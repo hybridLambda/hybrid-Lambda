@@ -1,0 +1,4 @@
+# Simulate gene trees from 2 taxa speices tree (networks), and analyse the topology
+
+../src/hybrid_sim -sp_coal_unit ../trees/2_tax_sp1 -para ../trees/2_tax_sp1_para2 -mono -num 100 -samples 4 4
+

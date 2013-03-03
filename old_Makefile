@@ -1,0 +1,36 @@
+COMPILER = g++
+FLAGS = -Wall -g
+#FLAGS = 
+	
+all: clean_all hybrid_sim clean
+
+
+hybrid_sim: main.o utility.o sim_gt.o freq.o all_gene_topo.o
+	 ${COMPILER} ${FLAGS} -o hybrid_sim main.o  utility.o  sim_gt.o freq.o  all_gene_topo.o
+#hybrid_sim: main.o utility.o sim_gt.o freq.o 
+#	         ${COMPILER} ${FLAGS} -o hybrid_sim main.o  utility.o  sim_gt.o freq.o 
+
+main.o: utility.hpp 
+	 ${COMPILER} ${FLAGS} -c main.cpp 
+
+#freq.o: utility.hpp 
+#	${COMPILER} ${FLAGS} -c freq.cpp
+
+freq.o: freq.hpp utility.hpp all_gene_topo.o
+	        ${COMPILER} ${FLAGS} -c freq.cpp
+
+
+sim_gt.o: utility.hpp 
+	${COMPILER} ${FLAGS} -c sim_gt.cpp
+
+utility.o: utility.hpp
+	 ${COMPILER} ${FLAGS} -c utility.cpp
+
+all_gene_topo.o: all_gene_topo.hpp
+	${COMPILER} ${FLAGS} -c all_gene_topo.cpp
+	
+clean:
+	rm -f *.o 
+	
+clean_all:
+	rm -f *.o hybrid_sim 

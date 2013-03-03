@@ -1,0 +1,8 @@
+echo "Print out the help menu of hybrid_sim"
+
+../src/hybrid_sim
+
+echo "or use the following commands"
+echo " "
+echo " ../src/hybrid_sim -h"
+echo " ../src/hybrid_sim -help"

@@ -1,0 +1,4 @@
+# Simulate gene trees from speices tree (networks) with different mutation rate
+
+../src/hybrid_sim -sp_num_gener ../trees/2_tax_sp1_gener_num -pop_string ../trees/2_tax_sp1_pop1 -mutation_rate 0.0002 -para ../trees/2_tax_sp1_para2 -seg -num 100 -samples 4 4
+

@@ -1,0 +1,7 @@
+# Simulate gene trees from speices tree (networks) with different population
+
+../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 10 -pop_size 5000
+
+# Or 
+# ../src/hybrid_sim -sp_coal_unit ../trees/2_tax_sp1 -pop_string ../trees/2_tax_sp1_pop1 -para ../trees/2_tax_sp1_para2 -num 100 -samples 4 4
+
