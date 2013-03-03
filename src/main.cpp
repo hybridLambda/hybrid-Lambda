@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
 	//string gt_tree_str;
 	//string mt_tree_str;
 
-	int num-Lambda_gt;
+	int num_sim_gt;
 	bool gene_freq_bool=false;
 	gene_tree_file="GENE_TREE";
 	bool reproduce_GENE_trees=true;
@@ -187,8 +187,8 @@ int main(int argc, char *argv[]){
 		if (argv_i=="-num"){
 			sim_n_gt_bool=true;
 			string s(argv[argc_i+1]);
-			istringstream num-Lambda_gt_str(s);
-			num-Lambda_gt_str>>num-Lambda_gt;
+			istringstream num_sim_gt_str(s);
+			num_sim_gt_str>>num_sim_gt;
 		}
 		
 		if (argv_i=="-seed"){
@@ -434,14 +434,14 @@ int main(int argc, char *argv[]){
 			append_seed_to_log_file(seed);
 
 			if (!sim_n_gt_bool){
-				num-Lambda_gt=1;
+				num_sim_gt=1;
 			}
 			if (my_action.Si_num_bool){
 				outtable_header(total_lineage);
 			}
 			//cout<<net_str<<endl;
 			//cout<<pop_size_string<<endl;
-			sim_n_gt simd_gt_tree_str_s(net_str,pop_size_string,para_string,sample_size,mutation_rate,num-Lambda_gt,my_action);
+			sim_n_gt simd_gt_tree_str_s(net_str,pop_size_string,para_string,sample_size,mutation_rate,num_sim_gt,my_action);
 			gt_tree_str_s=simd_gt_tree_str_s.gt_string_coal_unit_s;
 			mt_tree_str_s=simd_gt_tree_str_s.gt_string_mut_num_s;
 			
@@ -454,7 +454,7 @@ int main(int argc, char *argv[]){
 			}
 			
 			ostringstream num_ostr_stream;
-			num_ostr_stream<<num-Lambda_gt;
+			num_ostr_stream<<num_sim_gt;
 			appending_log_str=num_ostr_stream.str() + " trees simulated.";
 			appending_log_file(appending_log_str);
 			

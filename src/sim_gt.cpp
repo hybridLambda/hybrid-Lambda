@@ -739,8 +739,8 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 
 
 /*! \brief  sim_n_gt constructor */
-//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num-Lambda_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
-sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num-Lambda_gt,action_board my_action){
+//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
+sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action){
 
 	ofstream sim_gt_file_coal_unit;
 	string gene_tree_file_coal_unit=gene_tree_file+"_coal_unit";
@@ -767,7 +767,7 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 	}
 
 
-	for (int i=0;i<num-Lambda_gt;i++){
+	for (int i=0;i<num_sim_gt;i++){
 		sim_one_gt sim_gt_string(sp_string_coal_unit, sp_string_pop_size, para_string, sample_size,  mutation_rate,my_action);
 		gt_string_coal_unit_s.push_back(sim_gt_string.gt_string_coal_unit);
 		if (my_action.sim_num_mut_bool){
@@ -803,7 +803,7 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 	
 	if (my_action.mono_bool){
 		for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
-			monophyly[mono_i]=monophyly[mono_i]/num-Lambda_gt;
+			monophyly[mono_i]=monophyly[mono_i]/num_sim_gt;
 		}
 	}
 	
@@ -828,7 +828,7 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 
 /*! \brief UNUSED AT THE MOMENT. Add new simulated gene trees into the list of gene trees 
  * \todo change the target gene tree file name, */
-void appending-Lambda_gt_file(string sim_gt_input){
+void appending_sim_gt_file(string sim_gt_input){
 	ofstream sim_gt_file;
 	sim_gt_file.open (gene_tree_file.c_str(), ios::out | ios::app | ios::binary); 
 	sim_gt_file << sim_gt_input << "\n";
@@ -938,10 +938,10 @@ void outtable_header(int total_lineage){
 	out_table_file.close();
 }
 
-///*! \brief Hybrid-Lambda help file*/
+///*! \brief hybrid-Lambda help file*/
 //void print_help(){
 	//cout<<"*****************************************************************"<<endl;
-	//cout<<"*			Hybrid-Lambda beta 0.1			*"<<endl;
+	//cout<<"*			hybrid-Lambda beta 0.1			*"<<endl;
 	//cout<<"*			  Author: Joe ZHU			*"<<endl;
 	//cout<<"*****************************************************************"<<endl;
 	//cout<<endl<<endl;
@@ -1065,12 +1065,12 @@ double kingman_bl(double num_lineage){
 }
 
 
-/*! \brief Hybrid-Lambda help file*/
+/*! \brief hybrid-Lambda help file*/
 void print_help(){
 	cout<<endl;
 	cout<<endl;
 	cout<<"*****************************************************************"<<endl;
-	cout<<"*			Hybrid-Lambda beta 0.1			*"<<endl;
+	cout<<"*			hybrid-Lambda beta 0.1			*"<<endl;
 	cout<<"*			  Author: Joe ZHU			*"<<endl;
 	cout<<"*****************************************************************"<<endl;
 	cout<<endl<<endl;
