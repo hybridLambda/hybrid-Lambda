@@ -1,7 +1,7 @@
 echo "Simulate gene trees from speices tree (networks), and compute the frequencies"
 
-../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 100 -freq
+../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 100 -freq
 
 echo " "
 echo "OR"
-echo " ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 100 -freq_file save_freq"
+echo " ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 100 -freq_file save_freq"

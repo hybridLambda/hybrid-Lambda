@@ -1,12 +1,12 @@
 /*
- * hybrid_sim is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under 
  * coalescent process.
  * 
- * Copyright (C) 2010, 2011, 2012 Sha (Joe) Zhu
+ * Copyright (C) 2010, 2011, 2012, 2013 Sha (Joe) Zhu
  * 
- * This file is part of hybrid_sim.
+ * This file is part of hybrid-Lambda.
  * 
- * hybrid_sim is free software: you can redistribute it and/or modify
+ * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -33,8 +33,8 @@
 #include"mtrand.h"
 
 
-#ifndef GLOBAL_sim
-#define GLOBAL_sim
+#ifndef GLOBAL-Lambda
+#define GLOBAL-Lambda
 	
 extern bool debug_bool;
 //extern bool reproduce_GENE_trees;
@@ -141,10 +141,10 @@ class sim_n_gt{
 
 	}
 	
-	//sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
-	//sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
-	//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-	sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
+	//sim_n_gt(string Net_string, int num-Lambda_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
+	//sim_n_gt(string Net_string,int num-Lambda_gt, string para_string,vector < int > sample_size,double mutation_rate);
+	//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num-Lambda_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
+	sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num-Lambda_gt,action_board my_action);
 
 	void clear(){
 		gt_string_coal_unit_s.clear();
@@ -165,7 +165,7 @@ double unifRand();
 
 int poisson_rand_var(double lambda);
 
-void appending_sim_gt_file(string sim_gt_input);
+void appending-Lambda_gt_file(string sim_gt_input);
 
 void create_new_site_data(string gt_string_mut_num,int site_i);
 

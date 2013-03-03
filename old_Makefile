@@ -2,13 +2,13 @@ COMPILER = g++
 FLAGS = -Wall -g
 #FLAGS = 
 	
-all: clean_all hybrid_sim clean
+all: clean_all hybrid-Lambda clean
 
 
-hybrid_sim: main.o utility.o sim_gt.o freq.o all_gene_topo.o
-	 ${COMPILER} ${FLAGS} -o hybrid_sim main.o  utility.o  sim_gt.o freq.o  all_gene_topo.o
-#hybrid_sim: main.o utility.o sim_gt.o freq.o 
-#	         ${COMPILER} ${FLAGS} -o hybrid_sim main.o  utility.o  sim_gt.o freq.o 
+hybrid-Lambda: main.o utility.o sim_gt.o freq.o all_gene_topo.o
+	 ${COMPILER} ${FLAGS} -o hybrid-Lambda main.o  utility.o  sim_gt.o freq.o  all_gene_topo.o
+#hybrid-Lambda: main.o utility.o sim_gt.o freq.o 
+#	         ${COMPILER} ${FLAGS} -o hybrid-Lambda main.o  utility.o  sim_gt.o freq.o 
 
 main.o: utility.hpp 
 	 ${COMPILER} ${FLAGS} -c main.cpp 
@@ -33,4 +33,4 @@ clean:
 	rm -f *.o 
 	
 clean_all:
-	rm -f *.o hybrid_sim 
+	rm -f *.o hybrid-Lambda 

@@ -1,12 +1,12 @@
 /*
- * hybrid_sim is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under 
  * coalescent process.
  * 
- * Copyright (C) 2010, 2011, 2012 Sha (Joe) Zhu
+ * Copyright (C) 2010, 2011, 2012, 2013 Sha (Joe) Zhu
  * 
- * This file is part of hybrid_sim.
+ * This file is part of hybrid-Lambda.
  * 
- * hybrid_sim is free software: you can redistribute it and/or modify
+ * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -739,8 +739,8 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 
 
 /*! \brief  sim_n_gt constructor */
-//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
-sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action){
+//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num-Lambda_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
+sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num-Lambda_gt,action_board my_action){
 
 	ofstream sim_gt_file_coal_unit;
 	string gene_tree_file_coal_unit=gene_tree_file+"_coal_unit";
@@ -767,7 +767,7 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 	}
 
 
-	for (int i=0;i<num_sim_gt;i++){
+	for (int i=0;i<num-Lambda_gt;i++){
 		sim_one_gt sim_gt_string(sp_string_coal_unit, sp_string_pop_size, para_string, sample_size,  mutation_rate,my_action);
 		gt_string_coal_unit_s.push_back(sim_gt_string.gt_string_coal_unit);
 		if (my_action.sim_num_mut_bool){
@@ -803,7 +803,7 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 	
 	if (my_action.mono_bool){
 		for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
-			monophyly[mono_i]=monophyly[mono_i]/num_sim_gt;
+			monophyly[mono_i]=monophyly[mono_i]/num-Lambda_gt;
 		}
 	}
 	
@@ -828,7 +828,7 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 
 /*! \brief UNUSED AT THE MOMENT. Add new simulated gene trees into the list of gene trees 
  * \todo change the target gene tree file name, */
-void appending_sim_gt_file(string sim_gt_input){
+void appending-Lambda_gt_file(string sim_gt_input){
 	ofstream sim_gt_file;
 	sim_gt_file.open (gene_tree_file.c_str(), ios::out | ios::app | ios::binary); 
 	sim_gt_file << sim_gt_input << "\n";
@@ -938,16 +938,16 @@ void outtable_header(int total_lineage){
 	out_table_file.close();
 }
 
-///*! \brief Hybrid_sim help file*/
+///*! \brief Hybrid-Lambda help file*/
 //void print_help(){
 	//cout<<"*****************************************************************"<<endl;
-	//cout<<"*			Hybrid_sim beta 0.1			*"<<endl;
+	//cout<<"*			Hybrid-Lambda beta 0.1			*"<<endl;
 	//cout<<"*			  Author: Joe ZHU			*"<<endl;
 	//cout<<"*****************************************************************"<<endl;
 	//cout<<endl<<endl;
 	//cout<<"-h or -help -- Help menu"<<endl;
 	//cout<<"-num NUMBER -- Define the number of the gene tree will be simulated"<<endl;
-	//cout<<"By default, hybrid_sim simulates gene trees under Kingmman Coalescent process, with using "<<endl;
+	//cout<<"By default, hybrid-Lambda simulates gene trees under Kingmman Coalescent process, with using "<<endl;
 	//cout<<"-mm -- it allows to have multi merger process"<<endl;
 	//cout<<"-mm ALPHA -- 1 < ALPHA < 2 "<<endl;
 	//cout<<"-mm PSI -- 0 < PSI < 1 "<<endl;
@@ -976,34 +976,34 @@ void outtable_header(int total_lineage){
 			
 	//cout<<endl;
 	//cout<<"Examples:"<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 "<<endl;	
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -dot "<<endl;	
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -dotF figure.dot "<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -plot "<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -plotF figure.tex "<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -plot -branch"<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -plotF -label figure.tex "<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -num 1000"<<endl;	
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -num 100 -S 100 100"<<endl;
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -mm 1.1 -num 100 -S 100 100"<<endl;
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -mm 0.1 -num 100 -S 100 100"<<endl;
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -num 1000 -gF GENE_TREE_FILE"<<endl;	
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -num 1000 -f"<<endl;	
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -num 1000 -fF FRENQUENCY_FILE"<<endl;	
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
-	//cout<<"hybrid_sim -spcu 4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
-	//cout<<"hybrid_sim -gt GENE_TREE_FILE -f "<<endl;	
-	//cout<<"hybrid_sim -gt GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -mono -num 100 -mm .1 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -mono -num 100 -seed 2 -mm .1 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -para 2_tax_sp1_para2 -mono -num 100 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mm 2_tax_sp1_para2 -seg -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mm 2_tax_sp1_para2 -seg -num 100 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spng 2_tax_sp1_gener_num -pop_size 10000 -para 2_tax_sp1_para2 -seg -num 100 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mu 0.0002 -para 2_tax_sp1_para2 -seg -num 100 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mu 0.00002  -seg -num 1000 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spcu 2_tax_sp1 -mu 0.00002 -num 1000 -S 4 4"<<endl;
-	//cout<<"hybrid_sim -spng 2_tax_sp1_gener_num -pop_size 10000 -mu 0.0002 -mm 1.4 -seg -num 100 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 "<<endl;	
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -dot "<<endl;	
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -dotF figure.dot "<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -plot "<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -plotF figure.tex "<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -plot -branch"<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -plotF -label figure.tex "<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -num 1000"<<endl;	
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -num 100 -S 100 100"<<endl;
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -mm 1.1 -num 100 -S 100 100"<<endl;
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -mm 0.1 -num 100 -S 100 100"<<endl;
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -num 1000 -gF GENE_TREE_FILE"<<endl;	
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -num 1000 -f"<<endl;	
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -num 1000 -fF FRENQUENCY_FILE"<<endl;	
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
+	//cout<<"hybrid-Lambda -spcu 4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
+	//cout<<"hybrid-Lambda -gt GENE_TREE_FILE -f "<<endl;	
+	//cout<<"hybrid-Lambda -gt GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -mono -num 100 -mm .1 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -mono -num 100 -seed 2 -mm .1 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -para 2_tax_sp1_para2 -mono -num 100 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mm 2_tax_sp1_para2 -seg -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mm 2_tax_sp1_para2 -seg -num 100 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_size 10000 -para 2_tax_sp1_para2 -seg -num 100 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mu 0.0002 -para 2_tax_sp1_para2 -seg -num 100 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_string 2_tax_sp1_pop1 -mu 0.00002  -seg -num 1000 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spcu 2_tax_sp1 -mu 0.00002 -num 1000 -S 4 4"<<endl;
+	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_size 10000 -mu 0.0002 -mm 1.4 -seg -num 100 -S 4 4"<<endl;
 	//cout<<endl;
 //}
 
@@ -1065,12 +1065,12 @@ double kingman_bl(double num_lineage){
 }
 
 
-/*! \brief Hybrid_sim help file*/
+/*! \brief Hybrid-Lambda help file*/
 void print_help(){
 	cout<<endl;
 	cout<<endl;
 	cout<<"*****************************************************************"<<endl;
-	cout<<"*			Hybrid_sim beta 0.1			*"<<endl;
+	cout<<"*			Hybrid-Lambda beta 0.1			*"<<endl;
 	cout<<"*			  Author: Joe ZHU			*"<<endl;
 	cout<<"*****************************************************************"<<endl;
 	cout<<endl<<endl;
@@ -1109,18 +1109,18 @@ void print_help(){
 	cout<<endl;
 	cout<<"Examples:"<<endl;
 	cout<<""<<endl;	
-	cout<<"hybrid_sim -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1"<<endl;	
-	cout<<"hybrid_sim -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut"<<endl;
-	cout<<"hybrid_sim -spcu '((1:1,2:1):1,3:2);' -num N -pop 25000 -sim num gener"<<endl;
-	cout<<"hybrid_sim -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'"<<endl;
-	cout<<"hybrid_sim -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
-	cout<<"hybrid_sim -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
-	cout<<"hybrid_sim -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
-	cout<<"hybrid_sim -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
-	cout<<"hybrid_sim -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
-	cout<<"hybrid_sim -spcu '((1:1,2:1):1,3:2);' -num 1000 -gF GENE -fF OUTPUT"<<endl;	
-	cout<<"hybrid_sim -gt GENE_coal_unit -f "<<endl;	
-	cout<<"hybrid_sim -spcu '(A:5,B:5)r;'-mono -num 100 -mm .1 -S 4 4"<<endl;
+	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut"<<endl;
+	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num N -pop 25000 -sim num gener"<<endl;
+	cout<<"hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'"<<endl;
+	cout<<"hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
+	cout<<"hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
+	cout<<"hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
+	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -gF GENE -fF OUTPUT"<<endl;	
+	cout<<"hybrid-Lambda -gt GENE_coal_unit -f "<<endl;	
+	cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;'-mono -num 100 -mm .1 -S 4 4"<<endl;
 	cout<<endl;
 }
 

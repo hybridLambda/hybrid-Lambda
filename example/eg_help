@@ -1,8 +1,8 @@
-echo "Print out the help menu of hybrid_sim"
+echo "Print out the help menu of hybrid-Lambda"
 
-../src/hybrid_sim
+../src/hybrid-Lambda
 
 echo "or use the following commands"
 echo " "
-echo " ../src/hybrid_sim -h"
-echo " ../src/hybrid_sim -help"
+echo " ../src/hybrid-Lambda -h"
+echo " ../src/hybrid-Lambda -help"

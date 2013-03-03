@@ -2,13 +2,13 @@
 
 # This example simulate gene trees from a four taxa species tree,
 # By default, 1 sample is drawn from each species
-../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1
+../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1
 
 # Similarly 
-# ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -samples 1 1 1 1
-# ../src/hybrid_sim -sp_coal_unit ../trees/2_tax_sp1 -samples 1 1 
-# ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -samples 1 1 1 1 -num 10
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -samples 1 1 1 1
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/2_tax_sp1 -samples 1 1 
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -samples 1 1 1 1 -num 10
 
 # This is an example of sampling more than one lineage from each species tree.
-# ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -samples 2 3 1 4
-# ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp_nt1 -samples 2 3 1 4 -num 10
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -samples 2 3 1 4
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp_nt1 -samples 2 3 1 4 -num 10

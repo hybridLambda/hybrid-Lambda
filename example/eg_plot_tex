@@ -1,8 +1,8 @@
 echo "Use pdflatex to plot the network"
-../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp_nt1 -plot 
+../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp_nt1 -plot 
 echo " "
 echo "Use post-order tree traversal to label the interior branches"
-echo "../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp_nt1 -plot -label"
+echo "../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp_nt1 -plot -label"
 echo " "
 echo "Label the interior branch lengths"
-echo " ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp_nt1 -plot -branch"
+echo " ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp_nt1 -plot -branch"

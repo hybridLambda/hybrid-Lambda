@@ -1,10 +1,10 @@
 # Simulate gene trees from speices tree (networks) under multi merger coalescent
 
-../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 10 -multi .1
+../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 10 -multi .1
 
 # Or 
-# ../src/hybrid_sim -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 10 -multi 1.1
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/4_tax_sp1 -GENE gene_trees -num 10 -multi 1.1
 
 # Or 
-# ../src/hybrid_sim -sp_coal_unit ../trees/2_tax_sp1 -para ../trees/2_tax_sp1_para2 -num 100 -samples 4 4
+# ../src/hybrid-Lambda -sp_coal_unit ../trees/2_tax_sp1 -para ../trees/2_tax_sp1_para2 -num 100 -samples 4 4
 
