@@ -27,7 +27,9 @@
 
 
 #include"utility.hpp"
-#include<math.h>
+//#include<math.h>
+#include <boost/math/special_functions/gamma.hpp>
+
 #include<stdio.h>
 #include<ctime>
 #include"mtrand.h"
