@@ -28,8 +28,8 @@
 
 #include"utility.hpp"
 //#include<math.h>
-#include <boost/math/special_functions/gamma.hpp>
-
+#include<boost/math/special_functions/gamma.hpp>
+#include<boost/math/special_functions/binomial.hpp>
 #include<stdio.h>
 #include<ctime>
 #include"mtrand.h"

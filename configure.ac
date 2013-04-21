@@ -28,6 +28,31 @@ AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
+
+#
+# Platform specific setup
+#
+#############################
+AC_CANONICAL_HOST
+# Check for which host we are on and setup a few things
+# specifically based on the host
+case $host_os in
+  darwin* )
+    AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],CXXFLAGS=-I/opt/local/include)
+        ;;
+  linux*)
+AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp])        ;;
+   *BSD*)
+        # Do something specific for BSD
+        ;;
+    *)
+        #Default Case
+        AC_MSG_ERROR([Your platform is not currently supported])
+        ;;
+esac
+
+
+
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC

@@ -30,7 +30,8 @@
 /*! \brief Beta function, requires tgamma function from math.h \return double */
 double Beta(double x,double y){
 	double Beta_return;
-	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
+//	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
+    Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
 	return Beta_return;
 }
 
@@ -670,10 +671,22 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
 		for (double k_i=2;k_i<=b_i;k_i++){
 			double lambda_bk_mat_b_k;
 			if (para<1){//0<psi<1
-				lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*pow(para,k_i)*pow(1-para,b_i-k_i);//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*pow(para,k_i)*pow(1-para,b_i-k_i);//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+                //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+                lambda_bk_mat_b_k=exp(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+				if (isnan(lambda_bk_mat_b_k)){
+				cout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
+				cout<<"b="<<b_i<<"  k="<<k_i<<endl;
+				cout<<"log(boost::math::binomial_coefficient(b_i,k_i)) " <<log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))<<endl;
+				cout<<"log(pow(para,k_i)) "<< log(pow(para,k_i))<<endl;
+				cout<<"log(pow(1-para,b_i-k_i)) "<<log(pow(1-para,b_i-k_i))<<endl;
+				}
 			}
 			else{//1<alpha<2
-				lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para);// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para);// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+                //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+                lambda_bk_mat_b_k=exp(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+
 			}
 			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
 			}
@@ -1045,6 +1058,8 @@ valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double nu
 	valarray <double> nc_X(num_lineage-1);
 	for (unsigned int kmerge=0;kmerge<nc_X.size();kmerge++){
 		nc_X[kmerge]= -log( 1-unifRand() )/ lambda_bk_mat[num_lineage-2][kmerge];
+		//cout<<nc_X[kmerge]<<endl;
+		//if (isnan(nc_X[kmerge])){cout<<lambda_bk_mat[num_lineage-2][kmerge]<<endl;}
 	}
 	return nc_X;
 }
