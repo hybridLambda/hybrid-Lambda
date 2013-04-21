@@ -1,0 +1,9 @@
+hybrid-lambda-beta-0.2.tar.gz
+
+
+hybrid-lambda-beta-0.1.tar.gz
+Fixed the problem with compiling manual.pdf
+Bug: lambda coalescent not suitable for large samples.
+
+hybrid-lambda-beta.tar.gz
+Replacement of the program hybrid_sim
