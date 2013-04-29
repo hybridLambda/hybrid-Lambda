@@ -27,6 +27,10 @@
 
 #include"sim_gt.hpp"
 #include"freq.hpp"
+#include"figure.hpp"
+#include"param.hpp"
+
+using namespace hybridLambda;
 //using namespace std;
 
 bool debug_bool;
@@ -52,7 +56,6 @@ int main(int argc, char *argv[]){
 	//const char * freq_file_str;
 	vector < int > sample_size;
 	debug_bool=false;
-	bool help=false;
 	bool sim_n_gt_bool=false;
 	
 	string net_str;
@@ -61,18 +64,14 @@ int main(int argc, char *argv[]){
 	//ifstream Net_file;
 	//ifstream para_net_file;
 	//ifstream pop_size_file;
-	string freq_file_name="freq_out";
-	string tex_fig_name="texfigure.tex";
-	string dot_fig_name="figure.dot";
+	
 	vector <string> gt_tree_str_s;
 	vector <string> mt_tree_str_s;
 	//string gt_tree_str;
 	//string mt_tree_str;
 
 	int num_sim_gt;
-	bool gene_freq_bool=false;
-	gene_tree_file="GENE_TREE";
-	bool reproduce_GENE_trees=true;
+	
 	
 	string para_string;
 	bool para_string_bool=false;
@@ -100,11 +99,7 @@ int main(int argc, char *argv[]){
 	bool mutation_rate_bool=false;
 
 	
-	bool plot_bool=false;
-	bool dot_bool=false;
-	int plot_option;//=0;
-	bool plot_label=false;
-	bool plot_branch=false;
+
 
 	bool samples_bool=false;
 	
@@ -139,9 +134,7 @@ int main(int argc, char *argv[]){
 			net_str=read_input_line(argv[argc_i+1]);
 		}
 
-		if (argv_i=="-h" || argv_i=="-help"){
-			help=true;
-		}
+
 		
 		if (argv_i=="-print"){
 			print_tree=true;
@@ -191,32 +184,10 @@ int main(int argc, char *argv[]){
 			seed_bool=true;
 		}
 
-		if (argv_i=="-plot"){
-			plot_bool=true;
-		}
-		if (argv_i=="-plot_file" || argv_i=="-plotF"){
-			plot_bool=true;
-			tex_fig_name=argv[argc_i+1];
-		}
-		check_and_remove(tex_fig_name.c_str());
 		
 		
-		if (argv_i=="-label"){
-			plot_label=true;
-		}
+		
 
-		if (argv_i=="-branch"){
-			plot_branch=true;
-		}		
-
-		if (argv_i=="-dot"){
-			dot_bool=true;
-		}
-		if (argv_i=="-dot_file" || argv_i=="-dotF"){
-			dot_bool=true;
-			dot_fig_name=argv[argc_i+1];
-		}
-		check_and_remove(dot_fig_name.c_str());
 		
 
 		if (argv_i=="-GENE" || argv_i=="-gF"){
@@ -342,138 +313,5 @@ int main(int argc, char *argv[]){
       return EXIT_FAILURE;
     }
 }
-
-
-		string appending_log_str;
-
-		
-		if (reproduce_GENE_trees){
-			//string gene_tree_file_s="rm "+gene_tree_file+"*";
-			string gene_tree_file_coal_unit=gene_tree_file+"_coal_unit";
-			string gene_tree_file_mut_unit=gene_tree_file+"_mut_unit";
-			string gene_tree_file_num_gener=gene_tree_file+"_num_gener";
-			string gene_tree_file_num_mut=gene_tree_file+"_num_mut";
-			remove(gene_tree_file_coal_unit.c_str());
-			remove(gene_tree_file_mut_unit.c_str());
-			remove(gene_tree_file_num_gener.c_str());
-			remove(gene_tree_file_num_mut.c_str());
-		}
-		else{
-			if (net_str.size()>0){
-				net_str.clear();
-				appending_log_file("Illegal flags");
-				cout<<"Programs terminated"<<endl;
-				//return 0;
-				return my_exit();
-			}
-		}
-
-
-				
-		if (net_str.size()>0){
-
-						
-			if (!samples_bool){
-				total_lineage=net_dummy.tax_name.size();
-				for (int i=0;i<total_lineage;i++){
-					sample_size.push_back(1);
-				}
-			}
-			else{//  check the number of lineages and the number of species 
-				if (sample_size.size()!=net_dummy.tax_name.size()){
-					appending_log_file("Numbers of samples and numbers of species not equal!!!");
-					appending_log_file("Simulation terminated");
-					return my_exit(); 
-				}
-			}	
-			
-			//if ((!multi_merge_bool) && (!para_string_bool)){
-			//if (!mm_bool){
-			if ((!multi_merge_bool) && (!para_string_bool) && !mm_bool){
-
-				para_string=write_para_into_tree(net_str, 2.0); // If coalescent parameter is ungiven, use Kingman coalescent as default
-				appending_log_file("Default Kingman coalescent on all branches");
-			}
-	
-			//if ((!pop_size_bool) && (!pop_size_string_bool)){
-			//if (!pop_bool){
-			if ((!pop_size_bool) && (!pop_size_string_bool) && (!pop_bool)){
-				pop_size_string=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
-				if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
-					appending_log_file("Default population size of 10000 on all branches");
-					
-				}
-			}
-			
-			//appending_log_file(pop_size_string);
-			
-			if (!mutation_rate_bool){
-				mutation_rate=0.00005;
-				if (my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
-					appending_log_file("Default mutation rate 0.00005");
-				}
-			}
-			
-			pop_size_string=rewrite_pop_string_by_para_string(para_string,pop_size_string);  // checking if modify pop_size_string is needed,
-	
-			if (num_gener_bool){
-				net_str=write_sp_string_in_coal_unit(net_str,pop_size_string);	// Convert number of generations and population size to coalescent unit
-			}
-			
-			
-			Net new_net_dummy(net_str);
-			
-			if (!new_net_dummy.is_ultrametric){
-				appending_log_file("WARNING! NOT ULTRAMETRIC!!!");
-				//return my_exit();
-			}
-		
-			append_seed_to_log_file(seed);
-
-			if (!sim_n_gt_bool){
-				num_sim_gt=1;
-			}
-			if (my_action.Si_num_bool){
-				outtable_header(total_lineage);
-			}
-			//cout<<net_str<<endl;
-			//cout<<pop_size_string<<endl;
-			sim_n_gt simd_gt_tree_str_s(net_str,pop_size_string,para_string,sample_size,mutation_rate,num_sim_gt,my_action);
-			gt_tree_str_s=simd_gt_tree_str_s.gt_string_coal_unit_s;
-			mt_tree_str_s=simd_gt_tree_str_s.gt_string_mut_num_s;
-			
-			if (my_action.mono_bool  && sample_size.size()==2){
-				cout<<"   A mono     B mono Recip mono     A para     B para  Polyphyly"<<endl;
-				for (unsigned int mono_i=0;mono_i<simd_gt_tree_str_s.monophyly.size();mono_i++){
-					cout<<setw(9)<<simd_gt_tree_str_s.monophyly[mono_i]<<"  ";
-				}
-				cout<<endl;
-			}
-			
-			ostringstream num_ostr_stream;
-			num_ostr_stream<<num_sim_gt;
-			appending_log_str=num_ostr_stream.str() + " trees simulated.";
-			appending_log_file(appending_log_str);
-			
-			if (!sim_n_gt_bool){
-				string command="cat "+gene_tree_file+"_coal_unit";
-				int sys=system(command.c_str());
-			}
-			
-		}
-		
-		if (my_action.Si_num_bool){
-			appending_log_file("Table of number of segregating site in file: out_table");
-		}
-		
-		if (sites_data_bool){
-			create_site_data_dir(mt_tree_str_s);
-		}
-		
-		if (gene_freq_bool){
-			compute_gt_frequencies(gt_tree_str_s, freq_file_name);
-		}
-		
-
 
 

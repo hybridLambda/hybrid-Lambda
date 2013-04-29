@@ -172,3 +172,149 @@ int n_choose_k_int(int n, int k){
 	//cout<<"hybrid-Lambda -spng 2_tax_sp1_gener_num -pop_size 10000 -mu 0.0002 -mm 1.4 -seg -num 100 -S 4 4"<<endl;
 	//cout<<endl;
 //}
+
+void appending_log_file(string log_file_input /*! Information added*/){
+	ofstream log_file;
+	log_file.open ("log_file", ios::out | ios::app | ios::binary); 
+	log_file << log_file_input << "\n";
+	log_file.close();
+}
+
+
+
+
+
+
+		string appending_log_str;
+
+		
+		if (reproduce_GENE_trees){
+			//string gene_tree_file_s="rm "+gene_tree_file+"*";
+			string gene_tree_file_coal_unit=gene_tree_file+"_coal_unit";
+			string gene_tree_file_mut_unit=gene_tree_file+"_mut_unit";
+			string gene_tree_file_num_gener=gene_tree_file+"_num_gener";
+			string gene_tree_file_num_mut=gene_tree_file+"_num_mut";
+			remove(gene_tree_file_coal_unit.c_str());
+			remove(gene_tree_file_mut_unit.c_str());
+			remove(gene_tree_file_num_gener.c_str());
+			remove(gene_tree_file_num_mut.c_str());
+		}
+		else{
+			if (net_str.size()>0){
+				net_str.clear();
+				appending_log_file("Illegal flags");
+				cout<<"Programs terminated"<<endl;
+				//return 0;
+				return my_exit();
+			}
+		}
+
+
+				
+		if (net_str.size()>0){
+
+						
+			if (!samples_bool){
+				total_lineage=net_dummy.tax_name.size();
+				for (int i=0;i<total_lineage;i++){
+					sample_size.push_back(1);
+				}
+			}
+			else{//  check the number of lineages and the number of species 
+				if (sample_size.size()!=net_dummy.tax_name.size()){
+					appending_log_file("Numbers of samples and numbers of species not equal!!!");
+					appending_log_file("Simulation terminated");
+					return my_exit(); 
+				}
+			}	
+			
+			//if ((!multi_merge_bool) && (!para_string_bool)){
+			//if (!mm_bool){
+			if ((!multi_merge_bool) && (!para_string_bool) && !mm_bool){
+
+				para_string=write_para_into_tree(net_str, 2.0); // If coalescent parameter is ungiven, use Kingman coalescent as default
+				appending_log_file("Default Kingman coalescent on all branches");
+			}
+	
+			//if ((!pop_size_bool) && (!pop_size_string_bool)){
+			//if (!pop_bool){
+			if ((!pop_size_bool) && (!pop_size_string_bool) && (!pop_bool)){
+				pop_size_string=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
+				if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
+					appending_log_file("Default population size of 10000 on all branches");
+					
+				}
+			}
+			
+			//appending_log_file(pop_size_string);
+			
+			if (!mutation_rate_bool){
+				mutation_rate=0.00005;
+				if (my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
+					appending_log_file("Default mutation rate 0.00005");
+				}
+			}
+			
+			pop_size_string=rewrite_pop_string_by_para_string(para_string,pop_size_string);  // checking if modify pop_size_string is needed,
+	
+			if (num_gener_bool){
+				net_str=write_sp_string_in_coal_unit(net_str,pop_size_string);	// Convert number of generations and population size to coalescent unit
+			}
+			
+			
+			Net new_net_dummy(net_str);
+			
+			if (!new_net_dummy.is_ultrametric){
+				appending_log_file("WARNING! NOT ULTRAMETRIC!!!");
+				//return my_exit();
+			}
+		
+			append_seed_to_log_file(seed);
+
+			if (!sim_n_gt_bool){
+				num_sim_gt=1;
+			}
+			if (my_action.Si_num_bool){
+				outtable_header(total_lineage);
+			}
+			//cout<<net_str<<endl;
+			//cout<<pop_size_string<<endl;
+			sim_n_gt simd_gt_tree_str_s(net_str,pop_size_string,para_string,sample_size,mutation_rate,num_sim_gt,my_action);
+			gt_tree_str_s=simd_gt_tree_str_s.gt_string_coal_unit_s;
+			mt_tree_str_s=simd_gt_tree_str_s.gt_string_mut_num_s;
+			
+			if (my_action.mono_bool  && sample_size.size()==2){
+				cout<<"   A mono     B mono Recip mono     A para     B para  Polyphyly"<<endl;
+				for (unsigned int mono_i=0;mono_i<simd_gt_tree_str_s.monophyly.size();mono_i++){
+					cout<<setw(9)<<simd_gt_tree_str_s.monophyly[mono_i]<<"  ";
+				}
+				cout<<endl;
+			}
+			
+			ostringstream num_ostr_stream;
+			num_ostr_stream<<num_sim_gt;
+			appending_log_str=num_ostr_stream.str() + " trees simulated.";
+			appending_log_file(appending_log_str);
+			
+			if (!sim_n_gt_bool){
+				string command="cat "+gene_tree_file+"_coal_unit";
+				int sys=system(command.c_str());
+			}
+			
+		}
+		
+		if (my_action.Si_num_bool){
+			appending_log_file("Table of number of segregating site in file: out_table");
+		}
+		
+		if (sites_data_bool){
+			create_site_data_dir(mt_tree_str_s);
+		}
+		
+		if (gene_freq_bool){
+			compute_gt_frequencies(gt_tree_str_s, freq_file_name);
+		}
+		
+
+
+

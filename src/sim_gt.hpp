@@ -26,14 +26,13 @@
 
 
 
-#include"utility.hpp"
+//#include"utility.hpp"
 //#include<math.h>
 #include<boost/math/special_functions/gamma.hpp>
 #include<boost/math/special_functions/binomial.hpp>
 #include<stdio.h>
 #include<ctime>
-#include"mtrand.h"
-
+#include"net.hpp"
 
 #ifndef GLOBAL_sim
 #define GLOBAL_sim

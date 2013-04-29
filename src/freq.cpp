@@ -148,6 +148,7 @@ int RF_dist(string gt_string1,string gt_string2){
 }
 
 
+
 /*! \brief Compute gene tree frequencies */
 void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name){
 	remove(freq_file_name.c_str());
@@ -162,7 +163,7 @@ void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name
 	cout<<total_num<<endl;
 	freq_out_file.close();
 	string appending_log_str="Gene trees frequency analyzed in file: "+freq_file_name;
-	appending_log_file(appending_log_str);
+	//appending_log_file(appending_log_str);
 }
 
 
