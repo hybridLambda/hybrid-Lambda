@@ -30,6 +30,24 @@
 #include"sim_gt.hpp"
 
 
+
+namespace freq{
+	class param{
+		public:
+			bool gene_freq_bool;
+			string gene_tree_file;
+			bool reproduce_GENE_trees;
+	string freq_file_name;
+
+		
+		param();
+		param(int argc, char *argv[]);
+		private:
+	};
+}
+
+
+
 /*! \brief Class function for counting topological frequencies */
 class topo_freq{
 	public:

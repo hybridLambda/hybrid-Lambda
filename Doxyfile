@@ -583,6 +583,14 @@ INPUT                  = src/utility.hpp \
                          src/sim_gt.hpp \
                          src/freq.cpp \
                          src/freq.hpp \
+			src/figure.hpp \
+			src/figure.cpp \
+			src/net.cpp \
+			src/net.hpp \
+			src/node.cpp \
+			src/node.hpp \
+			src/param.hpp \
+			src/param.cpp \
 
 
 # This tag can be used to specify the character encoding of the source files

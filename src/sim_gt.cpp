@@ -27,6 +27,34 @@
 
 #include"sim_gt.hpp"
 #include"mtrand.h"
+
+sim::param::param(){
+	
+}
+
+sim::param::param(int argc, char *argv[]){
+	param();
+		
+		int argc_i=1;
+	while( argc_i < argc ){
+		
+		std::string argv_i(argv[argc_i]);
+		
+		//if (argv_i=="-nsam"){ // if scrm is not called, use this option read in the number of samples
+			////read_input_to_int(argv[argc_i+1],nsam);
+			//read_input_to_param<int>(argv[argc_i+1],nsam);
+			//argc_i++;
+		//}
+	}
+	
+	
+}
+
+
+
+
+
+
 /*! \brief Beta function, requires tgamma function from math.h \return double */
 double Beta(double x,double y){
 	double Beta_return;

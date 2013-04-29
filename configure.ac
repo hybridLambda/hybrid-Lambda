@@ -1,5 +1,5 @@
 #AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joe.zhu@pg.canterbury.ac.nz])
-AC_INIT([hybrid-Lambda],[beta-0.1],[joe.zhu@pg.canterbury.ac.nz])
+AC_INIT([hybrid-Lambda],[beta-0.2],[joezhu@well.ox.ac.uk])
 dnl AC_CONFIG_SRCDIR([simu.c])
 #AC_CONFIG_SRCDIR([main.cpp])
 #AC_CONFIG_HEADER([config.h])

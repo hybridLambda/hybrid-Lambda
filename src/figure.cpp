@@ -69,11 +69,17 @@ void figure::param::plot(string net_str){
 		//net_dummy.print_all_node();
 		//appending_log_file("Tree printed");
 	//}
+	//if (plot_bool){
+		//plot_in_latex_file(tex_fig_name.c_str(), net_dummy,plot_option);	
+	//}
+	//if (dot_bool){
+		//plot_in_dot(dot_fig_name.c_str(), net_dummy,plot_option);			
+	//}
 	if (plot_bool){
-		plot_in_latex_file(tex_fig_name.c_str(), net_dummy,plot_option);	
+		plot_in_latex_file_(net_dummy);	
 	}
 	if (dot_bool){
-		plot_in_dot(dot_fig_name.c_str(), net_dummy,plot_option);			
+		plot_in_dot_(net_dummy);			
 	}
 }
 
@@ -124,7 +130,7 @@ void figure::param::append_to_log(string logName){
 
 /*! \brief When drawing network in .tex files, detemine the x coordinates of nodes
  */
-valarray <int>  det_x_node (Net net_dummy){
+valarray <int>  figure::param::det_x_node (Net net_dummy){
 	valarray <int>  x_node (net_dummy.Net_nodes.size());
 	x_node[x_node.size()-1]=0;
 	
@@ -228,16 +234,17 @@ valarray <int>  det_x_node (Net net_dummy){
 
 /*! \brief Produce a dot file, which is used to draw the network, and compile the dot file to a pdf file.
  */
-void plot_in_dot(const char* file_name /*! Name for the figure file */,
-	Net net_dummy,
+void figure::param::plot_in_dot_(//const char* file_name /*! Name for the figure file */,
+	Net net_dummy
 // string net_str /*! Input network written in extended newick form */,
-	int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/){
+	//int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/
 //void plot_in_dot(const char* file_name /*! Name for the figure file */,
 	//Net net_dummy,
 //// string net_str /*! Input network written in extended newick form */,
 	//int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/){
-	string file_name_no_dot(file_name);
-	string file_name_with_dot(file_name);
+	){
+	string file_name_no_dot(dot_fig_name.c_str());
+	string file_name_with_dot(dot_fig_name.c_str());
 	string ddot(".dot");
 	
 	size_t found=file_name_no_dot.find(ddot);
@@ -336,18 +343,23 @@ void plot_in_dot(const char* file_name /*! Name for the figure file */,
 	sys=system(command.c_str());
 
 	string appending_log_str="Dot figure generated in file: "+file_name_no_dot+".pdf";
-	appending_log_file(appending_log_str);
+	//appending_log_file(appending_log_str);
 }
 
 
 
 /*! \brief Core function of drawing a network in .tex files. 
  */
-void plot_in_latex(const char* file_name /*! Name for the figure file */ , 
-	Net net_dummy,
+ void figure::param::plot_in_latex_(const char* file_name /*! Name for the figure file */ , 
+	Net net_dummy
 // string net_str /*! Input network written in extended newick form */,
-	int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/
+//	int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/
 	){
+//void plot_in_latex(const char* file_name /*! Name for the figure file */ , 
+	//Net net_dummy,
+//// string net_str /*! Input network written in extended newick form */,
+	//int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/
+	//){
 	//Net net_dummy(net_str);
 	ofstream latex_file;
 	latex_file.open (file_name, ios::out | ios::app | ios::binary); 	
@@ -425,14 +437,19 @@ void plot_in_latex(const char* file_name /*! Name for the figure file */ ,
 
 /*! \brief Produce a tex file, which is used to draw the network 
  */
-void plot_in_latex_file(const char* file_name /*! Name for the figure file */ , 
-	Net net_dummy,
+ void figure::param::plot_in_latex_file_(//const char* file_name /*! Name for the figure file */ , 
+	Net net_dummy
 // string net_str /*! Input network written in extended newick form */,
-	int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/ 
+	//int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/ 
 	){
+//void plot_in_latex_file(const char* file_name /*! Name for the figure file */ , 
+	//Net net_dummy,
+//// string net_str /*! Input network written in extended newick form */,
+	//int plot_option /*! '0' -- do not label the branches; '1' -- enumerate the branches by  postorder tree traversal; '2' -- label the branch lengths of the network*/ 
+	//){
 	ofstream latex_file;
-	string file_name_no_dot(file_name);
-	string file_name_with_dot(file_name);
+	string file_name_no_dot(tex_fig_name.c_str());
+	string file_name_with_dot(tex_fig_name.c_str());
 	string dtex(".tex");
 	
 	size_t found=file_name_no_dot.find(dtex);
@@ -449,7 +466,8 @@ void plot_in_latex_file(const char* file_name /*! Name for the figure file */ ,
 	latex_file<<"\\ifx\\du\\undefined\\newlength{\\du}\\fi\\setlength{\\du}{30\\unitlength}\n";
 	latex_file <<"\\begin{center}\n";
 	latex_file.close();
-	plot_in_latex(file_name_with_dot.c_str(), net_dummy,plot_option);	
+	//plot_in_latex(file_name_with_dot.c_str(), net_dummy,plot_option);	
+	plot_in_latex_(file_name_with_dot.c_str(),net_dummy);	
 	//		plot_in_latex(file_name, net_str,plot_option);	
 	latex_file.open (file_name_with_dot.c_str(), ios::out | ios::app | ios::binary); 
 	latex_file <<"\\end{center}\n";
@@ -460,7 +478,7 @@ void plot_in_latex_file(const char* file_name /*! Name for the figure file */ ,
 	int sys=system(command.c_str());
 
 	string appending_log_str="Network figure generated in file: "+file_name_no_dot+".pdf";
-	appending_log_file(appending_log_str);
+	//appending_log_file(appending_log_str);
 
 }
 

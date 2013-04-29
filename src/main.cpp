@@ -34,7 +34,9 @@ using namespace hybridLambda;
 //using namespace std;
 
 bool debug_bool;
-//bool reproduce_GENE_trees;
+
+
+bool reproduce_GENE_trees;
 string gene_tree_file;
 
 //bool sites_data_bool;
@@ -298,7 +300,7 @@ int main(int argc, char *argv[]){
       std::cout << "Simulation took about " << end_time - start_time 
                 << " second(s)" << std::endl;
                 
-      if (user_para.log_bool){          
+      if (hybrid_para.log_bool){          
 				std::ofstream log_file;
 				log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
 				log_file << "Simulation took about " << end_time - start_time << " second(s) \n";

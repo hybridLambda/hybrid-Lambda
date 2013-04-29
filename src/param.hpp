@@ -8,46 +8,13 @@
 #include<valarray>
 #include<stdexcept>
 #include"mtrand.h"
-
+#include"utility.hpp"
 
 
 #ifndef HYBRDRIDLAMBDA_PARAM_INCLUDED
 #define HYBRDRIDLAMBDA_PARAM_INCLUDED
 using namespace std;
 
-
-
-namespace sim{
-	class param{
-		public:
-		param();
-		param(int argc, char *argv[]);
-		
-		string sp_string_coal_unit;
-		string sp_string_pop_size;
-		string para_string;
-		vector < int > sample_size;
-		double mutation_rate;
-		//,action_board my_action
-
-
-	};
-}
-
-namespace freq{
-	class param{
-		public:
-			bool gene_freq_bool;
-			string gene_tree_file;
-			bool reproduce_GENE_trees;
-	string freq_file_name;
-
-		
-		param();
-		param(int argc, char *argv[]);
-		private:
-	};
-}
 
 
 

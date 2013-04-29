@@ -42,6 +42,23 @@ extern bool debug_bool;
 extern string gene_tree_file;
 
 
+namespace sim{
+	class param{
+		public:
+		param();
+		param(int argc, char *argv[]);
+		
+		string sp_string_coal_unit;
+		string sp_string_pop_size;
+		string para_string;
+		vector < int > sample_size;
+		double mutation_rate;
+		//,action_board my_action
+
+
+	};
+}
+
 
 class action_board{
 public:

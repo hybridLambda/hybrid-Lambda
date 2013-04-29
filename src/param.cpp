@@ -1,6 +1,6 @@
 // parameters
 #include<param.hpp>
-#include<utility.cpp>
+
 
 hybridLambda::param::param(){
 	log_bool=false;
@@ -34,52 +34,7 @@ hybridLambda::param::param(int argc, char *argv[]){
 		
 }
 
-freq::param::param(){
-	gene_freq_bool=false;
-	gene_tree_file="GENE_TREE";
-	reproduce_GENE_trees=true;
-	freq_file_name="freq_out";
 
-	}
-
-freq::param::param(int argc, char *argv[]){
-			int argc_i=1;
-		while (argc_i < argc){
-			std::string argv_i(argv[argc_i]);
-			if (argv_i=="-freq"|| argv_i=="-f"){
-				gene_freq_bool=true;
-			}
-			if (argv_i=="-freq_file"|| argv_i=="-fF"){
-				gene_freq_bool=true;
-				freq_file_name=argv[argc_i+1];
-			}
-			check_and_remove(freq_file_name.c_str());	
-			
-		}
-		
-	}
-
-sim::param::param(){
-	
-}
-
-sim::param::param(int argc, char *argv[]){
-	param();
-		
-		int argc_i=1;
-	while( argc_i < argc ){
-		
-		std::string argv_i(argv[argc_i]);
-		
-		//if (argv_i=="-nsam"){ // if scrm is not called, use this option read in the number of samples
-			////read_input_to_int(argv[argc_i+1],nsam);
-			//read_input_to_param<int>(argv[argc_i+1],nsam);
-			//argc_i++;
-		//}
-	}
-	
-	
-}
 
 
 
@@ -88,7 +43,7 @@ void hybridLambda::print_help(){
 	cout<<endl;
 	cout<<endl;
 	cout<<"*****************************************************************"<<endl;
-	cout<<"*			hybrid-Lambda beta 0.1			*"<<endl;
+	cout<<"*			hybrid-Lambda beta 0.2			*"<<endl;
 	cout<<"*			  Author: Joe ZHU			*"<<endl;
 	cout<<"*****************************************************************"<<endl;
 	cout<<endl<<endl;

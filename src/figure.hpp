@@ -10,7 +10,6 @@ namespace figure{
 		param(int argc, char *argv[]);
 		
 		void append_to_log(string logName);
-
 		void plot(string net_str);
 		
 		private:
@@ -28,9 +27,14 @@ namespace figure{
 
 		valarray <int>  det_x_node (Net net_dummy);
 		
-		void plot_in_latex(const char* file_name, Net net_dummy, int plot_option);
-		void plot_in_latex_file(const char* file_name, Net net_dummy, int plot_option);
-		void plot_in_dot(const char* file_name, Net net_dummy, int plot_option);
+		//void plot_in_latex(const char* file_name, Net net_dummy, int plot_option);
+		//void plot_in_latex_file(const char* file_name, Net net_dummy, int plot_option);
+		
+		void plot_in_latex_(const char* file_name,Net net_dummy);
+		void plot_in_latex_file_(Net net_dummy);
+		
+		//void plot_in_dot(const char* file_name, Net net_dummy, int plot_option);
+		void plot_in_dot_(Net net_dummy);
 
 
 	};
