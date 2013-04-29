@@ -174,14 +174,7 @@ int main(int argc, char *argv[]){
 		}
 		
 		
-		if (argv_i=="-freq"|| argv_i=="-f"){
-			gene_freq_bool=true;
-		}
-		if (argv_i=="-freq_file"|| argv_i=="-fF"){
-			gene_freq_bool=true;
-			freq_file_name=argv[argc_i+1];
-		}
-		check_and_remove(freq_file_name.c_str());
+
 		
 		
 		if (argv_i=="-num"){
@@ -318,10 +311,39 @@ int main(int argc, char *argv[]){
 		}
 	}
 	
-	if (help || argc==1){
-		print_help();
-	}
-	else{
+	if (argc==1 ){
+		//scrm_help help;
+		//help.print_help();
+		hybridLambda::print_help();
+	}	//else, proceed
+
+    try {
+		time_t start_time = time(0);
+	    hybridLambda::param::param hybrid_para(argc, argv);
+	    sim::param::param sim_para(argc, argv);
+	    figure::param::param figure_para(argc, argv);
+	          time_t end_time = time(0);
+      
+      std::cout << "Simulation took about " << end_time - start_time 
+                << " second(s)" << std::endl;
+                
+      if (user_para.log_bool){          
+				std::ofstream log_file;
+				log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+				log_file << "Simulation took about " << end_time - start_time << " second(s) \n";
+				log_file.close();
+			}
+		int sys=system("cat log_file");		
+
+    }
+    catch (const exception &e)
+    {
+      std::cerr << "Error: " << e.what() << std::endl;
+      return EXIT_FAILURE;
+    }
+}
+
+
 		string appending_log_str;
 
 		
@@ -346,35 +368,10 @@ int main(int argc, char *argv[]){
 			}
 		}
 
-		if (!seed_bool){
-			seed=(unsigned)(time(0));
-		}
 
-		//srand(seed);	// initialize gnu seed
-		MTRand_closed mt;
-		mt.seed(seed);		// initialize mt seed
 				
 		if (net_str.size()>0){
-			Net net_dummy(net_str);
 
-			if (print_tree){
-				net_dummy.print_all_node();
-				appending_log_file("Tree printed");
-			}
-
-			plot_option=set_plot_option(plot_label,plot_branch);
-	
-			if (plot_bool){
-				plot_in_latex_file(tex_fig_name.c_str(), net_dummy,plot_option);	
-			}
-			
-			if (dot_bool){
-				plot_in_dot(dot_fig_name.c_str(), net_dummy,plot_option);			
-			}
-			
-			if (print_tree || plot_bool || dot_bool){
-				return my_exit();
-			}
 						
 			if (!samples_bool){
 				total_lineage=net_dummy.tax_name.size();
@@ -477,10 +474,6 @@ int main(int argc, char *argv[]){
 			compute_gt_frequencies(gt_tree_str_s, freq_file_name);
 		}
 		
-		int sys=system("cat log_file");		
-	}
-	return 0;
-}
 
 
 

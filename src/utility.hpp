@@ -46,45 +46,6 @@ using namespace std;
  
 
 
-//AC::AC(){
-	//pAC=0.0;
-	//}
-class CAC{
-	public:
-	vector < unsigned int > alive_lineages; 
-	vector < class AC* > child_AC;
-	
-		unsigned int branch_index;
-	double pCAC;
-		CAC (){
-		//pAC=0.0;
-		pCAC=0.0;
-	}
-};
- 
-class AC{
-	public:
-	vector < unsigned int > alive_lineages; 
-	vector < unsigned int > tip_starting_alive_lineages;
-// 	vector < unsigned int > starting_alive_lineages; should be replaced by
-	//vector < AC *> starting_AC;
-
-	unsigned int branch_index;
-	//vector < int > num_of_lineages_coal_child_AC;
-	//vector < AC* > child_AC;
-	vector < class CAC * > child_CAC;
-	
-	//vector < vector < AC* > > child_AC; /*! \todo !!! change to this, instead of vector < AC* > child_AC, some of AC may have multiple ways to be formed */
-	double pAC;
-
-	AC (){
-		pAC=0.0;
-		//pCAC=0.0;
-	}
-};
-
-
-
 
 
 /*! \brief Node of a tree or network, it also represent the branch between this node and its parent node
@@ -206,18 +167,15 @@ void rewrite_node_content(vector <Node*> Net_ptr);
 string construct_adding_new_Net_str(Net old_Net);
 int ranking(Node *current);
 //vector <string> all_n_tax_gene_tree(unsigned int tax_num);
-void plot_in_latex(const char* file_name, Net net_dummy, int plot_option);
-void plot_in_latex_file(const char* file_name, Net net_dummy, int plot_option);
-void plot_in_dot(const char* file_name, Net net_dummy, int plot_option);
 //void plot_in_latex(const char* file_name, string net_str, int plot_option);
 //void plot_in_latex_file(const char* file_name, string net_str, int plot_option);
 //void plot_in_dot(const char* file_name, string net_str, int plot_option);
-double factorial(double a);	
-double n_permu_a(double n, double a);
-double n_choose_k(double n, double k);
-int factorial_int(int a);	
-int n_permu_a_int(int n, int a);
-int n_choose_k_int(int n, int k);
+//double factorial(double a);	
+//double n_permu_a(double n, double a);
+//double n_choose_k(double n, double k);
+//int factorial_int(int a);	
+//int n_permu_a_int(int n, int a);
+//int n_choose_k_int(int n, int k);
 void appending_debug_file(string debug_file_input);
 void appending_log_file(string log_file_input);/*!< \todo change string to char* type ??*/ 
 string remove_interior_label(string in_str);
@@ -259,6 +217,43 @@ vector <string> read_input_lines(char inchar[]);
 string read_input_para(char inchar[],string in_str);
 bool is_num(char inchar[]);
 
+
+
+
+/*! \brief Compute factorial of a \return double a! */
+template<class T>
+T factorial (T a){
+	if (a > 1){
+		return (a * factorial (a-1));}
+	else{
+		return (1);}
+}
+
+
+/*! \brief Compute a permutations of n \return double */
+template<class T>
+T n_permu_a (T n, T a){
+	if (a>1){
+		return (n*n_permu_a(n-1,a-1));
+	}
+	else{
+		if (a==1){
+			return (n);
+		}
+		else{
+			return (1);
+		}
+	}
+}
+
+/*! \brief Compute n choose k \return double */
+template<class T>
+T n_choose_k(T n, T k){
+	if (k<(n/2)){
+		return (n_choose_k(n,n-k));}
+	else{
+		return (n_permu_a(n,k)/factorial(k));}
+}
 
 
 
