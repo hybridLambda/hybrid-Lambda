@@ -28,15 +28,26 @@
 #include"sim_gt.hpp"
 #include"mtrand.h"
 
-//action_board::action_board(){
-	
-//}
+action_board::action_board(){
+	sim_mut_unit_bool=false;
+	sim_num_gener_bool=false;
+	sim_num_mut_bool=false;
+	mono_bool=false;
+	Si_num_bool=false;
+	//total_brchlen_bool=false;
+	gene_tree_file="GENE_TREE";
+}
 
 action_board::action_board(int argc, char *argv[]){
-	action_board();
-		
-	int argc_i=1;
-	while( argc_i < argc ){
+	sim_mut_unit_bool=false;
+	sim_num_gener_bool=false;
+	sim_num_mut_bool=false;
+	mono_bool=false;
+	Si_num_bool=false;
+	//total_brchlen_bool=false;
+	gene_tree_file="GENE_TREE";		
+	
+	for(int argc_i=1; argc_i < argc;argc_i++ ){
 		std::string argv_i(argv[argc_i]);
 		if (argv_i=="-sim_mut_unit"){
 			sim_mut_unit_bool=true;
@@ -44,7 +55,7 @@ action_board::action_board(int argc, char *argv[]){
 		if (argv_i=="-sim_num_gener"){
 			sim_num_gener_bool=true;
 		}
-		if (argv_i=="-sim_num_mut"){
+		if (argv_i=="-sim_num_mut" || argv_i=="-seg"){
 			sim_num_mut_bool=true;
 		}
 		if (argv_i=="-sim_Si_num"){
@@ -52,27 +63,49 @@ action_board::action_board(int argc, char *argv[]){
 			sim_num_mut_bool=true;
 			check_and_remove("out_table");
 		}
-		if (argv_i=="-seg"){
-			//sites_data_bool=true;
-			sim_num_mut_bool=true;
+		//if (argv_i=="-seg"){
+			////sites_data_bool=true;
+			//sim_num_mut_bool=true;
+		//}
+		if (argv_i=="-mono"){
+			mono_bool=true;
 		}
+		if (argv_i=="-GENE" || argv_i=="-gF"){
+			gene_tree_file=argv[argc_i+1];
+			argc_i++;
+		}
+		
 
 	}
 }
 sim::param::param(){
 	mutation_rate=0.00005;
 	num_sim_gt=1;
-	pop_size=10000;
-	pop_size_string_bool=false;
-	mm=2.0;
+	//pop_size=10000;
+	//pop_size_string_bool=false;
+	//mm=2.0;
+	pop_bool=false;
 	mm_bool=false;
-
+	
+	num_gener_bool=false;
+	sp_coal_unit_bool=false;
 }
 
 sim::param::param(int argc, char *argv[]){
-	param();
-		
+	mutation_rate=0.00005;
+	num_sim_gt=1;
+	//pop_size=10000;
+	//pop_size_string_bool=false;
+	//mm=2.0;
+	pop_bool=false;
+	mm_bool=false;
+	
+	num_gener_bool=false;
+	sp_coal_unit_bool=false;		
 	int argc_i=1;
+	//string pop_bool;
+		int total_lineage=0;
+
 	while( argc_i < argc ){
 		
 		std::string argv_i(argv[argc_i]);
@@ -85,12 +118,12 @@ sim::param::param(int argc, char *argv[]){
 				sp_coal_unit_bool=true;
 			}
 			if (sp_coal_unit_bool && num_gener_bool){
-				cout<<"Species tree branch length should only be in Coalescent unit or number of generations. Choose either -sp_num_gener or -sp_coal_unit"<<endl;
-				return my_exit();
+				throw std::invalid_argument("Species tree branch length should only be in Coalescent unit or number of generations. Choose either -sp_num_gener or -sp_coal_unit");
 			}
 			net_str=read_input_line(argv[argc_i+1]);
+			argc_i++;
+
 		}
-		
 		
 		
 		if (argv_i=="-mu"){
@@ -103,54 +136,66 @@ sim::param::param(int argc, char *argv[]){
 			argc_i++;
 		}
 		
-		if (argv_i=="-pop"){
-			//pop_size_bool=true;
-			//string s(argv[argc_i+1]);
-			//istringstream pop_size_str(s);
-			//pop_size_str>>pop_size;
-			read_input_to_param<double>(argv[argc_i+1],pop_size);
-			//sp_string_pop_size=write_para_into_tree(net_str, pop_size);
-			argc_i++;
-		}
+
 		if (argv_i=="-mm"){
 			mm_bool=true;
+			//read_input_to_param<double>(argv[argc_i+1],mm);
 			para_string=read_input_para(argv[argc_i+1],net_str);
+			argc_i++;
 		}
 			
 		if (argv_i=="-pop"){
 			pop_bool=true;
-			pop_size_string=read_input_para(argv[argc_i+1],net_str);
-			//cout<<pop_size_string<<endl;
+			sp_string_pop_size=read_input_para(argv[argc_i+1],net_str);
+			argc_i++;
 		}
 		
-		//if (argv_i=="-pop_string"){
-			//pop_size_string_bool=true;
-			////pop_size_file.open(argv[argc_i+1]);
-			////getline (pop_size_file,pop_size_string);
-			////pop_size_file.close();
-			//sp_string_pop_size=read_input_line(argv[argc_i+1]);
-			//argc_i++;
-
-		//}
-		//if (argv_i=="-nsam"){ // if scrm is not called, use this option read in the number of samples
-			////read_input_to_int(argv[argc_i+1],nsam);
-			//read_input_to_param<int>(argv[argc_i+1],nsam);
-			//argc_i++;
-		//}
-	//}
-			if ((!pop_size_bool) && (!pop_size_string_bool) && (!pop_bool)){
-			//	pop_size_string=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
-				if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
-				//	appending_log_file("Default population size of 10000 on all branches");
+			//if ((!pop_size_bool) && (!pop_size_string_bool) && (!pop_bool)){
+			////	pop_size_string=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
+				//if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
+				////	appending_log_file("Default population size of 10000 on all branches");
 					
-			//	}
+				//}
+			//}
+		if (argv_i=="-S" ){
+			//samples_bool=true;
+			for (int argc_j=argc_i+1;argc_j<argc;argc_j++){
+				string s(argv[argc_j]);
+				if (!isdigit(s[0])){
+					break;
+				}
+				istringstream pop_num_str(s);
+				int pop_num;
+				pop_num_str>>pop_num;
+				sample_size.push_back(pop_num);
+				total_lineage=total_lineage+pop_num;
+				
 			}
-			
+		}
+		argc_i++;
+	}
 	
-	sp_string_pop_size=rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
+	
+			if (!mm_bool){
+
+				para_string=write_para_into_tree(net_str, 2.0); // If coalescent parameter is ungiven, use Kingman coalescent as default
+				//appending_log_file("Default Kingman coalescent on all branches");
+			}
+	
+			//if ((!pop_size_bool) && (!pop_size_string_bool)){
+			//if (!pop_bool){
+			if (!pop_bool){
+				sp_string_pop_size=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
+				//if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
+					//appending_log_file("Default population size of 10000 on all branches");
+					
+				//}
+			}
+
+		sp_string_pop_size=rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
+
 
 }
-
 
 
 

@@ -45,23 +45,26 @@ extern string gene_tree_file;
 namespace sim{
 	class param{
 		public:
-		param();
-		param(int argc, char *argv[]);
-		
-		int num_sim_gt;
-		double mutation_rate;
-		double pop_size;
-		double mm;
-		bool pop_size_string_bool;
-		bool mm_bool;
-		string sp_string_coal_unit;
-		string sp_string_pop_size;
-		string para_string;
-		vector < int > sample_size;
-		
-		//,action_board my_action
-
-
+			param(int argc, char *argv[]);
+			
+			int num_sim_gt;
+			double mutation_rate;
+			//double pop_size;
+			//double mm;
+			//bool pop_size_string_bool;
+			bool mm_bool;
+			bool pop_bool;
+			string sp_string_coal_unit;
+			string sp_string_pop_size;
+			string para_string;
+			vector < int > sample_size;
+				string net_str;
+			
+			//,action_board my_action
+			bool num_gener_bool;
+			bool sp_coal_unit_bool;
+		private:
+			param();
 	};
 }
 
@@ -75,15 +78,9 @@ class action_board{
 	bool mono_bool;
 	bool Si_num_bool;
 	//bool total_brchlen_bool;
+	string gene_tree_file;
 	
-	action_board(){
-		sim_mut_unit_bool=false;
-		sim_num_gener_bool=false;
-		sim_num_mut_bool=false;
-		mono_bool=false;
-		Si_num_bool=false;
-		//total_brchlen_bool=false;
-	}
+	action_board();
 	action_board(int argc, char *argv[]);
 };
 

@@ -21,23 +21,29 @@ using namespace std;
 
 namespace hybridLambda{
 	class param{
-		public:
-				
-			size_t seed;			
+		public:	
+			size_t seed;				
+			bool simulation_bool;
 			bool help;
-			bool log_bool;
-			string log_NAME;
 			bool freq_bool;
 			bool print_tree;
 			bool plot_bool;
-			bool sites_data_bool;
+			bool log_bool;
+			string log_NAME;
+			bool seg_bool;
+			//bool mono_bool;
+			
+			//bool sites_data_bool;
+			
+
+			
 			vector <string> gt_tree_str_s;
 			vector <string> mt_tree_str_s;
 			
-			param();
 			param(int argc, char *argv[]);
 		
 		private:
+			param();
 		
 	};
 	

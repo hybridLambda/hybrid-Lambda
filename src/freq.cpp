@@ -27,28 +27,25 @@
 #include"freq.hpp"
 
 freq::param::param(){
-	gene_freq_bool=false;
-	gene_tree_file="GENE_TREE";
-	reproduce_GENE_trees=true;
+	//gene_freq_bool=false;
+	//gene_tree_file="GENE_TREE";
+	//reproduce_GENE_trees=true;
 	freq_file_name="freq_out";
 
 	}
 
-freq::param::param(int argc, char *argv[]){
-			int argc_i=1;
-		while (argc_i < argc){
-			std::string argv_i(argv[argc_i]);
-			
-			if (argv_i=="-freq_file"|| argv_i=="-fF"){
-			
-				freq_file_name=argv[argc_i+1];
-			}
-			
-			
-		}
-		check_and_remove(freq_file_name.c_str());	
+freq::param::param(int argc, char *argv[]){	
+	freq_file_name="freq_out";
+	for (int argc_i=1;argc_i < argc;argc_i++){
+		std::string argv_i(argv[argc_i]);
+		if (argv_i=="-freq_file"|| argv_i=="-fF"){
+			freq_file_name=argv[argc_i+1];
 		
+			break;
+		}	
 	}
+	check_and_remove(freq_file_name.c_str());			
+}
 
 
 

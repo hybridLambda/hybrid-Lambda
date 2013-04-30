@@ -3,49 +3,56 @@
 
 
 hybridLambda::param::param(){
+	seed=(unsigned)(time(0));
+	simulation_bool=false;
 	help=false;
+	freq_bool=false;
 	print_tree=false;
+	plot_bool;
 	log_bool=false;
 	log_NAME="LOG";
-	seed=(unsigned)(time(0));
-	freq_bool=false;
-	sites_data_bool=false;
+	seg_bool=false;
 
 };
 
 hybridLambda::param::param(int argc, char *argv[]){
-	param();
-		//if (!seed_bool){
-			//seed=(unsigned)(time(0));
-		//}
-
+	seed=(unsigned)(time(0));
+	simulation_bool=false;
+	help=false;
+	freq_bool=false;
+	print_tree=false;
+	plot_bool;
+	log_bool=false;
+	log_NAME="LOG";
+	seg_bool=false;	int argc_i=1;
+	while (argc_i < argc){
+		std::string argv_i(argv[argc_i]);
 		
-		int argc_i=1;
-		while (argc_i < argc){
-			std::string argv_i(argv[argc_i]);
+		if (argv_i=="-h" || argv_i=="-help"){
+			help=true;
+			print_help();
+		}
 			
-			if (argv_i=="-h" || argv_i=="-help"){
-				help=true;
-				argc_i++;
-			}
-			if (argv_i=="-seed"){
-				read_input_to_param<size_t>(argv[argc_i+1],seed);
-				argc_i++;
-				//string s(argv[argc_i+1]);
-				//istringstream seed_str(s);
-				//seed_str>>seed;
-				//seed_bool=true;
-			}
-			
-			if (argv_i=="-gt"){
-				//reproduce_GENE_trees=false;
-				gt_tree_str_s=read_input_lines(argv[argc_i+1]);
-			}
 
-			if (argv_i=="-mt"){/*! read number of mutations site and simulate segregating sites*/
-				gt_tree_str_s=read_input_lines(argv[argc_i+1]);
-	
-			}
+
+		if (argv_i=="-seed"){
+			read_input_to_param<size_t>(argv[argc_i+1],seed);
+			argc_i++;
+		}
+			
+		if (argv_i=="-gt"){
+			//reproduce_GENE_trees=false;
+			gt_tree_str_s=read_input_lines(argv[argc_i+1]);
+			argc_i++;
+
+		}
+
+		if (argv_i=="-mt"){/*! read number of mutations site and simulate segregating sites*/
+			mt_tree_str_s=read_input_lines(argv[argc_i+1]);
+			argc_i++;
+
+		}
+
 		if (argv_i=="-freq"|| argv_i=="-f" || argv_i=="-freq_file"|| argv_i=="-fF"){
 			freq_bool=true;
 		}
@@ -53,37 +60,22 @@ hybridLambda::param::param(int argc, char *argv[]){
 		if (argv_i=="-plot" || argv_i=="-plot_file" || argv_i=="-plotF" || argv_i=="-dot" || argv_i=="-dot_file" || argv_i=="-dotF"){
 			plot_bool=true;
 		}
+
 		if (argv_i=="-seg"){
-			sites_data_bool=true;
+			seg_bool=true;
 			//sim_num_mut_bool=true;
 		}
-		//if (argv_i=="-plot_file" || argv_i=="-plotF"){
-			//plot_bool=true;
-			//tex_fig_name=argv[argc_i+1];
-		//}
-		//check_and_remove(tex_fig_name.c_str());
-		
-		
-
-		//if (argv_i=="-dot"){
-			//dot_bool=true;
-		//}
-		//if (argv_i=="-dot_file" || argv_i=="-dotF"){
-			//dot_bool=true;
-			//dot_fig_name=argv[argc_i+1];
-		//}
-		
-			if (argv_i=="-print"){
-				print_tree=true;
-			}
-		
+				
+		if (argv_i=="-print"){
+			print_tree=true;
 		}
+			argc_i++;
+	
+	}
 		
-		//srand(seed);	// initialize gnu seed
-		MTRand_closed mt;
-		mt.seed(seed);		// initialize mt seed
-		
-		
+	//srand(seed);	// initialize gnu seed
+	MTRand_closed mt;
+	mt.seed(seed);		// initialize mt seed
 }
 
 

@@ -34,15 +34,14 @@
 namespace freq{
 	class param{
 		public:
-			bool gene_freq_bool;
-			string gene_tree_file;
-			bool reproduce_GENE_trees;
-	string freq_file_name;
-
+			//bool gene_freq_bool;
+			//string gene_tree_file;
+			//bool reproduce_GENE_trees;
+			string freq_file_name;
 		
-		param();
-		param(int argc, char *argv[]);
+			param(int argc, char *argv[]);
 		private:
+			param();
 	};
 }
 
