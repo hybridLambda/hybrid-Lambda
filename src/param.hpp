@@ -1,12 +1,12 @@
 //parameters header file
-#include<iostream>
-#include<string>
-#include<sstream>
-#include<fstream>
-#include<vector>
-#include<iomanip>
-#include<valarray>
-#include<stdexcept>
+//#include<iostream>
+//#include<string>
+//#include<sstream>
+//#include<fstream>
+//#include<vector>
+//#include<iomanip>
+//#include<valarray>
+//#include<stdexcept>
 #include"mtrand.h"
 #include"utility.hpp"
 
@@ -27,6 +27,12 @@ namespace hybridLambda{
 			bool help;
 			bool log_bool;
 			string log_NAME;
+			bool freq_bool;
+			bool print_tree;
+			bool plot_bool;
+			bool sites_data_bool;
+			vector <string> gt_tree_str_s;
+			vector <string> mt_tree_str_s;
 			
 			param();
 			param(int argc, char *argv[]);
@@ -41,16 +47,5 @@ namespace hybridLambda{
 	void print_option();	
 }
 
-template<class T>
-void read_input_to_param(char inchar[], T &input)
-{
-	if (isdigit(inchar[0])){
-		std::istringstream para_istrm(inchar);
-		para_istrm >> input;
-	}
-	else{
-            throw std::invalid_argument("Invalid argument type. ");
-	}	
-}
 
 #endif //HYBRDRIDLAMBDA_PARAM_INCLUDED

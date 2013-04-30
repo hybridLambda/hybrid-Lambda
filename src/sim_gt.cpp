@@ -28,26 +28,127 @@
 #include"sim_gt.hpp"
 #include"mtrand.h"
 
-sim::param::param(){
+//action_board::action_board(){
 	
+//}
+
+action_board::action_board(int argc, char *argv[]){
+	action_board();
+		
+	int argc_i=1;
+	while( argc_i < argc ){
+		std::string argv_i(argv[argc_i]);
+		if (argv_i=="-sim_mut_unit"){
+			sim_mut_unit_bool=true;
+		}
+		if (argv_i=="-sim_num_gener"){
+			sim_num_gener_bool=true;
+		}
+		if (argv_i=="-sim_num_mut"){
+			sim_num_mut_bool=true;
+		}
+		if (argv_i=="-sim_Si_num"){
+			Si_num_bool=true;
+			sim_num_mut_bool=true;
+			check_and_remove("out_table");
+		}
+		if (argv_i=="-seg"){
+			//sites_data_bool=true;
+			sim_num_mut_bool=true;
+		}
+
+	}
+}
+sim::param::param(){
+	mutation_rate=0.00005;
+	num_sim_gt=1;
+	pop_size=10000;
+	pop_size_string_bool=false;
+	mm=2.0;
+	mm_bool=false;
+
 }
 
 sim::param::param(int argc, char *argv[]){
 	param();
 		
-		int argc_i=1;
+	int argc_i=1;
 	while( argc_i < argc ){
 		
 		std::string argv_i(argv[argc_i]);
 		
+		if (argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i=="-spcu" || argv_i=="-spng"){
+			if (argv_i=="-sp_num_gener" || argv_i=="-spng"){
+				num_gener_bool=true;
+			}
+			if (argv_i=="-sp_coal_unit" || argv_i=="-spcu"){
+				sp_coal_unit_bool=true;
+			}
+			if (sp_coal_unit_bool && num_gener_bool){
+				cout<<"Species tree branch length should only be in Coalescent unit or number of generations. Choose either -sp_num_gener or -sp_coal_unit"<<endl;
+				return my_exit();
+			}
+			net_str=read_input_line(argv[argc_i+1]);
+		}
+		
+		
+		
+		if (argv_i=="-mu"){
+			read_input_to_param<double>(argv[argc_i+1],mutation_rate);
+			argc_i++;
+		}
+				
+		if (argv_i=="-num"){
+			read_input_to_param<int>(argv[argc_i+1],num_sim_gt);
+			argc_i++;
+		}
+		
+		if (argv_i=="-pop"){
+			//pop_size_bool=true;
+			//string s(argv[argc_i+1]);
+			//istringstream pop_size_str(s);
+			//pop_size_str>>pop_size;
+			read_input_to_param<double>(argv[argc_i+1],pop_size);
+			//sp_string_pop_size=write_para_into_tree(net_str, pop_size);
+			argc_i++;
+		}
+		if (argv_i=="-mm"){
+			mm_bool=true;
+			para_string=read_input_para(argv[argc_i+1],net_str);
+		}
+			
+		if (argv_i=="-pop"){
+			pop_bool=true;
+			pop_size_string=read_input_para(argv[argc_i+1],net_str);
+			//cout<<pop_size_string<<endl;
+		}
+		
+		//if (argv_i=="-pop_string"){
+			//pop_size_string_bool=true;
+			////pop_size_file.open(argv[argc_i+1]);
+			////getline (pop_size_file,pop_size_string);
+			////pop_size_file.close();
+			//sp_string_pop_size=read_input_line(argv[argc_i+1]);
+			//argc_i++;
+
+		//}
 		//if (argv_i=="-nsam"){ // if scrm is not called, use this option read in the number of samples
 			////read_input_to_int(argv[argc_i+1],nsam);
 			//read_input_to_param<int>(argv[argc_i+1],nsam);
 			//argc_i++;
 		//}
-	}
+	//}
+			if ((!pop_size_bool) && (!pop_size_string_bool) && (!pop_bool)){
+			//	pop_size_string=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
+				if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
+				//	appending_log_file("Default population size of 10000 on all branches");
+					
+			//	}
+			}
+			
 	
-	
+	sp_string_pop_size=rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
+
 }
 
 
@@ -103,7 +204,14 @@ int poisson_rand_var(double lambda){
 
 
 //sim_one_gt::sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
-sim_one_gt::sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,action_board my_action){
+//sim_one_gt::sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,action_board my_action){
+sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
+	string sp_string_coal_unit=sim_param.sp_string_coal_unit;
+	string sp_string_pop_size=sim_param.sp_string_pop_size;
+	string para_string=sim_param.para_string;
+	vector < int > sample_size=sim_param.sample_size;
+	double mutation_rate=sim_param.mutation_rate;
+	
 	bool sim_num_gener_bool=my_action.sim_num_gener_bool;
 	if (my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool){
 		sim_num_gener_bool=true;
@@ -781,8 +889,15 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 
 /*! \brief  sim_n_gt constructor */
 //sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
-sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action){
-
+//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action){
+sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action){
+		string sp_string_coal_unit=sim_param.sp_string_coal_unit;
+	string sp_string_pop_size=sim_param.sp_string_pop_size;
+	string para_string=sim_param.para_string;
+	vector < int > sample_size=sim_param.sample_size;
+	double mutation_rate=sim_param.mutation_rate;
+	int num_sim_gt=sim_param.num_sim_gt;
+	
 	ofstream sim_gt_file_coal_unit;
 	string gene_tree_file_coal_unit=gene_tree_file+"_coal_unit";
 	sim_gt_file_coal_unit.open (gene_tree_file_coal_unit.c_str(), ios::out | ios::app | ios::binary); 
@@ -809,7 +924,8 @@ sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string
 
 
 	for (int i=0;i<num_sim_gt;i++){
-		sim_one_gt sim_gt_string(sp_string_coal_unit, sp_string_pop_size, para_string, sample_size,  mutation_rate,my_action);
+		//sim_one_gt sim_gt_string(sp_string_coal_unit, sp_string_pop_size, para_string, sample_size,  mutation_rate,my_action);
+		sim_one_gt sim_gt_string(sim_param,my_action);
 		gt_string_coal_unit_s.push_back(sim_gt_string.gt_string_coal_unit);
 		if (my_action.sim_num_mut_bool){
 			gt_string_mut_num_s.push_back(sim_gt_string.gt_string_mut_num);

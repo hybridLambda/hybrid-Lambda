@@ -248,12 +248,12 @@ void appending_log_file(string log_file_input /*! Information added*/){
 			
 			//appending_log_file(pop_size_string);
 			
-			if (!mutation_rate_bool){
-				mutation_rate=0.00005;
-				if (my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
-					appending_log_file("Default mutation rate 0.00005");
-				}
-			}
+			//if (!mutation_rate_bool){
+				//mutation_rate=0.00005;
+				//if (my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
+					//appending_log_file("Default mutation rate 0.00005");
+				//}
+			//}
 			
 			pop_size_string=rewrite_pop_string_by_para_string(para_string,pop_size_string);  // checking if modify pop_size_string is needed,
 	
@@ -271,9 +271,9 @@ void appending_log_file(string log_file_input /*! Information added*/){
 		
 			append_seed_to_log_file(seed);
 
-			if (!sim_n_gt_bool){
-				num_sim_gt=1;
-			}
+			//if (!sim_n_gt_bool){
+				//num_sim_gt=1;
+			//}
 			if (my_action.Si_num_bool){
 				outtable_header(total_lineage);
 			}

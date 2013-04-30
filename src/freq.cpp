@@ -38,16 +38,15 @@ freq::param::param(int argc, char *argv[]){
 			int argc_i=1;
 		while (argc_i < argc){
 			std::string argv_i(argv[argc_i]);
-			if (argv_i=="-freq"|| argv_i=="-f"){
-				gene_freq_bool=true;
-			}
+			
 			if (argv_i=="-freq_file"|| argv_i=="-fF"){
-				gene_freq_bool=true;
+			
 				freq_file_name=argv[argc_i+1];
 			}
-			check_and_remove(freq_file_name.c_str());	
+			
 			
 		}
+		check_and_remove(freq_file_name.c_str());	
 		
 	}
 

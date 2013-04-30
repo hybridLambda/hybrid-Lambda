@@ -34,7 +34,6 @@
 #include<iomanip>
 #include<valarray>
 #include<cassert>
-
 #include<stdexcept>
 
 using namespace std;
@@ -48,6 +47,17 @@ using namespace std;
  */
  
 
+template<class T>
+void read_input_to_param(char inchar[], T &input)
+{
+	if (isdigit(inchar[0])){
+		std::istringstream para_istrm(inchar);
+		para_istrm >> input;
+	}
+	else{
+            throw std::invalid_argument("Invalid argument type. ");
+	}	
+}
 
 
 bool start_of_tax_name(string in_str,size_t i);

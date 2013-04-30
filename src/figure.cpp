@@ -3,7 +3,7 @@
 
 
 figure::param::param(){
-	 plot_bool=false;
+	 //plot_bool=false;
 	 dot_bool=false;
 	 plot_option;//=0;
 	 plot_label=false;

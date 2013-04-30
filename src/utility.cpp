@@ -29,7 +29,7 @@
 
 
 #include"utility.hpp"
-extern bool debug_bool;
+//extern bool debug_bool;
 //extern bool log_file_bool;
 
 
@@ -364,7 +364,10 @@ string read_input_line(char inchar[]){
 		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
 		out_str=dummy_str;
 		}else{
-			cout<<"Error: check input '"<<inchar<<"'"<<endl;
+			//cout<<"Error: check input '"<<inchar<<"'"<<endl;
+			string error_msg(inchar);
+			
+			throw std::invalid_argument("Invalid input file. " +error_msg);
 		}
 	}
 	in_file.close();
@@ -390,7 +393,9 @@ vector <string> read_input_lines(char inchar[]){
 			out_str=dummy_str;
 			out_vec.push_back(out_str);
 		}else{
-			cout<<"Error: check input '"<<inchar<<"'"<<endl;
+			//cout<<"Error: check input '"<<inchar<<"'"<<endl;
+			string error_msg(inchar);
+			throw std::invalid_argument("Invalid input file. " +error_msg);
 		}
 	}
 	in_file.close();

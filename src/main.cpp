@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 	//const char * freq_file_str;
 	vector < int > sample_size;
 	debug_bool=false;
-	bool sim_n_gt_bool=false;
+	//bool sim_n_gt_bool=false;
 	
 	string net_str;
 	//ifstream gt_tree_file;
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 	//string gt_tree_str;
 	//string mt_tree_str;
 
-	int num_sim_gt;
+
 	
 	
 	string para_string;
@@ -82,7 +82,6 @@ int main(int argc, char *argv[]){
 	double multi_merge_para;
 
 	string pop_size_string;
-	double pop_size;//=10000;
 	bool pop_bool=false;
 	
 	bool pop_size_string_bool=false;
@@ -97,8 +96,8 @@ int main(int argc, char *argv[]){
 	bool sites_data_bool=false;
 	bool sp_coal_unit_bool=false;
 
-	double mutation_rate;//=0.00005;
-	bool mutation_rate_bool=false;
+	//double mutation_rate;//=0.00005;
+	//bool mutation_rate_bool=false;
 
 	
 
@@ -171,20 +170,6 @@ int main(int argc, char *argv[]){
 		
 
 		
-		
-		if (argv_i=="-num"){
-			sim_n_gt_bool=true;
-			string s(argv[argc_i+1]);
-			istringstream num_sim_gt_str(s);
-			num_sim_gt_str>>num_sim_gt;
-		}
-		
-		if (argv_i=="-seed"){
-			string s(argv[argc_i+1]);
-			istringstream seed_str(s);
-			seed_str>>seed;
-			seed_bool=true;
-		}
 
 		
 		
@@ -232,36 +217,30 @@ int main(int argc, char *argv[]){
 			para_string=read_input_para(argv[argc_i+1],net_str);
 		}
 		
-		if (argv_i=="-pop"){
-			pop_bool=true;
-			pop_size_string=read_input_para(argv[argc_i+1],net_str);
-			//cout<<pop_size_string<<endl;
-		}
+		//if (argv_i=="-pop"){
+			//pop_bool=true;
+			//pop_size_string=read_input_para(argv[argc_i+1],net_str);
+			////cout<<pop_size_string<<endl;
+		//}
 		
 		
-		if (argv_i=="-pop_size"){
-			pop_size_bool=true;
-			string s(argv[argc_i+1]);
-			istringstream pop_size_str(s);
-			pop_size_str>>pop_size;
-			pop_size_string=write_para_into_tree(net_str, pop_size);
-		}
 
-		if (argv_i=="-pop_string"){
-			pop_size_string_bool=true;
-			//pop_size_file.open(argv[argc_i+1]);
-			//getline (pop_size_file,pop_size_string);
-			//pop_size_file.close();
-			pop_size_string=read_input_line(argv[argc_i+1]);
 
-		}
+		//if (argv_i=="-pop_string"){
+			//pop_size_string_bool=true;
+			////pop_size_file.open(argv[argc_i+1]);
+			////getline (pop_size_file,pop_size_string);
+			////pop_size_file.close();
+			//pop_size_string=read_input_line(argv[argc_i+1]);
 
-		if (argv_i=="-mu"){
-			mutation_rate_bool=true;
-			string s(argv[argc_i+1]);
-			istringstream mut_rate_str(s);
-			mut_rate_str>>mutation_rate;
-		}
+		//}
+
+		//if (argv_i=="-mu"){
+			//mutation_rate_bool=true;
+			//string s(argv[argc_i+1]);
+			//istringstream mut_rate_str(s);
+			//mut_rate_str>>mutation_rate;
+		//}
 		
 
 		if (argv_i=="-samples" || argv_i=="-S" ){
@@ -292,21 +271,21 @@ int main(int argc, char *argv[]){
 
     try {
 		time_t start_time = time(0);
-	    hybridLambda::param::param hybrid_para(argc, argv);
-	    sim::param::param sim_para(argc, argv);
-	    figure::param::param figure_para(argc, argv);
+	    hybridLambda::param hybrid_para(argc, argv);
+	    sim::param sim_para(argc, argv);
+	    figure::param figure_para(argc, argv);
 	          time_t end_time = time(0);
       
-      std::cout << "Simulation took about " << end_time - start_time 
-                << " second(s)" << std::endl;
+      std::cout << "Simulation took about " << end_time - start_time  << " second(s)" << std::endl;
                 
       if (hybrid_para.log_bool){          
 				std::ofstream log_file;
 				log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
 				log_file << "Simulation took about " << end_time - start_time << " second(s) \n";
 				log_file.close();
-			}
 		int sys=system("cat log_file");		
+			}
+		
 
     }
     catch (const exception &e)

@@ -48,11 +48,17 @@ namespace sim{
 		param();
 		param(int argc, char *argv[]);
 		
+		int num_sim_gt;
+		double mutation_rate;
+		double pop_size;
+		double mm;
+		bool pop_size_string_bool;
+		bool mm_bool;
 		string sp_string_coal_unit;
 		string sp_string_pop_size;
 		string para_string;
 		vector < int > sample_size;
-		double mutation_rate;
+		
 		//,action_board my_action
 
 
@@ -61,7 +67,7 @@ namespace sim{
 
 
 class action_board{
-public:
+	public:
 
 	bool sim_mut_unit_bool;
 	bool sim_num_gener_bool;
@@ -78,7 +84,7 @@ public:
 		Si_num_bool=false;
 		//total_brchlen_bool=false;
 	}
-	
+	action_board(int argc, char *argv[]);
 };
 
 
@@ -113,8 +119,8 @@ class sim_one_gt{
 	
 	
 	//sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-	sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,action_board my_action);
-
+	//sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,action_board my_action);
+	sim_one_gt(sim::param sim_param,action_board my_action);
 	
 	//sim_one_gt(string Net_string, vector < int > sample_size, bool multi_merge_bool,double multi_merge_para);
 	//void clear(){
@@ -162,8 +168,8 @@ class sim_n_gt{
 	//sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
 	//sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
 	//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-	sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
-
+	//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
+sim_n_gt(sim::param sim_param,action_board my_action);
 	void clear(){
 		gt_string_coal_unit_s.clear();
 		gt_string_mut_num_s.clear();
