@@ -36,16 +36,19 @@
 #include<cassert>
 #include<stdexcept>
 
+//Unless compiled with options NDEBUG, we will produce a debug output using 
+//'dout' instead of cout and execute (expensive) assert statements.
+#ifndef NDEBUG
+#define dout std::cout
+#else
+#pragma GCC diagnostic ignored "-Wunused-value"
+#define dout 0 && std::cout
+#endif
+
 using namespace std;
 
 #ifndef GLOBAL_H
 #define GLOBAL_H	
-
-
-
-/*! 
- */
- 
 
 template<class T>
 void read_input_to_param(char inchar[], T &input)
@@ -62,37 +65,20 @@ void read_input_to_param(char inchar[], T &input)
 
 bool start_of_tax_name(string in_str,size_t i);
 
-
-//vector <string> all_n_tax_gene_tree(unsigned int tax_num);
-//void plot_in_latex(const char* file_name, string net_str, int plot_option);
-//void plot_in_latex_file(const char* file_name, string net_str, int plot_option);
-//void plot_in_dot(const char* file_name, string net_str, int plot_option);
-//double factorial(double a);	
-//double n_permu_a(double n, double a);
-//double n_choose_k(double n, double k);
-//int factorial_int(int a);	
-//int n_permu_a_int(int n, int a);
-//int n_choose_k_int(int n, int k);
 void appending_debug_file(string debug_file_input);
-//void appending_log_file(string log_file_input);/*!< \todo change string to char* type ??*/ 
 void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/);
 
 string remove_interior_label(string in_str);
 string remove_brchlen(string in_str);
 string tree_topo(string in_str);
 
-
-//valarray <int>  det_x_node (Net net_dummy);
-//void print_help();
 string rm_and_hash_sign(string in_str);
 string rm_and_sign(string in_str);
 string rm_hash_sign(string in_str);
 
-
 void check_and_remove(const char* file_name);
 
 int my_exit();
-
 
 size_t Parenthesis_balance_index_backwards(string in_str,size_t i);
 size_t Parenthesis_balance_index_forwards(string in_str,size_t i);
@@ -114,8 +100,6 @@ string read_input_line(char inchar[]);
 vector <string> read_input_lines(char inchar[]);
 string read_input_para(char inchar[],string in_str);
 bool is_num(char inchar[]);
-
-
 
 
 /*! \brief Compute factorial of a \return double a! */
@@ -152,8 +136,5 @@ T n_choose_k(T n, T k){
 	else{
 		return (n_permu_a(n,k)/factorial(k));}
 }
-
-
-
 
 #endif

@@ -8,9 +8,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		checking_Parenthesis(old_string);
 		net_str=checking_labeled(old_string);
 	
-		//if (debug_bool){
-			//dout<<"Net::Net flag1"<<endl;
-		//}
+		//dout<<"Net::Net flag1"<<endl;
 
 		int net_str_len=net_str.length();
 		vector<string> labels;
@@ -136,9 +134,8 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 				//descndnt.push_back(intial_descndnt);
 		//}
 		
-		//if (debug_bool){
-			//cout<<"Net::Net flag3"<<endl;
-		//}
+			//dout<<"Net::Net flag3"<<endl;
+		
 		vector <Node*> Net_nodes_ptr;
 		for (unsigned int i=0;i<Net_nodes.size();i++){
 			Net_nodes[i].node_index=i;
@@ -184,9 +181,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		}
 		//cout<<descndnt.size()<<endl;
 		
-		//if (debug_bool){
-			//cout<<"Net::Net flag4"<<endl;
-		//}
+			//dout<<"Net::Net flag4"<<endl;
 		find_tip(Net_nodes_ptr.back());
 		//cout<<"number of child " <<Net_nodes_ptr.back()->child.size()<<endl;
 		//cout<<"node content "<<Net_nodes_ptr.back()->node_content<<endl;
@@ -198,15 +193,15 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			descndnt.push_back(descndnt_dummy);
 			valarray <int> descndnt2_dummy(0,tip_name.size());
 			descndnt2.push_back(descndnt2_dummy);
-			//cout<<Net_nodes_ptr[i]->name<<"  "<<Net_nodes_ptr[i]->label<<"  "<<Net_nodes_ptr[i]->tip_bool << " ";
+			//dout<<Net_nodes_ptr[i]->name<<"  "<<Net_nodes_ptr[i]->label<<"  "<<Net_nodes_ptr[i]->tip_bool << " ";
 			for (unsigned int tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
-				//cout<<Net_nodes_ptr[i]->label<<"   "<<tax_name[tax_name_i]<<"  ";
+				//dout<<Net_nodes_ptr[i]->label<<"   "<<tax_name[tax_name_i]<<"  ";
 				if (find_descndnt(Net_nodes_ptr[i],tax_name[tax_name_i])){
 					descndnt[i][tax_name_i]=1;
 				}
-				//cout<<descndnt[i][tax_name_i];
+				//dout<<descndnt[i][tax_name_i];
 			}
-			//cout<<endl;
+			//dout<<endl;
 			for (unsigned int tip_name_i=0;tip_name_i<tip_name.size();tip_name_i++){
 				if (find_descndnt2(Net_nodes_ptr[i],tip_name[tip_name_i])){
 					descndnt2[i][tip_name_i]=1;
@@ -214,16 +209,13 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			}
 			Net_nodes[i].num_descndnt=descndnt[i].sum();
 		}
-		//if (debug_bool){
-			//cout<<"Net::Net flag5"<<endl;
-		//}
+			//dout<<"Net::Net flag5"<<endl;
 		
 		//num_descndnt_interior(Net_nodes_ptr.back()); //replace by following
 		for (unsigned int i=0;i<Net_nodes_ptr.size();i++){
 			for (unsigned int j=0;j<Net_nodes_ptr.size();j++){
 				if (i!=j){
 					valarray <int> descndnt_diff=(descndnt[i]-descndnt[j]);
-					//cout<<"hea"<<endl;
 					if (descndnt_diff.min() >= 0 && Net_nodes[i].rank > Net_nodes[j].rank && Net_nodes[j].rank>=2){
 						Net_nodes_ptr[i]->num_descndnt_interior=Net_nodes_ptr[i]->num_descndnt_interior+1;
 						Net_nodes_ptr[i]->descndnt_interior_node.push_back(Net_nodes_ptr[j]);
@@ -232,18 +224,16 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 				}
 			
 			}
-			//cout<<"checking #interior_des "<<Net_nodes_ptr[i]->num_descndnt_interior<<" "<<Net_nodes_ptr[i]->descndnt_interior_node.size()<<endl;
+			//dout<<"checking #interior_des "<<Net_nodes_ptr[i]->num_descndnt_interior<<" "<<Net_nodes_ptr[i]->descndnt_interior_node.size()<<endl;
 		}
-		//if (debug_bool){
-			//cout<<"Net::Net flag6"<<endl;
-		//}	
+			
 		int e_num_old=0;
 		enumerate_internal_branch(Net_nodes_ptr.back(),e_num_old);
-		//if (debug_bool){
-			//cout<<"Net::Net flag6.5"<<endl;
-		//}
-		//cout<<descndnt.size()<<endl;
-		//cout<<net_str<<endl;
+		
+			//dout<<"Net::Net flag6.5"<<endl;
+		
+		//dout<<descndnt.size()<<endl;
+		//dout<<net_str<<endl;
 		for (unsigned int i=0;i<Net_nodes.size();i++){
 			//Net_nodes[i].print_tree_Node();
 			//cout<<endl;
@@ -271,9 +261,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			Net_nodes[i].clade.erase(Net_nodes[i].clade.size()-1,1);
 		}
 		
-		//if (debug_bool){
-			//cout<<"Net::Net flag7"<<endl;
-		//}
+
 		//check for coaleased tips(& sign in the tips)
 		bool rewrite_descndnt=false;
 		for (unsigned int i=0;i<Net_nodes.size();i++){
@@ -366,10 +354,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		tax_name.clear();
 		Net_nodes.clear();
 	}
-		
-	//if (debug_bool){
-		//cout<<"Net::Net flag8"<<endl;
-	//}
+	//dout<<"Net constructed"<<endl;
 }
 
 
@@ -481,9 +466,7 @@ int Net::enumerate_internal_branch(Node *current, /*!< pointer to the node that 
 {
 //needs modification, this is not correct.	
 	
-	//if (debug_bool){
-		//cout<<"Net::enumerate_internal_branch start"<<endl;
-	//}
+		//dout<<"Net::enumerate_internal_branch start"<<endl;
 	int e_num_new;
 	if (current->tip_bool){
 		e_num_new=e_num_old;}
@@ -507,9 +490,7 @@ int Net::enumerate_internal_branch(Node *current, /*!< pointer to the node that 
 			//}
 		}
 	}
-	//if (debug_bool){
-		//cout<<"Net::enumerate_internal_branch end"<<endl;
-	//}
+		//dout<<"Net::enumerate_internal_branch end"<<endl;
 	return e_num_new;
 }
 
@@ -536,13 +517,8 @@ bool Net::is_net_func(){
 }
 
 void Net::print_all_node(){
-	//bool debug_switch=false;
 	if ( is_net ){
 		cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
-		//if (debug_switch){
-			//string bug_statement="           label  hybrid hyb_des non-tip parent1 absolute_t brchlen1 parent2 brchlen2 #child #dsndnt #id rank   e_num   Clade ";
-			////appending_debug_file(bug_statement);
-		//}
 		for (unsigned int i=0;i<Net_nodes.size();i++){
 			for (unsigned int j=0;j<descndnt[i].size();j++){
 				cout<<descndnt[i][j];
@@ -599,7 +575,7 @@ string Net::label_interior_node(string in_str /*!< input newick form string */){
 	}
 	string out_str;
 	for (size_t i=0;i<in_str_partition.size();i++){
-		//cout<<in_str_partition[i]<<endl;
+		//dout<<in_str_partition[i]<<endl;
 		out_str=out_str+in_str_partition[i];
 	}
 	return out_str;
@@ -625,15 +601,11 @@ string construct_adding_new_Net_str(Net in_Net){
 string write_para_into_tree(string in_str /*! Externed newick formatted network string*/, 
 double para /*! Coalescent parameter or fixed population sizes */){
 	if (in_str.size()==0){
-		//cout<<""<<endl;
-		//exit(1);;
 		throw std::invalid_argument("Please define the input tree (network).");
 	}
 	Net para_Net(in_str);
 	vector <Node*> para_Net_node_ptr;
-	//if (debug_bool){
 	//	dout<<"write_para_into_tree flag"<<endl;
-	//}
 	for (unsigned int node_i=0;node_i<para_Net.Net_nodes.size();node_i++){
 		Node* new_node_ptr=NULL;
         para_Net_node_ptr.push_back(new_node_ptr);
@@ -643,9 +615,7 @@ double para /*! Coalescent parameter or fixed population sizes */){
 			para_Net_node_ptr[node_i]->brchlen2=para;
 		}
 	}
-	//if (debug_bool){
 	//	dout<<"write_para_into_tree flag"<<para<<endl;
-	//}
 	para_Net_node_ptr.back()->brchlen1=para;
 	rewrite_node_content(para_Net_node_ptr);
 	string para_string=construct_adding_new_Net_str(para_Net);

@@ -99,50 +99,6 @@ size_t Parenthesis_balance_index_forwards(string in_str,size_t i){
 
 
 
-//void label_des_indictr(Node *parent, int des_indictr[], string tax_name[], int tax_counter){
-    //if (parent->num_child==0){
-		//for (int i=0;i<tax_counter;i++){
-			//if (parent->label==tax_name[i] && des_indictr[i]==0){
-				//des_indictr[i]=des_indictr[i]+1;
-			//}
-		//}
-	//}
-	//for (int i_num_child=0;i_num_child<parent->num_child;i_num_child++){
-		//label_des_indictr(parent->child[i_num_child], des_indictr, tax_name, tax_counter);
-    //}
-//}
-
-
-//int compute_num_descndnt_interior(Node* current){
-	//int myreturn=0;
-	//if (current->rank <= 2){
-		//current->num_descndnt_interior=0;
-	//}
-	//else{
-		////int total_num_descndnt_interior=0;
-		//for (int i=0;i<current->num_child;i++){
-			//if (current->child[i]->rank==2){
-				//current->num_descndnt_interior=current->num_descndnt_interior+1;
-			//}
-			//else{
-				//if (current->child[i]->rank>2){
-					//current->num_descndnt_interior=1+current->num_descndnt_interior+num_descndnt_interior(current->child[i]);
-				//}
-				////current->child[i]->num_descndnt_interior=current->child[i]->num_descndnt_interior+1;
-				////child_num_descndnt_interior=num_descndnt_interior(current->child[i_num_child]);
-			//}
-			
-			////total_num_descndnt_interior=total_num_descndnt_interior+child_num_descndnt_interior;
-		//}
-		////current->num_descndnt_interior=total_num_descndnt_interior	
-	//}
-	
-	
-	//return myreturn=current->num_descndnt_interior;
-//}
-
-
-
 
 void appending_debug_file(string debug_file_input){
 	ofstream debug_file;
@@ -166,24 +122,6 @@ void appending_log_file(std::string log_file_NAME,std::string log_file_input /*!
 string remove_interior_label(string in_str/*!< input newick form string */){
 	string out_str;
 	out_str=in_str;
-	//for (size_t char_i=0;char_i<out_str.size();){
-		//if (out_str[char_i]==')' && (isalpha(out_str[char_i+1]) || isdigit(out_str[char_i+1]))){
-		////if (out_str[char_i]==')' && isalpha(out_str[char_i+1]) ){
-			////size_t char_j;
-			////for (char_j=char_i+1;char_j<out_str.size();char_j++){
-				////if (out_str[char_j]==':' || out_str[char_j]==',' || out_str[char_j]==';' || out_str[char_j]==')'){		
-					////break;
-				////}
-			////}
-			////cout<<out_str[char_j-1]<<out_str[char_j] <<"  "<<"working "<<char_j<<" not working "<<end_of_label_or_bl(out_str, char_i+1) +1<<endl;
-			////out_str.erase(out_str.begin()+char_i+1,out_str.begin()+char_j);	
-			//size_t char_j=end_of_label_or_bl(out_str, char_i+1);
-			//out_str.erase(out_str.begin()+char_i+1,out_str.begin()+char_j+1);	
-		//}
-		//else{
-			//char_i++;
-		//}
-	//}
 	
 	size_t found_bracket=out_str.find(')');
 	while ( found_bracket<out_str.size() ){
@@ -254,47 +192,6 @@ string rm_and_sign(string in_str){
 	return in_str;
 }
 
-//string rm_and_sign(string old_str){
-	//string new_str=old_str;
-	//int new_str_len=new_str.size();
-	//for (int i_str_len=0;i_str_len<new_str_len;){
-		//if (isalpha(new_str[i_str_len])){
-			////int str_start_index=i_str_len;
-			//int j_str_len;
-			//vector <string> label;
-			//for (j_str_len=i_str_len;j_str_len<new_str_len;j_str_len++){
-				//string label_dummy;
-				//if (new_str[j_str_len] != '&'){
-					//label_dummy=new_str[j_str_len];
-					//label.push_back(label_dummy);
-				//}
-
-				//char stop=new_str[j_str_len+1];
-				//if (stop==',' || stop==')' || stop==':' || stop==';'){
-					//break;
-				//}
-			//}
-			//unsigned int erase_len=j_str_len-i_str_len;
-			//if (1<label.size() && label.size()<(erase_len+1)){
-				//sort(label.begin(),label.end());
-				//string insert_str;
-				//for (unsigned int label_i=0;label_i<label.size();label_i++){
-					//insert_str=insert_str+label[label_i];
-				//}
-				
-				//new_str.erase(i_str_len,erase_len+1);
-				////cout<<insert_str<<endl;
-				//new_str.insert(i_str_len,insert_str);
-				//i_str_len=i_str_len+insert_str.size();
-			//}
-			//else{
-				//i_str_len=j_str_len+1;
-			//}
-		//}
-		//else {i_str_len++;}
-	//}
-	//return new_str;	
-//}
 
 /*! \brief Terminate the program and print out the log file*/
 int my_exit(){ // change my_exit() to return 0, and terminate program

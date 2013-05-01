@@ -21,7 +21,7 @@ hybridLambda::param::param(int argc, char *argv[]){
 	help=false;
 	freq_bool=false;
 	print_tree=false;
-	plot_bool;
+	plot_bool=false;
 	log_bool=false;
 	log_NAME="LOG";
 	seg_bool=false;	int argc_i=1;
@@ -32,8 +32,10 @@ hybridLambda::param::param(int argc, char *argv[]){
 			help=true;
 			print_help();
 		}
-			
-
+		
+		if (argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i=="-spcu" || argv_i=="-spng"){
+			simulation_bool=true;
+		}
 
 		if (argv_i=="-seed"){
 			read_input_to_param<size_t>(argv[argc_i+1],seed);

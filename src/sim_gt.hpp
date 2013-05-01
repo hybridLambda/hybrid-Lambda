@@ -37,9 +37,6 @@
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
 	
-extern bool debug_bool;
-//extern bool reproduce_GENE_trees;
-extern string gene_tree_file;
 
 
 namespace sim{
@@ -186,7 +183,8 @@ double unifRand();
 
 int poisson_rand_var(double lambda);
 
-void appending_sim_gt_file(string sim_gt_input);
+//void appending_sim_gt_file(string sim_gt_input);
+void appending_sim_gt_file(string gene_tree_file,string sim_gt_input);
 
 void create_new_site_data(string gt_string_mut_num,int site_i);
 
