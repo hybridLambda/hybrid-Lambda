@@ -50,23 +50,12 @@ using namespace std;
 #ifndef GLOBAL_H
 #define GLOBAL_H	
 
-template<class T>
-void read_input_to_param(char inchar[], T &input)
-{
-	if (isdigit(inchar[0])){
-		std::istringstream para_istrm(inchar);
-		para_istrm >> input;
-	}
-	else{
-            throw std::invalid_argument("Invalid argument type. ");
-	}	
-}
 
 
 bool start_of_tax_name(string in_str,size_t i);
 
-void appending_debug_file(string debug_file_input);
-void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/);
+//void appending_debug_file(string debug_file_input);
+//void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/);
 
 string remove_interior_label(string in_str);
 string remove_brchlen(string in_str);
@@ -136,5 +125,20 @@ T n_choose_k(T n, T k){
 	else{
 		return (n_permu_a(n,k)/factorial(k));}
 }
+
+template<class T>
+void read_input_to_param(char inchar[], T &input)
+{
+	if (isdigit(inchar[0])){
+		std::istringstream para_istrm(inchar);
+		para_istrm >> input;
+	}
+	else{
+            throw std::invalid_argument("Invalid argument type. ");
+	}	
+}
+
+
+
 
 #endif

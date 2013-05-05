@@ -139,74 +139,59 @@ class sim_one_gt{
 /*! \brief Collection of simulated gene trees from a network under Kingman or multi merger coalescent process*/
 class sim_n_gt{
 	public:
-	vector <string> gt_string_coal_unit_s;
-	vector <string> gt_string_mut_num_s;
-	//vector <string> gt_string_gener_num_s;
-	//vector <string> gt_string_mut_unit_s;
-	
-	vector <double> monophyly;
-	vector <string> tax_name;
-	vector <double> total_brchlen;
-	
-	sim_n_gt(){
 		vector <string> gt_string_coal_unit_s;
 		vector <string> gt_string_mut_num_s;
 		//vector <string> gt_string_gener_num_s;
 		//vector <string> gt_string_mut_unit_s;
+		
 		vector <double> monophyly;
 		vector <string> tax_name;
 		vector <double> total_brchlen;
-
-	}
+		
+		sim_n_gt(){
+			vector <string> gt_string_coal_unit_s;
+			vector <string> gt_string_mut_num_s;
+			//vector <string> gt_string_gener_num_s;
+			//vector <string> gt_string_mut_unit_s;
+			vector <double> monophyly;
+			vector <string> tax_name;
+			vector <double> total_brchlen;
 	
-	//sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
-	//sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
-	//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-	//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
-sim_n_gt(sim::param sim_param,action_board my_action);
-	void clear(){
-		gt_string_coal_unit_s.clear();
-		gt_string_mut_num_s.clear();
-		//gt_string_gener_num_s.clear();
-		//gt_string_mut_unit_s.clear();
-		monophyly.clear();
-		tax_name.clear();
-		total_brchlen.clear();
-	}
+		}
+		
+		//sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
+		//sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
+		//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
+		//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
+		sim_n_gt(sim::param sim_param,action_board my_action);
+		void clear(){
+			gt_string_coal_unit_s.clear();
+			gt_string_mut_num_s.clear();
+			//gt_string_gener_num_s.clear();
+			//gt_string_mut_unit_s.clear();
+			monophyly.clear();
+			tax_name.clear();
+			total_brchlen.clear();
+		}
 };
 
 
 
 double Beta(double x,double y);
-
 double unifRand();
-
 int poisson_rand_var(double lambda);
-
 //void appending_sim_gt_file(string sim_gt_input);
 void appending_sim_gt_file(string gene_tree_file,string sim_gt_input);
-
 void create_new_site_data(string gt_string_mut_num,int site_i);
-
-
 string write_sp_string_in_coal_unit(string sp_num_gener_string,string pop_size_string);
-
 string rewrite_pop_string_by_para_string(string para_string,string pop_size_string);
-
 void outtable_header(int total_lineage);
-
 void create_site_data_dir(vector <string> mt_tree_str_s);
-
 void append_seed_to_log_file(unsigned int seed);
-
 valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double num_lineage);
-
-
 vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage);
-
 int update_nc(valarray <double> nc_X);
 double update_coal_para(vector < vector <double> > lambda_bk_mat, double num_lineage);
-
 double kingman_bl(double num_lineage);
 
 #endif

@@ -317,4 +317,11 @@ void appending_log_file(string log_file_input /*! Information added*/){
 		
 
 
+void appending_debug_file(string debug_file_input){
+	ofstream debug_file;
+	debug_file.open ("debug_file", ios::out | ios::app | ios::binary); 
+	debug_file << debug_file_input << "\n";
+	debug_file.close();
+}
+
 

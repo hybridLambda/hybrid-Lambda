@@ -1,7 +1,6 @@
 // parameters
 #include<param.hpp>
 
-
 hybridLambda::param::param(){
 	seed=(unsigned)(time(0));
 	simulation_bool=false;
@@ -24,7 +23,8 @@ hybridLambda::param::param(int argc, char *argv[]){
 	plot_bool=false;
 	log_bool=false;
 	log_NAME="LOG";
-	seg_bool=false;	int argc_i=1;
+	seg_bool=false;	
+	int argc_i=1;
 	while (argc_i < argc){
 		std::string argv_i(argv[argc_i]);
 		
@@ -151,3 +151,26 @@ void hybridLambda::print_option(){
 	cout<<setw(20)<<"-plotF/-dotF FILE"<<"  --  "<<"Generated figure will be saved in FILE."<<endl;			
 	cout<<endl;	
 }
+
+
+
+
+/*! \brief Record the used random seed into the log_file*/
+void append_seed_to_log_file(unsigned int seed){
+	ostringstream seed_ostr_stream;
+	seed_ostr_stream<<seed;
+	string appending_log_str="Random Seed  " + seed_ostr_stream.str() + "  used ";
+	//appending_log_file(appending_log_str);
+}
+
+
+
+
+/*! \brief Add more information to log_file */
+void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/){
+	std::ofstream log_file;
+	log_file.open (log_file_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+	log_file << log_file_input << "\n";
+	log_file.close();
+}
+

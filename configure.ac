@@ -10,7 +10,6 @@ AC_PREREQ
 AC_CANONICAL_HOST
 
 # Checks for programs.
-#AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_RANLIB
 
@@ -38,10 +37,12 @@ AC_CANONICAL_HOST
 # specifically based on the host
 case $host_os in
   darwin* )
-    AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],CXXFLAGS=-I/opt/local/include)
-        ;;
+   export CXXFLAGS=-I/opt/local/include
+    AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],[AC_MSG_ERROR(['boost' header files not found. Install from the port: sudo port install boost])])
+         ;;
   linux*)
-AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp])        ;;
+    AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],[AC_MSG_ERROR(['boost' header files not found. Try downloading from :http://www.boost.org. Or: sudo apt-get install libboost-all-dev])])        
+		;;
    *BSD*)
         # Do something specific for BSD
         ;;

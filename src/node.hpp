@@ -39,13 +39,6 @@ class Node {
 
 	string name; /*!< \brief Name of a node, this is not unique for nodes. e.g. if its label is A_1, name is A */
 	
-//	vector < class AC > AC_list;
-//		vector < class CAC > CAC_list;
-
-//	vector < unsigned int > AC_list_sizes;
-	//vector < vector <unsigned int> > AC_list;
-	//double pAC;
-	
 	vector <unsigned int> Net_node_contains_gt_node1; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	vector <unsigned int> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	

@@ -29,10 +29,6 @@
 
 
 #include"utility.hpp"
-//extern bool debug_bool;
-//extern bool log_file_bool;
-
-
 
 /*! \brief Identify if its the start of the taxon name in a newick string, should be replaced by using (isalpha() || isdigit())  */
 bool start_of_tax_name(string in_str,size_t i){
@@ -56,10 +52,11 @@ void checking_Parenthesis(string in_str){
 		}
 	}
 	if (num_b!=0){
-		cout<<"Error:"<<endl;
-		cout<<in_str<<endl;
-		cout<<"Parenthesis not balanced!"<<endl;
-		exit (1);
+		throw std::invalid_argument(in_str + "Parenthesis not balanced!" +error_msg);
+		//cout<<"Error:"<<endl;
+		//cout<<in_str<<endl;
+		//cout<<"Parenthesis not balanced!"<<endl;
+		//exit (1);
 	}
 }
 
@@ -98,22 +95,6 @@ size_t Parenthesis_balance_index_forwards(string in_str,size_t i){
 }
 
 
-
-
-void appending_debug_file(string debug_file_input){
-	ofstream debug_file;
-	debug_file.open ("debug_file", ios::out | ios::app | ios::binary); 
-	debug_file << debug_file_input << "\n";
-	debug_file.close();
-}
-
-/*! \brief Add more information to log_file */
-void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/){
-	std::ofstream log_file;
-	log_file.open (log_file_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-	log_file << log_file_input << "\n";
-	log_file.close();
-}
 
 
 
