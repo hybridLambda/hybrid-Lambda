@@ -591,6 +591,8 @@ INPUT                  = src/utility.hpp \
 			src/node.hpp \
 			src/param.hpp \
 			src/param.cpp \
+			src/seg-site.cpp \
+			src/seg-site.hpp \
 
 
 # This tag can be used to specify the character encoding of the source files

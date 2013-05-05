@@ -52,7 +52,7 @@ void checking_Parenthesis(string in_str){
 		}
 	}
 	if (num_b!=0){
-		throw std::invalid_argument(in_str + "Parenthesis not balanced!" +error_msg);
+		throw std::invalid_argument(in_str + "Parenthesis not balanced!" );
 		//cout<<"Error:"<<endl;
 		//cout<<in_str<<endl;
 		//cout<<"Parenthesis not balanced!"<<endl;
@@ -243,8 +243,7 @@ string read_input_line(char inchar[]){
 		out_str=dummy_str;
 		}else{
 			//cout<<"Error: check input '"<<inchar<<"'"<<endl;
-			string error_msg(inchar);
-			
+			string error_msg(inchar);			
 			throw std::invalid_argument("Invalid input file. " +error_msg);
 		}
 	}

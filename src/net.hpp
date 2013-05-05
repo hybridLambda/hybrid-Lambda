@@ -1,6 +1,4 @@
 //net.hpp
-
-//net.hpp
 //#include"utility.hpp"
 #include"node.hpp"
 //#include<cassert>

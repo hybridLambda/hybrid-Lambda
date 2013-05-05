@@ -79,7 +79,7 @@ size_t end_of_label_or_bl(string in_str, size_t i);
 string write_para_into_tree(string sp_string, double para);
 
 
-string extract_label(string in_str, size_t i);
+//string extract_label(string in_str, size_t i);
 size_t hybrid_hash_index(string in_str);
 string extract_hybrid_label(string in_str);
 string extract_hybrid_para_str(string in_str);

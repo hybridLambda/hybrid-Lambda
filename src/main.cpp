@@ -54,7 +54,10 @@ int main(int argc, char *argv[]){
 	    figure::param figure_para(argc, argv);
 	    freq::param freq_para(argc,argv);
 	    action_board my_action(argc,argv);
+	    seg::param seg_param(argc,argv);
 	    
+	    
+	    if (hybrid_para.seg_bool){my_action.sim_num_mut_bool=true;}
 	    if (hybrid_para.print_tree){
 			Net new_net_dummy(sim_para.net_str);
 			new_net_dummy.print_all_node();
@@ -82,7 +85,7 @@ int main(int argc, char *argv[]){
 		
 		if (hybrid_para.seg_bool){
 			//seggreating data were generated
-			
+			seg_param.create_site_data_dir(mt_tree_str_s);
 		}
 		time_t seg_end_time =time(0);
 		
@@ -101,6 +104,8 @@ int main(int argc, char *argv[]){
 			}
 			if (hybrid_para.seg_bool){
 				//seggreating data were generated
+				//appending_log_file("Segregating site data simulated.");
+
 				log_file << "Generating segregating site data took about " << seg_end_time - freq_end_time << " second(s) \n";
 			}
 			log_file.close();

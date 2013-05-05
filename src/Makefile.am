@@ -11,8 +11,9 @@ sim_gt.cpp  sim_gt.hpp  \
 freq.cpp  freq.hpp \
 utility.cpp  utility.hpp mtrand.cpp \
 main.cpp  \
-figure.cpp figure.hpp 
+figure.cpp figure.hpp \
+seg-site.cpp seg-site.hpp 
 
-include_HEADERS = all_gene_topo.hpp sim_gt.hpp freq.hpp utility.hpp mtrand.h param.hpp node.hpp net.hpp
+include_HEADERS = all_gene_topo.hpp seg-site.hpp sim_gt.hpp freq.hpp utility.hpp mtrand.h param.hpp node.hpp net.hpp
 
 
