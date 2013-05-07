@@ -252,7 +252,7 @@ string read_input_line(char inchar[]){
 return 	out_str;
 }
 
-vector <string> read_input_lines(char inchar[]){
+vector <string> read_input_lines(const char inchar[]){
 	vector <string> out_vec;
 	ifstream in_file;
 	in_file.open(inchar);

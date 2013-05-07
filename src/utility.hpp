@@ -86,7 +86,7 @@ string extract_hybrid_para_str(string in_str);
 double extract_hybrid_para(string in_str);
 
 string read_input_line(char inchar[]);
-vector <string> read_input_lines(char inchar[]);
+vector <string> read_input_lines(const char inchar[]);
 string read_input_para(char inchar[],string in_str);
 bool is_num(char inchar[]);
 

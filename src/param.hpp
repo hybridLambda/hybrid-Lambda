@@ -18,11 +18,16 @@ namespace hybridLambda{
 			bool log_bool;
 			string log_NAME;
 			bool seg_bool;
+			bool read_GENE_trees;
+			bool read_mt_trees;
+			string gt_file_name;
+			string mt_file_name;
+			//string net_str;
 			//bool mono_bool;		
 			//bool sites_data_bool;
 			
-			vector <string> gt_tree_str_s;
-			vector <string> mt_tree_str_s;
+			//vector <string> gt_tree_str_s;
+			//vector <string> mt_tree_str_s;
 			
 			param(int argc, char *argv[]);
 		

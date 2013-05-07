@@ -325,3 +325,24 @@ void appending_debug_file(string debug_file_input){
 }
 
 
+
+/*! \brief Record the used random seed into the log_file*/
+void append_seed_to_log_file(unsigned int seed){
+	ostringstream seed_ostr_stream;
+	seed_ostr_stream<<seed;
+	string appending_log_str="Random Seed  " + seed_ostr_stream.str() + "  used ";
+	//appending_log_file(appending_log_str);
+}
+
+
+
+
+/*! \brief Add more information to log_file */
+void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/){
+	std::ofstream log_file;
+	log_file.open (log_file_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+	log_file << log_file_input << "\n";
+	log_file.close();
+}
+
+

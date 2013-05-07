@@ -11,7 +11,8 @@ hybridLambda::param::param(){
 	log_bool=false;
 	log_NAME="LOG";
 	seg_bool=false;
-
+	read_GENE_trees=false;
+	read_mt_trees=false;
 };
 
 hybridLambda::param::param(int argc, char *argv[]){
@@ -24,6 +25,8 @@ hybridLambda::param::param(int argc, char *argv[]){
 	log_bool=false;
 	log_NAME="LOG";
 	seg_bool=false;	
+	read_GENE_trees=false;
+	read_mt_trees=false;
 	int argc_i=1;
 	while (argc_i < argc){
 		std::string argv_i(argv[argc_i]);
@@ -36,21 +39,21 @@ hybridLambda::param::param(int argc, char *argv[]){
 		if (argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i=="-spcu" || argv_i=="-spng"){
 			simulation_bool=true;
 		}
-
+		
 		if (argv_i=="-seed"){
 			read_input_to_param<size_t>(argv[argc_i+1],seed);
 			argc_i++;
 		}
 			
 		if (argv_i=="-gt"){
-			//reproduce_GENE_trees=false;
-			gt_tree_str_s=read_input_lines(argv[argc_i+1]);
+			read_GENE_trees=true;
+			gt_file_name=argv[argc_i+1];
 			argc_i++;
-
 		}
 
 		if (argv_i=="-mt"){/*! read number of mutations site and simulate segregating sites*/
-			mt_tree_str_s=read_input_lines(argv[argc_i+1]);
+			read_mt_trees=true;
+			mt_file_name=argv[argc_i+1];
 			argc_i++;
 
 		}
@@ -63,13 +66,25 @@ hybridLambda::param::param(int argc, char *argv[]){
 			plot_bool=true;
 		}
 
-		if (argv_i=="-seg"){
+		if (argv_i=="-seg" || argv_i=="-segD"){
 			seg_bool=true;
 			//sim_num_mut_bool=true;
 		}
 				
 		if (argv_i=="-print"){
 			print_tree=true;
+		}
+		
+		if (argv_i=="-log"){
+			log_bool=true;
+			argc_i++;
+			if (argc_i < argc){
+				if (argv[argc_i][0]!='-'){
+					log_NAME=argv[argc_i];
+					argc_i++;
+				}
+				else{argc_i--;}
+			}
 		}
 			argc_i++;
 	
@@ -102,17 +117,17 @@ void hybridLambda::print_example(){
 		cout<<"Examples:"<<endl;
 	cout<<""<<endl;	
 	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut"<<endl;
-	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num N -pop 25000 -sim num gener"<<endl;
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut"<<endl;
+	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 100 -pop 25000 -sim_num_gener"<<endl;
 	cout<<"hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'"<<endl;
 	cout<<"hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
 	cout<<"hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
 	cout<<"hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
 	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -gF GENE -fF OUTPUT"<<endl;	
 	cout<<"hybrid-Lambda -gt GENE_coal_unit -f "<<endl;	
-	cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;'-mono -num 100 -mm .1 -S 4 4"<<endl;
+	cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4"<<endl;
 	cout<<endl;
 }
 
@@ -153,24 +168,4 @@ void hybridLambda::print_option(){
 }
 
 
-
-
-/*! \brief Record the used random seed into the log_file*/
-void append_seed_to_log_file(unsigned int seed){
-	ostringstream seed_ostr_stream;
-	seed_ostr_stream<<seed;
-	string appending_log_str="Random Seed  " + seed_ostr_stream.str() + "  used ";
-	//appending_log_file(appending_log_str);
-}
-
-
-
-
-/*! \brief Add more information to log_file */
-void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/){
-	std::ofstream log_file;
-	log_file.open (log_file_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-	log_file << log_file_input << "\n";
-	log_file.close();
-}
 
