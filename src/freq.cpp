@@ -27,11 +27,7 @@
 #include"freq.hpp"
 
 freq::param::param(){
-	//gene_freq_bool=false;
-	//gene_tree_file="GENE_TREE";
-	//reproduce_GENE_trees=true;
 	freq_file_name="freq_out";
-
 	}
 
 freq::param::param(int argc, char *argv[]){	
@@ -187,7 +183,6 @@ void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name
 	cout<<total_num<<endl;
 	freq_out_file.close();
 	string appending_log_str="Gene trees frequency analyzed in file: "+freq_file_name;
-	//appending_log_file(appending_log_str);
 }
 
 

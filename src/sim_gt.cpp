@@ -962,21 +962,16 @@ sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action){
 		}
 	}
 	
-//	appending_log_file("Produced gene tree files:");
-//	appending_log_file(gene_tree_file_coal_unit);
 
 	sim_gt_file_coal_unit.close();
 	
 	if (my_action.sim_mut_unit_bool){
-	//	appending_log_file(gene_tree_file_mut_unit);
 		sim_gt_file_mut_unit.close();
 	}
 	if (my_action.sim_num_gener_bool){
-	//	appending_log_file(gene_tree_file_num_gener);
 		sim_gt_file_num_gener.close();
 	}
 	if (my_action.sim_num_mut_bool){
-	//	appending_log_file(gene_tree_file_num_mut);
 		sim_gt_file_num_mut.close();
 	}
 	dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;

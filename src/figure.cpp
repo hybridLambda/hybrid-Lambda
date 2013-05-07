@@ -283,11 +283,8 @@ void figure::param::plot_in_dot_(//const char* file_name /*! Name for the figure
 	string command="dot -Tps "+file_name_no_dot+".dot -o "+file_name_no_dot+".ps";
 	int sys=system(command.c_str());
 	command="convert "+file_name_no_dot+".ps -resize 100\% "+file_name_no_dot+".pdf";
-	//cout<<command<<endl;
 	sys=system(command.c_str());
-
 	string appending_log_str="Dot figure generated in file: "+file_name_no_dot+".pdf";
-	//appending_log_file(appending_log_str);
 }
 
 
@@ -405,9 +402,7 @@ void figure::param::plot_in_dot_(//const char* file_name /*! Name for the figure
 	
 	string command="pdflatex "+file_name_no_dot+".tex";
 	int sys=system(command.c_str());
-
 	string appending_log_str="Network figure generated in file: "+file_name_no_dot+".pdf";
-	//appending_log_file(appending_log_str);
 
 }
 
