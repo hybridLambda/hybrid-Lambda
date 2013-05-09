@@ -1081,7 +1081,7 @@ valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double nu
 	return nc_X;
 }
 
-
+//use heap structure for this!
 int update_nc(valarray <double> nc_X){	
 	for (int kmerge=0;kmerge<int(nc_X.size());kmerge++){
 		if (nc_X[kmerge]== nc_X.min()){
