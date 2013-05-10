@@ -103,11 +103,8 @@ sim::param::param(int argc, char *argv[]){
 	num_gener_bool=false;
 	sp_coal_unit_bool=false;		
 	int argc_i=1;
-	//string pop_bool;
-		int total_lineage=0;
 
 	while( argc_i < argc ){
-		
 		std::string argv_i(argv[argc_i]);
 		
 		if (argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i=="-spcu" || argv_i=="-spng"){
@@ -125,7 +122,6 @@ sim::param::param(int argc, char *argv[]){
 
 		}
 		
-		
 		if (argv_i=="-mu"){
 			read_input_to_param<double>(argv[argc_i+1],mutation_rate);
 			argc_i++;
@@ -135,11 +131,9 @@ sim::param::param(int argc, char *argv[]){
 			read_input_to_param<int>(argv[argc_i+1],num_sim_gt);
 			argc_i++;
 		}
-		
 
 		if (argv_i=="-mm"){
 			mm_bool=true;
-			//read_input_to_param<double>(argv[argc_i+1],mm);
 			para_string=read_input_para(argv[argc_i+1],net_str);
 			argc_i++;
 		}
@@ -149,14 +143,7 @@ sim::param::param(int argc, char *argv[]){
 			sp_string_pop_size=read_input_para(argv[argc_i+1],net_str);
 			argc_i++;
 		}
-		
-			//if ((!pop_size_bool) && (!pop_size_string_bool) && (!pop_bool)){
-			////	pop_size_string=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
-				//if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
-				////	appending_log_file("Default population size of 10000 on all branches");
-					
-				//}
-			//}
+
 		if (argv_i=="-S" ){
 			samples_bool=true;
 			for (int argc_j=argc_i+1;argc_j<argc;argc_j++){
@@ -168,51 +155,38 @@ sim::param::param(int argc, char *argv[]){
 				int pop_num;
 				pop_num_str>>pop_num;
 				sample_size.push_back(pop_num);
-				total_lineage=total_lineage+pop_num;
-				
 			}
 		}
 		argc_i++;
 	}
+
+	if (!mm_bool){
+		para_string=write_para_into_tree(net_str, 2.0); // If coalescent parameter is ungiven, use Kingman coalescent as default
+	}
+
+	if (!pop_bool){
+		sp_string_pop_size=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
+	}
+
+	Net net_dummy(net_str);
 	
-
-			if (!mm_bool){
-
-				para_string=write_para_into_tree(net_str, 2.0); // If coalescent parameter is ungiven, use Kingman coalescent as default
-				//appending_log_file("Default Kingman coalescent on all branches");
-			}
+	if (!samples_bool){
+		for (int i=0;i<net_dummy.tax_name.size();i++){
+			sample_size.push_back(1);
+		}
+	}
+	else{//  check the number of lineages and the number of species 
+		if (sample_size.size()!=net_dummy.tax_name.size()){
+			throw std::invalid_argument("Numbers of samples and numbers of species not equal!!!");
+		}
+	}
 	
-			//if ((!pop_size_bool) && (!pop_size_string_bool)){
-			//if (!pop_bool){
-			if (!pop_bool){
-				sp_string_pop_size=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
-				//if (my_action.sim_num_gener_bool || my_action.sim_mut_unit_bool || my_action.sim_num_mut_bool || my_action.Si_num_bool){
-					//appending_log_file("Default population size of 10000 on all branches");
-					
-				//}
-			}
+	sp_string_pop_size=rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
 
-			Net net_dummy(net_str);
-			if (!samples_bool){
-				total_lineage=net_dummy.tax_name.size();
-				for (int i=0;i<total_lineage;i++){
-					sample_size.push_back(1);
-				}
-			}
-			else{//  check the number of lineages and the number of species 
-				if (sample_size.size()!=net_dummy.tax_name.size()){
-					throw std::invalid_argument("Numbers of samples and numbers of species not equal!!!");
-					//appending_log_file("Numbers of samples and numbers of species not equal!!!");
-					//appending_log_file("Simulation terminated");
-					//return my_exit(); 
-				}
-			}
-		
-		sp_string_pop_size=rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
-			if (num_gener_bool){
-				net_str=write_sp_string_in_coal_unit(net_str,sp_string_pop_size);	// Convert number of generations and population size to coalescent unit
-			}
-sp_string_coal_unit=net_str;
+	if (num_gener_bool){
+		net_str=write_sp_string_in_coal_unit(net_str,sp_string_pop_size);	// Convert number of generations and population size to coalescent unit
+	}
+	sp_string_coal_unit=net_str;
 }
 
 
@@ -228,12 +202,6 @@ double Beta(double x,double y){
 }
 
 
-/*!  \brief Initialize the random seed */
-//void initrand() 
-//{
-    //srand((unsigned)(time(0)));
-//} 
-
 
 /*! \fn double unifRand()
  * \brief Simulate random variable between 0 and 1.
@@ -242,7 +210,6 @@ double unifRand(){
 	MTRand_closed return_value;
 	return return_value();
     //return rand()/(double(RAND_MAX)+1);
-
     //return rand() / double(RAND_MAX); //generates a psuedo-random float between 0.0 and 0.999...
 } 
 
@@ -269,7 +236,8 @@ int poisson_rand_var(double lambda){
 //sim_one_gt::sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
 //sim_one_gt::sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,action_board my_action){
 sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
-	dout<<"	begin of sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action)"<<endl;
+	dout<<"	Starting simulating gene tree from "<< sim_param.sp_string_coal_unit<<endl;
+	//dout<<"	begin of sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action)"<<endl;
 
 	string sp_string_coal_unit=sim_param.sp_string_coal_unit;
 	string sp_string_pop_size=sim_param.sp_string_pop_size;
@@ -400,8 +368,6 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 				else{
 					if (my_Net.Net_nodes[node_i].child[child_i]->parent2->label!=my_Net.Net_nodes[node_i].label){
 						throw std::invalid_argument("parent2 is not correct!!!");
-						//cout<<"ERROR: parent2 is not correct!!!"<<endl;
-						//exit (1);
 					}
 					for (unsigned int child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<my_Net.Net_nodes[node_i].child[child_i]->Net_node_contains_gt_node2.size();child_i_contains_gt_node1_i++){
 						my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.push_back(my_Net.Net_nodes[node_i].child[child_i]->Net_node_contains_gt_node2[child_i_contains_gt_node1_i]);
@@ -409,9 +375,12 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 				}
 			}
 
-				dout<<my_Net.Net_nodes[node_i].label<<"   "<<rank_i<<endl;
+			dout<<"In population: "<< my_Net.Net_nodes[node_i].label<<" with rank  "<<rank_i;
+			
+			if (rank_i==my_Net.max_rank){dout<<", at the root, everything coalesces"<<endl;}else{dout<<endl;}
 			//here to choose go left or right for hybrid node.			
 			if (my_Net.Net_nodes[node_i].parent2){
+				dout<<"hybrid node"<<endl;
 				vector <unsigned int> Net_node_contains_gt_node_dummy=my_Net.Net_nodes[node_i].Net_node_contains_gt_node1;
 				my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.clear();
 				double left_para=extract_hybrid_para(my_Net.Net_nodes[node_i].label);
@@ -426,22 +395,22 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 			}
 			
 			double num_lineage=double(my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size());
-			
+						
 			vector < vector <double> > lambda_bk_mat;
 			if (my_para_net.Net_nodes[node_i].brchlen1!=2){
 				lambda_bk_mat=build_lambda_bk_mat(my_para_net.Net_nodes[node_i].brchlen1,num_lineage);			
 			}
 			
 			double remaining_length=my_Net.Net_nodes[node_i].brchlen1;
+			dout<<num_lineage<<" lineages entering population "<< my_Net.Net_nodes[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+
 			int nc=0;
-				dout<<"num_lineage "<< num_lineage<<endl;
 			double length=0;
 			if (num_lineage>1 && nc <2){
 				if (my_para_net.Net_nodes[node_i].brchlen1!=2){
 					valarray <double> nc_X=build_nc_X(lambda_bk_mat, num_lineage);
 					nc=update_nc(nc_X);
-					length=nc_X.min();					
-						dout<<"number of lineages gonna coalesce "<<nc<<endl;
+					length=nc_X.min();											
 				}
 				else{
 					nc=2;
@@ -449,18 +418,20 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 				}
 			}
 			
-				dout<<"length  "<<length<<endl;
-				dout<<"(0)num_lineage "<<num_lineage<<endl;
-				dout<<"(0)remaining length is   "<<remaining_length<<endl;
-				dout<<"(0)proposed exp length is   "<<length<<endl;
+			//dout<<nc<<" lineages coalesce "<<endl;
+				//dout<<"(0)num_lineage "<<num_lineage<<endl;
+				//dout<<"(0)remaining length is   "<<remaining_length<<endl;
+				//dout<<"(0)proposed exp length is   "<<length<<endl;
 			int lineage_index;
 			unsigned int gt_child_node_index;
 			while (((length < remaining_length) && (num_lineage>1) )  || ( (rank_i==my_Net.max_rank) && (num_lineage>1 )) ){
-					dout<<endl<<endl;
-					dout<<"(1)num_lineage "<<num_lineage<<endl;
-					dout<<"(1)remaining length is   "<<remaining_length<<endl;
-					dout<<"(1)proposed exp length is   "<<length<<endl;		
+					
+					//dout<<endl<<endl;
+					//dout<<"(1)num_lineage "<<num_lineage<<endl;
+					//dout<<"(1)remaining length is   "<<remaining_length<<endl;
+					//dout<<"(1)proposed exp length is   "<<length<<endl;		
 				if (nc>1){
+					dout<<"  "<<nc<<" lineages coalesce at time "<<length<<endl;
 					for (int nc_i=0;nc_i<nc;nc_i++){
 						lineage_index= rand() % my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size();
 						gt_child_node_index=my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[lineage_index];
@@ -496,10 +467,10 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 				remaining_gt_node.erase(remaining_gt_node.begin());
 				
 				remaining_length= remaining_length - length;
-					dout<<"remaining_length "<<remaining_length<<endl;
+					//dout<<"remaining_length "<<remaining_length<<endl;
 				num_lineage=double(my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size());
 
-					dout<<"checking num_lineage "<<num_lineage<<endl;
+					//dout<<"checking num_lineage "<<num_lineage<<endl;
 
 				nc=0;
 				if (num_lineage>1 && nc <2){
@@ -507,27 +478,21 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 						valarray <double> nc_X=build_nc_X(lambda_bk_mat, num_lineage);
 						nc=update_nc(nc_X);
 						length=nc_X.min();
-							dout<<"number of lineages gonna coalesce "<<nc<<endl;
+							//dout<<"number of lineages gonna coalesce "<<nc<<endl;
 					}
 					else{
 						nc=2;
 						length=kingman_bl(num_lineage);
 					}
 				}
-				
-				
-					dout<<"length  "<<length<<endl;
-					dout<<" length < remaining_length "<< (length < remaining_length) <<endl;
-
-					dout<<"(0)num_lineage "<<num_lineage<<endl;
-					dout<<"(0)remaining length is   "<<remaining_length<<endl;
-					dout<<"(0)proposed exp length is   "<<length<<endl;
-				
+				dout<<num_lineage<<" live lineages in population "<< my_Net.Net_nodes[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+			
 			}
 			
-				dout<<"parent1 finished"<<endl;
+				
 			
 			if (my_Net.Net_nodes[node_i].parent2){			
+				dout<<"hybrid node parent1 finished, in parent 2 now"<<endl;
 				double num_lineage=(my_Net.Net_nodes[node_i].Net_node_contains_gt_node2.size());
 				lambda_bk_mat.clear();
 				if (my_para_net.Net_nodes[node_i].brchlen2!=2){
@@ -535,7 +500,8 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 				}
 											
 				double remaining_length=my_Net.Net_nodes[node_i].brchlen2;
-				
+				dout<<num_lineage<<" lineages entering population "<< my_Net.Net_nodes[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+
 				double length=0;		
 				int nc=0;
 				if (num_lineage>1 && nc <2){
@@ -543,7 +509,7 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 						valarray <double> nc_X=build_nc_X(lambda_bk_mat, num_lineage);					
 						nc=update_nc(nc_X);
 						length=nc_X.min();
-							dout<<"number of lineages gonna coalesce "<<nc<<endl;		
+							//dout<<"number of lineages gonna coalesce "<<nc<<endl;		
 					}
 					else{
 						nc=2;
@@ -551,20 +517,22 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 					}
 				}
 				
-					dout<<"length  "<<length<<endl;
-					dout<<"(0)num_lineage "<<num_lineage<<endl;
-					dout<<"(0)remaining length is   "<<remaining_length<<endl;
-					dout<<"(0)proposed exp length is   "<<length<<endl;
+					//dout<<"length  "<<length<<endl;
+					//dout<<"(0)num_lineage "<<num_lineage<<endl;
+					//dout<<"(0)remaining length is   "<<remaining_length<<endl;
+					//dout<<"(0)proposed exp length is   "<<length<<endl;
 
 				int lineage_index;
 				unsigned int gt_child_node_index;
 				while ( (length < remaining_length && num_lineage>1.0 )  ){
-						dout<<endl<<endl;
-						dout<<"(1)num_lineage "<<num_lineage<<endl;
-						dout<<"(1)remaining length is   "<<remaining_length<<endl;
-						dout<<"(1)proposed exp length is   "<<length<<endl;		
+						//dout<<endl<<endl;
+						//dout<<"(1)num_lineage "<<num_lineage<<endl;
+						//dout<<"(1)remaining length is   "<<remaining_length<<endl;
+						//dout<<"(1)proposed exp length is   "<<length<<endl;		
 
 					if (nc>1){
+						dout<<"  "<<nc<<" lineages coalesce at time "<<length<<endl;
+
 						for (int nc_i=0;nc_i<nc;nc_i++){
 							lineage_index= rand() % my_Net.Net_nodes[node_i].Net_node_contains_gt_node2.size();
 							gt_child_node_index=my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[lineage_index];
@@ -599,7 +567,7 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 					remaining_gt_node.erase(remaining_gt_node.begin());
 					remaining_length= remaining_length - length;
 					num_lineage=double(my_Net.Net_nodes[node_i].Net_node_contains_gt_node2.size());
-						dout<<"checking num_lineage "<<num_lineage<<endl;
+						//dout<<"checking num_lineage "<<num_lineage<<endl;
 					
 					nc=0;
 					if (num_lineage>1 && nc <2){
@@ -614,15 +582,17 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 						}
 					}
 
-						dout<<"length  "<<length<<endl;
-						dout<<"(0)num_lineage "<<num_lineage<<endl;
-						dout<<"(0)remaining length is   "<<remaining_length<<endl;
-						dout<<"(0)proposed exp length is   "<<length<<endl;
+						//dout<<"length  "<<length<<endl;
+						//dout<<"(0)num_lineage "<<num_lineage<<endl;
+						//dout<<"(0)remaining length is   "<<remaining_length<<endl;
+						//dout<<"(0)proposed exp length is   "<<length<<endl;
+					dout<<num_lineage<<" live lineages in population "<< my_Net.Net_nodes[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+
 				}
 			}
 					
 			dout<<"*************************before adjusting***************"<<endl;
-			dout<<"my_gt_coal_unit.is_net "<<my_gt_coal_unit.is_net<<endl;
+			my_gt_coal_unit.print_all_node_dout()	;
 			
 			if (rank_i<my_Net.max_rank){
 				if (my_Net.Net_nodes[node_i].parent2){
@@ -655,9 +625,11 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 				}
 				
 					dout<<"************************* after adjusting***************"<<endl;
+					my_gt_coal_unit.print_all_node_dout()	;
+
 			}
 			remaining_sp_node.erase(remaining_sp_node.begin()+remaining_sp_node_i);
-				dout<<rank_i<<" "<<my_Net.Net_nodes[node_i].label<<" "<<my_Net.Net_nodes[node_i].path_time.size()<<endl;
+				//dout<<rank_i<<" "<<my_Net.Net_nodes[node_i].label<<" "<<my_Net.Net_nodes[node_i].path_time.size()<<endl;
 		}
 		else{
 			remaining_sp_node_i++;
@@ -668,8 +640,6 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 			remaining_sp_node_i=0;
 		}
 	}
-	
-
 	
 	for (unsigned int node_i=0;node_i<gt_nodes_ptr.size();){
 		if (gt_nodes_ptr[node_i]->num_descndnt==0){
@@ -705,6 +675,8 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 	}
 	
 
+	//if (!my_gt_coal_unit.is_ultrametric_func()){throw "not ultrametic";}
+	
 
 	rewrite_node_content(gt_nodes_ptr);
 	string old_gt_string_coal_unit=gt_nodes_ptr.back()->node_content+gt_nodes_ptr.back()->label+";";
@@ -714,15 +686,20 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 		string old_gt_string_num_gener=num_gener_gt_nodes_ptr.back()->node_content+num_gener_gt_nodes_ptr.back()->label+";";
 		gt_string_gener_num=remove_interior_label(old_gt_string_num_gener);
 	}
-	
-		dout<<"flag 2"<<endl;
-		dout<<gt_nodes_ptr.back()->label<<endl;
-		if (sim_num_gener_bool){
-			dout<<num_gener_gt_nodes_ptr.back()->label<<endl;
-		}
-		dout<<old_gt_string_coal_unit<<endl;
-	
+
+	//dout<<"flag 2"<<endl;
+	//dout<<gt_nodes_ptr.back()->label<<endl;
+	//if (sim_num_gener_bool){
+		//dout<<num_gener_gt_nodes_ptr.back()->label<<endl;
+	//}
+	//dout<<old_gt_string_coal_unit<<endl;
+
 	gt_string_coal_unit=remove_interior_label(old_gt_string_coal_unit);
+	// check if the gene tree is ultramatric.
+	dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
+	Net checking_ultra_net(gt_string_coal_unit);
+	if (!checking_ultra_net.is_ultrametric){throw "Gene tree is not ultrametric";}
+	
 	
 	if (my_action.sim_mut_unit_bool){
 		build_gt_string_mut_unit(mutation_rate);
@@ -807,11 +784,12 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
                 //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
                 lambda_bk_mat_b_k=exp(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
 				if (isnan(lambda_bk_mat_b_k)){
-				cout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
-				cout<<"b="<<b_i<<"  k="<<k_i<<endl;
-				cout<<"log(boost::math::binomial_coefficient(b_i,k_i)) " <<log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))<<endl;
-				cout<<"log(pow(para,k_i)) "<< log(pow(para,k_i))<<endl;
-				cout<<"log(pow(1-para,b_i-k_i)) "<<log(pow(1-para,b_i-k_i))<<endl;
+					throw std::domain_error("Function \"build_lambda_bk_mat\" returns NaN");
+					//dout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
+					//dout<<"b="<<b_i<<"  k="<<k_i<<endl;
+					//dout<<"log(boost::math::binomial_coefficient(b_i,k_i)) " <<log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))<<endl;
+					//dout<<"log(pow(para,k_i)) "<< log(pow(para,k_i))<<endl;
+					//dout<<"log(pow(1-para,b_i-k_i)) "<<log(pow(1-para,b_i-k_i))<<endl;
 				}
 			}
 			else{//1<alpha<2
@@ -873,10 +851,10 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 		}
 	}
 
-		for (unsigned int mono_i=0;mono_i<6;mono_i++){
-			dout<<monophyly[mono_i]<<"  ";
-		}
-		dout<<endl;
+	for (size_t mono_i=0;mono_i<6;mono_i++){
+		dout<<monophyly[mono_i]<<"  ";
+	}
+	dout<<endl;
 }
 
 
@@ -885,9 +863,10 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 //sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
 //sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action){
 sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action){
-	dout<<"begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+	dout<<" Start simulating "<<sim_param.num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+	
 	string gene_tree_file=my_action.gene_tree_file;
-		string sp_string_coal_unit=sim_param.sp_string_coal_unit;
+	string sp_string_coal_unit=sim_param.sp_string_coal_unit;
 	string sp_string_pop_size=sim_param.sp_string_pop_size;
 	string para_string=sim_param.para_string;
 	vector < int > sample_size=sim_param.sample_size;
@@ -920,7 +899,13 @@ sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action){
 		sim_gt_file_num_mut.open (gene_tree_file_num_mut.c_str(), ios::out | ios::app | ios::binary); 
 	}
 
-
+	if (my_action.Si_num_bool){
+		int total_lineage=0;
+		for (size_t i=0; i<sim_param.sample_size.size();i++){
+			total_lineage=total_lineage+sim_param.sample_size[i];
+		}
+		outtable_header(total_lineage);
+	}
 	for (int i=0;i<num_sim_gt;i++){
 		//sim_one_gt sim_gt_string(sp_string_coal_unit, sp_string_pop_size, para_string, sample_size,  mutation_rate,my_action);
 		sim_one_gt sim_gt_string(sim_param,my_action);
@@ -978,14 +963,6 @@ sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action){
 
 }
 
-/*! \brief UNUSED AT THE MOMENT. Add new simulated gene trees into the list of gene trees 
- * \todo change the target gene tree file name, */
-void appending_sim_gt_file(string gene_tree_file,string sim_gt_input){
-	ofstream sim_gt_file;
-	sim_gt_file.open (gene_tree_file.c_str(), ios::out | ios::app | ios::binary); 
-	sim_gt_file << sim_gt_input << "\n";
-	sim_gt_file.close();
-}
 
 
 

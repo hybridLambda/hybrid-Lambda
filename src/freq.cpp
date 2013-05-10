@@ -187,4 +187,23 @@ void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name
 
 
 
+/*! \brief Remove branch length in a tree string, gives the tree topology */
+string remove_brchlen(string in_str /*!< input newick form string */){
+	string out_str = in_str;
+	size_t found_col=out_str.find(':');
+	while ( found_col<out_str.size() ){
+		size_t char_j=end_of_label_or_bl(out_str,found_col)+1;
+		//out_str.erase(out_str.begin()+found_col,out_str.begin()+char_j);
+		out_str.erase(found_col,char_j-found_col);
+		found_col=out_str.find(":",found_col+1);
+	}
+	return out_str;
+}
+
+/*! \brief Remove branch length in a tree string, gives the tree topology \todo combine with remove_brchlen, only keep one of them*/
+string tree_topo(string in_str /*!< input newick form string */){
+	return remove_brchlen(remove_interior_label(in_str));
+}
+
+
 

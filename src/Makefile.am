@@ -1,7 +1,7 @@
 bin_PROGRAMS = hybrid-Lambda
 PROG = HYBRID-LAMBDA
-#hybrid_Lambda_CXXFLAGS=  -O3 -g 
-hybrid_Lambda_CXXFLAGS= -O3 -g -DNDEBUG #options for not showing debug messages.
+hybrid_Lambda_CXXFLAGS=  -O3 -g 
+#hybrid_Lambda_CXXFLAGS= -O3 -g -DNDEBUG #options for not showing debug messages.
 
 hybrid_Lambda_SOURCES = param.hpp param.cpp \
 node.hpp node.cpp \

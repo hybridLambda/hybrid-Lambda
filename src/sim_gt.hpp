@@ -180,8 +180,6 @@ class sim_n_gt{
 double Beta(double x,double y);
 double unifRand();
 int poisson_rand_var(double lambda);
-//void appending_sim_gt_file(string sim_gt_input);
-void appending_sim_gt_file(string gene_tree_file,string sim_gt_input);
 void create_new_site_data(string gt_string_mut_num,int site_i);
 string write_sp_string_in_coal_unit(string sp_num_gener_string,string pop_size_string);
 string rewrite_pop_string_by_para_string(string para_string,string pop_size_string);

@@ -23,7 +23,6 @@
 */
 
 /*! \file utility.cpp
- *  \brief Core function of converting a Newick (extended Newick) format string into a species tree (network), and simple string manipulation for tree strings
  */
 
 
@@ -53,10 +52,6 @@ void checking_Parenthesis(string in_str){
 	}
 	if (num_b!=0){
 		throw std::invalid_argument(in_str + "Parenthesis not balanced!" );
-		//cout<<"Error:"<<endl;
-		//cout<<in_str<<endl;
-		//cout<<"Parenthesis not balanced!"<<endl;
-		//exit (1);
 	}
 }
 
@@ -95,10 +90,6 @@ size_t Parenthesis_balance_index_forwards(string in_str,size_t i){
 }
 
 
-
-
-
-
 /*! \brief Remove interior nodes label of a string */
 string remove_interior_label(string in_str/*!< input newick form string */){
 	string out_str;
@@ -117,25 +108,6 @@ string remove_interior_label(string in_str/*!< input newick form string */){
 	}
 
 	return out_str;
-}
-
-
-/*! \brief Remove branch length in a tree string, gives the tree topology */
-string remove_brchlen(string in_str /*!< input newick form string */){
-	string out_str = in_str;
-	size_t found_col=out_str.find(':');
-	while ( found_col<out_str.size() ){
-		size_t char_j=end_of_label_or_bl(out_str,found_col)+1;
-		//out_str.erase(out_str.begin()+found_col,out_str.begin()+char_j);
-		out_str.erase(found_col,char_j-found_col);
-		found_col=out_str.find(":",found_col+1);
-	}
-	return out_str;
-}
-
-/*! \brief Remove branch length in a tree string, gives the tree topology \todo combine with remove_brchlen, only keep one of them*/
-string tree_topo(string in_str /*!< input newick form string */){
-	return remove_brchlen(remove_interior_label(in_str));
 }
 
 
@@ -174,12 +146,7 @@ string rm_and_sign(string in_str){
 }
 
 
-/*! \brief Terminate the program and print out the log file*/
-int my_exit(){ // change my_exit() to return 0, and terminate program
-	int sys=system("cat log_file");		
-	//exit(1);
-	return 0;
-}
+
 
 
 /*! Check and remove files*/
@@ -242,7 +209,6 @@ string read_input_line(char inchar[]){
 		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
 		out_str=dummy_str;
 		}else{
-			//cout<<"Error: check input '"<<inchar<<"'"<<endl;
 			string error_msg(inchar);			
 			throw std::invalid_argument("Invalid input file. " +error_msg);
 		}
@@ -270,7 +236,6 @@ vector <string> read_input_lines(const char inchar[]){
 			out_str=dummy_str;
 			out_vec.push_back(out_str);
 		}else{
-			//cout<<"Error: check input '"<<inchar<<"'"<<endl;
 			string error_msg(inchar);
 			throw std::invalid_argument("Invalid input file. " +error_msg);
 		}

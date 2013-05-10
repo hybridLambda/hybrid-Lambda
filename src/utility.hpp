@@ -54,20 +54,13 @@ using namespace std;
 
 bool start_of_tax_name(string in_str,size_t i);
 
-//void appending_debug_file(string debug_file_input);
-//void appending_log_file(std::string log_file_NAME,std::string log_file_input /*! Information added*/);
-
 string remove_interior_label(string in_str);
-string remove_brchlen(string in_str);
-string tree_topo(string in_str);
 
 string rm_and_hash_sign(string in_str);
 string rm_and_sign(string in_str);
 string rm_hash_sign(string in_str);
 
 void check_and_remove(const char* file_name);
-
-int my_exit();
 
 size_t Parenthesis_balance_index_backwards(string in_str,size_t i);
 size_t Parenthesis_balance_index_forwards(string in_str,size_t i);
@@ -79,7 +72,6 @@ size_t end_of_label_or_bl(string in_str, size_t i);
 string write_para_into_tree(string sp_string, double para);
 
 
-//string extract_label(string in_str, size_t i);
 size_t hybrid_hash_index(string in_str);
 string extract_hybrid_label(string in_str);
 string extract_hybrid_para_str(string in_str);

@@ -1,3 +1,26 @@
+/* 
+ * 
+ * hybrid-Lambda is used to simulate gene trees given species network under 
+ * coalescent process.
+ * 
+ * Copyright (C) 2010, 2011, 2012, 2013 Sha (Joe) Zhu
+ * 
+ * This file is part of hybrid-Lambda 
+ * 
+ * hybrid-Lambda is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include"net.hpp"
 
@@ -464,7 +487,6 @@ bool Net::is_ultrametric_func(){
 int Net::enumerate_internal_branch(Node *current, /*!< pointer to the node that is enumerated */
 	int e_num_old) /*!< enumerator which is about to be updated \todo change e_num_old to int* type */ 
 {
-//needs modification, this is not correct.	
 	
 		//dout<<"Net::enumerate_internal_branch start"<<endl;
 	int e_num_new;
@@ -521,13 +543,13 @@ void Net::print_all_node(){
 		cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
 		for (unsigned int i=0;i<Net_nodes.size();i++){
 			for (unsigned int j=0;j<descndnt[i].size();j++){
-				cout<<descndnt[i][j];
+				cout<<setw(3)<<descndnt[i][j];
 			}
 
 			Net_nodes[i].print_net_Node();
 			cout<<"  ";
 			for (unsigned int j=0;j<descndnt2[i].size();j++){
-				cout<<descndnt2[i][j];
+				cout<<setw(3)<<descndnt2[i][j];
 			}
 			cout<<endl;
 		}	
@@ -536,14 +558,46 @@ void Net::print_all_node(){
 		cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
 		for (unsigned int i=0;i<Net_nodes.size();i++){
 			for (unsigned int j=0;j<descndnt[i].size();j++){
-				cout<<descndnt[i][j];
+				cout<<setw(3)<<descndnt[i][j];
 			}
 			Net_nodes[i].print_tree_Node();
 						cout<<"  ";
 			for (unsigned int j=0;j<descndnt2[i].size();j++){
-				cout<<descndnt2[i][j];
+				cout<<setw(3)<<descndnt2[i][j];
 			}
 			cout<<endl;
+		}	
+	}		
+}
+
+void Net::print_all_node_dout(){
+	if ( is_net ){
+		dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
+		for (unsigned int i=0;i<Net_nodes.size();i++){
+			for (unsigned int j=0;j<descndnt[i].size();j++){
+				dout<<setw(3)<<descndnt[i][j];
+			}
+
+			Net_nodes[i].print_net_Node();
+			dout<<"  ";
+			for (unsigned int j=0;j<descndnt2[i].size();j++){
+				dout<<descndnt2[i][j];
+			}
+			dout<<endl;
+		}	
+	}
+	else{
+		dout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
+		for (unsigned int i=0;i<Net_nodes.size();i++){
+			for (unsigned int j=0;j<descndnt[i].size();j++){
+				dout<<setw(3)<<descndnt[i][j];
+			}
+			Net_nodes[i].print_tree_Node();
+						dout<<"  ";
+			for (unsigned int j=0;j<descndnt2[i].size();j++){
+				dout<<descndnt2[i][j];
+			}
+			dout<<endl;
 		}	
 	}		
 }
@@ -605,7 +659,6 @@ double para /*! Coalescent parameter or fixed population sizes */){
 	}
 	Net para_Net(in_str);
 	vector <Node*> para_Net_node_ptr;
-	//	dout<<"write_para_into_tree flag"<<endl;
 	for (unsigned int node_i=0;node_i<para_Net.Net_nodes.size();node_i++){
 		Node* new_node_ptr=NULL;
         para_Net_node_ptr.push_back(new_node_ptr);
@@ -615,7 +668,6 @@ double para /*! Coalescent parameter or fixed population sizes */){
 			para_Net_node_ptr[node_i]->brchlen2=para;
 		}
 	}
-	//	dout<<"write_para_into_tree flag"<<para<<endl;
 	para_Net_node_ptr.back()->brchlen1=para;
 	rewrite_node_content(para_Net_node_ptr);
 	string para_string=construct_adding_new_Net_str(para_Net);

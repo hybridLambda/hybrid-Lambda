@@ -58,3 +58,8 @@ class topo_freq{
 bool same_topo(string gt_string1,string gt_string2);
 
 void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name);
+
+string remove_brchlen(string in_str);
+string tree_topo(string in_str);
+
+

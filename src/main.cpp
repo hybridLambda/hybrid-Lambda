@@ -31,15 +31,8 @@
 #include"seg-site.hpp"
 
 using namespace hybridLambda;
-//using namespace std;
-
-
-
-//bool reproduce_GENE_trees;
-//string gene_tree_file;
 
 int main(int argc, char *argv[]){
-	//remove("seg-sites");
 
 	vector <string> gt_tree_str_s;
 	vector <string> mt_tree_str_s;
@@ -50,22 +43,18 @@ int main(int argc, char *argv[]){
 
     try {
 	    hybridLambda::param hybrid_para(argc, argv);
-	    
-	    
-	    
 	    figure::param figure_para(argc, argv);
 	    freq::param freq_para(argc,argv);
 	    action_board my_action(argc,argv);
 	    seg::param seg_para(argc,argv);
-	    
-	    
-	    if (hybrid_para.seg_bool){my_action.sim_num_mut_bool=true;}
+   	    if (hybrid_para.seg_bool){my_action.sim_num_mut_bool=true;}
 
 		time_t start_time = time(0);
 		if (hybrid_para.simulation_bool){
 			sim::param sim_para(argc, argv);	
+
+			Net new_net_dummy(sim_para.net_str);
 			if (hybrid_para.print_tree){
-				Net new_net_dummy(sim_para.net_str);
 				new_net_dummy.print_all_node();
 				return EXIT_SUCCESS;
 			}
@@ -75,9 +64,23 @@ int main(int argc, char *argv[]){
 				return EXIT_SUCCESS;
 			}
 			
+			if (!new_net_dummy.is_ultrametric){
+				cout<<"WARNING! NOT ULTRAMETRIC!!!"<<endl;
+				//return EXIT_SUCCESS;
+			}
+			
 		    sim_n_gt simd_gt_tree_str_s(sim_para,my_action);
 			gt_tree_str_s=simd_gt_tree_str_s.gt_string_coal_unit_s;
 			mt_tree_str_s=simd_gt_tree_str_s.gt_string_mut_num_s;
+			
+			
+			if (my_action.mono_bool  &&  sim_para.sample_size.size()==2){
+				cout<<"   A mono     B mono Recip mono     A para     B para  Polyphyly"<<endl;
+				for (unsigned int mono_i=0;mono_i<simd_gt_tree_str_s.monophyly.size();mono_i++){
+					cout<<setw(9)<<simd_gt_tree_str_s.monophyly[mono_i]<<"  ";
+				}
+				cout<<endl;
+			}
 		}
 		time_t sim_end_time = time(0);
 		
@@ -110,6 +113,12 @@ int main(int argc, char *argv[]){
 				//files were saved at where
 				log_file << "Simulation took about " << sim_end_time - start_time << " second(s) \n";
 				log_file << "Random seed is :"<<hybrid_para.seed << "\n";
+				if ( !hybrid_para.mm_bool ){
+					log_file<<"Default Kingman coalescent on all branches. \n";
+					}
+				if ( !hybrid_para.pop_bool ){
+					log_file << "Default population size of 10000 on all branches. \n";
+					}
 				log_file << "Produced gene tree files: \n";	
 				log_file << my_action.gene_tree_file<<"_coal_unit\n";
 				

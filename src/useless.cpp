@@ -346,3 +346,18 @@ void appending_log_file(std::string log_file_NAME,std::string log_file_input /*!
 }
 
 
+/*! \brief Terminate the program and print out the log file*/
+int my_exit(){ // change my_exit() to return 0, and terminate program
+	int sys=system("cat log_file");		
+	//exit(1);
+	return 0;
+}
+
+/*! \brief UNUSED AT THE MOMENT. Add new simulated gene trees into the list of gene trees 
+ * \todo change the target gene tree file name, */
+void appending_sim_gt_file(string gene_tree_file,string sim_gt_input){
+	ofstream sim_gt_file;
+	sim_gt_file.open (gene_tree_file.c_str(), ios::out | ios::app | ios::binary); 
+	sim_gt_file << sim_gt_input << "\n";
+	sim_gt_file.close();
+}
