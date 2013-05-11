@@ -101,6 +101,57 @@ void Node::print_tree_Node(){
 	//cout<<setw(3)<<num_descndnt_interior;
 }
 
+
+void Node::print_net_Node_dout(){
+	dout<<setw(12)<<label;
+	dout<<setw(6)<<hybrid;
+	dout<<setw(8)<<descndnt_of_hybrid;
+	dout<<setw(5)<<tip_bool;
+	if (parent1){dout<<setw (11)<<(parent1->label);}
+	else dout<<"           ";
+	dout<<setw (8)<<absolute_time;
+	dout<<setw (8)<<brchlen1;
+	if (parent2){dout<<setw (9)<<parent2->label;}
+	else dout<<"         ";
+	dout<<setw (8)<<brchlen2;
+	dout<<setw (7)<<num_child;
+	dout<<setw (8)<<num_descndnt;
+	dout<<setw(4)<<num_descndnt_interior;
+//	dout<<setw (7)<<current.e_num;
+//	dout<<setw (3)<<current.e_num2;
+	dout<<setw (6)<<rank<<"   ";
+	//for (unsigned int i=0;i<descndnt.size();i++){
+		//dout<<setw (1)<<descndnt[i];
+	//}
+	dout<<setw(2)<<e_num;
+	dout<<setw(3)<<e_num2;
+	dout<<"    "<<clade;
+	//dout<<endl;
+}
+
+
+void Node::print_tree_Node_dout(){
+	dout<<setw (12)<<label;
+	dout<<setw(5)<<tip_bool;
+	if (parent1){dout<<setw (11)<<(parent1->label);}
+	else dout<<"           ";
+	dout<<setw (11)<<absolute_time;
+	dout<<setw (11)<<brchlen1;
+	dout<<setw (7)<<num_child;
+	dout<<setw (8)<<num_descndnt;
+	dout<<setw(4)<<num_descndnt_interior;
+	dout<<setw (6)<<rank<<"   ";
+	//for (unsigned int i=0;i<descndnt.size();i++){
+		//dout<<setw (1)<<descndnt[i];
+	//}	
+	dout<<setw(3)<<e_num;
+	dout<<"    "<<clade;
+	//dout<<setw(3)<<num_descndnt_interior;
+}
+
+
+
+
 	//~Node(){
 void Node::clear(){
 	//clade=" ";

@@ -68,6 +68,8 @@ class Node {
 	Node(); /*!< \brief Initialize Node class*/
 	void print_net_Node();
 	void print_tree_Node();
+		void print_tree_Node_dout();
+void print_net_Node_dout();
 	void clear();
 	
 		

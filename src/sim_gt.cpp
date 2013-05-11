@@ -610,19 +610,21 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 						gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent2->absolute_time -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->absolute_time;
 					}					
 				}
-				else{
-					for (unsigned int num_lineage_i=0;num_lineage_i<my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size();num_lineage_i++){
-						if (sim_num_gener_bool){
-							if ((gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time)>  my_Net.Net_nodes[node_i].absolute_time){
-								num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time)*my_pop_net.Net_nodes[node_i].brchlen1;//+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
-							}
-							else{
-								num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time- gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1)*my_pop_net.Net_nodes[node_i].brchlen1+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
-							}
+				//else{
+				// through parent 1, it should always be checked!!!	
+				
+				for (unsigned int num_lineage_i=0;num_lineage_i<my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size();num_lineage_i++){
+					if (sim_num_gener_bool){
+						if ((gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time)>  my_Net.Net_nodes[node_i].absolute_time){
+							num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time)*my_pop_net.Net_nodes[node_i].brchlen1;//+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
 						}
-						gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent1->absolute_time -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time;
+						else{
+							num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time- gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1)*my_pop_net.Net_nodes[node_i].brchlen1+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
+						}
 					}
+					gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent1->absolute_time -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time;
 				}
+				//}
 				
 					dout<<"************************* after adjusting***************"<<endl;
 					my_gt_coal_unit.print_all_node_dout()	;

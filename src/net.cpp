@@ -578,7 +578,8 @@ void Net::print_all_node_dout(){
 				dout<<setw(3)<<descndnt[i][j];
 			}
 
-			Net_nodes[i].print_net_Node();
+			//Net_nodes[i].print_net_Node();
+			Net_nodes[i].print_net_Node_dout();
 			dout<<"  ";
 			for (unsigned int j=0;j<descndnt2[i].size();j++){
 				dout<<descndnt2[i][j];
@@ -592,7 +593,7 @@ void Net::print_all_node_dout(){
 			for (unsigned int j=0;j<descndnt[i].size();j++){
 				dout<<setw(3)<<descndnt[i][j];
 			}
-			Net_nodes[i].print_tree_Node();
+			Net_nodes[i].print_tree_Node_dout();
 						dout<<"  ";
 			for (unsigned int j=0;j<descndnt2[i].size();j++){
 				dout<<descndnt2[i][j];
