@@ -112,7 +112,7 @@ hybridLambda::param::param(int argc, char *argv[]){
 			if (argc_i < argc){
 				if (argv[argc_i][0]!='-'){
 					log_NAME=argv[argc_i];
-					argc_i++;
+					//argc_i++;
 				}
 				else{argc_i--;}
 			}
