@@ -23,33 +23,38 @@
 */
 // parameters
 #include<param.hpp>
+void hybridLambda::param::init(){
+	this->seed=(unsigned)(time(0));
+	this->simulation_bool=false;
+	this->help=false;
+	this->freq_bool=false;
+	this->print_tree=false;
+	this->plot_bool;
+	this->log_bool=false;
+	this->log_NAME="LOG";
+	this->seg_bool=false;
+	this->read_GENE_trees=false;
+	this->read_mt_trees=false;
+	this->tmrca_NAME="tmrcaFILE";
+}
 
 hybridLambda::param::param(){
-	seed=(unsigned)(time(0));
-	simulation_bool=false;
-	help=false;
-	freq_bool=false;
-	print_tree=false;
-	plot_bool;
-	log_bool=false;
-	log_NAME="LOG";
-	seg_bool=false;
-	read_GENE_trees=false;
-	read_mt_trees=false;
+	this->init();
 };
 
 hybridLambda::param::param(int argc, char *argv[]){
-	seed=(unsigned)(time(0));
-	simulation_bool=false;
-	help=false;
-	freq_bool=false;
-	print_tree=false;
-	plot_bool=false;
-	log_bool=false;
-	log_NAME="LOG";
-	seg_bool=false;	
-	read_GENE_trees=false;
-	read_mt_trees=false;
+	this->init();
+	//seed=(unsigned)(time(0));
+	//simulation_bool=false;
+	//help=false;
+	//freq_bool=false;
+	//print_tree=false;
+	//plot_bool=false;
+	//log_bool=false;
+	//log_NAME="LOG";
+	//seg_bool=false;	
+	//read_GENE_trees=false;
+	//read_mt_trees=false;
 	int argc_i=1;
 	while (argc_i < argc){
 		std::string argv_i(argv[argc_i]);
@@ -87,6 +92,18 @@ hybridLambda::param::param(int argc, char *argv[]){
 			
 		if (argv_i=="-pop"){
 			pop_bool=true;			
+		}
+		
+		if (argv_i=="-tmrca"){
+			tmrca_bool=true;
+			argc_i++;
+			if (argc_i < argc){
+				if (argv[argc_i][0]!='-'){
+					tmrca_NAME=argv[argc_i];
+					//argc_i++;
+				}
+				else{argc_i--;}
+			}
 		}
 
 		if (argv_i=="-freq"|| argv_i=="-f" || argv_i=="-freq_file"|| argv_i=="-fF"){

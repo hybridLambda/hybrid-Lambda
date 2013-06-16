@@ -88,6 +88,17 @@ int main(int argc, char *argv[]){
 			gt_tree_str_s=read_input_lines(hybrid_para.gt_file_name.c_str());
 		}
 		
+		if (hybrid_para.tmrca_bool){
+			remove(hybrid_para.tmrca_NAME.c_str());    
+			std::ofstream tmrca_file;
+			tmrca_file.open (hybrid_para.tmrca_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+			for (size_t i=0;i<gt_tree_str_s.size();i++){
+				Net gt(gt_tree_str_s[i]);
+				tmrca_file<< gt.Net_nodes.back().absolute_time<<endl;
+			}
+			tmrca_file.close();
+		}
+		
 		if (hybrid_para.read_mt_trees){
 			mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
 		}
@@ -132,6 +143,10 @@ int main(int argc, char *argv[]){
 					log_file << my_action.gene_tree_file<<"_num_mut\n";
 				}
 				
+			}
+			
+			if (hybrid_para.tmrca_bool){
+				log_file << "TMRCA file is saved at: "<<hybrid_para.tmrca_NAME<<"\n";
 			}
 			if (hybrid_para.freq_bool){
 				//frequencies
