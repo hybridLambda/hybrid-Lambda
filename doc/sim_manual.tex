@@ -86,7 +86,7 @@ The value {\tt N} following the flag {\tt -num} is the number of gene trees simu
 % {\tt -seed} allows users to define random seed for simulation.
 Users can specify a random seed for simulation by declaring it after {\tt -seed}.
 By default, the branch lengths of the output trees are in coalescent units. They are saved in the file {\tt GENE\_TREE\_coal\_unit}. The flag {\tt -gF} enables the users to name the output files. For example:
-\cm{\mbox{hybrid-Lambda -spcu \textquotesingle((1:1,2:1):1,3:2);\textquotesingle\  -num 3 -seed 2 -gF example1}}
+\cm{\mbox{hybrid-Lambda -spcu '((1:1,2:1):1,3:2);'\  -num 3 -seed 2 -gF example1} -log}
 will print the following message:
 \begin{verbatim}
 Default Kingman coalescent on all branches
@@ -141,7 +141,7 @@ This command will also produce gene trees for which the branch lengths are in nu
 
 Instead of inputting a species network with branch lengths in coalescent units, input strings can have branch lengths representing the number of generations.
 Moreover, in the following example, we demonstrate that if the population sizes are assumed to vary, the input strings in Expression \eqref{sim_man:at_root} can specify the population sizes on all branches and the root.
-\cm{\mbox{hybrid-Lambda -spng \textquotesingle(A:50000,B:50000)r;\textquotesingle\ -pop \textquotesingle(A:50000,B:50000)r:40000;\textquotesingle.}}
+\cm{\mbox{hybrid-Lambda -spng '(A:50000,B:50000)r;'\ -pop '(A:50000,B:50000)r:40000;'.}}
 %can be specified on each branch via strings in the format of expression \eqref{sim_man:at_root}, since the population size needs to be defined at the root.
 % \cm{hybrid-Lambda -spng INPUT-1 -pop INPUT-2}
 
@@ -157,7 +157,7 @@ Moreover, in the following example, we demonstrate that if the population sizes 
 To sample multiple individuals, the order of the sample sizes needs to follow the order of the taxa names.
 
 For example:
-\cm{\mbox{hybrid-Lambda -spcu \textquotesingle((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);\textquotesingle} \mbox{-S 2 4 3 6 5} .}
+\cm{\mbox{hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);'} \mbox{-S 2 4 3 6 5} .}
 The order of the taxon names is {\tt 13D}, {\tt 4}, {\tt A}, {\tt B} and {\tt a}. Thus, the program
 will sample 2 individuals in taxon {\tt 13D}, four samples from taxon {\tt 4}, three samples from taxon {\tt A}, six samples from taxon {\tt B} and five samples from taxon {\tt a}.
 
@@ -166,7 +166,7 @@ will sample 2 individuals in taxon {\tt 13D}, four samples from taxon {\tt 4}, t
 \cm{hybrid-Lambda -spcu INPUT-1 -mm INPUT-2}
 The Kingman coalescent is assumed by default. To use the $\Lambda$-coalescent, the coalescent parameter needs to be specified after {\tt -mm}. For details, see Equation \eqref{sim_man:eqn:psi} and \eqref{sim_man:eqn:alpha}.
 Moreover, similar to assigning particular population sizes on branches (see the examples in Section \ref{sim_man:pop}), coalescent parameters can be specified as well. In this case, to assume the Kingman coalescent within some population, the multiple merger parameter needs to be set to 2. For example:
-\cm{hybrid-Lambda -spcu \textquotesingle(A:1,B:1)r;\textquotesingle\ -mm \textquotesingle(A:1.9,B:.2)r:2;\textquotesingle\ -S 3 4.}
+\cm{hybrid-Lambda -spcu '(A:1,B:1)r;'\ -mm '(A:1.9,B:.2)r:2;'\ -S 3 4.}
 
 
 \subsection{Commands for other features:}
@@ -200,7 +200,7 @@ If the option {\tt -f} is used instead of {\tt -fF OUTPUT}, the analysed frequen
 \cm{ hybrid-Lambda -spcu INPUT-1 -S n1 n2 -mono [-mm INPUT-2]}
 Recent studies on the shape of genealogies between two species investigated the probabilities of monophyletic taxa \citep{Eldon2012,Rosenberg2003}. The option {\tt -mm} generates a frequency table of the gene trees whose taxa are monophyletic in one population, both populations, or are paraphyletic and polyphyletic.
 For example:
-\cm{hybrid-Lambda -spcu \textquotesingle(A:5,B:5)r;\textquotesingle -mono -num 100 -mm .1 -S 4 4}
+\cm{hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4 -log}
 will print the following message:
 \begin{verbatim}
    A mono     B mono Recip mono     A para     B para  Polyphyly
@@ -230,14 +230,19 @@ $\qquad${\verb -sim_mut_unit }& Convert the simulated gene tree branch lengths t
 $\qquad${\verb -sim_num_gener } &Convert the simulated gene tree branch lengths to number of generations.\\
 $\qquad${\verb -sim_num_mut }& Simulate the number of mutations on each branch of the simulated gene trees.\\
 % $\qquad${\verb -sim_Si_num } & Generate the file {\tt out\_table}, which includes the number of segregating sites and the total branch length of the gene tree in coalescent unit. \\
+
 {\verb -f } & Generate a topology frequency table for a set of input trees or simulated gene trees. The frequency table is saved in the file {\tt freq\_out} by default.\\
 {\verb -fF } {\tt FILE}& The topology frequency table will be saved in {\tt FILE}.\\
 {\verb -gt } {\tt FILE} & Specify the file to analyse tree topology frequencies.\\
+{\verb -tmrca } {\tt [FILE]}& Return the TMRCA of the gene trees. TMRCA file is saved in ``tmrcaFILE'' by default, user can define the TMRCA file name by option FILE.\\
+{\verb -log } {\tt [FILE]}& Enable the log function. Log file is saved in ``LOG'' by default, user can define the log file name by option FILE.\\
+
 % {\verb -seg } & Generate segregating site data\\
 {\verb -mono } & Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees.\\
 {\tt -plot}/{\tt -dot} {\tt [option]} & Use \LaTeX ({\tt -plot}) or {\tt Dot} ({\tt -dot}) to draw the input (defined by {\tt -spcu}) network (tree).\\
 $\qquad${\tt -branch}& Branch lengths will be labelled in the figure.\\
 % $\qquad${\tt -label}& Branches will be labelled by post-ordered traversal.\\
+{\tt -plotF}/{\tt -dotF} {\tt FILE}& The generated figure will be saved in {\tt FILE}.\\
 {\tt -plotF}/{\tt -dotF} {\tt FILE}& The generated figure will be saved in {\tt FILE}.\\
 \end{longtable}
 
