@@ -36,6 +36,7 @@ void hybridLambda::param::init(){
 	this->read_GENE_trees=false;
 	this->read_mt_trees=false;
 	this->tmrca_NAME="tmrcaFILE";
+	this->bl_NAME="blFILE";
 }
 
 hybridLambda::param::param(){
@@ -100,6 +101,18 @@ hybridLambda::param::param(int argc, char *argv[]){
 			if (argc_i < argc){
 				if (argv[argc_i][0]!='-'){
 					tmrca_NAME=argv[argc_i];
+					//argc_i++;
+				}
+				else{argc_i--;}
+			}
+		}
+
+		if (argv_i=="-bl"){
+			bl_bool=true;
+			argc_i++;
+			if (argc_i < argc){
+				if (argv[argc_i][0]!='-'){
+					bl_NAME=argv[argc_i];
 					//argc_i++;
 				}
 				else{argc_i--;}

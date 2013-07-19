@@ -49,7 +49,9 @@ namespace hybridLambda{
 			bool mm_bool;
 			bool pop_bool;
 			bool tmrca_bool;
+			bool bl_bool;
 			string tmrca_NAME;
+			string bl_NAME;
 			//string net_str;
 			//bool mono_bool;		
 			//bool sites_data_bool;

@@ -99,6 +99,21 @@ int main(int argc, char *argv[]){
 			tmrca_file.close();
 		}
 		
+		if (hybrid_para.bl_bool){
+			remove(hybrid_para.bl_NAME.c_str());    
+			std::ofstream bl_file;
+			bl_file.open (hybrid_para.bl_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+			for (size_t i=0;i<gt_tree_str_s.size();i++){
+				Net gt(gt_tree_str_s[i]);
+				double totalbl=0;
+				for (size_t node_i = 0 ; node_i < gt.Net_nodes.size(); node_i++){
+					totalbl = totalbl + gt.Net_nodes[node_i].brchlen1;
+				}
+				bl_file << totalbl << endl;
+			}
+			bl_file.close();
+		}
+		
 		if (hybrid_para.read_mt_trees){
 			mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
 		}
@@ -148,6 +163,12 @@ int main(int argc, char *argv[]){
 			if (hybrid_para.tmrca_bool){
 				log_file << "TMRCA file is saved at: "<<hybrid_para.tmrca_NAME<<"\n";
 			}
+
+			if (hybrid_para.bl_bool){
+				log_file << "Total branch length file is saved at: "<<hybrid_para.bl_NAME<<"\n";
+			}
+
+			
 			if (hybrid_para.freq_bool){
 				//frequencies
 				log_file << "Computing topology frequency took about " << freq_end_time - sim_end_time << " second(s) \n";
