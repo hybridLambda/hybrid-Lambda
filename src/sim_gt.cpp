@@ -700,7 +700,7 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 	// check if the gene tree is ultramatric.
 	dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
 	Net checking_ultra_net(gt_string_coal_unit);
-	if (!checking_ultra_net.is_ultrametric){throw "Gene tree is not ultrametric";}
+	//if (!checking_ultra_net.is_ultrametric){throw "Gene tree is not ultrametric";}
 	
 	
 	if (my_action.sim_mut_unit_bool){
@@ -723,16 +723,17 @@ sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action){
 		}	
 		
 		brch_total.back()=0;
-		
+		//cout<<total_brchlen<<endl;
 		//double theta=1.0;
-		int total_mut=poisson_rand_var(mutation_rate*total_brchlen);
+		int total_mut = poisson_rand_var(mutation_rate*total_brchlen);
+		//cout<<total_mut<<endl;
 		for (int mut_i=0;mut_i<total_mut;mut_i++){
 			unsigned int brch_index=0;
 			double u=unifRand()*total_brchlen;
 			while (u>brch_total[brch_index]){
 				 brch_index =brch_index + 1;	
 			}
-			mt_nodes_ptr[brch_index]->brchlen1=mt_nodes_ptr[brch_index]->brchlen1+1;
+			mt_nodes_ptr[brch_index]->brchlen1 = mt_nodes_ptr[brch_index]->brchlen1+1;
 		}
 		rewrite_node_content(mt_nodes_ptr);
 		gt_string_mut_num=mt_nodes_ptr.back()->node_content+mt_nodes_ptr.back()->label+";";
@@ -784,7 +785,9 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
 			if (para<1){//0<psi<1
 				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*pow(para,k_i)*pow(1-para,b_i-k_i);//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
                 //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
-                lambda_bk_mat_b_k=exp(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+                //cout<<"normal calculation : "<<exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)))<<endl;
+                lambda_bk_mat_b_k=exp(log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i))) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+                //cout<<"boost calculation : "<<lambda_bk_mat_b_k<<endl;
 				if (isnan(lambda_bk_mat_b_k)){
 					throw std::domain_error("Function \"build_lambda_bk_mat\" returns NaN");
 					//dout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
@@ -796,9 +799,11 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
 			}
 			else{//1<alpha<2
 				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para);// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+                //cout<<n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para)<<endl;
                 //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-                lambda_bk_mat_b_k=exp(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-
+                //cout<<"normal calculation "<<exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)))<<endl;// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+                lambda_bk_mat_b_k=exp(log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+				//cout<<"boost result "<<lambda_bk_mat_b_k<<endl;
 			}
 			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
 			}
@@ -998,8 +1003,10 @@ string pop_size_string /*! Network in extended newick form, branch lengths are t
 
 /*! \brief For alpha coalescent, modify the population size according to the multi merger parameter, N=N^(alpha-1), as mutation must scale with the coalescent timescale, in this case is N^(alpha-1)
  * \return string  Network in extended newick form, branch lengths are the population sizes */
-string rewrite_pop_string_by_para_string(string para_string /*! Network in extended newick form, branch lengths are the coalescent parameters */,
-string pop_size_string /*! Network in extended newick form, branch lengths are the population sizes*/){
+string rewrite_pop_string_by_para_string(
+	string para_string /*! Network in extended newick form, branch lengths are the coalescent parameters */,
+	string pop_size_string /*! Network in extended newick form, branch lengths are the population sizes*/
+	){
 	Net para_net_check(para_string);
 	Net pop_size_check(pop_size_string);
 	vector <Node*> pop_size_node_ptr;
@@ -1007,8 +1014,8 @@ string pop_size_string /*! Network in extended newick form, branch lengths are t
 		Node* new_node_ptr=NULL;
 		pop_size_node_ptr.push_back(new_node_ptr);
 		pop_size_node_ptr[node_i]=&pop_size_check.Net_nodes[node_i];
-		if (para_net_check.Net_nodes[node_i].brchlen1<2 && para_net_check.Net_nodes[node_i].brchlen1>1){
-			pop_size_node_ptr[node_i]->brchlen1=pow(pop_size_node_ptr[node_i]->brchlen1,para_net_check.Net_nodes[node_i].brchlen1-1);
+		if (para_net_check.Net_nodes[node_i].brchlen1<2 && para_net_check.Net_nodes[node_i].brchlen1>1){ // rescale the number of generations for alpha
+			pop_size_node_ptr[node_i]->brchlen1 = pow(pop_size_node_ptr[node_i]->brchlen1,para_net_check.Net_nodes[node_i].brchlen1-1);
 		}
 		if (para_net_check.Net_nodes[node_i].hybrid){
 			if (para_net_check.Net_nodes[node_i].brchlen2<2 && para_net_check.Net_nodes[node_i].brchlen2>1){
@@ -1017,7 +1024,7 @@ string pop_size_string /*! Network in extended newick form, branch lengths are t
 		}
 	}
 	rewrite_node_content(pop_size_node_ptr);
-	string pop_size_string_return=construct_adding_new_Net_str(pop_size_check);
+	string pop_size_string_return = construct_adding_new_Net_str(pop_size_check);
 	return pop_size_string_return;
 }
 
