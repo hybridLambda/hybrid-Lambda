@@ -29,7 +29,7 @@ void hybridLambda::param::init(){
 	this->help=false;
 	this->freq_bool=false;
 	this->print_tree=false;
-	this->plot_bool;
+	this->plot_bool=false;
 	this->log_bool=false;
 	this->log_NAME="LOG";
 	this->seg_bool=false;
@@ -57,9 +57,8 @@ hybridLambda::param::param(int argc, char *argv[]){
 	//read_GENE_trees=false;
 	//read_mt_trees=false;
 	int argc_i=1;
-	while (argc_i < argc){
+	while (argc_i < argc){	
 		std::string argv_i(argv[argc_i]);
-		
 		if (argv_i=="-h" || argv_i=="-help"){
 			help=true;
 			print_help();
