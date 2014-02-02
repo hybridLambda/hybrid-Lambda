@@ -1,12 +1,12 @@
-#AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joe.zhu@pg.canterbury.ac.nz])
+#AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joezhu@well.ox.ac.uk])
 AC_INIT([hybrid-Lambda],[beta-0.3],[joezhu@well.ox.ac.uk])
-dnl AC_CONFIG_SRCDIR([simu.c])
-#AC_CONFIG_SRCDIR([main.cpp])
+#dnl AC_CONFIG_SRCDIR([simu.c])
 #AC_CONFIG_HEADER([config.h])
 
-AM_INIT_AUTOMAKE
-AC_PROG_INSTALL
-AC_PREREQ
+AM_INIT_AUTOMAKE([subdir-objects])
+m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
+AM_SILENT_RULES([yes])
+
 AC_CANONICAL_HOST
 
 # Checks for programs.
@@ -18,9 +18,8 @@ AC_PROG_RANLIB
 
 # Checks for header files.
 AC_HEADER_STDC
-#AC_CHECK_HEADERS([float.h stdlib.h string.h unistd.h])
 AC_LANG(C++) 
-AC_CHECK_HEADERS([iostream string sstream fstream vector iomanip valarray math.h stdio.h ctime])
+#AC_CHECK_HEADERS([iostream string sstream fstream vector iomanip valarray math.h stdio.h ctime])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -37,10 +36,13 @@ AC_CANONICAL_HOST
 # specifically based on the host
 case $host_os in
   darwin* )
-   export CXXFLAGS=-I/opt/local/include
+   AC_PROG_CXX([clang])
+    export CXX=clang++
+    export CXXFLAGS=-I/opt/local/include -stdlib=libc++ 
     AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],[AC_MSG_ERROR(['boost' header files not found. Install from the port: sudo port install boost])])
          ;;
   linux*)
+  AC_PROG_CXX
     AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],[AC_MSG_ERROR(['boost' header files not found. Try downloading from :http://www.boost.org. Or: sudo apt-get install libboost-all-dev])])        
 		;;
    *BSD*)
@@ -52,7 +54,19 @@ case $host_os in
         ;;
 esac
 
+# Checks for the compiler viersion
+GCC_VERSION_MAJOR=$(g++ -dumpversion | cut -d'.' -f1)
+GCC_VERSION_MINOR=$(g++ -dumpversion | cut -d'.' -f2)
 
+if test "$GCC_VERSION_MAJOR" -ge 4
+then
+	if test "$GCC_VERSION_MINOR" -lt 7
+	then
+		AC_MSG_ERROR([Require g++ compiler 4.7+])
+	fi
+else
+	AC_MSG_ERROR([Require g++ compiler 4.7+])
+fi 
 
 # Checks for library functions.
 AC_FUNC_MALLOC

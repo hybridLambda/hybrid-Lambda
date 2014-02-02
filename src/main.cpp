@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
 	vector <string> gt_tree_str_s;
 	vector <string> mt_tree_str_s;
 	
-	if (argc==1 ){
+	if ( argc==1 ){
 		hybridLambda::print_help();
 	}	//else, proceed
 

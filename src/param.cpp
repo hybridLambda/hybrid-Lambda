@@ -37,6 +37,26 @@ void hybridLambda::param::init(){
 	this->read_mt_trees=false;
 	this->tmrca_NAME="tmrcaFILE";
 	this->bl_NAME="blFILE";
+			//size_t seed;				
+			//bool simulation_bool;
+			//bool help;
+			//bool freq_bool;
+			//bool print_tree;
+			//bool plot_bool;
+			//bool log_bool;
+			//string log_NAME;
+			//bool seg_bool;
+			//bool read_GENE_trees;
+			//bool read_mt_trees;
+			//string gt_file_name;
+			//string mt_file_name;
+			
+			//bool mm_bool;
+			//bool pop_bool;
+			//bool tmrca_bool;
+			//bool bl_bool;
+			//string tmrca_NAME;
+
 }
 
 hybridLambda::param::param(){
@@ -45,17 +65,6 @@ hybridLambda::param::param(){
 
 hybridLambda::param::param(int argc, char *argv[]){
 	this->init();
-	//seed=(unsigned)(time(0));
-	//simulation_bool=false;
-	//help=false;
-	//freq_bool=false;
-	//print_tree=false;
-	//plot_bool=false;
-	//log_bool=false;
-	//log_NAME="LOG";
-	//seg_bool=false;	
-	//read_GENE_trees=false;
-	//read_mt_trees=false;
 	int argc_i=1;
 	while (argc_i < argc){	
 		std::string argv_i(argv[argc_i]);
@@ -164,8 +173,8 @@ void hybridLambda::print_help(){
 	cout<<endl;
 	cout<<endl;
 	cout<<"*****************************************************************"<<endl;
-	cout<<"*			hybrid-Lambda beta 0.2			*"<<endl;
-	cout<<"*			  Author: Joe ZHU			*"<<endl;
+	cout<<"*                      hybrid-Lambda beta 0.2                   *"<<endl;
+	cout<<"*                         Author: Joe ZHU                       *"<<endl;
 	cout<<"*****************************************************************"<<endl;
 	cout<<endl<<endl;
 	hybridLambda::print_option();
@@ -174,7 +183,7 @@ void hybridLambda::print_help(){
 }
 
 void hybridLambda::print_example(){
-		cout<<"Examples:"<<endl;
+	cout<<"Examples:"<<endl;
 	cout<<""<<endl;	
 	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1"<<endl;	
 	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut"<<endl;

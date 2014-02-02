@@ -32,6 +32,15 @@ using namespace std;
 namespace hybridLambda{
 	class param{
 		public:	
+            /*!
+             * Constructors and Destructors
+             */  
+			param();
+            param(int argc, char *argv[]);
+
+            /*!
+             * Members
+             */              
 			size_t seed;				
 			bool simulation_bool;
 			bool help;
@@ -52,17 +61,10 @@ namespace hybridLambda{
 			bool bl_bool;
 			string tmrca_NAME;
 			string bl_NAME;
-			//string net_str;
-			//bool mono_bool;		
-			//bool sites_data_bool;
 			
-			//vector <string> gt_tree_str_s;
-			//vector <string> mt_tree_str_s;
-			
-			param(int argc, char *argv[]);
 		
 		private:
-			param();
+			
 			void init();
 	};
 	
