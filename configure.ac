@@ -68,6 +68,14 @@ else
 	AC_MSG_ERROR([Require g++ compiler 4.7+])
 fi 
 
+# Checks for the std=c++0x option
+AX_CXX_COMPILE_STDCXX_0X
+
+# Checks for the std=c++11 option
+#AX_CXX_COMPILE_STDCXX_11([ext|noext],[mandatory|optional])
+AX_CXX_COMPILE_STDCXX_11()
+
+
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
