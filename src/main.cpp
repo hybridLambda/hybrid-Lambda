@@ -135,17 +135,16 @@ int main(int argc, char *argv[]){
         
         if (hybrid_para.fst_bool){
             sim::param sim_para(argc, argv);	
-			Net coal_unit_net(sim_para.sp_string_coal_unit);
+            Net coal_unit_net(sim_para.net_str);
             double tau = coal_unit_net.Net_nodes[0].brchlen1;
             
-            Net para_net(sim_para.para_string);
-            double lambdaA  = para_net.Net_nodes[0].brchlen1;
-            double lambdaAB = para_net.Net_nodes.back().brchlen1;
-            Fst = FST(lambdaA, lambdaAB, tau) ;
-            cout << "tau = " << tau << endl;
-            cout << "lambdaA = " << lambdaA <<endl;
-            cout << "lambdaAB = " << lambdaAB <<endl;
-            cout << "Fst = " << Fst << endl;
+            //Net para_net(sim_para.para_string);
+            //double lambdaA  = para_net.Net_nodes[0].brchlen1;
+            //double lambdaAB = para_net.Net_nodes.back().brchlen1;
+            //cout<<"tau = " << tau <<endl;
+            //cout << "( 1 - exp( -tau ) )= "<<( 1 - exp( -tau ) )<<endl;
+            Fst = ( 1 - exp( -tau ) ) * ( tau / ( 1 + tau ) );
+            cout << "Expected[Fst] = " << Fst << endl;
         }
 		
 		if (hybrid_para.log_bool){      

@@ -1,5 +1,6 @@
-#include<boost/math/special_functions/binomial.hpp>
-
+//#include<boost/math/special_functions/binomial.hpp>
+//#include<boost/math/special_functions/gamma.hpp>
+#include "sim_gt.hpp"
 
 /*!
  * Assume two populations A and B have been isolated until time tau in the past as measured from the present. 
@@ -14,22 +15,37 @@
  * 
  */
 
-double ETw( double lambdaA, double lambdaAB, double tau ){
+double lambda( double alpha ){
+    return exp(log(boost::math::binomial_coefficient<double>(unsigned(2),unsigned(2)))+log(Beta(2-alpha,2-2+alpha)) - log(Beta(2.0-alpha,alpha)));
+    //return Beta(2-alpha, alpha)/Beta(2.0-alpha,alpha);
+}
+
+
+double ETw( double alphaA, double alphaAB, double tau ){
     //exp(log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)))
+    double lambdaA = lambda( alphaA );
+    double lambdaAB = lambda( alphaAB );
     
     return ( 1 - exp( -lambdaA * tau ) ) / lambdaA + exp( -lambdaA * tau) * ( tau + 1 / lambdaAB);
 } 
 
-double ETb( double lambdaAB, double tau ){
+double ETb( double alphaAB, double tau ){
+    double lambdaAB = lambda( alphaAB );
     return tau + 1/ lambdaAB;
 }
 
-double FST_indirect( double lambdaA, double lambdaAB, double tau ){
+double FST_indirect( double alphaA, double alphaAB, double tau ){
+    double lambdaA = lambda( alphaA );
+    double lambdaAB = lambda( alphaAB );
     return ( 1 - ETw( lambdaA, lambdaAB, tau) / ETb( lambdaAB, tau) );
 }
 
-double FST( double lambdaA, double lambdaAB, double tau ){
-    return ( 1 - exp(-lambdaA * tau) ) * ( 1 - 1 / ( tau + 1 / lambdaAB ) / lambdaA );
+double FST( double alphaA, double alphaAB, double tau ){
+    double lambdaA = lambda( alphaA );
+    double lambdaAB = lambda( alphaAB );
+    cout << "lambdaA = " << lambdaA <<endl;
+    return ( 1 - exp( -tau ) ) * ( tau / ( 1 + tau ) );
+    //return ( 1 - exp(-lambdaA * tau) ) * ( 1 - 1 / ( tau + 1 / lambdaAB ) / lambdaA );
     
 }
 
