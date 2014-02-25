@@ -29,6 +29,7 @@
 #include"freq.hpp"
 #include"figure.hpp"
 #include"seg-site.hpp"
+#include"fst.hpp"
 
 using namespace hybridLambda;
 
@@ -47,6 +48,8 @@ int main(int argc, char *argv[]){
 	    freq::param freq_para(argc,argv);
 	    action_board my_action(argc,argv);
 	    seg::param seg_para(argc,argv);
+        double Fst;
+
    	    if (hybrid_para.seg_bool){my_action.sim_num_mut_bool=true;}
 
 		time_t start_time = time(0);
@@ -70,8 +73,8 @@ int main(int argc, char *argv[]){
 			}
 			
 		    sim_n_gt simd_gt_tree_str_s(sim_para,my_action);
-			gt_tree_str_s=simd_gt_tree_str_s.gt_string_coal_unit_s;
-			mt_tree_str_s=simd_gt_tree_str_s.gt_string_mut_num_s;
+			gt_tree_str_s = simd_gt_tree_str_s.gt_string_coal_unit_s;
+			mt_tree_str_s = simd_gt_tree_str_s.gt_string_mut_num_s;
 			
 			
 			if (my_action.mono_bool  &&  sim_para.sample_size.size()==2){
@@ -129,6 +132,21 @@ int main(int argc, char *argv[]){
 			seg_para.create_site_data_dir(mt_tree_str_s);
 		}
 		time_t seg_end_time =time(0);
+        
+        if (hybrid_para.fst_bool){
+            sim::param sim_para(argc, argv);	
+			Net coal_unit_net(sim_para.sp_string_coal_unit);
+            double tau = coal_unit_net.Net_nodes[0].brchlen1;
+            
+            Net para_net(sim_para.para_string);
+            double lambdaA  = para_net.Net_nodes[0].brchlen1;
+            double lambdaAB = para_net.Net_nodes.back().brchlen1;
+            Fst = FST(lambdaA, lambdaAB, tau) ;
+            cout << "tau = " << tau << endl;
+            cout << "lambdaA = " << lambdaA <<endl;
+            cout << "lambdaAB = " << lambdaAB <<endl;
+            cout << "Fst = " << Fst << endl;
+        }
 		
 		if (hybrid_para.log_bool){      
 			remove(hybrid_para.log_NAME.c_str());    
@@ -179,6 +197,10 @@ int main(int argc, char *argv[]){
 				log_file << "Generating segregating site data took about " << seg_end_time - freq_end_time << " second(s) \n";
 				log_file << "Segregating site data saved at: "<<seg_para.seg_dir_name<<"\n";
 			}
+            if (hybrid_para.fst_bool){
+                log_file << "Fst = " << Fst << "\n";
+            }
+            
 			log_file.close();
 			string showlog="cat "+ hybrid_para.log_NAME;
 			int sys=system(showlog.c_str());

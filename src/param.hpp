@@ -62,6 +62,7 @@ namespace hybridLambda{
 			string tmrca_NAME;
 			string bl_NAME;
 			
+            bool fst_bool;
 		
 		private:
 			

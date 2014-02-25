@@ -24,19 +24,20 @@
 // parameters
 #include<param.hpp>
 void hybridLambda::param::init(){
-	this->seed=(unsigned)(time(0));
-	this->simulation_bool=false;
-	this->help=false;
-	this->freq_bool=false;
-	this->print_tree=false;
-	this->plot_bool=false;
-	this->log_bool=false;
-	this->log_NAME="LOG";
-	this->seg_bool=false;
-	this->read_GENE_trees=false;
-	this->read_mt_trees=false;
-	this->tmrca_NAME="tmrcaFILE";
-	this->bl_NAME="blFILE";
+	this->seed            = (unsigned)(time(0));
+	this->simulation_bool = false;
+	this->help            = false;
+	this->freq_bool       = false;
+	this->print_tree      = false;
+	this->plot_bool       = false;
+	this->log_bool        = false;
+	this->log_NAME        = "LOG";
+	this->seg_bool        = false;
+	this->read_GENE_trees = false;
+	this->read_mt_trees   = false;
+	this->tmrca_NAME      = "tmrcaFILE";
+	this->bl_NAME         = "blFILE";
+    this->fst_bool        = false;
 			//size_t seed;				
 			//bool simulation_bool;
 			//bool help;
@@ -143,7 +144,11 @@ hybridLambda::param::param(int argc, char *argv[]){
 		if (argv_i=="-print"){
 			print_tree=true;
 		}
-		
+
+		if (argv_i=="-fst"){
+			fst_bool = true;
+		}		
+
 		if (argv_i=="-log"){
 			log_bool=true;
 			argc_i++;

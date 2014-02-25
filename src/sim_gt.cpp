@@ -1069,13 +1069,14 @@ valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double nu
 
 //use heap structure for this!
 int update_nc(valarray <double> nc_X){	
-	for (int kmerge=0;kmerge<int(nc_X.size());kmerge++){
-		if (nc_X[kmerge]== nc_X.min()){
+	for (int kmerge = 0; kmerge < int(nc_X.size()); kmerge++){
+		if (nc_X[kmerge] == nc_X.min()){
 			//nc=kmerge+2;
 			return kmerge+2;
 			//break;
 		}
 	}
+    dout << "k merger was never found ... " << endl;
 }
 
 double kingman_bl(double num_lineage){

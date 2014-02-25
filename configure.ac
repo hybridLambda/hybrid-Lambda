@@ -55,25 +55,25 @@ case $host_os in
 esac
 
 # Checks for the compiler viersion
-GCC_VERSION_MAJOR=$(g++ -dumpversion | cut -d'.' -f1)
-GCC_VERSION_MINOR=$(g++ -dumpversion | cut -d'.' -f2)
+#GCC_VERSION_MAJOR=$(g++ -dumpversion | cut -d'.' -f1)
+#GCC_VERSION_MINOR=$(g++ -dumpversion | cut -d'.' -f2)
 
-if test "$GCC_VERSION_MAJOR" -ge 4
-then
-	if test "$GCC_VERSION_MINOR" -lt 7
-	then
-		AC_MSG_ERROR([Require g++ compiler 4.7+])
-	fi
-else
-	AC_MSG_ERROR([Require g++ compiler 4.7+])
-fi 
+#if test "$GCC_VERSION_MAJOR" -ge 4
+#then
+#	if test "$GCC_VERSION_MINOR" -lt 7
+#	then
+#		AC_MSG_ERROR([Require g++ compiler 4.7+])
+#	fi
+#else
+#	AC_MSG_ERROR([Require g++ compiler 4.7+])
+#fi 
 
 # Checks for the std=c++0x option
-AX_CXX_COMPILE_STDCXX_0X
+#AX_CXX_COMPILE_STDCXX_0X
 
 # Checks for the std=c++11 option
 #AX_CXX_COMPILE_STDCXX_11([ext|noext],[mandatory|optional])
-AX_CXX_COMPILE_STDCXX_11()
+#AX_CXX_COMPILE_STDCXX_11()
 
 
 # Checks for library functions.

@@ -55,7 +55,7 @@ namespace sim{
 			string sp_string_pop_size;
 			string para_string;
 			vector < int > sample_size;
-				string net_str;
+            string net_str;
 			
 			//,action_board my_action
 			bool num_gener_bool;
