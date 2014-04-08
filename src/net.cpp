@@ -674,3 +674,30 @@ double para /*! Coalescent parameter or fixed population sizes */){
 	string para_string=construct_adding_new_Net_str(para_Net);
 	return para_string;	
 }
+
+
+size_t Net::first_coal_rank(){
+    size_t min_rank = (size_t)Net_nodes.back().rank;
+    for (size_t i = 0 ; i < Net_nodes.size(); i++){
+        if ( !Net_nodes[i].tip_bool ){
+            min_rank = ( Net_nodes[i].rank < min_rank ) ?  Net_nodes[i].rank : min_rank ;
+            }
+        }
+    return min_rank;
+    }
+
+size_t Net::first_coal_index (){    
+    size_t min_rank = this->first_coal_rank();
+    size_t dummy_index = this->Net_nodes.size()-1;
+    double min_coal_time = this->Net_nodes[dummy_index].absolute_time;
+    //cout<<"min_rank = "<<min_rank<<endl;
+    for (size_t i = 0 ; i < Net_nodes.size(); i++){
+        if ( this->Net_nodes[i].rank == min_rank &&  this->Net_nodes[i].absolute_time < min_coal_time ){
+            dummy_index = i;
+            min_coal_time = this->Net_nodes[dummy_index].absolute_time;
+            }
+        
+        }
+        //cout << "min_coal_time = " << min_coal_time  <<endl;
+    return dummy_index;
+    }

@@ -53,7 +53,8 @@ class Net{
 		int enumerate_internal_branch(Node *current,int e_num_old);
 		bool is_net_func(); /*!< \brief To determin if a Net is network or not. \return is_net */
 		bool is_ultrametric_func(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
-	
+	    size_t first_coal_rank();
+        
 	public:
 	
 		string net_str; /*!< \brief species network string \todo this is new!!!*/
@@ -67,7 +68,9 @@ class Net{
 		vector <Node> Net_nodes;  /*!< \brief vector of nodes */
 		bool is_net; /*!< \brief true if Net is a network; false if it's a tree */
 		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
-		void clear(); 
+		
+        size_t first_coal_index ();
+        void clear(); 
 		void print_all_node();
 		void print_all_node_dout();
 

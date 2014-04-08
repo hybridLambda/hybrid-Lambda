@@ -61,6 +61,9 @@ namespace hybridLambda{
 			bool bl_bool;
 			string tmrca_NAME;
 			string bl_NAME;
+            
+            bool firstcoal_bool;
+            string firstcoal_NAME;
 			
             bool fst_bool;
 		

@@ -37,6 +37,8 @@ void hybridLambda::param::init(){
 	this->read_mt_trees   = false;
 	this->tmrca_NAME      = "tmrcaFILE";
 	this->bl_NAME         = "blFILE";
+    this->firstcoal_bool  = false;
+    this->firstcoal_NAME  = "firstcoalFILE" ; 
     this->fst_bool        = false;
 			//size_t seed;				
 			//bool simulation_bool;
@@ -110,6 +112,18 @@ hybridLambda::param::param(int argc, char *argv[]){
 			if (argc_i < argc){
 				if (argv[argc_i][0]!='-'){
 					tmrca_NAME=argv[argc_i];
+					//argc_i++;
+				}
+				else{argc_i--;}
+			}
+		}
+
+		if (argv_i=="-firstcoal"){
+			firstcoal_bool=true;
+			argc_i++;
+			if (argc_i < argc){
+				if (argv[argc_i][0]!='-'){
+					firstcoal_NAME=argv[argc_i];
 					//argc_i++;
 				}
 				else{argc_i--;}

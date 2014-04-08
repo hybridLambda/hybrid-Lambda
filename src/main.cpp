@@ -101,7 +101,7 @@ int main(int argc, char *argv[]){
 			}
 			tmrca_file.close();
 		}
-		
+
 		if (hybrid_para.bl_bool){
 			remove(hybrid_para.bl_NAME.c_str());    
 			std::ofstream bl_file;
@@ -117,6 +117,18 @@ int main(int argc, char *argv[]){
 			bl_file.close();
 		}
 		
+        if (hybrid_para.firstcoal_bool){
+			remove(hybrid_para.firstcoal_NAME.c_str());    
+			std::ofstream fistcoal_file;
+			fistcoal_file.open (hybrid_para.firstcoal_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+			for (size_t i=0;i<gt_tree_str_s.size();i++){
+				Net gt(gt_tree_str_s[i]);
+                size_t first_coal_index_dummy = gt.first_coal_index();
+				fistcoal_file << gt.Net_nodes[first_coal_index_dummy].absolute_time << "\t" << gt.Net_nodes[first_coal_index_dummy].clade << endl;
+			}
+			fistcoal_file.close();
+		}
+        
 		if (hybrid_para.read_mt_trees){
 			mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
 		}
