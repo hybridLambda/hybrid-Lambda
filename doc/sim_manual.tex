@@ -3,7 +3,7 @@
 \section{Introduction}
 
 
-{\tt hybrid-Lambda} is a software package that can simulate gene trees within a rooted species network or a rooted species tree under the coalescent process. The main feature of this program is that users can choose to use the standard Kingman coalescent process, which produces bifurcating genealogies, or two other $\Lambda$-coalescent processes, which produce multifurcating genealogies. The other feature is that {\tt hybrid-Lambda} uses extended Newick formatted strings to make it easier to represent hybridization events between species.
+{\tt Hybrid-Lambda} is a software package that can simulate gene trees within a rooted species network or a rooted species tree under the coalescent process. The main feature of this program is that users can choose to use the standard Kingman coalescent process, which produces bifurcating genealogies, or two other $\Lambda$-coalescent processes, which produce multifurcating genealogies. The other feature is that {\tt Hybrid-Lambda} uses extended Newick formatted strings to make it easier to represent hybridization events between species.
 
 \vspace{1cm}
 
@@ -14,7 +14,7 @@
 
 
 \section{Download and installation}
-{\tt hybrid-Lambda} can be downloaded from \url{https://code.google.com/p/hybrid-lambda/}. Extract the source code by executing the following command:
+{\tt Hybrid-Lambda} can be downloaded from \url{https://code.google.com/p/hybrid-lambda/}. Extract the source code by executing the following command:
 \cm{tar -xf hybrid-Lambda-VERSION.tar.gz.}
 
 It is fairly standard to compile \hs~on UNIX-like systems. In the directory {\tt hybrid-Lambda-VERSION}, execute the following command:
@@ -43,12 +43,12 @@ and 2, the rate is:
 where $B(\cdot,\cdot)$  is the beta function \citep{Schweinsberg2003}.
 
 \subsection{Input/output formats}\label{sim_man:input}
-The input file for {\tt hybrid-Lambda} is a character string that describes the relationships among species. Standard Newick format \citep{Olsen1990} is used for inputting species trees and outputting
+The input file for {\tt Hybrid-Lambda} is a character string that describes the relationships among species. Standard Newick format \citep{Olsen1990} is used for inputting species trees and outputting
 gene trees, e.g.:
 \begin{equation}
 ((A:t_A,B:t_B):t_{AB},C:t_C)\label{sim_man:no_root},
 \end{equation}
-where $t_i$ denotes the branch length from $i$ to its parent node. {\tt hybrid-Lambda} uses the values of $t_i$ to assign parameters for different inputs. In Expression \eqref{sim_man:no_root}, the interior nodes are not labelled. However, this is not essential. {\tt hybrid-Lambda} can also recognise input Newick string whose nodes are all labelled.
+where $t_i$ denotes the branch length from $i$ to its parent node. {\tt Hybrid-Lambda} uses the values of $t_i$ to assign parameters for different inputs. In Expression \eqref{sim_man:no_root}, the interior nodes are not labelled. However, this is not essential. {\tt Hybrid-Lambda} can also recognise input Newick string whose nodes are all labelled.
 
 Extended Newick formatted strings \citep{Cardona12008,Huson2010} label all internal
 nodes, and are used for inputting species networks. In the network string, the descendants of a hybrid node are recorded before the hybrid node the first time the hybrid node appears, otherwise is written as a tip node. For example,
@@ -147,7 +147,7 @@ Moreover, in the following example, we demonstrate that if the population sizes 
 
 \subsection{Simulating multiple samples per species}
 \cm{hybrid-Lambda -spcu INPUT -S n1 n2 ... }
-{\tt hybrid-Lambda} sorts the taxa names in a particular order. At each character of a taxon name, it sorts:
+{\tt Hybrid-Lambda} sorts the taxa names in a particular order. At each character of a taxon name, it sorts:
 \begin{itemize}
 \item numerics in ascending order,
 \item letters in alphabetical order,
@@ -174,14 +174,14 @@ Moreover, similar to assigning particular population sizes on branches (see the 
 % \cm{ hybrid-Lambda -spcu FILENAME -dot [-branch]}
 % \subsubsection{Plot by \LaTeX}
 \cm{ hybrid-Lambda -spcu INPUT -dotF OUTPUT [-branch] }
-{\tt hybrid-Lambda} uses the program {\tt dot} to generate figures. The option {\tt [-branch]} will label the branch lengths in the figure, e.g.:
+{\tt Hybrid-Lambda} uses the program {\tt dot} to generate figures. The option {\tt [-branch]} will label the branch lengths in the figure, e.g.:
 \cm{hybrid-Lambda -spcu trees/7\_tax\_sp\_nt1\_para -dot -branch}
 \begin{center}
 \includegraphics[width=10cm,height=10cm]{branch.pdf}
 \end{center}
 If the option {\tt -dot} is used instead of {\tt -dotF OUTPUT}, the figure will be saved in the file {\tt figure.pdf} by default.
 
-Alternatively, by replacing {\tt -dotF} with {\tt plotF}, {\tt hybrid-Lambda} can generate \LaTeX\ code for plotting a network or tree.
+Alternatively, by replacing {\tt -dotF} with {\tt plotF}, {\tt Hybrid-Lambda} can generate \LaTeX\ code for plotting a network or tree.
 If {\tt -plot} is used instead of {\tt -plotF OUTPUT}, the \LaTeX\ code will be saved in the file {\tt texfigure.tex} by default.
 % \begin{figure}
 % \centering
@@ -189,7 +189,7 @@ If {\tt -plot} is used instead of {\tt -plotF OUTPUT}, the \LaTeX\ code will be 
 % \end{figure}
 
 \subsubsection{Analysing the frequencies of gene trees}
-{\tt hybrid-Lambda} can generate a topology frequency table for the simulated gene trees by:
+{\tt Hybrid-Lambda} can generate a topology frequency table for the simulated gene trees by:
 \cm{ hybrid-Lambda -spcu INPUT -num N -fF OUTPUT .}
 
 \cm{ hybrid-Lambda -gt INPUT -fF OUTPUT}
