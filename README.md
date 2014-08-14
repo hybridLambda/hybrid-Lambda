@@ -8,56 +8,67 @@ gies. The other feature is that hybrid sim uses extended Newick formatted
 strings to make it easier to represent hybridization events between species.
 
 
+##INSTALLATION
+To install hybrid-Lambda, first install the following packages and libraries
 
-INSTALLATION
+on Debian/Ubuntu based systems:
+```bash
+apt-get install build-essential autoconf autoconf-archive doxygen graphviz
+```
+on Mac OS:
+```bash
+port install automake autoconf autoconf-archive doxygen graphviz
+```
 
-To install hybrid-Lambda, type the following commands, './bootstrap' and then 'make';
-mac port install graphviz
+then type the following commands:
+```bash
+./bootstrap
+make
+```
 
-DOCUMENTATION
 
-To generate html documentation by typing 'doxygen Doxyfile', or 'make doxygen-run'.
-
-
-ASSUMPTION
-
+##ASSUMPTION
 Input network files are written in extended newick format.
  
 
-HOW IT WORKS
+##LICENCE
+You can freely use all code in this project under the conditions of the GNU
+GPL Version 3 or later.
+
+##HOW IT WORKS
 
 Program parameters and options:
-         -h or -help  --  Help. List the following content.
-         -spcu INPUT  --  Input the species network/tree string through command line or a file.
+         -h or -help | Help. List the following content.
+         -spcu INPUT | Input the species network/tree string through command line or a file.
                           Branch lengths of the INPUT are in coalescent unit.
-         -spng INPUT  --  Input the species network/tree string through command line or a file. 
+         -spng INPUT | Input the species network/tree string through command line or a file. 
                           Branch lengths of the INPUT are in number of generation.
-          -pop INPUT  --  Population sizes are defined by a single numerical constant, 
+          -pop INPUT | Population sizes are defined by a single numerical constant, 
                           or a string which specifies the population size on each branch. 
                           The string can be input through command line or a file. 
                           By default, population size 10,000 is used.
-           -mm INPUT  --  Multiple merger parameters are defined by a single numerical constant, 
+           -mm INPUT | Multiple merger parameters are defined by a single numerical constant, 
                           or a string which speifies the parameter on each branch. 
                           The string can be input through command line or a file. 
                           By default, Kingman coalescent is used.
-        -S n1 n2 ...  --  Specify the number of samples for each taxon.
-              -num N  --  The number of gene trees will be simulated.
-          -seed SEED  --  User define random SEED
-              -mu MU  --  User defined constant mutation rate MU. By default mutation rate 0.00005 is used.
-   -gF FILE [option]  --  Specify the filename for simulated gene trees. "GENE_TREE" by default
-       -sim_mut_unit  --  Convert the simulated gene tree branch lengths to mutation unit.
-      -sim_num_gener  --  Convert the simulated gene tree branch lengths to number of generations.
-        -sim_num_mut  --  Simulate numbers of mutations on each branch of simulated gene trees.
-         -sim_Si_num  --  Generate the file out table, which includes the number of segregating
+        -S n1 n2 ... | Specify the number of samples for each taxon.
+              -num N | The number of gene trees will be simulated.
+          -seed SEED | User define random SEED
+              -mu MU | User defined constant mutation rate MU. By default mutation rate 0.00005 is used.
+   -gF FILE [option] | Specify the filename for simulated gene trees. "GENE_TREE" by default
+       -sim_mut_unit | Convert the simulated gene tree branch lengths to mutation unit.
+      -sim_num_gener | Convert the simulated gene tree branch lengths to number of generations.
+        -sim_num_mut | Simulate numbers of mutations on each branch of simulated gene trees.
+         -sim_Si_num | Generate the file out table, which includes the number of segregating
                           sites and the total branch length of the gene tree in coalescent unit.
-                  -f  --  Generate a topology frequency table of a set of input trees or simulated gene trees.
+                  -f | Generate a topology frequency table of a set of input trees or simulated gene trees.
                           Frequency table is saved in file freq out by default.
-            -fF FILE  --  The topology frequency table will be saved in the FILE.
-            -gt FILE  --  Specify the FILE of trees to analyse tree topology frequencies.
-               -mono  --  Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. 
- -plot/-dot [option]  --  Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).
-             -branch  --  Branch lengths will be labelled in the figure.
-   -plotF/-dotF FILE  --  Generated figure will be saved in FILE.
+            -fF FILE | The topology frequency table will be saved in the FILE.
+            -gt FILE | Specify the FILE of trees to analyse tree topology frequencies.
+               -mono | Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. 
+ -plot/-dot [option] | Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).
+             -branch | Branch lengths will be labelled in the figure.
+   -plotF/-dotF FILE | Generated figure will be saved in FILE.
 
 Examples:
 
