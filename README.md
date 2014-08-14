@@ -39,7 +39,7 @@ GPL Version 3 or later.
 
 Program parameters and options:
 
-Options              |     
+Options              | Useage
 -------------------- | -----------------------
          -h or -help | Help. List the following content.
          -spcu INPUT | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in coalescent unit.
@@ -72,8 +72,8 @@ Options              |
              -branch | Branch lengths will be labelled in the figure.
    -plotF/-dotF FILE | Generated figure will be saved in FILE.
 
-Examples:
-
+##Examples:
+```bash
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1
 hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num N -pop 25000 -sim num gener
@@ -86,4 +86,4 @@ hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -gF GENE -fF OUTPUT
 hybrid-Lambda -gt GENE_coal_unit -f 
 hybrid-Lambda -spcu '(A:5,B:5)r;'-mono -num 100 -mm .1 -S 4 4
-
+```
