@@ -1,5 +1,6 @@
-#AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joezhu@well.ox.ac.uk])
 AC_INIT([hybrid-Lambda],[beta-0.3],[joezhu@well.ox.ac.uk])
+#AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joezhu@well.ox.ac.uk])
+
 #dnl AC_CONFIG_SRCDIR([simu.c])
 #AC_CONFIG_HEADER([config.h])
 
@@ -53,27 +54,6 @@ case $host_os in
         AC_MSG_ERROR([Your platform is not currently supported])
         ;;
 esac
-
-# Checks for the compiler viersion
-#GCC_VERSION_MAJOR=$(g++ -dumpversion | cut -d'.' -f1)
-#GCC_VERSION_MINOR=$(g++ -dumpversion | cut -d'.' -f2)
-
-#if test "$GCC_VERSION_MAJOR" -ge 4
-#then
-#	if test "$GCC_VERSION_MINOR" -lt 7
-#	then
-#		AC_MSG_ERROR([Require g++ compiler 4.7+])
-#	fi
-#else
-#	AC_MSG_ERROR([Require g++ compiler 4.7+])
-#fi 
-
-# Checks for the std=c++0x option
-#AX_CXX_COMPILE_STDCXX_0X
-
-# Checks for the std=c++11 option
-#AX_CXX_COMPILE_STDCXX_11([ext|noext],[mandatory|optional])
-#AX_CXX_COMPILE_STDCXX_11()
 
 
 # Checks for library functions.

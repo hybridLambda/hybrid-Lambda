@@ -1,11 +1,10 @@
-/* 
- * 
+/*
  * hybrid-Lambda is used to simulate gene trees given species network under 
  * coalescent process.
  * 
- * Copyright (C) 2010, 2011, 2012, 2013 Sha (Joe) Zhu
+ * Copyright (C) 2010 -- 2014 Sha (Joe) Zhu
  * 
- * This file is part of hybrid-Lambda 
+ * This file is part of hybrid-Lambda.
  * 
  * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +18,6 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 //seg-site.cpp 
 
