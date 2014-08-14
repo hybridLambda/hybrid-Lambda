@@ -12,7 +12,7 @@ strings to make it easier to represent hybridization events between species.
 INSTALLATION
 
 To install hybrid-Lambda, type the following commands, './bootstrap' and then 'make';
-
+mac port install graphviz
 
 DOCUMENTATION
 

@@ -1,0 +1,14 @@
+\documentclass{article}
+\usepackage{tikz}
+
+% set up externalization
+\usetikzlibrary{external}
+\tikzset{external/system call={latex \tikzexternalcheckshellescape -halt-on-error
+-interaction=batchmode -jobname "\image" "\texsource";
+dvips -o "\image".ps "\image".dvi;
+ps2eps -f "\image.ps"}}
+\tikzexternalize
+
+\begin{document}
+\input{multi_in_net_tikz_fig.tex}
+\end{document}

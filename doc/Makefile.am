@@ -21,3 +21,7 @@ endif
 EXTRA_DIST = manual.pdf 
 
 #SUBDIRS =
+
+net1fig: 
+	rm net1-figure0.md5
+	latex --shell-escape net1.tex

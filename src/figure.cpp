@@ -303,9 +303,12 @@ void figure::param::plot_in_dot_(//const char* file_name /*! Name for the figure
 	dot_file <<"}\n";
 	dot_file.close();
 
-	string command="dot -Tps "+file_name_no_dot+".dot -o "+file_name_no_dot+".ps";
-	int sys=system(command.c_str());
-	command="convert "+file_name_no_dot+".ps -resize 100\% "+file_name_no_dot+".pdf";
+	string command="dot -Tps2 "+file_name_no_dot+".dot -o "+file_name_no_dot+".eps";
+	int sys = system(command.c_str());
+	command = "dot -Tps "+file_name_no_dot+".dot -o "+file_name_no_dot+".ps";
+	sys = system(command.c_str());
+    command = "dot -Tpdf "+file_name_no_dot+".dot -o "+file_name_no_dot+".pdf";
+	//command="convert "+file_name_no_dot+".ps -resize 100\% "+file_name_no_dot+".pdf";
 	sys=system(command.c_str());
 	string appending_log_str="Dot figure generated in file: "+file_name_no_dot+".pdf";
 }

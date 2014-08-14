@@ -1,20 +1,25 @@
 
 
-\section{Introduction}
+%\section{Introduction}
 
 
 {\tt Hybrid-Lambda} is a software package that can simulate gene trees within a rooted species network or a rooted species tree under the coalescent process. The main feature of this program is that users can choose to use the standard Kingman coalescent process, which produces bifurcating genealogies, or two other $\Lambda$-coalescent processes, which produce multifurcating genealogies. The other feature is that {\tt Hybrid-Lambda} uses extended Newick formatted strings to make it easier to represent hybridization events between species.
 
-\vspace{1cm}
+\vspace{1.5cm}
 
 \begin{center}
 %\input{$HOME/phd_diary/my_files/wk_coal_c++/sim/notes/multi_in_net_tikz_fig.tex}
 \input{multi_in_net_tikz_fig.tex}
 \end{center}
 
+\vspace{1cm}
+
+%\newpage
 
 \section{Download and installation}
-{\tt Hybrid-Lambda} can be downloaded from \url{https://code.google.com/p/hybrid-lambda/}. Extract the source code by executing the following command:
+{\tt Hybrid-Lambda} can be downloaded from \url{https://github.com/shajoezhu/hybrid-Lambda}. 
+%https://code.google.com/p/hybrid-lambda/
+Extract the source code by executing the following command:
 \cm{tar -xf hybrid-Lambda-VERSION.tar.gz.}
 
 It is fairly standard to compile \hs~on UNIX-like systems. In the directory {\tt hybrid-Lambda-VERSION}, execute the following command:
@@ -57,7 +62,8 @@ nodes, and are used for inputting species networks. In the network string, the d
 \end{equation}
 where $\#$ identifies the hybrid node.
 \begin{center}
-\includegraphics[height=6.5cm]{net_eg.pdf}
+\includegraphics[width=.5\textwidth]{net_eg.pdf}
+%hybrid-Lambda -spcu "(((B:1)h_1#.5:1,A:2)s_1:1,(h_1#.5:1,C:2)s_2:1)r;" -dotF net_eg
 \end{center}
 At a hybrid node, lineages travel to either parent nodes with given probabilities. The parameter $\gamma$ denotes the probability of that the lineage goes to the first parent node.
 Since the hybrid node has two parent nodes, the branch length needs to be specific, i.e. $t_{i}^j$ denotes the branch length from $i$ to $j$.
@@ -117,7 +123,7 @@ For example, suppose the input network string in the file {\tt 4\_tax\_sp\_nt1\_
  ((((B:1,C:1)s1:1)h1#.5:1,A:3)s2:1,(h1#.5:1,D:3)s3:1)r.
 \end{verbatim}
 
-\cm{hybrid-Lambda -spcu trees/4\_tax\_sp\_nt1\_para -gF example2 -num 2 \mbox{-mu 0.00003} -sim\_mut\_unit -sim\_num\_mut}
+\cm{ \mbox{ hybrid-Lambda -spcu trees/4\_tax\_sp\_nt1\_para -gF example2 -num 2 \textbackslash } \mbox{-mu 0.00003 -sim\_mut\_unit -sim\_num\_mut }}
 will generate the following files:
 \begin{verbatim}
 $ cat example2_coal_unit
@@ -157,7 +163,7 @@ Moreover, in the following example, we demonstrate that if the population sizes 
 To sample multiple individuals, the order of the sample sizes needs to follow the order of the taxa names.
 
 For example:
-\cm{\mbox{hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);'} \mbox{-S 2 4 3 6 5} .}
+\cm{\mbox{hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' \textbackslash } \mbox{-S 2 4 3 6 5} .}
 The order of the taxon names is {\tt 13D}, {\tt 4}, {\tt A}, {\tt B} and {\tt a}. Thus, the program
 will sample 2 individuals in taxon {\tt 13D}, four samples from taxon {\tt 4}, three samples from taxon {\tt A}, six samples from taxon {\tt B} and five samples from taxon {\tt a}.
 
@@ -175,11 +181,11 @@ Moreover, similar to assigning particular population sizes on branches (see the 
 % \subsubsection{Plot by \LaTeX}
 \cm{ hybrid-Lambda -spcu INPUT -dotF OUTPUT [-branch] }
 {\tt Hybrid-Lambda} uses the program {\tt dot} to generate figures. The option {\tt [-branch]} will label the branch lengths in the figure, e.g.:
-\cm{hybrid-Lambda -spcu trees/7\_tax\_sp\_nt1\_para -dot -branch}
+\cm{hybrid-Lambda -spcu trees/7\_tax\_sp\_nt1\_para -dotF branch -branch}
 \begin{center}
-\includegraphics[width=10cm,height=10cm]{branch.pdf}
+\includegraphics[width=.8\textwidth]{branch.pdf}
 \end{center}
-If the option {\tt -dot} is used instead of {\tt -dotF OUTPUT}, the figure will be saved in the file {\tt figure.pdf} by default.
+If the option {\tt -dot} is used instead of {\tt -dotF OUTPUT}, the figure will be saved in the file {\tt dotfigure.pdf} by default.
 
 Alternatively, by replacing {\tt -dotF} with {\tt plotF}, {\tt Hybrid-Lambda} can generate \LaTeX\ code for plotting a network or tree.
 If {\tt -plot} is used instead of {\tt -plotF OUTPUT}, the \LaTeX\ code will be saved in the file {\tt texfigure.tex} by default.
