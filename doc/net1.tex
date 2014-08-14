@@ -6,7 +6,8 @@
 \tikzset{external/system call={latex \tikzexternalcheckshellescape -halt-on-error
 -interaction=batchmode -jobname "\image" "\texsource";
 dvips -o "\image".ps "\image".dvi;
-ps2eps -f "\image.ps"}}
+ps2eps "\image.ps" -f;
+convert "\image.ps" "\image.png"}}
 \tikzexternalize
 
 \begin{document}

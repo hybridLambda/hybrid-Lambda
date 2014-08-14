@@ -23,5 +23,5 @@ EXTRA_DIST = manual.pdf
 #SUBDIRS =
 
 net1fig: 
-	rm net1-figure0.md5
+	if [ -a net1-figure0.md5 ] ; then rm net1-figure0.md5 ; fi
 	latex --shell-escape net1.tex
