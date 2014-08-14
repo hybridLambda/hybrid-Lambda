@@ -39,11 +39,10 @@ GPL Version 3 or later.
 
 Program parameters and options:
 
-Options              | 
+Options              
 -------------------- | -----------------------
          -h or -help | Help. List the following content.
-         -spcu INPUT | Input the species network/tree string through command line or a file.
-                          Branch lengths of the INPUT are in coalescent unit.
+         -spcu INPUT | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in coalescent unit.
          -spng INPUT | Input the species network/tree string through command line or a file. 
                           Branch lengths of the INPUT are in number of generation.
           -pop INPUT | Population sizes are defined by a single numerical constant, 
