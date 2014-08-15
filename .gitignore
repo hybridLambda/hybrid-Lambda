@@ -29,6 +29,18 @@
 *.sqlite
 *.swp
 
+# doc #
+######################
+doc/manual.aux
+doc/manual.out
+doc/net1-figure0.dpth
+doc/net1-figure0.dvi
+doc/net1-figure0.pdf
+doc/net1-figure0.ps
+doc/net1.aux
+doc/net1.auxlock
+doc/net1.dvi
+
 # automake
 Makefile
 Makefile.in

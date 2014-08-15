@@ -21,6 +21,72 @@
 */
 
 #include"figure.hpp"
+#include<cexcept>
+
+void Figure::init(){
+    //this->plot_bool=false;
+	 //dot_bool=false;
+     this->option = PLOT_DEFAULT;
+	 //plot_option=0;
+	 //plot_label=false;
+	 //plot_branch=false;
+	 //this->tex_fig_name="texfigure.tex";
+	 //this->dot_fig_name="dotfigure.dot";
+    }
+
+Figure::Figure( int argc, char *argv[] ){
+	 //plot_bool=false;
+	 //dot_bool=false;
+	 
+	 //plot_option=0;
+	 //plot_label=false;
+	 //plot_branch=false;
+	 //tex_fig_name="texfigure.tex";
+	 //dot_fig_name="dotfigure.dot";
+	for ( int argc_i=1; argc_i < argc ;argc_i++ ){
+		
+		std::string argv_i(argv[argc_i]);
+		if (argv_i=="-label"){
+            if ( this->plot_option != PLOT_DEFAULT ){
+                throw std::invaild_argument ( " Plot option can either be \"-label\" or \"-branch\" " );
+                }
+            this->plot_option == LABEL;
+			//plot_label=true;
+		}
+		if (argv_i=="-branch"){
+            if ( this->plot_option != PLOT_DEFAULT ){
+                throw std::invaild_argument ( " Plot option can either be \"-label\" or \"-branch\" " );
+                }
+            this->plot_option == BRANCH;
+			//plot_label=true;
+		}
+
+		if (argv_i=="-dot"){
+			dot_bool=true;
+		}
+
+		if (argv_i=="-dot_file" || argv_i=="-dotF"){
+			dot_bool=true;
+			dot_fig_name=argv[argc_i+1];
+			argc_i++;
+		}
+		check_and_remove(dot_fig_name.c_str());
+		
+		if (argv_i=="-plot"){
+			plot_bool=true;
+		}
+		if (argv_i=="-plot_file" || argv_i=="-plotF"){
+			plot_bool=true;
+			tex_fig_name=argv[argc_i+1];
+			argc_i++;
+
+		}
+		check_and_remove(tex_fig_name.c_str());
+	}
+	set_plot_option_();
+}
+
+
 
 figure::param::param(){
 	 this->plot_bool=false;

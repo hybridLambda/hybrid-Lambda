@@ -20,14 +20,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include"net.hpp"
+#include<iostream> // clog
+
+enum FIGURE_OPTION { PLOT_DEFAULT, BRANCH, LABEL};
+enum FIGURE_PROGRAM { LATEX, DOT };
+
+class Figure{
+    public:
+        //Figure();
+        Figure ( int argc, char *argv[] );
+        void plot( string net_str );
+        
+    private:
+        FIGURE_PROGRAM method;
+        FIGURE_OPTION option;
+        //bool plot_bool;
+        //bool dot_bool;
+        
+        //int plot_option;//=0;
+        //bool plot_label;
+        //bool plot_branch;
+        //string tex_fig_name;
+        //string dot_fig_name;
+        //void set_plot_option_();
+        void init();
+        string figure_file_prefix;
+        valarray <int>  det_x_node (Net net_dummy);
+        void plot_in_latex_(const char* file_name, Net net_dummy);
+        void plot_in_latex_file_(Net net_dummy);
+        void plot_in_dot_(Net net_dummy);
+};
+
+
 
 namespace figure{
 	class param{
 		public:
-
 			param();
-			param(int argc, char *argv[]);
-			
+			param(int argc, char *argv[]);			
 			void plot(string net_str);
 		
 		private:
@@ -45,6 +75,8 @@ namespace figure{
 			void plot_in_latex_file_(Net net_dummy);
 			void plot_in_dot_(Net net_dummy);
 	};
+    
+    
 }
 
 
