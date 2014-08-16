@@ -96,7 +96,6 @@ void Figure::finalize(){
 /*! \brief Produce a tex file, which is used to draw the network 
  */
 void Figure::plot_in_latex_file( ){
-	cout<<"hea"<<endl;
 	ofstream latex_file;
     latex_file.open( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
 	latex_file << "\\documentclass[10pt]{article}\n";
@@ -104,9 +103,7 @@ void Figure::plot_in_latex_file( ){
 	latex_file << "\\ifx\\du\\undefined\\newlength{\\du}\\fi\\setlength{\\du}{30\\unitlength}\n";
 	latex_file << "\\begin{center}\n";
 	latex_file.close();
-cout<<"hea"<<endl;
     this->plot_in_latex_core();
-cout<<"hea"<<endl;
     latex_file.open ( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
 	latex_file << "\\end{center}\n";
 	latex_file << "\\end{document}\n";
@@ -114,8 +111,7 @@ cout<<"hea"<<endl;
 	
 	string command = "pdflatex " + this->figure_file_name;
 	int sys=system(command.c_str());
-	//string appending_log_str="Network figure generated in file: "+file_name_no_dot+".pdf";
-    std::clog << "Network figure generated in file: " + this->figure_file_name + ".pdf" << endl; 
+    std::clog << "Network figure generated in file: " + this->figure_file_name << endl; 
 }
 
 void Figure::plot_in_latex_core(){
@@ -124,9 +120,7 @@ void Figure::plot_in_latex_core(){
 	latex_file << "\\begin{tikzpicture}[thick]\n";
 	valarray <int>  x_node = this->det_x_node ( );
 	for (size_t node_i = 0; node_i < this->obj_net.Net_nodes.size();node_i++){
-        cout << node_i<<endl;
 		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
-        cout <<sp_node_label<<endl;
 		sp_node_label=rm_and_hash_sign(sp_node_label);
 		if (obj_net.Net_nodes[node_i].tip_bool){
 			latex_file<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
@@ -199,42 +193,35 @@ void Figure::plot_in_dot( ){
 	ofstream dot_file;
 	dot_file.open ( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
 	dot_file <<"graph G {\n rankdir=BT; ratio=compress;\n";//page="14,14"; determines the size of the ps output
-	//valarray <int>  x_node=det_x_node (obj_net);
-    
-	for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size()-1; node_i++ ){
-    
+
+	for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size()-1; node_i++ ){    
 		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
-        //cout<<sp_node_label<<endl;
 		sp_node_label=rm_and_hash_sign(sp_node_label);
 		string sp_node_parent1_label=obj_net.Net_nodes[node_i].parent1->label;
 		sp_node_parent1_label=rm_and_hash_sign(sp_node_parent1_label);
 		if (!obj_net.Net_nodes[node_i].tip_bool){		
 			if (this->option == LABEL){
 				dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<"[label=\""<< obj_net.Net_nodes[node_i].e_num <<"\"];\n";
-			}
-			else{
-				if (this->option == BRANCH){
-					dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen1 <<"\"];\n";	
+			    }
+			else if (this->option == BRANCH){
+                dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen1 <<"\"];\n";	
 				}
-				else{
-					dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<";\n";//
-				}	
-			}
+            else{
+                dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<";\n";//
+            }	
+			
 			if (obj_net.Net_nodes[node_i].parent2){
 				string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;
 				sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
 				if (this->option == LABEL){
 					dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<"[label=\""<< obj_net.Net_nodes[node_i].e_num2 <<"\"];\n";
-				}
-				else{
-					if (this->option == BRANCH){
-						dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen2 <<"\"];\n";	
+				    }
+				else if (this->option == BRANCH){
+                    dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen2 <<"\"];\n";	
 					}
-					else{
-						dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<";\n";//<<"[label=\""<< obj_net.Net_nodes[node_i].e_num2 <<"\"];\n";
+                else{
+                    dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<";\n";//<<"[label=\""<< obj_net.Net_nodes[node_i].e_num2 <<"\"];\n";
 					}	
-				}	
-				
 			}
 		}
 		else{
@@ -276,42 +263,45 @@ void Figure::plot_in_dot( ){
 	dot_file <<"}\n";
 	dot_file.close();
 
-	string command = "dot -Tps2 " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".eps";
-	int sys = system(command.c_str());
-	command = "dot -Tps2 " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".ps";
-	sys = system(command.c_str());
-    command = "dot -Tpdf " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".pdf";
-	//command="convert "+file_name_no_dot+".ps -resize 100\% "+file_name_no_dot+".pdf";
-	sys=system(command.c_str());
+	//string command = "dot -Tps2 " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".eps";
+	//int sys = system(command.c_str());
+	//command = "dot -Tps2 " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".ps";
+	//sys = system(command.c_str());
+    //command = "dot -Tpdf " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".pdf";
+	//sys=system(command.c_str());
+    this->execute_dot ("ps2", ".eps");
+    this->execute_dot ("ps2", ".ps");
+    this->execute_dot ("pdf", ".pdf");
 	std::clog << "Dot figure generated in file: " + this->figure_file_prefix + ".pdf" << endl;
 }
+
+void Figure::execute_dot(string method, string suffix){
+	string command = "dot -T" + method + " " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + suffix;
+	(void)system( command.c_str() );
+    }
 
 
 /*! \brief When drawing network in .tex files, detemine the x coordinates of nodes
  */
 valarray <int>  Figure::det_x_node ( ){
 	valarray <int>  x_node ( this->obj_net.Net_nodes.size() );
-    cout << this->obj_net.Net_nodes.size()<<endl;
 	x_node[x_node.size()-1]=0;
-	this->obj_net.print_all_node();
 	for ( int rank_i = this->obj_net.Net_nodes.back().rank; rank_i > 0; rank_i-- ){ 
-        cout<<rank_i<<endl;       
 		vector <int> x_node_dummy;
 		vector <size_t> x_node_dummy_index;
 		for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size(); node_i++ ){
 			if ( this->obj_net.Net_nodes[node_i].rank == rank_i){
-                cout << "rank_i "<<rank_i << " node_i "<<node_i<<" "<< this->obj_net.Net_nodes[node_i].label <<endl;
-				size_t n_child=obj_net.Net_nodes[node_i].child.size();
+				size_t n_child = this->obj_net.Net_nodes[node_i].child.size();
 				int parent_x = x_node[node_i];
 				int start_child_x = parent_x-floor(n_child/2);
-				bool odd_num_child=false;
-				if ((n_child % 2) == 1){
-					odd_num_child=true;
-				}
+
+                bool odd_num_child = (n_child % 2) == 1 ? true:false;
+                
 				if (odd_num_child){
 					for (size_t child_i=0; child_i < n_child;child_i++){
-						for (size_t node_j=0;node_j<obj_net.Net_nodes.size();node_j++){
-							if (obj_net.Net_nodes[node_j].label==obj_net.Net_nodes[node_i].child[child_i]->label){			
+						for (size_t node_j=0; node_j < this->obj_net.Net_nodes.size(); node_j++){
+							//if ( this->obj_net.Net_nodes[node_j].label == this->obj_net.Net_nodes[node_i].child[child_i]->label){			
+                            if ( &this->obj_net.Net_nodes[node_j] == this->obj_net.Net_nodes[node_i].child[child_i] ){
 								if ( start_child_x == parent_x){
 									x_node[node_j] = parent_x;
 									start_child_x++;
@@ -325,9 +315,10 @@ valarray <int>  Figure::det_x_node ( ){
 					}
 				}
 				else{
-					for (size_t child_i=0;child_i<n_child;child_i++){
-						for (size_t node_j=0;node_j<obj_net.Net_nodes.size();node_j++){
-							if (obj_net.Net_nodes[node_j].label==obj_net.Net_nodes[node_i].child[child_i]->label){
+					for (size_t child_i=0; child_i < n_child; child_i++){
+						for ( size_t node_j = 0; node_j < this->obj_net.Net_nodes.size(); node_j++){
+							//if (this->obj_net.Net_nodes[node_j].label == this->obj_net.Net_nodes[node_i].child[child_i]->label){
+                            if ( &this->obj_net.Net_nodes[node_j] == this->obj_net.Net_nodes[node_i].child[child_i] ){
 								if (start_child_x==parent_x){										
 									start_child_x++;
 								}
@@ -343,8 +334,8 @@ valarray <int>  Figure::det_x_node ( ){
 				x_node_dummy.push_back(x_node[node_i]);
 				x_node_dummy_index.push_back(node_i);
 			}
-            cout << "rank_i "<<rank_i << " node_i "<<node_i<<" "<< this->obj_net.Net_nodes[node_i].label <<endl;
 		}
+        //cout <<"stop"
 		if (x_node_dummy.size() > 1){
 			bool need_to_shift=true;
 			while (need_to_shift){
@@ -379,7 +370,6 @@ valarray <int>  Figure::det_x_node ( ){
 			}
 		}
 	}
-    cout <<"hea"<<endl;
 	return x_node;
 	
 }

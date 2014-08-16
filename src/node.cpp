@@ -19,10 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//node.cpp
+
 #include"node.hpp"
-
-
 
 Node::Node(){
 	label=" ";

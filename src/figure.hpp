@@ -46,4 +46,5 @@ class Figure{
         void plot_in_latex_core();
         void plot_in_latex_file();
         void plot_in_dot( );
+        void execute_dot(string method, string suffix);
 };
