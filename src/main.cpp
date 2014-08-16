@@ -44,7 +44,8 @@ int main(int argc, char *argv[]){
 
     try {
 	    hybridLambda::param hybrid_para(argc, argv);
-	    figure::param figure_para(argc, argv);
+	    //figure::param figure_para(argc, argv);
+        Figure figure_para(argc, argv);
 	    freq::param freq_para(argc,argv);
 	    action_board my_action(argc,argv);
 	    seg::param seg_para(argc,argv);

@@ -23,7 +23,7 @@
 #include<iostream> // clog
 
 enum FIGURE_OPTION { PLOT_DEFAULT, BRANCH, LABEL};
-enum FIGURE_PROGRAM { LATEX, DOT };
+enum FIGURE_PROGRAM { NO_METHOD, LATEX, DOT };
 
 class Figure{
     public:
@@ -34,50 +34,16 @@ class Figure{
     private:
         FIGURE_PROGRAM method;
         FIGURE_OPTION option;
-        //bool plot_bool;
-        //bool dot_bool;
-        
-        //int plot_option;//=0;
-        //bool plot_label;
-        //bool plot_branch;
-        //string tex_fig_name;
-        //string dot_fig_name;
-        //void set_plot_option_();
         void init();
+        void check_option();
+        void check_method();
+        void finalize();
         string figure_file_prefix;
-        valarray <int>  det_x_node (Net net_dummy);
-        void plot_in_latex_(const char* file_name, Net net_dummy);
-        void plot_in_latex_file_(Net net_dummy);
-        void plot_in_dot_(Net net_dummy);
+        string figure_file_suffix;
+        string figure_file_name;
+        Net obj_net;
+        valarray <int>  det_x_node ( );
+        void plot_in_latex_core();
+        void plot_in_latex_file();
+        void plot_in_dot( );
 };
-
-
-
-namespace figure{
-	class param{
-		public:
-			param();
-			param(int argc, char *argv[]);			
-			void plot(string net_str);
-		
-		private:
-		
-			bool plot_bool;
-			bool dot_bool;
-			int plot_option;//=0;
-			bool plot_label;
-			bool plot_branch;
-			string tex_fig_name;
-			string dot_fig_name;
-			void set_plot_option_();
-			valarray <int>  det_x_node (Net net_dummy);
-			void plot_in_latex_(const char* file_name,Net net_dummy);
-			void plot_in_latex_file_(Net net_dummy);
-			void plot_in_dot_(Net net_dummy);
-	};
-    
-    
-}
-
-
-
