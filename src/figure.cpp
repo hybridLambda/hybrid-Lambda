@@ -35,7 +35,6 @@ Figure::Figure( int argc, char *argv[] ){
             this->check_method();   
             this->method = DOT;    
             this->figure_file_prefix = "dotfigure.dot";
-            //this->figure_file_prefix = "dotfigure";
             this->figure_file_suffix = ".dot";
             }
 		if ( argv_i == "-plot"   ){ 
@@ -95,180 +94,109 @@ void Figure::finalize(){
 
 /*! \brief Produce a tex file, which is used to draw the network 
  */
-void Figure::plot_in_latex_file( ){
-	ofstream latex_file;
-    latex_file.open( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
-	latex_file << "\\documentclass[10pt]{article}\n";
-	latex_file << "\\usepackage{tikz,graphics,graphicx,lscape,fullpage,multicol,setspace}\n \\singlespacing\n \\begin{document}\n ";	
-	latex_file << "\\ifx\\du\\undefined\\newlength{\\du}\\fi\\setlength{\\du}{30\\unitlength}\n";
-	latex_file << "\\begin{center}\n";
-	latex_file.close();
-    this->plot_in_latex_core();
-    latex_file.open ( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
-	latex_file << "\\end{center}\n";
-	latex_file << "\\end{document}\n";
-	latex_file.close();
+void Figure::plot_in_latex( ){
+    figure_ofstream.open( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
+	figure_ofstream << "\\documentclass[10pt]{article}\n";
+	figure_ofstream << "\\usepackage{tikz,graphics,graphicx,lscape,fullpage,multicol,setspace}\n \\singlespacing\n \\begin{document}\n ";	
+	figure_ofstream << "\\ifx\\du\\undefined\\newlength{\\du}\\fi\\setlength{\\du}{30\\unitlength}\n";
+	figure_ofstream << "\\begin{center}\n";
+    figure_ofstream << "\\begin{tikzpicture}[thick]\n";
+	valarray <int>  x_node = this->det_x_node ( );
+	for (size_t node_i = 0; node_i < this->obj_net.Net_nodes.size();node_i++){
+		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
+		sp_node_label=rm_and_hash_sign(sp_node_label);
+		if (obj_net.Net_nodes[node_i].tip_bool){
+			figure_ofstream<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
+		}
+		else{
+			figure_ofstream<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,fill=orange,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
+		}
+	}
+    this->plot_core();	    
+   	figure_ofstream <<"\\end{tikzpicture}\n\n";
+	figure_ofstream << "\\end{center}\n";
+	figure_ofstream << "\\end{document}\n";
+	figure_ofstream.close();
 	
 	string command = "pdflatex " + this->figure_file_name;
 	int sys=system(command.c_str());
     std::clog << "Network figure generated in file: " + this->figure_file_name << endl; 
 }
 
-void Figure::plot_in_latex_core(){
-	ofstream latex_file;
-	latex_file.open (this->figure_file_name.c_str(), ios::out | ios::app | ios::binary); 	
-	latex_file << "\\begin{tikzpicture}[thick]\n";
-	valarray <int>  x_node = this->det_x_node ( );
-	for (size_t node_i = 0; node_i < this->obj_net.Net_nodes.size();node_i++){
-		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
-		sp_node_label=rm_and_hash_sign(sp_node_label);
-		if (obj_net.Net_nodes[node_i].tip_bool){
-			latex_file<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
-		//latex_file<<"\\node at ("<<x_node[node_i]<<"\\du,"<<y_node[node_i]<<"\\du) [circle,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
-		}
-		else{
-			latex_file<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,fill=orange,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
-		}
-	}
+void Figure::edge_entry(string from, string to, size_t label, double bl, bool tip){
+    if ( this->option == LABEL && tip ){ 
+        //figure_ofstream << from << " -- " << to << "[label=\"" << label <<"\"];\n";
+        figure_ofstream << ( ( this->method == DOT )  ? "" : "\\draw (" )
+                        << from 
+                        << ( ( this->method == DOT )  ? " -- " : ")--(" )
+                        << to 
+                        << ( ( this->method == DOT )  ? "[label=\"" : ") node [midway,left]{" )
+                        << label
+                        << ( ( this->method == DOT )  ? "\"];\n" : "};\n" );
+    }
+    else if (this->option == BRANCH){
+        //figure_ofstream << from <<" -- " << to << "[label=\""<< bl <<"\"];\n";
+        figure_ofstream << ( ( this->method == DOT )  ? "" : "\\draw (" )
+                        << from 
+                        << ( ( this->method == DOT )  ? " -- " : ")--(" )
+                        << to 
+                        << ( ( this->method == DOT )  ? "[label=\"" : ") node [midway,left]{" )
+                        << bl
+                        << ( ( this->method == DOT )  ? "\"];\n" : "};\n" );
+    }
+    else{
+        //figure_ofstream << from <<" -- "<< to <<";\n";//
+        figure_ofstream << ( ( this->method == DOT ) ? "" : "\\draw (" )
+                        << from
+                        << ( ( this->method == DOT ) ? " -- " : ")--(" )
+                        << to 
+                        << ( ( this->method == DOT ) ? ";\n" : ");\n" );
+    }	
+}
 
-	for (size_t node_i=0; node_i < obj_net.Net_nodes.size()-1; node_i++ ){
-		string sp_node_label=obj_net.Net_nodes[node_i].label;
+
+void Figure::plot_core(){
+   	for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size()-1; node_i++ ){    
+		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
 		sp_node_label=rm_and_hash_sign(sp_node_label);
 		string sp_node_parent1_label=obj_net.Net_nodes[node_i].parent1->label;
 		sp_node_parent1_label=rm_and_hash_sign(sp_node_parent1_label);
-		if (!obj_net.Net_nodes[node_i].tip_bool){
-			if (this->option == LABEL){
-				latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent1_label<<") node [midway,left]{"<< obj_net.Net_nodes[node_i].e_num <<"};\n";
-			}
-			else{
-				if (this->option == BRANCH){
-					latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent1_label<<") node [midway,left]{"<< obj_net.Net_nodes[node_i].brchlen1 <<"};\n";
-				}
-				else{
-					latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent1_label<<");\n";	
-				}	
-			}
-			if (obj_net.Net_nodes[node_i].parent2){
-				string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;	
-				sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
-				if (this->option == LABEL){
-					latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent2_label<<") node [midway,left]{"<< obj_net.Net_nodes[node_i].e_num2 <<"};\n";
-				}
-				else{
-					if (this->option == BRANCH){
-						latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent2_label<<") node [midway,left]{"<< obj_net.Net_nodes[node_i].brchlen2 <<"};\n";
-					}
-					else{
-						latex_file<<"\\draw ("<<sp_node_label<<")-- (" << sp_node_parent2_label<<");\n";
-					}		
-				}
-			}
-		}
-		else{
-			if (this->option == BRANCH){
-				latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent1_label<<") node [midway,left]{"<< obj_net.Net_nodes[node_i].brchlen1 <<"};\n";
-			}
-			else{
-				latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent1_label<<");\n";	
-			}	
-			if (obj_net.Net_nodes[node_i].parent2){
-				string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;
-				sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
-				if (this->option == BRANCH){
-					latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent2_label<<") node [midway,left]{"<< obj_net.Net_nodes[node_i].brchlen2 <<"};\n";
-				}
-				else{
-					latex_file<<"\\draw ("<<sp_node_label<<")-- ("<<sp_node_parent2_label<<");\n";
-				}		
-			}
-		}
+
+        this->edge_entry(sp_node_label, sp_node_parent1_label, obj_net.Net_nodes[node_i].e_num, obj_net.Net_nodes[node_i].brchlen1, !obj_net.Net_nodes[node_i].tip_bool);
+        if (obj_net.Net_nodes[node_i].parent2){
+            string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;
+            sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
+            this->edge_entry( sp_node_label, sp_node_parent2_label, obj_net.Net_nodes[node_i].e_num2, obj_net.Net_nodes[node_i].brchlen2, !obj_net.Net_nodes[node_i].tip_bool);
+        }
 	}
-	latex_file <<"\\end{tikzpicture}\n\n";
-	latex_file.close();	
 }
 
 /*! \brief Produce a dot file, which is used to draw the network, and compile the dot file to a pdf file.
  */
 void Figure::plot_in_dot( ){
-	ofstream dot_file;
-	dot_file.open ( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
-	dot_file <<"graph G {\n rankdir=BT; ratio=compress;\n";//page="14,14"; determines the size of the ps output
+    figure_ofstream.open ( this->figure_file_name.c_str(), ios::out | ios::app | ios::binary ); 
+	figure_ofstream <<"graph G {\n rankdir=BT; ratio=compress;\n";//page="14,14"; determines the size of the ps output
 
-	for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size()-1; node_i++ ){    
-		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
-		sp_node_label=rm_and_hash_sign(sp_node_label);
-		string sp_node_parent1_label=obj_net.Net_nodes[node_i].parent1->label;
-		sp_node_parent1_label=rm_and_hash_sign(sp_node_parent1_label);
-		if (!obj_net.Net_nodes[node_i].tip_bool){		
-			if (this->option == LABEL){
-				dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<"[label=\""<< obj_net.Net_nodes[node_i].e_num <<"\"];\n";
-			    }
-			else if (this->option == BRANCH){
-                dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen1 <<"\"];\n";	
-				}
-            else{
-                dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<";\n";//
-            }	
-			
-			if (obj_net.Net_nodes[node_i].parent2){
-				string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;
-				sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
-				if (this->option == LABEL){
-					dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<"[label=\""<< obj_net.Net_nodes[node_i].e_num2 <<"\"];\n";
-				    }
-				else if (this->option == BRANCH){
-                    dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen2 <<"\"];\n";	
-					}
-                else{
-                    dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<";\n";//<<"[label=\""<< obj_net.Net_nodes[node_i].e_num2 <<"\"];\n";
-					}	
-			}
-		}
-		else{
-			if (this->option == BRANCH){
-				dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen1 <<"\"];\n";	
-			}
-			else{
-				dot_file<<sp_node_label<<" -- "<<sp_node_parent1_label<<";\n";//
-			}	
-			
-			if (obj_net.Net_nodes[node_i].parent2){
-				string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;
-				sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);					
-				if (this->option == BRANCH){
-					dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<"[label=\""<< obj_net.Net_nodes[node_i].brchlen2 <<"\"];\n";	
-				}
-				else{
-					dot_file<<sp_node_label<<" -- "<<sp_node_parent2_label<<";\n";//<<"[label=\""<< obj_net.Net_nodes[node_i].e_num2 <<"\"];\n";
-				}
-			}
-		}
-	}
-	
+    this->plot_core();	
+
 	if (obj_net.is_ultrametric){
 		for (int rank_i=obj_net.Net_nodes.back().rank;rank_i>0;rank_i--){
-			dot_file<<"{ rank=same; ";
+			figure_ofstream<<"{ rank=same; ";
 			vector <int> x_node_dummy;
 			vector <size_t> x_node_dummy_index;
 			for (size_t node_i=0;node_i<obj_net.Net_nodes.size();node_i++){
 				if (obj_net.Net_nodes[node_i].rank==rank_i){
-					string sp_node_label=obj_net.Net_nodes[node_i].label;
-					sp_node_label=rm_and_hash_sign(sp_node_label);
-					dot_file<<sp_node_label<<" ";
+					string sp_node_label = obj_net.Net_nodes[node_i].label;
+					sp_node_label = rm_and_hash_sign(sp_node_label);
+					figure_ofstream << sp_node_label << " ";
 				}	
 			}
-			dot_file<<"} ;\n";
+			figure_ofstream<<"} ;\n";
 		}
 	}
-	dot_file <<"}\n";
-	dot_file.close();
+	figure_ofstream << "}\n";
+	figure_ofstream.close();
 
-	//string command = "dot -Tps2 " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".eps";
-	//int sys = system(command.c_str());
-	//command = "dot -Tps2 " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".ps";
-	//sys = system(command.c_str());
-    //command = "dot -Tpdf " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + ".pdf";
-	//sys=system(command.c_str());
     this->execute_dot ("ps2", ".eps");
     this->execute_dot ("ps2", ".ps");
     this->execute_dot ("pdf", ".pdf");
@@ -377,9 +305,8 @@ valarray <int>  Figure::det_x_node ( ){
 
 void Figure::plot( string net_str ){
 	this->obj_net = Net (net_str);
-    //obj_net.print_all_node();
-	if ( this->method == LATEX ){ this->plot_in_latex_file(); }
-	if ( this->method == DOT   ){ this->plot_in_dot();		  }
+	if ( this->method == LATEX ){ this->plot_in_latex(); }
+	if ( this->method == DOT   ){ this->plot_in_dot();   }
 	
 	if ( this->option == BRANCH ){
 		std::clog << std::endl << "Internal branches are labelled by post-order tree traversal." << std::endl;

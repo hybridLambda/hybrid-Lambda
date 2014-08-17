@@ -34,17 +34,25 @@ class Figure{
     private:
         FIGURE_PROGRAM method;
         FIGURE_OPTION option;
+        
+        
         void init();
         void check_option();
         void check_method();
         void finalize();
+
+        valarray <int>  det_x_node ( );
+        //void plot_in_latex_core();
+        void plot_in_latex();
+        void plot_in_dot( );
+        void plot_core();
+        void execute_dot(string method, string suffix);
+        
+        void edge_entry(string from, string to, size_t label, double bl, bool tip);
+        
+        ofstream figure_ofstream;
         string figure_file_prefix;
         string figure_file_suffix;
         string figure_file_name;
         Net obj_net;
-        valarray <int>  det_x_node ( );
-        void plot_in_latex_core();
-        void plot_in_latex_file();
-        void plot_in_dot( );
-        void execute_dot(string method, string suffix);
 };
