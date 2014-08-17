@@ -224,47 +224,38 @@ void  Figure::det_x_node ( ){
 				int parent_x = x_node[node_i];
 				int start_child_x = parent_x - floor( n_child / 2 );
 
-                //bool odd_num_child = (n_child % 2) == 1 ? true:false;
-                //cout << "current parent is "<<this->obj_net.Net_nodes[node_i].label << " first_child is "<< this->obj_net.Net_nodes[node_i].child[0]->label<<endl;
+                bool odd_num_child = (n_child % 2) == 1 ? true:false;
                 //cout << "parent x = " << parent_x <<" " << "start_child_x = "<<start_child_x <<" ";
                 for ( size_t child_i = 0; child_i < n_child; child_i++ ){                    
-                    for ( size_t node_j = 0; node_j < this->obj_net.Net_nodes.size(); node_j++ ){
-                        //cout << " node address is " << (&(this->obj_net.Net_nodes[node_j])) <<endl;
-                        //cout << this->obj_net.Net_nodes[node_j].label <<" "<< this->obj_net.Net_nodes[node_i].child[child_i]->label<<endl;
-                        if ( &this->obj_net.Net_nodes[node_j] == this->obj_net.Net_nodes[node_i].child[child_i] ){
-// BUG!!! NOTE THE LABEL HERE IS NOT WORKING, SHOULD CHANGE THE TYPE OF THE NODE, USE POINTERS TO REFER THE NODE.
-// THE FOLLOWING LINE IS NOT YET WORKING!!! USE ADDRESS IS NOT WORKING EITHER.                        
-                        //if (this->obj_net.Net_nodes[node_j].label == this->obj_net.Net_nodes[node_i].child[child_i]->label ){
-                            //cout <<" should add start_child_x"<<endl;
-                            if ( start_child_x == parent_x ){
-                                //cout<<"here";
-                                x_node[node_j] = parent_x;
+                    //cout << " child_"<<child_i << " x = " ;
+                    for ( size_t node_j = 0; node_j < this->obj_net.Net_nodes.size(); node_j++ ){                    
+                        if ( node_j == this->obj_net.Net_nodes[node_i].child[child_i]->node_index ){
+                            if ( !odd_num_child && start_child_x == parent_x ){
                                 start_child_x++;
                             }
-                            else{
-                                //cout<<"oops";
-                                x_node[node_j] = start_child_x;
-                            }
+                            x_node[node_j] = start_child_x;
                             start_child_x++;
+                            //cout << x_node[node_j] ;
                         }
                     }
-                    //cout << "child_"<<child_i << " x = " << start_child_x << ", ";
+                    
                 }
-                cout << endl;
+
 				this->x_node_tmp.push_back(x_node[node_i]);
 				this->x_node_tmp_index.push_back(node_i);
 			}
 		}
-        //cout <<"stop"
         this->x_node_shift();
+                //cout << endl;
 	}
 }
 
 void Figure::x_node_shift(){
-    if (x_node_tmp.size() == 0){
+    if ( x_node_tmp.size() < 2 ){
+    //cout <<"  no shift"<<endl;
         return;
     }
-    
+    //cout <<"  Need shift"<<endl;
     bool need_to_shift=true;
     while ( need_to_shift ){
         for (size_t x_node_tmp_i=0;x_node_tmp_i<x_node_tmp.size();x_node_tmp_i++){
