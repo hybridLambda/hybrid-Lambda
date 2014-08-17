@@ -101,7 +101,8 @@ void Figure::plot_in_latex( ){
 	figure_ofstream << "\\ifx\\du\\undefined\\newlength{\\du}\\fi\\setlength{\\du}{30\\unitlength}\n";
 	figure_ofstream << "\\begin{center}\n";
     figure_ofstream << "\\begin{tikzpicture}[thick]\n";
-	valarray <int>  x_node = this->det_x_node ( );
+	//valarray <int>  x_node = this->det_x_node ( );
+    this->det_x_node ( );
 	for (size_t node_i = 0; node_i < this->obj_net.Net_nodes.size();node_i++){
 		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
 		sp_node_label=rm_and_hash_sign(sp_node_label);
@@ -179,11 +180,9 @@ void Figure::plot_in_dot( ){
 
     this->plot_core();	
 
-	if (obj_net.is_ultrametric){
-		for (int rank_i=obj_net.Net_nodes.back().rank;rank_i>0;rank_i--){
+	if (this->obj_net.is_ultrametric){
+		for (int rank_i = this->obj_net.Net_nodes.back().rank; rank_i > 0; rank_i--){
 			figure_ofstream<<"{ rank=same; ";
-			vector <int> x_node_dummy;
-			vector <size_t> x_node_dummy_index;
 			for (size_t node_i=0;node_i<obj_net.Net_nodes.size();node_i++){
 				if (obj_net.Net_nodes[node_i].rank==rank_i){
 					string sp_node_label = obj_net.Net_nodes[node_i].label;
@@ -211,95 +210,92 @@ void Figure::execute_dot(string method, string suffix){
 
 /*! \brief When drawing network in .tex files, detemine the x coordinates of nodes
  */
-valarray <int>  Figure::det_x_node ( ){
-	valarray <int>  x_node ( this->obj_net.Net_nodes.size() );
-	x_node[x_node.size()-1]=0;
-	for ( int rank_i = this->obj_net.Net_nodes.back().rank; rank_i > 0; rank_i-- ){ 
-		vector <int> x_node_dummy;
-		vector <size_t> x_node_dummy_index;
+void  Figure::det_x_node ( ){
+    this->x_node = valarray <int> (this->obj_net.Net_nodes.size());
+	x_node[x_node.size()-1] = 0; //root x-axis value is zero
+
+	for ( int rank_i = this->obj_net.Net_nodes.back().rank-1; rank_i > 0; rank_i-- ){ // start from the children of the root
+		this->x_node_tmp.clear();
+		this->x_node_tmp_index.clear();
+        
 		for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size(); node_i++ ){
 			if ( this->obj_net.Net_nodes[node_i].rank == rank_i){
 				size_t n_child = this->obj_net.Net_nodes[node_i].child.size();
 				int parent_x = x_node[node_i];
-				int start_child_x = parent_x-floor(n_child/2);
+				int start_child_x = parent_x - floor( n_child / 2 );
 
-                bool odd_num_child = (n_child % 2) == 1 ? true:false;
-                
-				if (odd_num_child){
-					for (size_t child_i=0; child_i < n_child;child_i++){
-						for (size_t node_j=0; node_j < this->obj_net.Net_nodes.size(); node_j++){
-							//if ( this->obj_net.Net_nodes[node_j].label == this->obj_net.Net_nodes[node_i].child[child_i]->label){			
-                            if ( &this->obj_net.Net_nodes[node_j] == this->obj_net.Net_nodes[node_i].child[child_i] ){
-								if ( start_child_x == parent_x){
-									x_node[node_j] = parent_x;
-									start_child_x++;
-								}
-								else{
-									x_node[node_j] = start_child_x;
-								}
-								start_child_x++;
-							}
-						}
-					}
-				}
-				else{
-					for (size_t child_i=0; child_i < n_child; child_i++){
-						for ( size_t node_j = 0; node_j < this->obj_net.Net_nodes.size(); node_j++){
-							//if (this->obj_net.Net_nodes[node_j].label == this->obj_net.Net_nodes[node_i].child[child_i]->label){
-                            if ( &this->obj_net.Net_nodes[node_j] == this->obj_net.Net_nodes[node_i].child[child_i] ){
-								if (start_child_x==parent_x){										
-									start_child_x++;
-								}
-								//	x_node[node_j]=start_child_x*(parent_y-child_y)+parent_x;
-								x_node[node_j]=start_child_x;
-								//y_node[node_j]=parent_y-1;
-								start_child_x++;
-							}
-						}
-					}
-					
-				}
-				x_node_dummy.push_back(x_node[node_i]);
-				x_node_dummy_index.push_back(node_i);
+                //bool odd_num_child = (n_child % 2) == 1 ? true:false;
+                //cout << "current parent is "<<this->obj_net.Net_nodes[node_i].label << " first_child is "<< this->obj_net.Net_nodes[node_i].child[0]->label<<endl;
+                //cout << "parent x = " << parent_x <<" " << "start_child_x = "<<start_child_x <<" ";
+                for ( size_t child_i = 0; child_i < n_child; child_i++ ){                    
+                    for ( size_t node_j = 0; node_j < this->obj_net.Net_nodes.size(); node_j++ ){
+                        //cout << " node address is " << (&(this->obj_net.Net_nodes[node_j])) <<endl;
+                        //cout << this->obj_net.Net_nodes[node_j].label <<" "<< this->obj_net.Net_nodes[node_i].child[child_i]->label<<endl;
+                        if ( &this->obj_net.Net_nodes[node_j] == this->obj_net.Net_nodes[node_i].child[child_i] ){
+// BUG!!! NOTE THE LABEL HERE IS NOT WORKING, SHOULD CHANGE THE TYPE OF THE NODE, USE POINTERS TO REFER THE NODE.
+// THE FOLLOWING LINE IS NOT YET WORKING!!! USE ADDRESS IS NOT WORKING EITHER.                        
+                        //if (this->obj_net.Net_nodes[node_j].label == this->obj_net.Net_nodes[node_i].child[child_i]->label ){
+                            //cout <<" should add start_child_x"<<endl;
+                            if ( start_child_x == parent_x ){
+                                //cout<<"here";
+                                x_node[node_j] = parent_x;
+                                start_child_x++;
+                            }
+                            else{
+                                //cout<<"oops";
+                                x_node[node_j] = start_child_x;
+                            }
+                            start_child_x++;
+                        }
+                    }
+                    //cout << "child_"<<child_i << " x = " << start_child_x << ", ";
+                }
+                cout << endl;
+				this->x_node_tmp.push_back(x_node[node_i]);
+				this->x_node_tmp_index.push_back(node_i);
 			}
 		}
         //cout <<"stop"
-		if (x_node_dummy.size() > 1){
-			bool need_to_shift=true;
-			while (need_to_shift){
-				for (size_t x_node_dummy_i=0;x_node_dummy_i<x_node_dummy.size();x_node_dummy_i++){
-					int current_x_node_dummy=x_node_dummy[x_node_dummy_i];
-					for (size_t x_node_dummy_j=x_node_dummy_i+1;x_node_dummy_j<x_node_dummy.size();x_node_dummy_j++){
-						if (current_x_node_dummy==x_node_dummy[x_node_dummy_j]){
-							if (x_node_dummy[x_node_dummy_j]>0){
-								x_node_dummy[x_node_dummy_j]++;
-								x_node[x_node_dummy_index[x_node_dummy_j]]++;
-							}
-							else{
-								x_node_dummy[x_node_dummy_j]--;
-								x_node[x_node_dummy_index[x_node_dummy_j]]--;
-							}
-						}
-					}
-				}
-				need_to_shift=false;
-				for (size_t x_node_dummy_i=0;x_node_dummy_i<x_node_dummy.size();x_node_dummy_i++){
-					int current_x_node_dummy=x_node_dummy[x_node_dummy_i];
-					for (size_t x_node_dummy_j=x_node_dummy_i+1;x_node_dummy_j<x_node_dummy.size();x_node_dummy_j++){
-						if (current_x_node_dummy==x_node_dummy[x_node_dummy_j]){
-							need_to_shift=true;
-							break;
-						}		
-					}
-					if (need_to_shift){
-						break;
-					}
-				}
-			}
-		}
+        this->x_node_shift();
 	}
-	return x_node;
-	
+}
+
+void Figure::x_node_shift(){
+    if (x_node_tmp.size() == 0){
+        return;
+    }
+    
+    bool need_to_shift=true;
+    while ( need_to_shift ){
+        for (size_t x_node_tmp_i=0;x_node_tmp_i<x_node_tmp.size();x_node_tmp_i++){
+            int current_x_node_tmp=x_node_tmp[x_node_tmp_i];
+            for (size_t x_node_tmp_j=x_node_tmp_i+1;x_node_tmp_j<x_node_tmp.size();x_node_tmp_j++){
+                if (current_x_node_tmp == x_node_tmp[x_node_tmp_j]){
+                    if ( x_node_tmp[x_node_tmp_j] > 0 ){
+                        x_node_tmp[x_node_tmp_j]++;
+                        x_node[x_node_tmp_index[x_node_tmp_j]]++;
+                    }
+                    else{
+                        x_node_tmp[x_node_tmp_j]--;
+                        x_node[x_node_tmp_index[x_node_tmp_j]]--;
+                    }
+                }
+            }
+        }
+        need_to_shift=false;
+        for (size_t x_node_tmp_i=0;x_node_tmp_i<x_node_tmp.size();x_node_tmp_i++){
+            int current_x_node_tmp=x_node_tmp[x_node_tmp_i];
+            for (size_t x_node_tmp_j=x_node_tmp_i+1;x_node_tmp_j<x_node_tmp.size();x_node_tmp_j++){
+                if (current_x_node_tmp==x_node_tmp[x_node_tmp_j]){
+                    need_to_shift=true;
+                    break;
+                }		
+            }
+            if (need_to_shift){
+                break;
+            }
+        }
+    }
 }
 
 

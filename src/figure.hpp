@@ -41,7 +41,13 @@ class Figure{
         void check_method();
         void finalize();
 
-        valarray <int>  det_x_node ( );
+        void  det_x_node ( );
+        void x_node_shift();
+        valarray <int> x_node;
+        vector <int> x_node_tmp;
+		vector <size_t> x_node_tmp_index;
+
+        //valarray <int>  det_x_node ( );
         //void plot_in_latex_core();
         void plot_in_latex();
         void plot_in_dot( );
