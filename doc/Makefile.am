@@ -23,6 +23,10 @@ EXTRA_DIST = manual.pdf
 #SUBDIRS =
 
 net1fig: 
-	if [ -a net1-figure0.md5 ] ; then rm net1-figure0.md5 ; fi
+	rm net1-figure*
 	latex --shell-escape net1.tex
 	convert -density 300 net1-figure0.eps -resize 1024x1024 net1-figure0.png
+	convert -density 300 net1-figure1.eps -resize 1024x1024 net1-figure1.png
+
+
+#if [ -a net1-figure0.md5 ] ; then rm net1-figure0.md5 ; fi
