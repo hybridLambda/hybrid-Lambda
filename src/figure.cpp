@@ -25,10 +25,11 @@
 #include <stdexcept>      // std::invalid_argument
 
 
-Figure::Figure( int argc, char *argv[] ){
+Figure::Figure( int argc, char *argv[] ):
+    argc_(argc), argv_(argv){
     this->init();
-	for ( int argc_i = 1; argc_i < argc ; argc_i++ ){
-		std::string argv_i( argv[argc_i] );
+	while( argc_i < argc_ ){
+		std::string argv_i( argv_[argc_i] );
 		if ( argv_i == "-label"  ){ this->check_option();   this->option = LABEL;  }
 		if ( argv_i == "-branch" ){ this->check_option();   this->option = BRANCH; }
 		if ( argv_i == "-dot"    ){ 
@@ -45,27 +46,36 @@ Figure::Figure( int argc, char *argv[] ){
             }
         
 		if (argv_i=="-dot_file" || argv_i=="-dotF"){
-			this->check_method();   this->method = DOT; 
-			this->figure_file_prefix = argv[argc_i+1];
+			this->check_method();   
+            this->method = DOT; 
+            this->read_prefix();
             this->figure_file_suffix = ".dot";
-			argc_i++;
 		}
 		
 
 		if (argv_i=="-plot_file" || argv_i=="-plotF"){
-			this->check_method();   this->method = LATEX; 
-			this->figure_file_prefix = argv[argc_i+1];
+			this->check_method();   
+            this->method = LATEX; 
+            this->read_prefix();
 			this->figure_file_suffix = ".tex";
-            argc_i++;
 		}
+        argc_i++;
 	}
     this->finalize();
 }
 
-void Figure::init(){
-     this->option = PLOT_DEFAULT;
-     this->method = NO_METHOD;
+
+void Figure::read_prefix(){
+    argc_i++;
+    if (argc_i >= argc_) {
+      throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
     }
+    this->figure_file_prefix = argv_[argc_i];
+    if (this->figure_file_prefix[0] == '-' ) {
+      throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
+    }        
+}
+
 
 void Figure::check_option(){
     if ( this->option != PLOT_DEFAULT ){
@@ -78,6 +88,12 @@ void Figure::check_method(){
         throw std::invalid_argument ( " Method can either be LaTex (\"-plot\") or DOT (\"-dot\") " );
     }
 }
+
+void Figure::init(){
+     this->option = PLOT_DEFAULT;
+     this->method = NO_METHOD;
+     this->argc_i = 1;
+    }
 
 /*! Check and remove files*/
 void Figure::finalize(){
@@ -296,9 +312,9 @@ void Figure::plot( string net_str ){
 	if ( this->method == DOT   ){ this->plot_in_dot();   }
 	
 	if ( this->option == BRANCH ){
-		std::clog << std::endl << "Internal branches are labelled by post-order tree traversal." << std::endl;
+		std::clog << "Internal branches are labelled by post-order tree traversal." << std::endl;
 	}
 	if ( this->option == LABEL ){
-		std::clog << std::endl << "Branch lengths are labelled." << std::endl;
+		std::clog << "Branch lengths are labelled." << std::endl;
 	}
 }

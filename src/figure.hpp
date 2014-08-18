@@ -35,6 +35,10 @@ class Figure{
         FIGURE_PROGRAM method;
         FIGURE_OPTION option;
         
+        int argc_;
+        int argc_i;
+        char * const* argv_;
+        void read_prefix();            
         
         void init();
         void check_option();
