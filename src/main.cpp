@@ -101,6 +101,7 @@ int main(int argc, char *argv[]){
 				tmrca_file<< gt.Net_nodes.back().absolute_time<<endl;
 			}
 			tmrca_file.close();
+        	std::clog << "TMRCA file is saved at: "<<hybrid_para.tmrca_NAME<<"\n";
 		}
 
 		if (hybrid_para.bl_bool){
@@ -116,6 +117,7 @@ int main(int argc, char *argv[]){
 				bl_file << totalbl << endl;
 			}
 			bl_file.close();
+            std::clog << "Total branch length file is saved at: "<<hybrid_para.bl_NAME<<"\n";
 		}
 		
         if (hybrid_para.firstcoal_bool){
@@ -189,16 +191,7 @@ int main(int argc, char *argv[]){
 				}
 				
 			}
-			
-			if (hybrid_para.tmrca_bool){
-				log_file << "TMRCA file is saved at: "<<hybrid_para.tmrca_NAME<<"\n";
-			}
-
-			if (hybrid_para.bl_bool){
-				log_file << "Total branch length file is saved at: "<<hybrid_para.bl_NAME<<"\n";
-			}
-
-			
+						
 			if (hybrid_para.freq_bool){
 				//frequencies
 				log_file << "Computing topology frequency took about " << freq_end_time - sim_end_time << " second(s) \n";
