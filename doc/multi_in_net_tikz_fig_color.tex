@@ -34,11 +34,6 @@
 \draw(0\du,22.5\du)--(5\du,35\du);
 \draw(-5\du,45\du)--(5\du,35\du);
 % \pgfmathsetmacro{\Xb}{random(7)};
-\draw[thick](-40\du,0\du)--(-39\du,1\du)--(-39\du,2\du)--(-39\du,3\du)--(-38\du,4\du)--(-40\du,5\du)--(-40\du,6\du)--(-39\du,7\du)--(-39\du,8\du)--(-39\du,9\du)--(-39\du,10\du);
-\fill(-39\du,10\du)[black,blue]circle(2.5pt);
-\fill(-15\du,50\du)[black,purple]circle(2.5pt);
-\fill(-5\du,60\du)[black,purple]circle(2.5pt);
-\fill(10\du,40\du)[black,blue]circle(2.5pt);
 \node at (-45\du,-5\du)[below]{\bf A};
 \node at (-15\du,-5\du)[below]{\bf B};
 \node at (7.5\du,-5\du)[below]{\bf C};
@@ -63,6 +58,7 @@
 % \draw[thick](0\du,15\du)--(-15\du,30\du);
 % \draw[thick](-15\du,30\du)--(-15\du,50\du);
 % \draw[thick](5\du,15\du)--(10\du,40\du);
+\draw[thick,cyan](-40\du,0\du)--(-39\du,1\du)--(-39\du,2\du)--(-39\du,3\du)--(-38\du,4\du)--(-40\du,5\du)--(-40\du,6\du)--(-39\du,7\du)--(-39\du,8\du)--(-39\du,9\du)--(-39\du,10\du);
 \draw[thick,cyan](-39\du,10\du)--(-38\du,12\du)--(-36\du,14\du)--(-36\du,16\du)--(-35\du,18\du)--(-32\du,20\du)--(-32\du,22\du)--(-31\du,24\du)--(-30\du,26\du)--(-29\du,28\du)--(-28\du,30\du)--(-25\du,32\du)--(-24\du,34\du)--(-23\du,36\du)--(-23\du,38\du)--(-22\du,40\du)--(-20\du,42\du)--(-18\du,44\du)--(-18\du,46\du)--(-17\du,48\du)--(-15\du,50\du);
 \draw[thick,cyan](-15\du,50\du)--(-15\du,51\du)--(-13\du,52\du)--(-12\du,53\du)--(-11\du,54\du)--(-10\du,55\du)--(-9\du,56\du)--(-8\du,57\du)--(-7\du,58\du)--(-7\du,59\du)--(-5\du,60\du);
 \draw[thick,cyan](10\du,40\du)--(9\du,42\du)--(6\du,44\du)--(5\du,46\du)--(4\du,48\du)--(3\du,50\du)--(0\du,52\du)--(0\du,54\du)--(-1\du,56\du)--(-4\du,58\du)--(-5\du,60\du);
@@ -80,16 +76,17 @@
 \draw[thick,cyan](-50\du,0\du)--(-49\du,1\du)--(-48\du,2\du)--(-45\du,3\du)--(-44\du,4\du)--(-45\du,5\du)--(-44\du,6\du)--(-41\du,7\du)--(-40\du,8\du)--(-39\du,9\du)--(-39\du,10\du);
 \draw[thick,->](-45\du,30\du)--(-36\du,25\du);
 \node at (-45\du,30\du)[above]{\footnotesize species network};
-\draw[thick,->](15\du,55\du)--(6\du,45\du);
+\draw[thick,->,cyan](15\du,55\du)--(6\du,45\du);
 \node at (15\du,55\du)[right, cyan]{\footnotesize gene genealogies};
-\draw[thick,->](20\du,50\du)--(11\du,41\du);
+\draw[thick,->,blue](20\du,50\du)--(11\du,41\du);
 \node at (20\du,50\du)[right,blue]{\footnotesize multiple merger};
-\draw[thick,->](-30\du,55\du)--(-17\du,51\du);
-\draw[thick,->](-30\du,55\du)--(-7\du,60\du);
+\draw[thick,->,purple](-30\du,55\du)--(-17\du,51\du);
+\draw[thick,->,purple](-30\du,55\du)--(-7\du,60\du);
 \node at (-30\du,55\du)[left, purple]{\footnotesize binary mergers};
-% \node at (-45\du,55\du)[below]{\footnotesize (or Kingman coalescent)};
-% \node at (-30\du,55\du)[left]{\footnotesize multiple merger};
-% \node at (-45\du,55\du)[below]{\footnotesize (or Kingman coalescent)};
-\draw[thick,->](-50\du,15\du)--(-41\du,11\du);
+\draw[thick,->,blue](-50\du,15\du)--(-41\du,11\du);
 \node at (-55\du,15\du)[above,blue]{\footnotesize multiple merger};
+\fill(-39\du,10\du)[black,blue]circle(2.5pt);
+\fill(-15\du,50\du)[black,purple]circle(2.5pt);
+\fill(-5\du,60\du)[black,purple]circle(2.5pt);
+\fill(10\du,40\du)[black,blue]circle(2.5pt);
 \end{tikzpicture}
