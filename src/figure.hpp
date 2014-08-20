@@ -41,6 +41,7 @@ class Figure{
         void read_prefix();            
         
         void init();
+        void initialize_method( FIGURE_PROGRAM program, string suffix);
         void check_option();
         void check_method();
         void finalize();
@@ -52,7 +53,6 @@ class Figure{
 		vector <size_t> x_node_tmp_index;
 
         //valarray <int>  det_x_node ( );
-        //void plot_in_latex_core();
         void plot_in_latex();
         void plot_in_dot( );
         void plot_core();

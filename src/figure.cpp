@@ -21,9 +21,7 @@
 */
 
 #include"figure.hpp"
-//#include<exception>
 #include <stdexcept>      // std::invalid_argument
-
 
 Figure::Figure( int argc, char *argv[] ):
     argc_(argc), argv_(argv){
@@ -31,39 +29,36 @@ Figure::Figure( int argc, char *argv[] ):
 	while( argc_i < argc_ ){
 		std::string argv_i( argv_[argc_i] );
 		if ( argv_i == "-label"  ){ this->check_option();   this->option = LABEL;  }
-		if ( argv_i == "-branch" ){ this->check_option();   this->option = BRANCH; }
+		if ( argv_i == "-branch" ){ this->check_option();   this->option = BRANCH; }        
 		if ( argv_i == "-dot"    ){ 
-            this->check_method();   
-            this->method = DOT;    
-            this->figure_file_prefix = "dotfigure.dot";
-            this->figure_file_suffix = ".dot";
-            }
+            this->check_method();  
+            this->initialize_method ( DOT, ".dot" );
+            this->figure_file_prefix = "dotfigure";
+        }
 		if ( argv_i == "-plot"   ){ 
             this->check_method();   
-            this->method = LATEX;  
-            this->figure_file_prefix = "texfigure.tex";
-            this->figure_file_suffix = ".tex";
-            }
-        
-		if (argv_i=="-dot_file" || argv_i=="-dotF"){
-			this->check_method();   
-            this->method = DOT; 
+            this->initialize_method ( LATEX, ".tex" );
+            this->figure_file_prefix = "texfigure";
+        }
+		if (argv_i == "-dot_file" || argv_i == "-dotF"){
+			this->check_method();
+            this->initialize_method ( DOT, ".dot" );
             this->read_prefix();
-            this->figure_file_suffix = ".dot";
 		}
-		
-
-		if (argv_i=="-plot_file" || argv_i=="-plotF"){
-			this->check_method();   
-            this->method = LATEX; 
+		if (argv_i == "-plot_file" || argv_i == "-plotF"){
+			this->check_method();
+            this->initialize_method ( LATEX, ".tex" );
             this->read_prefix();
-			this->figure_file_suffix = ".tex";
 		}
         argc_i++;
 	}
     this->finalize();
 }
 
+void Figure::initialize_method( FIGURE_PROGRAM program, string suffix){
+    this->method = program;  
+    this->figure_file_suffix = suffix;
+    }
 
 void Figure::read_prefix(){
     argc_i++;
@@ -79,13 +74,15 @@ void Figure::read_prefix(){
 
 void Figure::check_option(){
     if ( this->option != PLOT_DEFAULT ){
+        cerr << "Too many figure options!"<<endl;
         throw std::invalid_argument ( " Plot option can either be \"-label\" or \"-branch\" " );
     }
 }
 
 void Figure::check_method(){
     if ( this->method != NO_METHOD ){
-        throw std::invalid_argument ( " Method can either be LaTex (\"-plot\") or DOT (\"-dot\") " );
+        cerr << "Which method (figure) do you mean?"<<endl;
+        throw std::invalid_argument ( " Method can either be LaTex (\"-plot\" or \"-plotF\") or DOT (\"-dot\" or \"-dotF\") " );
     }
 }
 
