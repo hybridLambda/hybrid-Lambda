@@ -1,6 +1,7 @@
 bin_PROGRAMS = hybrid-Lambda
 PROG = HYBRID-LAMBDA
 check_PROGRAMS = hybrid-Lambda_dbg hybrid-Lambda_prof unit_tests
+TESTS = unit_tests 
 
 hybrid_Lambda_CXXFLAGS = -O3 -g -DNDEBUG #options for not showing debug messages.
 hybrid_Lambda_dbg_CXXFLAGS =  -O3 -g 
