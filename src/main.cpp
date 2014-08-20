@@ -35,16 +35,16 @@ using namespace hybridLambda;
 
 int main(int argc, char *argv[]){
 
-	vector <string> gt_tree_str_s;
-	vector <string> mt_tree_str_s;
 	
 	if ( argc==1 ){
 		hybridLambda::print_help();
 	}	//else, proceed
 
     try {
+        vector <string> gt_tree_str_s;
+        vector <string> mt_tree_str_s;
+            
 	    hybridLambda::param hybrid_para(argc, argv);
-	    //figure::param figure_para(argc, argv);
         Figure figure_para(argc, argv);
 	    freq::param freq_para(argc,argv);
 	    action_board my_action(argc,argv);
