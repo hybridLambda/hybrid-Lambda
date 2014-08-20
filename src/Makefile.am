@@ -11,7 +11,6 @@ hybrid_Lambda_prof_CXXFLAGS = -O3 -g -DNDEBUG #options for not showing debug mes
 shared_SOURCES =  param.hpp param.cpp \
 						node.hpp node.cpp \
 						net.hpp net.cpp \
-						all_gene_topo.cpp  all_gene_topo.hpp \
 						sim_gt.cpp  sim_gt.hpp  \
 						freq.cpp  freq.hpp \
 						utility.cpp  utility.hpp mtrand.cpp \

@@ -26,40 +26,57 @@
 
 
 #include"utility.hpp"
-#include"all_gene_topo.hpp"
 #include"sim_gt.hpp"
 
 
+class Freq{
+    public:
+        //Figure();
+        Figure ( int argc, char *argv[] );
 
-namespace freq{
-	class param{
-		public:
-			//bool gene_freq_bool;
-			//string gene_tree_file;
-			//bool reproduce_GENE_trees;
-			string freq_file_name;
-		
-			param(int argc, char *argv[]);
-		private:
-			param();
-	};
-}
+    private:
+        string freq_out_filename;
 
-
-
-/*! \brief Class function for counting topological frequencies */
-class topo_freq{
-	public:
-	vector <string> gene_topo; /*!< \brief Different gene topologies */
-	vector <int> gene_freq;    /*!< \brief Frequencies for different tree topologies */
-	topo_freq(vector <string> gt_strings); /*!< \brief topo_freq class constructor */
+        int argc_;
+        int argc_i;
+        char * const* argv_;
+        //void read_prefix(); 
+        
+        Net gt1;
+        Net gt2;
+        string tree_topo(string in_str);    
+        bool same_topo(string gt_string1,string gt_string2);
+        void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name);
+        //topo_freq(vector <string> gt_strings); /*!< \brief topo_freq class constructor */
 };
 
-bool same_topo(string gt_string1,string gt_string2);
+//namespace freq{
+	//class param{
+		//public:
+			////bool gene_freq_bool;
+			////string gene_tree_file;
+			////bool reproduce_GENE_trees;
+			//string freq_file_name;
+		
+			//param(int argc, char *argv[]);
+		//private:
+			//param();
+	//};
+//}
 
-void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name);
+
+
+///*! \brief Class function for counting topological frequencies */
+//class topo_freq{
+	//public:
+	//vector <string> gene_topo; /*!< \brief Different gene topologies */
+	//vector <int> gene_freq;    /*!< \brief Frequencies for different tree topologies */
+	//topo_freq(vector <string> gt_strings); /*!< \brief topo_freq class constructor */
+//};
+
+
 
 string remove_brchlen(string in_str);
-string tree_topo(string in_str);
+
 
 

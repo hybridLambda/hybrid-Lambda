@@ -577,8 +577,6 @@ WARN_LOGFILE           =
 INPUT                  = src/utility.hpp \
                          src/utility.cpp \
                          src/main.cpp \
-                         src/all_gene_topo.cpp \
-                         src/all_gene_topo.hpp \
                          src/sim_gt.cpp \
                          src/sim_gt.hpp \
                          src/freq.cpp \

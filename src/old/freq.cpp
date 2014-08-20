@@ -48,30 +48,13 @@ freq::param::param(int argc, char *argv[]){
 /*! \brief For given tree strings, differentiate topologies, and count frequencies for each topology
  * 
  */ 
- 
-/*! \brief Compute gene tree frequencies */
-void Freq::compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name){
-	remove(freq_file_name.c_str());
-	topo_freq my_topo_freq(gt_tree_str_s);
-	ofstream freq_out_file;
-	freq_out_file.open (freq_file_name.c_str(), ios::out | ios::app | ios::binary); 
-	int total_num=0;
-	for (size_t topo_i=0;topo_i<my_topo_freq.gene_topo.size();topo_i++){
-		freq_out_file<<topo_i+1<<" "<<my_topo_freq.gene_topo[topo_i]<<"  "<<my_topo_freq.gene_freq[topo_i]<<endl;
-		total_num=total_num+my_topo_freq.gene_freq[topo_i];
-	}
-	cout<<total_num<<endl;
-	freq_out_file.close();
-	string appending_log_str="Gene trees frequency analyzed in file: "+freq_file_name;
-}
-
 topo_freq::topo_freq(vector <string> gt_strings){
 	Net gt_dummy(gt_strings[0]);
 	gene_topo.push_back(tree_topo(gt_strings[0]));
 	gene_freq.push_back(1);
-	for (size_t gt_string_i=1;gt_string_i<gt_strings.size();gt_string_i++){
+	for (unsigned int gt_string_i=1;gt_string_i<gt_strings.size();gt_string_i++){
 		bool new_topo=true;
-		for (size_t topo_i=0;topo_i<gene_topo.size();topo_i++){
+		for (unsigned int topo_i=0;topo_i<gene_topo.size();topo_i++){
 			if (same_topo(gt_strings[gt_string_i], gene_topo[topo_i])){
 				gene_freq[topo_i]=gene_freq[topo_i]+1;
 				new_topo=false;
@@ -88,7 +71,7 @@ topo_freq::topo_freq(vector <string> gt_strings){
 
 /*! \brief determine two tree strings have the same topology or not
  */
-bool Freq::same_topo(string gt_string1,string gt_string2){
+bool same_topo(string gt_string1,string gt_string2){
 	bool same_topo_return=false;
 	Net gt1(gt_string1);
 	Net gt2(gt_string2);
@@ -98,7 +81,7 @@ bool Freq::same_topo(string gt_string1,string gt_string2){
 	}
 	else{
 		bool same_tax_names=true;
-		for (size_t tax_i=0;tax_i<gt1.tax_name.size();tax_i++){
+		for (unsigned int tax_i=0;tax_i<gt1.tax_name.size();tax_i++){
 			if (gt1.tax_name[tax_i]!=gt2.tax_name[tax_i]){
 				//cout<<gt1.tax_name[tax_i]<<" "<<gt2.tax_name[tax_i]<<endl;
 				same_tax_names=false;
@@ -112,8 +95,8 @@ bool Freq::same_topo(string gt_string1,string gt_string2){
 			vector <int> gt1_in_gt2(gt1.descndnt2.size(),0);
 			vector <int> gt2_in_gt1(gt2.descndnt2.size(),0);
 			same_topo_return=true;
-			for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
-				for (size_t node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
+			for (unsigned int node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
+				for (unsigned int node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
 					valarray <bool> comp=(gt1.descndnt2[node1_i]==gt2.descndnt2[node2_i]);
 					if (comp.min()==1){
 						//cout<<gt1.Net_nodes[node1_i].node_content<<endl;
@@ -125,8 +108,8 @@ bool Freq::same_topo(string gt_string1,string gt_string2){
 					
 				}
 			}
-			//for (size_t node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
-				//for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
+			//for (unsigned int node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
+				//for (unsigned int node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
 					//valarray <bool> comp=(gt1.descndnt2[node1_i]==gt2.descndnt2[node2_i]);
 					//if (comp.min()==1){
 						////cout<<gt1.Net_nodes[node1_i].node_content<<endl;
@@ -138,7 +121,7 @@ bool Freq::same_topo(string gt_string1,string gt_string2){
 					
 				//}
 			//}
-			for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
+			for (unsigned int node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
 				if (gt1_in_gt2[node1_i]==0 || gt2_in_gt1[node1_i]==0){
 					same_topo_return=false;
 					break;// this is newly added. test????
@@ -157,9 +140,49 @@ bool Freq::same_topo(string gt_string1,string gt_string2){
 }
 
 
+/*! \brief Determine the RF distance of two trees
+ * \todo UNTESTED!!!!!
+ */
+int RF_dist(string gt_string1,string gt_string2){
+	int RF_dist_return=0;
+	Net gt1(gt_string1);
+	Net gt2(gt_string2);
+	valarray <int> gt1_in_gt2(gt1.descndnt.size(),0);
+	valarray <int> gt2_in_gt1(gt2.descndnt.size(),0);
+	for (unsigned int node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
+		for (unsigned int node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
+			valarray <bool> comp=(gt1.descndnt2[node1_i]==gt2.descndnt2[node2_i]);
+			if (comp.min()==1){
+				//cout<<gt1.Net_nodes[node1_i].node_content<<endl;
+				//cout<<gt2.Net_nodes[node2_i].node_content<<endl;
+				gt1_in_gt2[node1_i]=1;
+				gt2_in_gt1[node2_i]=1;
+				//break;
+			}
+		}
+	}
+	RF_dist_return=gt1_in_gt2.size()-gt1_in_gt2.sum()+gt2_in_gt1.size()-gt2_in_gt1.sum();
+	return RF_dist_return;
+
+}
 
 
 
+/*! \brief Compute gene tree frequencies */
+void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name){
+	remove(freq_file_name.c_str());
+	topo_freq my_topo_freq(gt_tree_str_s);
+	ofstream freq_out_file;
+	freq_out_file.open (freq_file_name.c_str(), ios::out | ios::app | ios::binary); 
+	int total_num=0;
+	for (unsigned int topo_i=0;topo_i<my_topo_freq.gene_topo.size();topo_i++){
+		freq_out_file<<topo_i+1<<" "<<my_topo_freq.gene_topo[topo_i]<<"  "<<my_topo_freq.gene_freq[topo_i]<<endl;
+		total_num=total_num+my_topo_freq.gene_freq[topo_i];
+	}
+	cout<<total_num<<endl;
+	freq_out_file.close();
+	string appending_log_str="Gene trees frequency analyzed in file: "+freq_file_name;
+}
 
 
 
@@ -177,34 +200,9 @@ string remove_brchlen(string in_str /*!< input newick form string */){
 }
 
 /*! \brief Remove branch length in a tree string, gives the tree topology \todo combine with remove_brchlen, only keep one of them*/
-string Freq::tree_topo(string in_str /*!< input newick form string */){
+string tree_topo(string in_str /*!< input newick form string */){
 	return remove_brchlen(remove_interior_label(in_str));
 }
 
 
 
-/*! \brief Determine the RF distance of two trees
- * \todo UNTESTED!!!!!
- */
-int RF_dist(string gt_string1,string gt_string2){
-	int RF_dist_return=0;
-	//Net gt1(gt_string1);
-	//Net gt2(gt_string2);
-	valarray <int> gt1_in_gt2(gt1.descndnt.size(),0);
-	valarray <int> gt2_in_gt1(gt2.descndnt.size(),0);
-	for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
-		for (size_t node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
-			valarray <bool> comp=(gt1.descndnt2[node1_i]==gt2.descndnt2[node2_i]);
-			if (comp.min()==1){
-				//cout<<gt1.Net_nodes[node1_i].node_content<<endl;
-				//cout<<gt2.Net_nodes[node2_i].node_content<<endl;
-				gt1_in_gt2[node1_i]=1;
-				gt2_in_gt1[node2_i]=1;
-				//break;
-			}
-		}
-	}
-	RF_dist_return=gt1_in_gt2.size()-gt1_in_gt2.sum()+gt2_in_gt1.size()-gt2_in_gt1.sum();
-	return RF_dist_return;
-
-}

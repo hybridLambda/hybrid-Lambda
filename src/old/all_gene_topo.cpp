@@ -26,7 +26,7 @@
 #include"all_gene_topo.hpp"
 
 
-vector < string > find_current_taxa_name(string in_str){
+vector < string > find_current_taxa_name( string in_str ){
 	vector < string > current_taxa_name;
 	for (size_t i=1;i<in_str.size();){
 		if (isalpha(in_str[i]) || isdigit(in_str[i])){
