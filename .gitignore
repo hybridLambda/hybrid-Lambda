@@ -8,7 +8,6 @@
 *.so
 *.to
 
-
 # Packages #
 ############
 # it's better to unpack these files and commit the raw source
@@ -37,6 +36,10 @@ doc/net1-figure0.dpth
 doc/net1-figure0.dvi
 doc/net1-figure0.pdf
 doc/net1-figure0.ps
+doc/net1-figure1.dpth
+doc/net1-figure1.dvi
+doc/net1-figure1.eps
+doc/net1-figure1.ps
 doc/net1.aux
 doc/net1.auxlock
 doc/net1.dvi
@@ -53,3 +56,12 @@ configure
 aclocal.m4
 .deps
 INSTALL
+
+# figures
+src/texfigure.aux
+src/texfigure.pdf
+src/texfigure.tex
+src/dotfigure.eps
+src/dotfigure.pdf
+src/dotfigure.ps
+
