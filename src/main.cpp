@@ -78,12 +78,17 @@ int main(int argc, char *argv[]){
 			mt_tree_str_s = simd_gt_tree_str_s.gt_string_mut_num_s;
 			
 			
-			if (my_action.mono_bool  &&  sim_para.sample_size.size()==2){
-				cout<<"   A mono     B mono Recip mono     A para     B para  Polyphyly"<<endl;
-				for (unsigned int mono_i=0;mono_i<simd_gt_tree_str_s.monophyly.size();mono_i++){
-					cout<<setw(9)<<simd_gt_tree_str_s.monophyly[mono_i]<<"  ";
-				}
-				cout<<endl;
+			if (my_action.mono_bool ){
+                if ( sim_para.sample_size.size()==2 ){ //\todo check population structure is a species tree
+                    cout<<"   A mono     B mono Recip mono     A para     B para  Polyphyly"<<endl;
+                    for (unsigned int mono_i=0;mono_i<simd_gt_tree_str_s.monophyly.size();mono_i++){
+                        cout<<setw(9)<<simd_gt_tree_str_s.monophyly[mono_i]<<"  ";
+                    }
+                    cout<<endl;
+                }
+                else {
+                    throw std::invalid_argument(std::string(" -mono flag can only apply to species tree of two population") );
+                    }
 			}
 		}
 		time_t sim_end_time = time(0);
@@ -139,9 +144,9 @@ int main(int argc, char *argv[]){
 		if ( hybrid_para.freq_bool ){ //frequencies			
 			freq_para.compute_gt_frequencies( gt_tree_str_s );
 		}
+        
 		time_t freq_end_time=time(0);	
-		if (hybrid_para.seg_bool){
-			//seggreating data were generated
+		if (hybrid_para.seg_bool){ 	//seggreating data were generated
 			seg_para.create_site_data_dir(mt_tree_str_s);
 		}
 		time_t seg_end_time =time(0);

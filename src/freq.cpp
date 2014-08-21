@@ -152,27 +152,3 @@ string Freq::tree_topo(string in_str /*!< input newick form string */){
 	return remove_brchlen(remove_interior_label(in_str));
 }
 
-/*! \brief Determine the RF distance of two trees
- * \todo UNTESTED!!!!!
- */
-int RF_dist(string gt_string1,string gt_string2){
-	int RF_dist_return=0;
-	Net gt1(gt_string1);
-	Net gt2(gt_string2);
-	valarray <int> gt1_in_gt2(gt1.descndnt.size(),0);
-	valarray <int> gt2_in_gt1(gt2.descndnt.size(),0);
-	for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
-		for (size_t node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
-			valarray <bool> comp=(gt1.descndnt2[node1_i]==gt2.descndnt2[node2_i]);
-			if (comp.min()==1){
-				//cout<<gt1.Net_nodes[node1_i].node_content<<endl;
-				//cout<<gt2.Net_nodes[node2_i].node_content<<endl;
-				gt1_in_gt2[node1_i]=1;
-				gt2_in_gt1[node2_i]=1;
-				//break;
-			}
-		}
-	}
-	RF_dist_return=gt1_in_gt2.size()-gt1_in_gt2.sum()+gt2_in_gt1.size()-gt2_in_gt1.sum();
-	return RF_dist_return;
-}

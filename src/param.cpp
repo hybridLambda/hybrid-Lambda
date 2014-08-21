@@ -38,26 +38,6 @@ void hybridLambda::param::init(){
     this->firstcoal_bool  = false;
     this->firstcoal_NAME  = "firstcoalFILE" ; 
     this->fst_bool        = false;
-			//size_t seed;				
-			//bool simulation_bool;
-			//bool help;
-			//bool freq_bool;
-			//bool print_tree;
-			//bool plot_bool;
-			//bool log_bool;
-			//string log_NAME;
-			//bool seg_bool;
-			//bool read_GENE_trees;
-			//bool read_mt_trees;
-			//string gt_file_name;
-			//string mt_file_name;
-			
-			//bool mm_bool;
-			//bool pop_bool;
-			//bool tmrca_bool;
-			//bool bl_bool;
-			//string tmrca_NAME;
-
 }
 
 hybridLambda::param::param(){
@@ -202,16 +182,16 @@ void hybridLambda::print_help(){
 void hybridLambda::print_example(){
 	cout<<"Examples:"<<endl;
 	cout<<""<<endl;	
-	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut"<<endl;
+	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut"<<endl;
 	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 100 -pop 25000 -sim_num_gener"<<endl;
 	cout<<"hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'"<<endl;
 	cout<<"hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
 	cout<<"hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
 	cout<<"hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -gF GENE_TREE_FILE -f"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
-	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -gF GENE -fF OUTPUT"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE_TREE_FILE -f"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
+	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -o GENE -fF OUTPUT"<<endl;	
 	cout<<"hybrid-Lambda -gt GENE_coal_unit -f "<<endl;	
 	cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4"<<endl;
 	cout<<endl;
@@ -235,7 +215,7 @@ void hybridLambda::print_option(){
 	cout<<setw(20)<<"-num N"<<"  --  "<<"The number of gene trees will be simulated."<<endl;
 	cout<<setw(20)<<"-seed SEED"<<"  --  "<<"User define random SEED"<<endl;
 	cout<<setw(20)<<"-mu MU"<<"  --  "<<"User defined constant mutation rate MU. By default mutation rate 0.00005 is used."<<endl;
-	cout<<setw(20)<<"-gF FILE [option]"<<"  --  "<<"Specify the filename for simulated gene trees. \"GENE_TREE\" by default"<<endl;
+	cout<<setw(20)<<"-o FILE [option]"<<"  --  "<<"Specify the file name prefix for simulated gene trees. \"GENE_TREE\" by default"<<endl;
 	//cout<<"     By default, gene tree branch lengths are in coalescent unit "<<endl;
 	cout<<setw(20)<<"-sim_mut_unit"<<"  --  "<<"Convert the simulated gene tree branch lengths to mutation unit."<<endl;
 	cout<<setw(20)<<"-sim_num_gener"<<"  --  "<<"Convert the simulated gene tree branch lengths to number of generations."<<endl;

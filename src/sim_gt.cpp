@@ -69,7 +69,7 @@ action_board::action_board(int argc, char *argv[]){
 		if (argv_i=="-mono"){
 			mono_bool=true;
 		}
-		if (argv_i=="-GENE" || argv_i=="-gF"){
+		if (argv_i=="-GENE" || argv_i=="-o"){
 			gene_tree_file=argv[argc_i+1];
 			argc_i++;
 		}

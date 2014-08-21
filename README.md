@@ -50,7 +50,7 @@ Options              | Useage
 -num N               | The number of gene trees will be simulated.
 -seed SEED           | User define random SEED
 -mu MU               | User defined constant mutation rate MU. By **default** mutation rate 0.00005 is used.
--gF FILE [option]    | Specify the filename for simulated gene trees. "GENE_TREE" by **default**
+-o PREFIX [option]   | Specify the file name prefix for simulated gene trees. "GENE_TREE" by **default**
 -sim_mut_unit        | Convert the simulated gene tree branch lengths to mutation unit.
 -sim_num_gener       | Convert the simulated gene tree branch lengths to number of generations.
 -sim_num_mut         | Simulate numbers of mutations on each branch of simulated gene trees.
@@ -65,16 +65,16 @@ Options              | Useage
 
 ##Examples:
 ```bash
-hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -gF example1
-hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -gF example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut
+hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1
+hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num N -pop 25000 -sim num gener
 hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'
 hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5
 hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4
 hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch
-hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -f
-hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -gF GENE_TREE_FILE -fF FRENQUENCY_FILE
-hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -gF GENE -fF OUTPUT
+hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -o GENE_TREE_FILE -f
+hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -o GENE_TREE_FILE -fF FRENQUENCY_FILE
+hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -o GENE -fF OUTPUT
 hybrid-Lambda -gt GENE_coal_unit -f 
 hybrid-Lambda -spcu '(A:5,B:5)r;'-mono -num 100 -mm .1 -S 4 4
 ```
