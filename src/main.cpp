@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
             
 	    hybridLambda::param hybrid_para(argc, argv);
         Figure figure_para(argc, argv);
-	    freq::param freq_para(argc,argv);
+	    Freq freq_para(argc,argv);
 	    action_board my_action(argc,argv);
 	    seg::param seg_para(argc,argv);
         double Fst;
@@ -136,10 +136,8 @@ int main(int argc, char *argv[]){
 			mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
 		}
 				
-		if (hybrid_para.freq_bool){
-			//frequencies
-			compute_gt_frequencies(gt_tree_str_s, freq_para.freq_file_name);
-
+		if ( hybrid_para.freq_bool ){ //frequencies			
+			freq_para.compute_gt_frequencies( gt_tree_str_s );
 		}
 		time_t freq_end_time=time(0);	
 		if (hybrid_para.seg_bool){
@@ -192,11 +190,6 @@ int main(int argc, char *argv[]){
 				
 			}
 						
-			if (hybrid_para.freq_bool){
-				//frequencies
-				log_file << "Computing topology frequency took about " << freq_end_time - sim_end_time << " second(s) \n";
-				log_file << "Frequency file is saved at: "<<freq_para.freq_file_name<<"\n";
-			}
 			if (hybrid_para.seg_bool){
 				//seggreating data were generated
 				log_file << "Generating segregating site data took about " << seg_end_time - freq_end_time << " second(s) \n";

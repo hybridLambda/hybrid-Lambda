@@ -24,59 +24,21 @@
 /*! \file freq.hpp
  * \brief Header file for freq.cpp */
 
-
-#include"utility.hpp"
-#include"sim_gt.hpp"
-
+#include"net.hpp"
 
 class Freq{
     public:
-        //Figure();
-        Figure ( int argc, char *argv[] );
-
+        Freq ( int argc, char *argv[] );
+        void compute_gt_frequencies( vector <string> &gt_tree_str_s );
     private:
         string freq_out_filename;
+        ofstream freq_out_file;
 
-        int argc_;
-        int argc_i;
-        char * const* argv_;
-        //void read_prefix(); 
-        
-        Net gt1;
-        Net gt2;
+        vector <string> gene_topo; /*!< \brief Different gene topologies */
+        vector <int> gene_freq;    /*!< \brief Frequencies for different tree topologies */        
+        vector <string> gt_tree_str_tmp;
         string tree_topo(string in_str);    
-        bool same_topo(string gt_string1,string gt_string2);
-        void compute_gt_frequencies(vector <string> gt_tree_str_s, string freq_file_name);
-        //topo_freq(vector <string> gt_strings); /*!< \brief topo_freq class constructor */
+        string remove_brchlen(string in_str);
+        bool same_topo(string gt_string1,string gt_string2);        
+        void compute_gt_frequencies_core();
 };
-
-//namespace freq{
-	//class param{
-		//public:
-			////bool gene_freq_bool;
-			////string gene_tree_file;
-			////bool reproduce_GENE_trees;
-			//string freq_file_name;
-		
-			//param(int argc, char *argv[]);
-		//private:
-			//param();
-	//};
-//}
-
-
-
-///*! \brief Class function for counting topological frequencies */
-//class topo_freq{
-	//public:
-	//vector <string> gene_topo; /*!< \brief Different gene topologies */
-	//vector <int> gene_freq;    /*!< \brief Frequencies for different tree topologies */
-	//topo_freq(vector <string> gt_strings); /*!< \brief topo_freq class constructor */
-//};
-
-
-
-string remove_brchlen(string in_str);
-
-
-
