@@ -41,7 +41,9 @@ class HybridLambda{
     public:	
         /*! Constructors and Destructors */  
         HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { this->init(); this->parse(); }
-        ~HybridLambda(){ delete simulation_jobs_; }
+        ~HybridLambda(){ 
+            delete simulation_jobs_; 
+            delete parameters_; }
 
         /*! Members */              
         size_t seed;				
@@ -65,14 +67,17 @@ class HybridLambda{
         
         /*! Methods */              
         void parse() ;
-        void HybridLambda_core( sim::param sim_param );
+        void HybridLambda_core(  );
         action_board* simulation_jobs() const { return this->simulation_jobs_; }
+        SimulationParameters* parameters() const { return this->parameters_;   } 
         void extract_tmrca();
         void extract_bl();
         void extract_firstcoal();       
         
     private:
         action_board* simulation_jobs_;
+        SimulationParameters* parameters_;
+        
         void init();
         std::ofstream extract_file;
         string extract_file_name;
@@ -98,18 +103,20 @@ class HybridLambda{
         char * const* argv_;
         //size_t random_seed_;  
         int num_sim_gt;
-
         
+        string tmp_input_str;
+        string read_input_para(const char *inchar,string in_str);
+
         template<class T>
         T readNextInput() {
             ++argc_i;        
-            if (argc_i >= argc_) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
+            if (argc_i >= argc_) throw std::invalid_argument( std::string( "Not enough parameters when parsing options: ") + argv_[argc_i-1]);
         
             char c;
             T input;
             std::stringstream ss(argv_[argc_i]);
             ss >> input;
-            if (ss.fail() || ss.get(c)) throw std::invalid_argument(std::string("Failed to parse option: ") + argv_[argc_i]); 
+            if (ss.fail() || ss.get(c)) throw std::invalid_argument( std::string( "Failed to parse option: ") + argv_[argc_i]); 
             return input;
         }
 

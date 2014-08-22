@@ -23,8 +23,6 @@
 /*! \file utility.cpp
  */
 
-
-
 #include"utility.hpp"
 
 /*! \brief Identify if its the start of the taxon name in a newick string, should be replaced by using (isalpha() || isdigit())  */
@@ -254,21 +252,6 @@ bool is_num(char inchar[]){
 	return is_num_return;
 }
 
-string read_input_para(char inchar[],string in_str){
-	
-	string out_str;
-	if (is_num(inchar)){
-		istringstream para_istrm(inchar);
-		double para;
-		para_istrm>>para;
-		out_str=write_para_into_tree(in_str, para);
-	}
-	else{
-		out_str=read_input_line(inchar);
-	}
-	return out_str;
-}
-		
 		
 void readNextStringto( string &readto , int argc_i, int argc_, char * const* argv_ ){
     argc_i++;

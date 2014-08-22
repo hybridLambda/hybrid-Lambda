@@ -25,45 +25,38 @@
  *  \brief Main function of hybrid-Lambda */
 
 #include"hybridLambda.hpp"
-#include"sim_gt.hpp"
 #include"freq.hpp"
 #include"figure.hpp"
 #include"seg-site.hpp"
 #include"fst.hpp"
 
 
-
-//using namespace HybridLambda;
-
 int main(int argc, char *argv[]){
 
 	if ( argc == 1 ) print_help(); 	//else, proceed
 
     try {
-        //vector <string> gt_tree_str_s;
-        //vector <string> mt_tree_str_s;
-            
 	    HybridLambda hybrid_para ( argc, argv );
+        //hybrid_para.parse();
         Figure figure_para ( argc, argv );
 	    Freq freq_para ( argc, argv );
-	    action_board my_action(argc,argv);
 	    seg::param seg_para(argc,argv);
         double Fst;
 
-   	    if ( hybrid_para.seg_bool ){my_action.sim_num_mut_bool=true;}
+   	    //if ( hybrid_para.seg_bool ){my_action.sim_num_mut_bool=true;}
 
-		time_t start_time = time(0);
+		//time_t start_time = time(0);
 		if (hybrid_para.simulation_bool){
-			sim::param sim_para(argc, argv);	
+			//sim::param sim_para(argc, argv);	
 
-			Net new_net_dummy(sim_para.net_str);
+			Net new_net_dummy(hybrid_para.parameters()->net_str);
 			if (hybrid_para.print_tree){
 				new_net_dummy.print_all_node();
 				return EXIT_SUCCESS;
 			}
 			
 			if (hybrid_para.plot_bool){
-				figure_para.plot(sim_para.net_str);
+				figure_para.plot(hybrid_para.parameters()->net_str);
 				return EXIT_SUCCESS;
 			}
 			
@@ -72,14 +65,10 @@ int main(int argc, char *argv[]){
 				//return EXIT_SUCCESS;
 			}
 			
-		    //sim_n_gt simd_gt_tree_str_s(sim_para,my_action);
-            hybrid_para.HybridLambda_core(sim_para,  my_action);
-			//gt_tree_str_s = simd_gt_tree_str_s.gt_string_coal_unit_s;
-			//mt_tree_str_s = simd_gt_tree_str_s.gt_string_mut_num_s;
+            hybrid_para.HybridLambda_core( );
 			
-			
-			if (my_action.mono_bool ){
-                if ( sim_para.sample_size.size() == 2 ){ //\todo check population structure is a species tree
+			if (hybrid_para.simulation_jobs()->mono() ){
+                if ( hybrid_para.parameters()->sample_size.size() == 2 ){ //\todo check population structure is a species tree
                     cout << "   A mono     B mono Recip mono     A para     B para  Polyphyly" << endl;
                     for ( size_t mono_i = 0; mono_i < hybrid_para.monophyly.size(); mono_i++){
                         cout << setw(9) << hybrid_para.monophyly[mono_i] << "  ";
@@ -91,49 +80,43 @@ int main(int argc, char *argv[]){
                     }
 			}
 		}
-		time_t sim_end_time = time(0);
+		//time_t sim_end_time = time(0);
 		
-		if (hybrid_para.read_GENE_trees){
-			//gt_tree_str_s=read_input_lines(hybrid_para.gt_file_name.c_str());
-            hybrid_para.gt_tree_str_s=read_input_lines(hybrid_para.gt_file_name.c_str());
-		}
+		if (hybrid_para.read_GENE_trees) hybrid_para.gt_tree_str_s = read_input_lines(hybrid_para.gt_file_name.c_str());
 		
         hybrid_para.extract_tmrca ();
         hybrid_para.extract_bl ();
         hybrid_para.extract_firstcoal();
-
-		if (hybrid_para.read_mt_trees){
-			//mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
-            hybrid_para.mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
-		}
-				
-		if ( hybrid_para.freq_bool ){ //frequencies			
-			//freq_para.compute_gt_frequencies( gt_tree_str_s );
-            freq_para.compute_gt_frequencies( hybrid_para.gt_tree_str_s );            
-		}
         
-		time_t freq_end_time=time(0);	
+        //frequencies			
+		if ( hybrid_para.freq_bool ) freq_para.compute_gt_frequencies( hybrid_para.gt_tree_str_s );       
+
+		if (hybrid_para.read_mt_trees) hybrid_para.mt_tree_str_s = read_input_lines(hybrid_para.mt_file_name.c_str());
+        
+		//time_t freq_end_time=time(0);	
 		if (hybrid_para.seg_bool){ 	//seggreating data were generated
 			//seg_para.create_site_data_dir(mt_tree_str_s);
             seg_para.create_site_data_dir( hybrid_para.mt_tree_str_s );
 		}
-		time_t seg_end_time =time(0);
-        
-        if (hybrid_para.fst_bool){
-            sim::param sim_para(argc, argv);	
-            Net coal_unit_net(sim_para.net_str);
-            double tau = coal_unit_net.Net_nodes[0].brchlen1;
-            
-            //Net para_net(sim_para.para_string);
-            //double lambdaA  = para_net.Net_nodes[0].brchlen1;
-            //double lambdaAB = para_net.Net_nodes.back().brchlen1;
-            //cout<<"tau = " << tau <<endl;
-            //cout << "( 1 - exp( -tau ) )= "<<( 1 - exp( -tau ) )<<endl;
-            Fst = ( 1 - exp( -tau ) ) * ( tau / ( 1 + tau ) );
-            cout << "Expected[Fst] = " << Fst << endl;
-        }
-		
-		//if (hybrid_para.log_bool){      
+		//time_t seg_end_time =time(0);
+
+
+/// need to work         
+//if (hybrid_para.fst_bool){
+////sim::param sim_para(argc, argv);	
+//Net coal_unit_net(sim_para.net_str);
+//double tau = coal_unit_net.Net_nodes[0].brchlen1;
+
+////Net para_net(sim_para.para_string);
+////double lambdaA  = para_net.Net_nodes[0].brchlen1;
+////double lambdaAB = para_net.Net_nodes.back().brchlen1;
+////cout<<"tau = " << tau <<endl;
+////cout << "( 1 - exp( -tau ) )= "<<( 1 - exp( -tau ) )<<endl;
+//Fst = ( 1 - exp( -tau ) ) * ( tau / ( 1 + tau ) );
+//cout << "Expected[Fst] = " << Fst << endl;
+//}
+
+        //if (hybrid_para.log_bool){      
 			//remove(hybrid_para.log_NAME.c_str());    
 			//std::ofstream log_file;
 			//log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
@@ -237,7 +220,6 @@ void print_help(){
 	cout<<endl<<endl;
 	print_option();
 	print_example();
-	//exit(1);
     exit (EXIT_SUCCESS);
 }
 

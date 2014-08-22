@@ -28,49 +28,82 @@
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/special_functions/binomial.hpp>
 #include <stdio.h>
-#include <ctime>
+//#include <ctime>
 #include "net.hpp"
 
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
 	
-namespace sim{
-	class param{
-		public:
-			param(int argc, char *argv[]);
+    
+class SimulationParameters{
+    friend class HybridLambda;
+    friend class sim_one_gt;
+    
+    double mutation_rate;
+    //double pop_size;
+    //double mm;
+    //bool pop_size_string_bool;
+    bool mm_bool;
+    bool pop_bool;
+    string sp_string_coal_unit;
+    string sp_string_pop_size;
+    string para_string;
+    vector < int > sample_size;
+    
+    
+    bool num_gener_bool;
+    bool sp_coal_unit_bool;
+    SimulationParameters();
+    ~SimulationParameters(){};
+    public:
+    string net_str;
+};
+
+
+//namespace sim{
+	//class param{
+		//public:
+			//param(int argc, char *argv[]);
 			
-			int num_sim_gt;
-			double mutation_rate;
-			//double pop_size;
-			//double mm;
-			//bool pop_size_string_bool;
-			bool mm_bool;
-			bool pop_bool;
-			string sp_string_coal_unit;
-			string sp_string_pop_size;
-			string para_string;
-			vector < int > sample_size;
-            string net_str;
+			//double mutation_rate;
+			////double pop_size;
+			////double mm;
+			////bool pop_size_string_bool;
+			//bool mm_bool;
+			//bool pop_bool;
+			//string sp_string_coal_unit;
+			//string sp_string_pop_size;
+			//string para_string;
+			//vector < int > sample_size;
+            //string net_str;
 			
-			//,action_board my_action
-			bool num_gener_bool;
-			bool sp_coal_unit_bool;
-		private:
-			param();
-	};
-}
+			////,action_board my_action
+			//bool num_gener_bool;
+			//bool sp_coal_unit_bool;
+		//private:
+			//param();
+	//};
+//}
 
 
 class action_board {
     friend class HybridLambda;
     friend class sim_one_gt;
+    public:
+	bool mono()          const { return mono_bool; }  // \todo, make this private
+
+    private:
 	bool sim_mut_unit()  const { return sim_mut_unit_bool;  }
 	bool sim_num_gener() const { return sim_num_gener_bool; }
 	bool sim_num_mut()   const { return sim_num_mut_bool;   }
+	bool Si_num()        const { return Si_num_bool; }
+
     
-    void set_sim_mut_unit  { this->sim_mut_unit_bool  = true; }
-    void set_sim_num_gener { this->sim_num_gener_bool = true; }
-    void set_sim_mut_mut   { this->sim_num_mut_bool   = true; }
+    void set_sim_mut_unit()  { this->sim_mut_unit_bool  = true; }
+    void set_sim_num_gener() { this->sim_num_gener_bool = true; }
+    void set_sim_mut_mut()   { this->sim_num_mut_bool   = true; }	
+	bool set_Si_num() {this->Si_num_bool = true; this->sim_num_mut_bool=true; }
+    bool set_mono() { this->mono_bool = true; } 
     
 	bool sim_mut_unit_bool;
 	bool sim_num_gener_bool;
@@ -79,64 +112,47 @@ class action_board {
 	bool Si_num_bool;
     
 	action_board();
+    ~action_board(){};
 };
 
 
 /*! \brief One simulated gene tree from a network under Kingman or multi merger coalescent process*/
 class sim_one_gt{
-	private:
-	void compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size);
-	void build_gt_string_mut_unit(double mutation_rate);
-	void Si_num_out_table(Net mt_tree,int total_mut);
+    friend class HybridLambda;
+	//private:
+        void compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size);
+        void build_gt_string_mut_unit(double mutation_rate);
+        void Si_num_out_table(Net mt_tree,int total_mut);
+        action_board* simulation_jobs_;
+        SimulationParameters* parameters_;
 
-	
-	
-	public:
-	string gt_string_coal_unit;
-	string gt_string_mut_num;
-	string gt_string_mut_unit;
-	string gt_string_gener_num;
-	
-	
-	vector <string> tax_name;
-	vector <double> monophyly;
-	double total_brchlen;
-	
-	sim_one_gt(){
-		string gt_string_coal_unit;
-		string gt_string_mut_num;
-		string gt_string_mut_unit;
-		string gt_string_gener_num;
-		vector <double> monophyly;
-		vector <string> tax_name;
-	}
-	
-	
-	//sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-	//sim_one_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string,vector < int > sample_size, double mutation_rate,action_board my_action);
-	sim_one_gt(sim::param sim_param,action_board my_action);
-	
-	//sim_one_gt(string Net_string, vector < int > sample_size, bool multi_merge_bool,double multi_merge_para);
+	//public:
+        string gt_string_coal_unit;
+        string gt_string_mut_num;
+        string gt_string_mut_unit;
+        string gt_string_gener_num;
+        
+        
+        vector <string> tax_name;
+        vector <double> monophyly;
+        double total_brchlen;
+        
+    sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs);    
+    ~sim_one_gt(){};
+		
 	//void clear(){
 		//gt_string_coal_unit.clear();
-		//~monophyly;
+		//gt_string_mut_num.clear();
+		//gt_string_mut_unit.clear();
+		//gt_string_gener_num.clear();
+		//monophyly.clear();
 		//tax_name.clear();
 		//}
-		
-	void clear(){
-		gt_string_coal_unit.clear();
-		gt_string_mut_num.clear();
-		gt_string_mut_unit.clear();
-		gt_string_gener_num.clear();
-		monophyly.clear();
-		tax_name.clear();
-		//total_brchlen;
-		}
 		
 };
 
 
-double Beta(double x,double y);
+double Beta(double x, double y);
 double unifRand();
 int poisson_rand_var(double lambda);
 void create_new_site_data(string gt_string_mut_num,int site_i);

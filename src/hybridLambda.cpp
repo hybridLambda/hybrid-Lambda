@@ -48,6 +48,21 @@ void HybridLambda::init(){
     this->num_sim_gt = 1;
 }
 
+string HybridLambda::read_input_para(const char *inchar, string in_str){
+	
+	string out_str;
+	if (is_num(inchar)){
+		istringstream para_istrm(inchar);
+		double para;
+		para_istrm>>para;
+		out_str=write_para_into_tree(in_str, para);
+	}
+	else{
+		out_str=read_input_line(inchar);
+	}
+	return out_str;
+}
+
 void HybridLambda::parse(){
 	
 	while (argc_i < argc_){	
@@ -72,7 +87,9 @@ void HybridLambda::parse(){
 		}
 
 		else if (argv_i=="-mm"){
-			mm_bool=true;
+            readNextStringto( this->tmp_input_str , this->argc_i, this->argc_,  this->argv_ );
+            this->parameters_->para_string = read_input_para(this->tmp_input_str.c_str(), this->parameters_->net_str);
+			//mm_bool=true;
 		}
 			
 		else if (argv_i=="-pop"){
@@ -165,15 +182,15 @@ void HybridLambda::extract_firstcoal(){
 
 
 /*! \brief  sim_n_gt constructor */
-void HybridLambda::HybridLambda_core(sim::param sim_param ){
+void HybridLambda::HybridLambda_core( ){
 	dout<<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 	
-    string para_string = sim_param.para_string;
+    string para_string =  this->parameters_->para_string;
     
-	string sp_string_coal_unit = sim_param.sp_string_coal_unit;
-	string sp_string_pop_size  = sim_param.sp_string_pop_size;
+	string sp_string_coal_unit =  this->parameters_->sp_string_coal_unit;
+	string sp_string_pop_size  =  this->parameters_->sp_string_pop_size;
 	
-	//int num_sim_gt=sim_param.num_sim_gt;
+	//int num_sim_gt= this->parameters_->num_sim_gt;
 	
 	string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
 	string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
@@ -192,13 +209,13 @@ void HybridLambda::HybridLambda_core(sim::param sim_param ){
 
 	if ( this->simulation_jobs_->Si_num_bool){
 		int total_lineage=0;
-		for (size_t i=0; i<sim_param.sample_size.size();i++){
-			total_lineage=total_lineage+sim_param.sample_size[i];
+		for (size_t i=0; i< this->parameters_->sample_size.size();i++){
+			total_lineage=total_lineage+ this->parameters_->sample_size[i];
 		}
 		outtable_header(total_lineage);
 	}
 	for ( int i=0; i < this->num_sim_gt; i++ ){
-		sim_one_gt sim_gt_string(sim_param, this->simulation_jobs_ );
+		sim_one_gt sim_gt_string( this->parameters_, this->simulation_jobs_ );
 		gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
 		if ( this->simulation_jobs_->sim_num_mut_bool){
 			mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
