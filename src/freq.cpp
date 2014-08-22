@@ -24,19 +24,13 @@
 
 #include"freq.hpp"
 
-Freq::Freq( int argc, char *argv[] ){
+Freq::Freq( int argc, char *argv[] ):
+    argc_(argc), argv_(argv){
 	this->freq_out_filename = "freq_out";
-	for ( int argc_i = 1; argc_i < argc; argc_i++ ){
+	for (  argc_i = 1; argc_i < argc; argc_i++ ){
 		std::string argv_i( argv[argc_i] );
 		if ( argv_i == "-freq_file" || argv_i=="-fF" ){
-            argc_i++;
-            if (argc_i >= argc) {
-                throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_i);
-            }
-            this->freq_out_filename = argv[argc_i];
-            if ( this->freq_out_filename[0] == '-' ) {
-                throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv[argc_i-1]);
-            }        
+            readNextStringto( this->freq_out_filename , this->argc_i, this->argc_,  this->argv_ ); 
 			break;
 		}
         argc_i++;	

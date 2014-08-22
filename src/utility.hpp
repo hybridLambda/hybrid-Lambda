@@ -115,17 +115,7 @@ T n_choose_k(T n, T k){
 		return (n_permu_a(n,k)/factorial(k));}
 }
 
-template<class T>
-void read_input_to_param(char inchar[], T &input)
-{
-	if (isdigit(inchar[0])){
-		std::istringstream para_istrm(inchar);
-		para_istrm >> input;
-	}
-	else{
-            throw std::invalid_argument("Invalid argument type. ");
-	}	
-}
+void readNextStringto( string &readto , int argc_i, int argc_, char * const* argv_ );
 
 
 

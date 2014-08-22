@@ -269,5 +269,10 @@ string read_input_para(char inchar[],string in_str){
 	return out_str;
 }
 		
-	
 		
+void readNextStringto( string &readto , int argc_i, int argc_, char * const* argv_ ){
+    argc_i++;
+    if (argc_i >= argc_) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]); 
+    readto = std::string(argv_[argc_i]);
+    if ( readto[0] == '-' ) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
+}

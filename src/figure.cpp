@@ -43,12 +43,14 @@ Figure::Figure( int argc, char *argv[] ):
 		if (argv_i == "-dot_file" || argv_i == "-dotF"){
 			this->check_method();
             this->initialize_method ( DOT, ".dot" );
-            this->read_prefix();
+            //this->read_prefix();
+            readNextStringto( this->figure_file_prefix , this->argc_i, this->argc_,  this->argv_ );
 		}
 		if (argv_i == "-plot_file" || argv_i == "-plotF"){
 			this->check_method();
             this->initialize_method ( LATEX, ".tex" );
-            this->read_prefix();
+            //this->read_prefix();
+            readNextStringto( this->figure_file_prefix , this->argc_i, this->argc_,  this->argv_ );
 		}
         argc_i++;
 	}
@@ -59,17 +61,6 @@ void Figure::initialize_method( FIGURE_PROGRAM program, string suffix){
     this->method = program;  
     this->figure_file_suffix = suffix;
     }
-
-void Figure::read_prefix(){
-    argc_i++;
-    if (argc_i >= argc_) {
-      throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
-    }
-    this->figure_file_prefix = argv_[argc_i];
-    if (this->figure_file_prefix[0] == '-' ) {
-      throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
-    }        
-}
 
 
 void Figure::check_option(){
@@ -114,7 +105,6 @@ void Figure::plot_in_latex( ){
 	figure_ofstream << "\\ifx\\du\\undefined\\newlength{\\du}\\fi\\setlength{\\du}{30\\unitlength}\n";
 	figure_ofstream << "\\begin{center}\n";
     figure_ofstream << "\\begin{tikzpicture}[thick]\n";
-	//valarray <int>  x_node = this->det_x_node ( );
     this->det_x_node ( );
 	for (size_t node_i = 0; node_i < this->obj_net.Net_nodes.size();node_i++){
 		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
@@ -139,7 +129,6 @@ void Figure::plot_in_latex( ){
 
 void Figure::edge_entry(string from, string to, size_t label, double bl, bool tip){
     if ( this->option == LABEL && tip ){ 
-        //figure_ofstream << from << " -- " << to << "[label=\"" << label <<"\"];\n";
         figure_ofstream << ( ( this->method == DOT )  ? "" : "\\draw (" )
                         << from 
                         << ( ( this->method == DOT )  ? " -- " : ")--(" )
@@ -149,7 +138,6 @@ void Figure::edge_entry(string from, string to, size_t label, double bl, bool ti
                         << ( ( this->method == DOT )  ? "\"];\n" : "};\n" );
     }
     else if (this->option == BRANCH){
-        //figure_ofstream << from <<" -- " << to << "[label=\""<< bl <<"\"];\n";
         figure_ofstream << ( ( this->method == DOT )  ? "" : "\\draw (" )
                         << from 
                         << ( ( this->method == DOT )  ? " -- " : ")--(" )
@@ -159,7 +147,6 @@ void Figure::edge_entry(string from, string to, size_t label, double bl, bool ti
                         << ( ( this->method == DOT )  ? "\"];\n" : "};\n" );
     }
     else{
-        //figure_ofstream << from <<" -- "<< to <<";\n";//
         figure_ofstream << ( ( this->method == DOT ) ? "" : "\\draw (" )
                         << from
                         << ( ( this->method == DOT ) ? " -- " : ")--(" )

@@ -20,9 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// parameters
-
 #include<hybridLambda.hpp>
+
 void HybridLambda::init(){
 	this->seed            = (unsigned)(time(0));
 	this->simulation_bool = false;
@@ -40,7 +39,13 @@ void HybridLambda::init(){
     this->bl_bool = false;
     this->firstcoal_bool = false;
     this->argc_i = 1;
-    this->simulation_jobs = new action_board();
+    this->simulation_jobs_ = new action_board();
+    
+    
+    
+    
+    
+    this->num_sim_gt = 1;
 }
 
 void HybridLambda::parse(){
@@ -52,10 +57,7 @@ void HybridLambda::parse(){
         else if ( argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i == "-spcu" || argv_i=="-spng"){ 
             simulation_bool=true; 
             }		
-		else if ( argv_i=="-seed" ){ 
-            read_input_to_param<size_t>(argv_[argc_i+1],seed);
-			argc_i++;
-		}
+
 			
 		else if (argv_i=="-gt"){
 			read_GENE_trees=true;
@@ -76,34 +78,26 @@ void HybridLambda::parse(){
 		else if (argv_i=="-pop"){
 			pop_bool=true;			
 		}
-        if ( argv_i=="-o" ){
-			this->prefix = argv_[argc_i+1];
-			argc_i++;
-		}
-        if (argv_i=="-sim_mut_unit"){
-			sim_mut_unit_bool=true;
-		}
-		if (argv_i=="-sim_num_gener"){
-			sim_num_gener_bool=true;
-		}
-		if (argv_i=="-sim_num_mut" || argv_i=="-seg"){
-			sim_num_mut_bool=true;
-		}
-		if (argv_i=="-sim_Si_num"){
-			Si_num_bool=true;
-			sim_num_mut_bool=true;
-			check_and_remove("out_table");
-		}
-		if (argv_i=="-mono"){
-			mono_bool=true;
-		}
+        
+		else if ( argv_i=="-seed" ){ this->seed = readNextInput<size_t>(); }
+        else if (argv_i=="-num"){ this->num_sim_gt = readNextInput<int>(); }
+        
+        else if ( argv_i=="-o" ) readNextStringto( this->prefix , this->argc_i, this->argc_,  this->argv_ );
+        // Output
+        else if ( argv_i == "-sim_mut_unit"  ){ this->simulation_jobs_->set_sim_mut_unit(); }
+        else if ( argv_i == "-sim_num_gener" ){ this->simulation_jobs_->set_sim_num_gener();}
+		else if ( argv_i == "-sim_num_mut" || argv_i=="-seg"){ this->simulation_jobs_->set_sim_mut_mut(); } 
+		else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); check_and_remove("out_table");} // work on code for removing out_table
+		else if ( argv_i == "-mono"){ this->simulation_jobs_->set_mono() ; }
 
+		else if ( argv_i == "-freq" || argv_i == "-f" || argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true; }
+		else if ( argv_i == "-plot" || argv_i == "-plot_file" || argv_i == "-plotF" || argv_i == "-dot" || argv_i == "-dot_file" || argv_i == "-dotF" ){ this->plot_bool=true; }
+        else if ( argv_i == "-label" || argv_i == "-branch" ){ continue; }
+        
 		else if ( argv_i == "-tmrca"     ){ this->tmrca_bool=true;     }
 		else if ( argv_i == "-firstcoal" ){ this->firstcoal_bool=true; }
 		else if ( argv_i == "-bl"   ){ this->bl_bool=true; }
-		else if ( argv_i == "-freq"|| argv_i == "-f" || argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true; }
-		else if ( argv_i == "-plot" || argv_i == "-plot_file" || argv_i == "-plotF" || argv_i == "-dot" || argv_i == "-dot_file" || argv_i == "-dotF" ){ this->plot_bool=true; }
-        else if ( argv_i == "-label" || argv_i == "-branch" ){ continue; }
+        
 		else if ( argv_i == "-seg" || argv_i == "-segD" ){ this->seg_bool=true;	}
 		else if ( argv_i == "-print" ){ this->print_tree=true; }
 		else if ( argv_i == "-fst"   ){ this->fst_bool = true; }
@@ -171,18 +165,15 @@ void HybridLambda::extract_firstcoal(){
 
 
 /*! \brief  sim_n_gt constructor */
-void HybridLambda::HybridLambda_core(sim::param sim_param,action_board my_action){
-	dout<<" Start simulating "<<sim_param.num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+void HybridLambda::HybridLambda_core(sim::param sim_param ){
+	dout<<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 	
     string para_string = sim_param.para_string;
     
-	//string gene_tree_file=my_action.gene_tree_file;
-	string sp_string_coal_unit=sim_param.sp_string_coal_unit;
-	string sp_string_pop_size=sim_param.sp_string_pop_size;
+	string sp_string_coal_unit = sim_param.sp_string_coal_unit;
+	string sp_string_pop_size  = sim_param.sp_string_pop_size;
 	
-	vector < int > sample_size=sim_param.sample_size;
-	double mutation_rate=sim_param.mutation_rate;
-	int num_sim_gt=sim_param.num_sim_gt;
+	//int num_sim_gt=sim_param.num_sim_gt;
 	
 	string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
 	string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
@@ -199,21 +190,21 @@ void HybridLambda::HybridLambda_core(sim::param sim_param,action_board my_action
     sim_gt_file_num_gener.open ( gene_tree_file_num_gener.c_str(), ios::out | ios::app | ios::binary); 
     sim_gt_file_num_mut.open   ( gene_tree_file_num_mut.c_str(),   ios::out | ios::app | ios::binary); 
 
-	if (my_action.Si_num_bool){
+	if ( this->simulation_jobs_->Si_num_bool){
 		int total_lineage=0;
 		for (size_t i=0; i<sim_param.sample_size.size();i++){
 			total_lineage=total_lineage+sim_param.sample_size[i];
 		}
 		outtable_header(total_lineage);
 	}
-	for ( int i=0; i < num_sim_gt; i++ ){
-		sim_one_gt sim_gt_string(sim_param,my_action);
+	for ( int i=0; i < this->num_sim_gt; i++ ){
+		sim_one_gt sim_gt_string(sim_param, this->simulation_jobs_ );
 		gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
-		if (my_action.sim_num_mut_bool){
+		if ( this->simulation_jobs_->sim_num_mut_bool){
 			mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
 		}
 		
-		if (my_action.mono_bool){
+		if ( this->simulation_jobs_->mono_bool){
 			if ( i == 0 ){
 				tax_name=sim_gt_string.tax_name;
 				monophyly=sim_gt_string.monophyly;	
@@ -228,14 +219,14 @@ void HybridLambda::HybridLambda_core(sim::param sim_param,action_board my_action
 		dout << sim_gt_string.gt_string_coal_unit << endl;
 		sim_gt_file_coal_unit<<sim_gt_string.gt_string_coal_unit <<"\n";
 		        
-		if ( my_action.sim_mut_unit_bool ){ sim_gt_file_mut_unit  << sim_gt_string.gt_string_mut_unit  << "\n"; }
-		if ( my_action.sim_num_gener_bool){ sim_gt_file_num_gener << sim_gt_string.gt_string_gener_num << "\n"; }
-		if ( my_action.sim_num_mut_bool  ){ sim_gt_file_num_mut   << sim_gt_string.gt_string_mut_num   << "\n"; }
+		if (  this->simulation_jobs_->sim_mut_unit() ){ sim_gt_file_mut_unit  << sim_gt_string.gt_string_mut_unit  << "\n"; }
+		if (  this->simulation_jobs_->sim_num_gener()){ sim_gt_file_num_gener << sim_gt_string.gt_string_gener_num << "\n"; }
+		if (  this->simulation_jobs_->sim_num_mut()  ){ sim_gt_file_num_mut   << sim_gt_string.gt_string_mut_num   << "\n"; }
 	}
 	
-	if (my_action.mono_bool){
-		for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
-			monophyly[mono_i]=monophyly[mono_i]/num_sim_gt;
+	if ( this->simulation_jobs_->mono()){
+		for ( size_t mono_i = 0; mono_i < monophyly.size(); mono_i++ ){
+			monophyly[mono_i] = monophyly[mono_i] / num_sim_gt;
 		}
 	}
     
@@ -246,9 +237,12 @@ void HybridLambda::HybridLambda_core(sim::param sim_param,action_board my_action
     
     std::clog << "Produced gene tree files: \n";	
 	std::clog << gene_tree_file_coal_unit << "\n";				
-    if ( my_action.sim_mut_unit_bool  ){ std::clog << gene_tree_file_mut_unit  << "\n"; }
-    if ( my_action.sim_num_gener_bool ){ std::clog << gene_tree_file_num_gener << "\n"; }
-    if ( my_action.sim_num_mut_bool   ){ std::clog << gene_tree_file_num_mut   << "\n"; }
+    if (  this->simulation_jobs_->sim_mut_unit_bool  ) std::clog << gene_tree_file_mut_unit  << "\n"; 
+    else remove (gene_tree_file_mut_unit.c_str()) ;
+    if (  this->simulation_jobs_->sim_num_gener_bool ) std::clog << gene_tree_file_num_gener << "\n"; 
+    else remove (gene_tree_file_num_gener.c_str()) ;
+    if (  this->simulation_jobs_->sim_num_mut_bool   ) std::clog << gene_tree_file_num_mut   << "\n"; 
+    else remove (gene_tree_file_num_mut.c_str()) ;
 	dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 }
 

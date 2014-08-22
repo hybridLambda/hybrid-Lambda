@@ -31,6 +31,9 @@ class Freq{
         Freq ( int argc, char *argv[] );
         void compute_gt_frequencies( vector <string> &gt_tree_str_s );
     private:
+        int argc_;
+        int argc_i;
+        char * const* argv_;
         string freq_out_filename;
         ofstream freq_out_file;
 

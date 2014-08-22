@@ -20,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//parameters header file
 #include"mtrand.h"
 #include"sim_gt.hpp"
 
@@ -32,7 +31,6 @@ using namespace std;
 #include <iomanip>      // std::setw
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
 
-
 void print_example();
 void print_help();
 void print_option();
@@ -41,27 +39,16 @@ void print_option();
 class HybridLambda{
 	//class param{
     public:	
-        /*!
-         * Constructors and Destructors
-         */  
-        //param();
-        
-        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { init(); }
-        void parse() ;
-        //HybridLambda(int argc, char *argv[]);
-        void HybridLambda_core(sim::param sim_param,action_board my_action);
+        /*! Constructors and Destructors */  
+        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { this->init(); this->parse(); }
+        ~HybridLambda(){ delete simulation_jobs_; }
 
-        /*!
-         * Members
-         */              
+        /*! Members */              
         size_t seed;				
         string gt_file_name;
         string mt_file_name;
         
         bool fst_bool;
-        void extract_tmrca();
-        void extract_bl();
-        void extract_firstcoal();
 
         vector <string> gt_tree_str_s;
         vector <string> mt_tree_str_s;
@@ -75,11 +62,17 @@ class HybridLambda{
         bool read_mt_trees;
         bool simulation_bool;
         vector <double> monophyly;
-
+        
+        /*! Methods */              
+        void parse() ;
+        void HybridLambda_core( sim::param sim_param );
+        action_board* simulation_jobs() const { return this->simulation_jobs_; }
+        void extract_tmrca();
+        void extract_bl();
+        void extract_firstcoal();       
+        
     private:
-        action_board* simulation_jobs;
-        
-        
+        action_board* simulation_jobs_;
         void init();
         std::ofstream extract_file;
         string extract_file_name;
@@ -100,53 +93,27 @@ class HybridLambda{
         bool pop_bool;
         
 		vector <string> tax_name;
-          int argc_;
-  int argc_i;
-  char * const* argv_;
-  size_t random_seed_;  
+        int argc_;
+        int argc_i;
+        char * const* argv_;
+        //size_t random_seed_;  
+        int num_sim_gt;
+
+        
+        template<class T>
+        T readNextInput() {
+            ++argc_i;        
+            if (argc_i >= argc_) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
+        
+            char c;
+            T input;
+            std::stringstream ss(argv_[argc_i]);
+            ss >> input;
+            if (ss.fail() || ss.get(c)) throw std::invalid_argument(std::string("Failed to parse option: ") + argv_[argc_i]); 
+            return input;
+        }
+
 };
 	
-
-//}
-
-
-///*! \brief Collection of simulated gene trees from a network under Kingman or multi merger coalescent process*/
-//class sim_n_gt{
-	//public:
-		//vector <string> gt_string_coal_unit_s;
-		//vector <string> gt_string_mut_num_s;
-		////vector <string> gt_string_gener_num_s;
-		////vector <string> gt_string_mut_unit_s;
-		
-		//vector <double> monophyly;
-		//vector <string> tax_name;
-		//vector <double> total_brchlen;
-		
-		//sim_n_gt(){
-			//vector <string> gt_string_coal_unit_s;
-			//vector <string> gt_string_mut_num_s;
-			////vector <string> gt_string_gener_num_s;
-			////vector <string> gt_string_mut_unit_s;
-			//vector <double> monophyly;
-			//vector <string> tax_name;
-			//vector <double> total_brchlen;
-	
-		//}
-		
-		////sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
-		////sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
-		////sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-		////sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
-		//sim_n_gt(sim::param sim_param,action_board my_action);
-		//void clear(){
-			//gt_string_coal_unit_s.clear();
-			//gt_string_mut_num_s.clear();
-			////gt_string_gener_num_s.clear();
-			////gt_string_mut_unit_s.clear();
-			//monophyly.clear();
-			//tax_name.clear();
-			//total_brchlen.clear();
-		//}
-//};
 
 #endif //HYBRDRIDLAMBDA_PARAM_INCLUDED
