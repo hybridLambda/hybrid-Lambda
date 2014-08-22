@@ -8,7 +8,7 @@ hybrid_Lambda_dbg_CXXFLAGS =  -O3 -g
 hybrid_Lambda_prof_CXXFLAGS = -O3 -g -DNDEBUG #options for not showing debug messages.
 
 
-shared_SOURCES =  param.hpp param.cpp \
+shared_SOURCES =  hybridLambda.hpp hybridLambda.cpp \
 						node.hpp node.cpp \
 						net.hpp net.cpp \
 						sim_gt.cpp  sim_gt.hpp  \
@@ -26,6 +26,6 @@ unit_tests_SOURCES = figure.cpp utility.cpp net.cpp node.cpp tests/test_figure.c
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x 
 unit_tests_LDADD= -lcppunit -ldl
 
-include_HEADERS = all_gene_topo.hpp seg-site.hpp sim_gt.hpp freq.hpp utility.hpp mtrand.h param.hpp node.hpp net.hpp
+include_HEADERS = all_gene_topo.hpp seg-site.hpp sim_gt.hpp freq.hpp utility.hpp mtrand.h hybridLambda.hpp node.hpp net.hpp
 
 

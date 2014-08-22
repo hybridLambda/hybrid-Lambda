@@ -35,7 +35,7 @@ action_board::action_board(){
 	mono_bool=false;
 	Si_num_bool=false;
 	//total_brchlen_bool=false;
-	gene_tree_file="GENE_TREE";
+	//gene_tree_file="GENE_TREE";
 }
 
 action_board::action_board(int argc, char *argv[]){
@@ -45,7 +45,7 @@ action_board::action_board(int argc, char *argv[]){
 	mono_bool=false;
 	Si_num_bool=false;
 	//total_brchlen_bool=false;
-	gene_tree_file="GENE_TREE";		
+	//gene_tree_file="GENE_TREE";		
 	for(int argc_i=1; argc_i < argc;argc_i++ ){
 		std::string argv_i(argv[argc_i]);
 		if (argv_i=="-sim_mut_unit"){
@@ -69,10 +69,10 @@ action_board::action_board(int argc, char *argv[]){
 		if (argv_i=="-mono"){
 			mono_bool=true;
 		}
-		if (argv_i=="-GENE" || argv_i=="-o"){
-			gene_tree_file=argv[argc_i+1];
-			argc_i++;
-		}
+		//if (argv_i == || argv_i=="-o"){
+			//gene_tree_file=argv[argc_i+1];
+			//argc_i++;
+		//}
 		
 
 	}
@@ -864,111 +864,6 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 	dout<<endl;
 }
 
-
-
-/*! \brief  sim_n_gt constructor */
-//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool){
-//sim_n_gt::sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action){
-sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action){
-	dout<<" Start simulating "<<sim_param.num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
-	
-	string gene_tree_file=my_action.gene_tree_file;
-	string sp_string_coal_unit=sim_param.sp_string_coal_unit;
-	string sp_string_pop_size=sim_param.sp_string_pop_size;
-	string para_string=sim_param.para_string;
-	vector < int > sample_size=sim_param.sample_size;
-	double mutation_rate=sim_param.mutation_rate;
-	int num_sim_gt=sim_param.num_sim_gt;
-	
-	ofstream sim_gt_file_coal_unit;
-	string gene_tree_file_coal_unit=gene_tree_file+"_coal_unit";
-	remove(gene_tree_file_coal_unit.c_str());
-	sim_gt_file_coal_unit.open (gene_tree_file_coal_unit.c_str(), ios::out | ios::app | ios::binary); 
-			
-	ofstream sim_gt_file_mut_unit;
-	ofstream sim_gt_file_num_gener;
-	ofstream sim_gt_file_num_mut;
-	
-	string gene_tree_file_mut_unit=gene_tree_file+"_mut_unit";
-	remove(gene_tree_file_mut_unit.c_str());
-	string gene_tree_file_num_gener=gene_tree_file+"_num_gener";
-	remove(gene_tree_file_num_gener.c_str());
-	string gene_tree_file_num_mut=gene_tree_file+"_num_mut";
-	remove(gene_tree_file_num_mut.c_str());
-	
-	if (my_action.sim_mut_unit_bool){
-		sim_gt_file_mut_unit.open (gene_tree_file_mut_unit.c_str(), ios::out | ios::app | ios::binary); 
-	}
-	if (my_action.sim_num_gener_bool){
-		sim_gt_file_num_gener.open (gene_tree_file_num_gener.c_str(), ios::out | ios::app | ios::binary); 
-	}
-	if (my_action.sim_num_mut_bool){
-		sim_gt_file_num_mut.open (gene_tree_file_num_mut.c_str(), ios::out | ios::app | ios::binary); 
-	}
-
-	if (my_action.Si_num_bool){
-		int total_lineage=0;
-		for (size_t i=0; i<sim_param.sample_size.size();i++){
-			total_lineage=total_lineage+sim_param.sample_size[i];
-		}
-		outtable_header(total_lineage);
-	}
-	for (int i=0;i<num_sim_gt;i++){
-		//sim_one_gt sim_gt_string(sp_string_coal_unit, sp_string_pop_size, para_string, sample_size,  mutation_rate,my_action);
-		sim_one_gt sim_gt_string(sim_param,my_action);
-		gt_string_coal_unit_s.push_back(sim_gt_string.gt_string_coal_unit);
-		if (my_action.sim_num_mut_bool){
-			gt_string_mut_num_s.push_back(sim_gt_string.gt_string_mut_num);
-		}
-		
-		if (my_action.mono_bool){
-			if (i==0){
-				tax_name=sim_gt_string.tax_name;
-				monophyly=sim_gt_string.monophyly;	
-			}
-			else{
-				for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
-					monophyly[mono_i]=monophyly[mono_i]+sim_gt_string.monophyly[mono_i];
-				}		
-			}
-		}
-		
-		//total_brchlen.push_back(sim_gt_string.total_brchlen);
-		dout<<sim_gt_string.gt_string_coal_unit<<endl;
-		sim_gt_file_coal_unit<<sim_gt_string.gt_string_coal_unit <<"\n";
-		
-		if (my_action.sim_mut_unit_bool){
-			sim_gt_file_mut_unit<<sim_gt_string.gt_string_mut_unit <<"\n";
-		}
-		if (my_action.sim_num_gener_bool){
-			sim_gt_file_num_gener<<sim_gt_string.gt_string_gener_num <<"\n";
-		}
-		if (my_action.sim_num_mut_bool){
-			sim_gt_file_num_mut<<sim_gt_string.gt_string_mut_num <<"\n";
-		}
-	}
-	
-	if (my_action.mono_bool){
-		for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
-			monophyly[mono_i]=monophyly[mono_i]/num_sim_gt;
-		}
-	}
-	
-
-	sim_gt_file_coal_unit.close();
-	
-	if (my_action.sim_mut_unit_bool){
-		sim_gt_file_mut_unit.close();
-	}
-	if (my_action.sim_num_gener_bool){
-		sim_gt_file_num_gener.close();
-	}
-	if (my_action.sim_num_mut_bool){
-		sim_gt_file_num_mut.close();
-	}
-	dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
-
-}
 
 
 

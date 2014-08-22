@@ -24,29 +24,29 @@
 /*! \file main.cpp
  *  \brief Main function of hybrid-Lambda */
 
-#include"param.hpp"
+#include"hybridLambda.hpp"
 #include"sim_gt.hpp"
 #include"freq.hpp"
 #include"figure.hpp"
 #include"seg-site.hpp"
 #include"fst.hpp"
 
-using namespace hybridLambda;
+//using namespace HybridLambda;
 
 int main(int argc, char *argv[]){
 
 	
 	if ( argc==1 ){
-		hybridLambda::print_help();
+		HybridLambda::print_help();
 	}	//else, proceed
 
     try {
         vector <string> gt_tree_str_s;
         vector <string> mt_tree_str_s;
             
-	    hybridLambda::param hybrid_para(argc, argv);
-        Figure figure_para(argc, argv);
-	    Freq freq_para(argc,argv);
+	    HybridLambda hybrid_para ( argc, argv );
+        Figure figure_para ( argc, argv );
+	    Freq freq_para ( argc, argv );
 	    action_board my_action(argc,argv);
 	    seg::param seg_para(argc,argv);
         double Fst;
@@ -97,46 +97,10 @@ int main(int argc, char *argv[]){
 			gt_tree_str_s=read_input_lines(hybrid_para.gt_file_name.c_str());
 		}
 		
-		if (hybrid_para.tmrca_bool){
-			remove(hybrid_para.tmrca_NAME.c_str());    
-			std::ofstream tmrca_file;
-			tmrca_file.open (hybrid_para.tmrca_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-			for (size_t i=0;i<gt_tree_str_s.size();i++){
-				Net gt(gt_tree_str_s[i]);
-				tmrca_file<< gt.Net_nodes.back().absolute_time<<endl;
-			}
-			tmrca_file.close();
-        	std::clog << "TMRCA file is saved at: "<<hybrid_para.tmrca_NAME<<"\n";
-		}
+        hybrid_para.extract_tmrca ();
+        hybrid_para.extract_bl ();
+        hybrid_para.extract_firstcoal();
 
-		if (hybrid_para.bl_bool){
-			remove(hybrid_para.bl_NAME.c_str());    
-			std::ofstream bl_file;
-			bl_file.open (hybrid_para.bl_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-			for (size_t i=0;i<gt_tree_str_s.size();i++){
-				Net gt(gt_tree_str_s[i]);
-				double totalbl=0;
-				for (size_t node_i = 0 ; node_i < gt.Net_nodes.size(); node_i++){
-					totalbl = totalbl + gt.Net_nodes[node_i].brchlen1;
-				}
-				bl_file << totalbl << endl;
-			}
-			bl_file.close();
-            std::clog << "Total branch length file is saved at: "<<hybrid_para.bl_NAME<<"\n";
-		}
-		
-        if (hybrid_para.firstcoal_bool){
-			remove(hybrid_para.firstcoal_NAME.c_str());    
-			std::ofstream fistcoal_file;
-			fistcoal_file.open (hybrid_para.firstcoal_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-			for (size_t i=0;i<gt_tree_str_s.size();i++){
-				Net gt(gt_tree_str_s[i]);
-                size_t first_coal_index_dummy = gt.first_coal_index();
-				fistcoal_file << gt.Net_nodes[first_coal_index_dummy].absolute_time << "\t" << gt.Net_nodes[first_coal_index_dummy].clade << endl;
-			}
-			fistcoal_file.close();
-		}
-        
 		if (hybrid_para.read_mt_trees){
 			mt_tree_str_s=read_input_lines(hybrid_para.mt_file_name.c_str());
 		}
@@ -165,49 +129,49 @@ int main(int argc, char *argv[]){
             cout << "Expected[Fst] = " << Fst << endl;
         }
 		
-		if (hybrid_para.log_bool){      
-			remove(hybrid_para.log_NAME.c_str());    
-			std::ofstream log_file;
-			log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-			if (hybrid_para.simulation_bool){
-				//simulation 
-				//files were saved at where
-				log_file << "Simulation took about " << sim_end_time - start_time << " second(s) \n";
-				log_file << "Random seed is :"<<hybrid_para.seed << "\n";
-				if ( !hybrid_para.mm_bool ){
-					log_file<<"Default Kingman coalescent on all branches. \n";
-					}
-				if ( !hybrid_para.pop_bool ){
-					log_file << "Default population size of 10000 on all branches. \n";
-					}
-				log_file << "Produced gene tree files: \n";	
-				log_file << my_action.gene_tree_file<<"_coal_unit\n";
+		//if (hybrid_para.log_bool){      
+			//remove(hybrid_para.log_NAME.c_str());    
+			//std::ofstream log_file;
+			//log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+			//if (hybrid_para.simulation_bool){
+				////simulation 
+				////files were saved at where
+				//log_file << "Simulation took about " << sim_end_time - start_time << " second(s) \n";
+				//log_file << "Random seed is :"<<hybrid_para.seed << "\n";
+				//if ( !hybrid_para.mm_bool ){
+					//log_file<<"Default Kingman coalescent on all branches. \n";
+					//}
+				//if ( !hybrid_para.pop_bool ){
+					//log_file << "Default population size of 10000 on all branches. \n";
+					//}
+				//log_file << "Produced gene tree files: \n";	
+				//log_file << my_action.gene_tree_file<<"_coal_unit\n";
 				
-				if (my_action.sim_mut_unit_bool){
-					log_file << my_action.gene_tree_file<<"_mut_unit\n";
-				}
-				if (my_action.sim_num_gener_bool){
-					log_file << my_action.gene_tree_file<<"_numb_gener\n";
-				}
-				if (my_action.sim_num_mut_bool){
-					log_file << my_action.gene_tree_file<<"_num_mut\n";
-				}
+				//if (my_action.sim_mut_unit_bool){
+					//log_file << my_action.gene_tree_file<<"_mut_unit\n";
+				//}
+				//if (my_action.sim_num_gener_bool){
+					//log_file << my_action.gene_tree_file<<"_numb_gener\n";
+				//}
+				//if (my_action.sim_num_mut_bool){
+					//log_file << my_action.gene_tree_file<<"_num_mut\n";
+				//}
 				
-			}
+			//}
 						
-			if (hybrid_para.seg_bool){
-				//seggreating data were generated
-				log_file << "Generating segregating site data took about " << seg_end_time - freq_end_time << " second(s) \n";
-				log_file << "Segregating site data saved at: "<<seg_para.seg_dir_name<<"\n";
-			}
-            if (hybrid_para.fst_bool){
-                log_file << "Fst = " << Fst << "\n";
-            }
+			//if (hybrid_para.seg_bool){
+				////seggreating data were generated
+				//log_file << "Generating segregating site data took about " << seg_end_time - freq_end_time << " second(s) \n";
+				//log_file << "Segregating site data saved at: "<<seg_para.seg_dir_name<<"\n";
+			//}
+            //if (hybrid_para.fst_bool){
+                //log_file << "Fst = " << Fst << "\n";
+            //}
             
-			log_file.close();
-			string showlog="cat "+ hybrid_para.log_NAME;
-			int sys=system(showlog.c_str());
-		}
+			//log_file.close();
+			//string showlog="cat "+ hybrid_para.log_NAME;
+			//int sys=system(showlog.c_str());
+		//}
     }
     catch (const exception &e)
     {
