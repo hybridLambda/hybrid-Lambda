@@ -22,12 +22,21 @@
 
 //parameters header file
 #include"mtrand.h"
-//#include"utility.hpp"
 #include"sim_gt.hpp"
 
 #ifndef HYBRDRIDLAMBDA_PARAM_INCLUDED
 #define HYBRDRIDLAMBDA_PARAM_INCLUDED
 using namespace std;
+
+#include <iostream>     // std::cout, std::endl
+#include <iomanip>      // std::setw
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
+
+
+void print_example();
+void print_help();
+void print_option();
+
 
 class HybridLambda{
 	//class param{
@@ -36,8 +45,11 @@ class HybridLambda{
          * Constructors and Destructors
          */  
         //param();
-        HybridLambda(int argc, char *argv[]);
-void HybridLambda_core(sim::param sim_param,action_board my_action);
+        
+        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { init(); }
+        void parse() ;
+        //HybridLambda(int argc, char *argv[]);
+        void HybridLambda_core(sim::param sim_param,action_board my_action);
 
         /*!
          * Members
@@ -45,21 +57,28 @@ void HybridLambda_core(sim::param sim_param,action_board my_action);
         size_t seed;				
         string gt_file_name;
         string mt_file_name;
-
-        //string firstcoal_NAME;
         
         bool fst_bool;
-        void print_help();
-        void print_example();
-        void print_option();	
         void extract_tmrca();
         void extract_bl();
         void extract_firstcoal();
 
         vector <string> gt_tree_str_s;
         vector <string> mt_tree_str_s;
-        
+
+        bool freq_bool;
+        bool print_tree;
+        bool plot_bool;
+
+        bool seg_bool;
+        bool read_GENE_trees;
+        bool read_mt_trees;
+        bool simulation_bool;
+        vector <double> monophyly;
+
     private:
+        action_board* simulation_jobs;
+        
         
         void init();
         std::ofstream extract_file;
@@ -75,67 +94,59 @@ void HybridLambda_core(sim::param sim_param,action_board my_action);
         ofstream sim_gt_file_num_gener;
         ofstream sim_gt_file_num_mut;
 
-        bool simulation_bool;
-        bool help;
-        bool freq_bool;
-        bool print_tree;
-        bool plot_bool;
-        bool log_bool;
         string prefix;
-        //string log_NAME;
-        bool seg_bool;
-        bool read_GENE_trees;
-        bool read_mt_trees;
         
         bool mm_bool;
         bool pop_bool;
         
-        vector <double> monophyly;
 		vector <string> tax_name;
-        
+          int argc_;
+  int argc_i;
+  char * const* argv_;
+  size_t random_seed_;  
 };
 	
 
 //}
 
 
-/*! \brief Collection of simulated gene trees from a network under Kingman or multi merger coalescent process*/
-class sim_n_gt{
-	public:
-		vector <string> gt_string_coal_unit_s;
-		vector <string> gt_string_mut_num_s;
-		//vector <string> gt_string_gener_num_s;
-		//vector <string> gt_string_mut_unit_s;
+///*! \brief Collection of simulated gene trees from a network under Kingman or multi merger coalescent process*/
+//class sim_n_gt{
+	//public:
+		//vector <string> gt_string_coal_unit_s;
+		//vector <string> gt_string_mut_num_s;
+		////vector <string> gt_string_gener_num_s;
+		////vector <string> gt_string_mut_unit_s;
 		
-		vector <double> monophyly;
-		vector <string> tax_name;
-		vector <double> total_brchlen;
+		//vector <double> monophyly;
+		//vector <string> tax_name;
+		//vector <double> total_brchlen;
 		
-		sim_n_gt(){
-			vector <string> gt_string_coal_unit_s;
-			vector <string> gt_string_mut_num_s;
-			//vector <string> gt_string_gener_num_s;
-			//vector <string> gt_string_mut_unit_s;
-			vector <double> monophyly;
-			vector <string> tax_name;
-			vector <double> total_brchlen;
+		//sim_n_gt(){
+			//vector <string> gt_string_coal_unit_s;
+			//vector <string> gt_string_mut_num_s;
+			////vector <string> gt_string_gener_num_s;
+			////vector <string> gt_string_mut_unit_s;
+			//vector <double> monophyly;
+			//vector <string> tax_name;
+			//vector <double> total_brchlen;
 	
-		}
+		//}
 		
-		//sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
-		//sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
-		//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
-		//sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
-		sim_n_gt(sim::param sim_param,action_board my_action);
-		void clear(){
-			gt_string_coal_unit_s.clear();
-			gt_string_mut_num_s.clear();
-			//gt_string_gener_num_s.clear();
-			//gt_string_mut_unit_s.clear();
-			monophyly.clear();
-			tax_name.clear();
-			total_brchlen.clear();
-		}
-};
+		////sim_n_gt(string Net_string, int num_sim_gt,vector <int> sample_size,bool multi_merge_bool,double multi_merge_para);
+		////sim_n_gt(string Net_string,int num_sim_gt, string para_string,vector < int > sample_size,double mutation_rate);
+		////sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,bool sim_mut_unit_bool, bool sim_num_gener_bool,bool sim_num_mut_bool,bool mono_bool);
+		////sim_n_gt(string sp_string_coal_unit, string sp_string_pop_size, string para_string, vector < int > sample_size,double mutation_rate,int num_sim_gt,action_board my_action);
+		//sim_n_gt(sim::param sim_param,action_board my_action);
+		//void clear(){
+			//gt_string_coal_unit_s.clear();
+			//gt_string_mut_num_s.clear();
+			////gt_string_gener_num_s.clear();
+			////gt_string_mut_unit_s.clear();
+			//monophyly.clear();
+			//tax_name.clear();
+			//total_brchlen.clear();
+		//}
+//};
 
 #endif //HYBRDRIDLAMBDA_PARAM_INCLUDED

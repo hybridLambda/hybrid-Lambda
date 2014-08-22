@@ -21,6 +21,8 @@
 */
 //node.hpp
 #include"utility.hpp"
+#include <iomanip>      // std::setw
+
 #ifndef NODE
 #define NODE
 /*! \brief Node of a tree or network, it also represent the branch between this node and its parent node

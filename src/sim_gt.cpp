@@ -29,54 +29,47 @@
 #include"mtrand.h"
 
 action_board::action_board(){
-	sim_mut_unit_bool=false;
-	sim_num_gener_bool=false;
-	sim_num_mut_bool=false;
-	mono_bool=false;
-	Si_num_bool=false;
-	//total_brchlen_bool=false;
-	//gene_tree_file="GENE_TREE";
+	this->sim_mut_unit_bool  = false;
+	this->sim_num_gener_bool = false;
+	this->sim_num_mut_bool   = false;
+	this->mono_bool          = false;
+	this->Si_num_bool        = false;
 }
 
-action_board::action_board(int argc, char *argv[]){
-	sim_mut_unit_bool=false;
-	sim_num_gener_bool=false;
-	sim_num_mut_bool=false;
-	mono_bool=false;
-	Si_num_bool=false;
-	//total_brchlen_bool=false;
-	//gene_tree_file="GENE_TREE";		
-	for(int argc_i=1; argc_i < argc;argc_i++ ){
-		std::string argv_i(argv[argc_i]);
-		if (argv_i=="-sim_mut_unit"){
-			sim_mut_unit_bool=true;
-		}
-		if (argv_i=="-sim_num_gener"){
-			sim_num_gener_bool=true;
-		}
-		if (argv_i=="-sim_num_mut" || argv_i=="-seg"){
-			sim_num_mut_bool=true;
-		}
-		if (argv_i=="-sim_Si_num"){
-			Si_num_bool=true;
-			sim_num_mut_bool=true;
-			check_and_remove("out_table");
-		}
-		//if (argv_i=="-seg"){
-			////sites_data_bool=true;
+//action_board::action_board(int argc, char *argv[]){
+	//sim_mut_unit_bool=false;
+	//sim_num_gener_bool=false;
+	//sim_num_mut_bool=false;
+	//mono_bool=false;
+	//Si_num_bool=false;
+	////total_brchlen_bool=false;
+	////gene_tree_file="GENE_TREE";		
+	//for(int argc_i=1; argc_i < argc;argc_i++ ){
+		//std::string argv_i(argv[argc_i]);
+		//if (argv_i=="-sim_mut_unit"){
+			//sim_mut_unit_bool=true;
+		//}
+		//if (argv_i=="-sim_num_gener"){
+			//sim_num_gener_bool=true;
+		//}
+		//if (argv_i=="-sim_num_mut" || argv_i=="-seg"){
 			//sim_num_mut_bool=true;
 		//}
-		if (argv_i=="-mono"){
-			mono_bool=true;
-		}
-		//if (argv_i == || argv_i=="-o"){
-			//gene_tree_file=argv[argc_i+1];
-			//argc_i++;
+		//if (argv_i=="-sim_Si_num"){
+			//Si_num_bool=true;
+			//sim_num_mut_bool=true;
+			//check_and_remove("out_table");
 		//}
-		
+		////if (argv_i=="-seg"){
+			//////sites_data_bool=true;
+			////sim_num_mut_bool=true;
+		////}
+		//if (argv_i=="-mono"){
+			//mono_bool=true;
+		//}
 
-	}
-}
+	//}
+//}
 sim::param::param(){
 	mutation_rate=0.00005;
 	num_sim_gt=1;
@@ -858,16 +851,11 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 		}
 	}
 
-	for (size_t mono_i=0;mono_i<6;mono_i++){
+	for (size_t mono_i = 0; mono_i < 6; mono_i ++){
 		dout<<monophyly[mono_i]<<"  ";
 	}
 	dout<<endl;
 }
-
-
-
-
-
 
 
 /*! \brief Convert the network branch lengths from number of generations to coalescent unit, by dividing the population size 

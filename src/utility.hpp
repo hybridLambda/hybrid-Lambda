@@ -29,7 +29,6 @@
 #include<sstream>
 #include<fstream>
 #include<vector>
-#include<iomanip>
 #include<valarray>
 #include<cassert>
 #include<stdexcept>

@@ -25,20 +25,15 @@
  * \brief Header file for sim_gt.cpp */
 
 
-
-//#include"utility.hpp"
-//#include<math.h>
-#include<boost/math/special_functions/gamma.hpp>
-#include<boost/math/special_functions/binomial.hpp>
-#include<stdio.h>
-#include<ctime>
-#include"net.hpp"
+#include <boost/math/special_functions/gamma.hpp>
+#include <boost/math/special_functions/binomial.hpp>
+#include <stdio.h>
+#include <ctime>
+#include "net.hpp"
 
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
 	
-
-
 namespace sim{
 	class param{
 		public:
@@ -66,20 +61,24 @@ namespace sim{
 }
 
 
-class action_board{
-	public:
-
+class action_board {
+    friend class HybridLambda;
+    friend class sim_one_gt;
+	bool sim_mut_unit()  const { return sim_mut_unit_bool;  }
+	bool sim_num_gener() const { return sim_num_gener_bool; }
+	bool sim_num_mut()   const { return sim_num_mut_bool;   }
+    
+    void set_sim_mut_unit  { this->sim_mut_unit_bool  = true; }
+    void set_sim_num_gener { this->sim_num_gener_bool = true; }
+    void set_sim_mut_mut   { this->sim_num_mut_bool   = true; }
+    
 	bool sim_mut_unit_bool;
 	bool sim_num_gener_bool;
 	bool sim_num_mut_bool;
 	bool mono_bool;
 	bool Si_num_bool;
-	//bool total_brchlen_bool;
-	//string gene_tree_file;
-	
     
 	action_board();
-	action_board(int argc, char *argv[]);
 };
 
 
