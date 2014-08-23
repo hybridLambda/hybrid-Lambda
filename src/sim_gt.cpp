@@ -37,116 +37,54 @@ action_board::action_board(){
 }
 
 SimulationParameters::SimulationParameters(){
-	mutation_rate=0.00005;
-
+	this->mutation_rate=0.00005;
 	//pop_size=10000;
 	//pop_size_string_bool=false;
 	//mm=2.0;
 	pop_bool=false;
 	mm_bool=false;
-	
+	samples_bool=false;
+    
 	num_gener_bool=false;
 	sp_coal_unit_bool=false;
 }
 
-//sim::param::param(int argc, char *argv[]){
-	//bool samples_bool=false;
-	//mutation_rate=0.00005;
-	////num_sim_gt=1;
-	////pop_size=10000;
-	////pop_size_string_bool=false;
-	////mm=2.0;
-	//pop_bool=false;
-	//mm_bool=false;
+
+void SimulationParameters::finalize(){
+    // If coalescent parameter is ungiven, use Kingman coalescent as default
+    if ( !this->mm_bool ) {
+        para_string = write_para_into_tree( net_str, 2.0 ); 
+        clog << "Default Kingman coalescent on all branches." << endl;
+    }
+    // If the population size is ungiven, use default population size 10000
+	if ( !this->pop_bool ) {
+        sp_string_pop_size=write_para_into_tree( net_str, 10000.0 ); 
+        clog << "Default population size of 10000 on all branches. "<<endl;
+    }
+
+	Net net_dummy(net_str);
 	
-	//num_gener_bool=false;
-	//sp_coal_unit_bool=false;		
-	//int argc_i=1;
-
-	//while( argc_i < argc ){
-		//std::string argv_i(argv[argc_i]);
-		
-		//if (argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i=="-spcu" || argv_i=="-spng"){
-			//if (argv_i=="-sp_num_gener" || argv_i=="-spng"){
-				//num_gener_bool=true;
-			//}
-			//if (argv_i=="-sp_coal_unit" || argv_i=="-spcu"){
-				//sp_coal_unit_bool=true;
-			//}
-			//if (sp_coal_unit_bool && num_gener_bool){
-				//throw std::invalid_argument("Species tree branch length should only be in Coalescent unit or number of generations. Choose either -sp_num_gener or -sp_coal_unit");
-			//}
-			//net_str=read_input_line(argv[argc_i+1]);
-			//argc_i++;
-
-		//}
-		
-		//if (argv_i=="-mu"){
-			////read_input_to_param<double>(argv[argc_i+1],mutation_rate);
-			//argc_i++;
-		//}
-				
-
-
-		//if (argv_i=="-mm"){
-			//mm_bool=true;
-			//para_string=read_input_para(argv[argc_i+1],net_str);
-			//argc_i++;
-		//}
-			
-		//if (argv_i=="-pop"){
-			//pop_bool=true;
-			//sp_string_pop_size=read_input_para(argv[argc_i+1],net_str);
-			//argc_i++;
-		//}
-
-		//if (argv_i=="-S" ){
-			//samples_bool=true;
-			//for (int argc_j=argc_i+1;argc_j<argc;argc_j++){
-				//string s(argv[argc_j]);
-				//if (!isdigit(s[0])){
-					//break;
-				//}
-				//istringstream pop_num_str(s);
-				//int pop_num;
-				//pop_num_str>>pop_num;
-				//sample_size.push_back(pop_num);
-			//}
-		//}
-		//argc_i++;
-	//}
-
-	//if (!mm_bool){
-		//para_string=write_para_into_tree(net_str, 2.0); // If coalescent parameter is ungiven, use Kingman coalescent as default
-	//}
-
-	//if (!pop_bool){
-		//sp_string_pop_size=write_para_into_tree(net_str, 10000.0); // If the population size is ungiven, use default population size 10000
-	//}
-
-	//Net net_dummy(net_str);
+    if ( !net_dummy.is_ultrametric){
+	    clog<<"WARNING! NOT ULTRAMETRIC!!!"<<endl;
+		//return EXIT_FAIL;
+    }
+    
+	if ( !this->samples_bool ){
+		for (int i = 0; i < net_dummy.tax_name.size(); i++){
+			sample_size.push_back(1);
+		}
+	}
+	else{ //  check the number of lineages and the number of species 
+		if (sample_size.size() != net_dummy.tax_name.size()) 	throw std::invalid_argument("Numbers of samples and numbers of species not equal!!!");
+	}
 	
-	//if (!samples_bool){
-		//for (int i=0;i<net_dummy.tax_name.size();i++){
-			//sample_size.push_back(1);
-		//}
-	//}
-	//else{//  check the number of lineages and the number of species 
-		//if (sample_size.size()!=net_dummy.tax_name.size()){
-			//throw std::invalid_argument("Numbers of samples and numbers of species not equal!!!");
-		//}
-	//}
+	sp_string_pop_size = rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
+
+	if ( this->num_gener_bool ) net_str = write_sp_string_in_coal_unit(net_str,sp_string_pop_size);	// Convert number of generations and population size to coalescent unit
 	
-	//sp_string_pop_size=rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
+    sp_string_coal_unit = net_str;
 
-	//if (num_gener_bool){
-		//net_str=write_sp_string_in_coal_unit(net_str,sp_string_pop_size);	// Convert number of generations and population size to coalescent unit
-	//}
-	//sp_string_coal_unit=net_str;
-//}
-
-
-
+    }
 
 
 /*! \brief Beta function, requires tgamma function from math.h \return double */
@@ -158,7 +96,6 @@ double Beta(double x,double y){
 }
 
 
-
 /*! \fn double unifRand()
  * \brief Simulate random variable between 0 and 1.
  */
@@ -168,8 +105,6 @@ double unifRand(){
     //return rand()/(double(RAND_MAX)+1);
     //return rand() / double(RAND_MAX); //generates a psuedo-random float between 0.0 and 0.999...
 } 
-
-
 
 
 /*! \fn int poisson_rand_var(double lambda)
@@ -189,7 +124,7 @@ int poisson_rand_var(double lambda){
 }
 
 
-sim_one_gt::sim_one_gt(SimulationParameters* sim_param, action_board* simulation_jobs): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
+sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulation_jobs): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
 	dout<<"	Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
 	//dout<<"	begin of sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action)"<<endl;
 

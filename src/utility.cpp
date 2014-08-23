@@ -142,9 +142,6 @@ string rm_and_sign(string in_str){
 }
 
 
-
-
-
 /*! Check and remove files*/
 void check_and_remove(const char* file_name){
 	ifstream my_file(file_name);
@@ -192,68 +189,8 @@ double extract_hybrid_para(string in_str){
 	para_istr>>para;
 	return para;
 }
-
-
-string read_input_line(char inchar[]){
-	ifstream in_file;
-	string out_str;
-	in_file.open(inchar);
-	if (in_file.good()){
-		getline (in_file,out_str);}
-	else{
-		string dummy_str(inchar);
-		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
-		out_str=dummy_str;
-		}else{
-			string error_msg(inchar);			
-			throw std::invalid_argument("Invalid input file. " +error_msg);
-		}
-	}
-	in_file.close();
-			
-return 	out_str;
-}
-
-vector <string> read_input_lines(const char inchar[]){
-	vector <string> out_vec;
-	ifstream in_file;
-	in_file.open(inchar);
-	string out_str;
-	if (in_file.good()){
-		getline (in_file,out_str);
-		while (out_str.size()>0){   
-			out_vec.push_back(out_str);
-			getline (in_file,out_str);
-		}
-	}	
-	else{
-		string dummy_str(inchar);
-		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
-			out_str=dummy_str;
-			out_vec.push_back(out_str);
-		}else{
-			string error_msg(inchar);
-			throw std::invalid_argument("Invalid input file. " +error_msg);
-		}
-	}
-	in_file.close();
-	return out_vec;	
-}
-
-bool is_num(char inchar[]){
-	bool is_num_return=true;
-	string in_str(inchar);
-	for (size_t i=0;i<in_str.size();i++){
-		if (isalpha(in_str[i]) && in_str[i]!='e'){
-			is_num_return=false;
-			break;
-		}
-	}
-	return is_num_return;
-}
-
-		
-void readNextStringto( string &readto , int argc_i, int argc_, char * const* argv_ ){
+	
+void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ ){
     argc_i++;
     if (argc_i >= argc_) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]); 
     readto = std::string(argv_[argc_i]);

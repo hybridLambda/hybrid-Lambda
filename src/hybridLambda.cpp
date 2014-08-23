@@ -20,14 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "figure.hpp"
+
 #include<hybridLambda.hpp>
+#include <stdlib.h>     /* strtod */
 
 void HybridLambda::init(){
 	this->seed            = (unsigned)(time(0));
 	this->simulation_bool = false;
 	this->prefix = "OUT";
 	this->freq_bool       = false;
-	this->print_tree      = false;
+	this->print_tree_bool = false;
 	this->plot_bool       = false;
 	this->seg_bool        = false;
 	this->read_GENE_trees = false;
@@ -39,96 +42,118 @@ void HybridLambda::init(){
     this->bl_bool = false;
     this->firstcoal_bool = false;
     this->argc_i = 1;
-    this->simulation_jobs_ = new action_board();
     
-    
-    
-    
-    
+    this->gt_file_name = "";
+    this->mt_file_name = "";
     this->num_sim_gt = 1;
+    this->simulation_jobs_ = new action_board();
+    this->parameters_ = new SimulationParameters();
+}
+
+HybridLambda::~HybridLambda(){ 
+    delete simulation_jobs_; 
+    delete parameters_; 
 }
 
 string HybridLambda::read_input_para(const char *inchar, string in_str){
-	
-	string out_str;
-	if (is_num(inchar)){
-		istringstream para_istrm(inchar);
-		double para;
-		para_istrm>>para;
-		out_str=write_para_into_tree(in_str, para);
-	}
-	else{
-		out_str=read_input_line(inchar);
-	}
-	return out_str;
+    if ( is_num(inchar) ) return write_para_into_tree( in_str, strtod(inchar, NULL) );
+    else return read_input_line( inchar );
 }
 
+void HybridLambda::read_sp_str( string & argv_i ){
+    this->simulation_bool=true; 
+    if (argv_i == "-sp_num_gener" || argv_i == "-spng"){ this->parameters_->num_gener_bool=true; }
+    if (argv_i == "-sp_coal_unit" || argv_i == "-spcu"){ this->parameters_->sp_coal_unit_bool=true;	}
+    if ( this->parameters_->sp_coal_unit_bool && this->parameters_->num_gener_bool){
+        throw std::invalid_argument("Species tree branch length should only be in Coalescent unit or number of generations. Choose either -sp_num_gener or -sp_coal_unit");
+    }
+    readNextStringto( this->tmp_input_str , this->argc_i, this->argc_,  this->argv_ );
+    this->parameters_->net_str = read_input_line(tmp_input_str.c_str());
+}
+
+void HybridLambda::extract_mm_or_pop_param( string & mm_pop_string ){
+    readNextStringto( this->tmp_input_str , this->argc_i, this->argc_,  this->argv_ );
+    mm_pop_string = this->read_input_para(this->tmp_input_str.c_str(), this->parameters_->net_str);
+}
+
+
 void HybridLambda::parse(){
-	
 	while (argc_i < argc_){	
 		std::string argv_i(argv_[argc_i]);
 		if ( argv_i == "-h" || argv_i == "-help" ){ print_help(); }
-// need to rework here		
-        else if ( argv_i=="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i == "-spcu" || argv_i=="-spng"){ 
-            simulation_bool=true; 
-            }		
-
-			
-		else if (argv_i=="-gt"){
-			read_GENE_trees=true;
-			gt_file_name=argv_[argc_i+1];
-			argc_i++;
-		}
+		else if ( argv_i =="-gt" ){ readNextStringto( this->gt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
         /*! read number of mutations site and simulate segregating sites*/
-		else if (argv_i=="-mt"){
-			read_mt_trees=true;
-			mt_file_name=argv_[argc_i+1];
-			argc_i++;
-		}
-
-		else if (argv_i=="-mm"){
-            readNextStringto( this->tmp_input_str , this->argc_i, this->argc_,  this->argv_ );
-            this->parameters_->para_string = read_input_para(this->tmp_input_str.c_str(), this->parameters_->net_str);
-			//mm_bool=true;
-		}
-			
-		else if (argv_i=="-pop"){
-			pop_bool=true;			
-		}
-        
-		else if ( argv_i=="-seed" ){ this->seed = readNextInput<size_t>(); }
-        else if (argv_i=="-num"){ this->num_sim_gt = readNextInput<int>(); }
-        
-        else if ( argv_i=="-o" ) readNextStringto( this->prefix , this->argc_i, this->argc_,  this->argv_ );
-        // Output
+		else if ( argv_i =="-mt" ){ readNextStringto( this->mt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
+		else if ( argv_i =="-seed" ){ this->seed = this->readNextInput<size_t>(); }
+        else if ( argv_i =="-num"){ this->num_sim_gt = this->readNextInput<int>(); }
+        else if ( argv_i =="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i == "-spcu" || argv_i=="-spng"){ this->read_sp_str(argv_i); }
+		else if ( argv_i =="-mm" ){ this->parameters_->mm_bool = true; this->extract_mm_or_pop_param( this->parameters_->para_string ) ; }
+        else if ( argv_i =="-pop" ){ this->parameters_->pop_bool = true; this->extract_mm_or_pop_param( this->parameters_->sp_string_pop_size ) ; }        
+        else if ( argv_i =="-S" ){ this->read_sample_sizes();	}
+        else if ( argv_i =="-mu"){ this->parameters_->mutation_rate = this->readNextInput<double>(); }	
+        else if ( argv_i =="-o" ) readNextStringto( this->prefix , this->argc_i, this->argc_,  this->argv_ );
         else if ( argv_i == "-sim_mut_unit"  ){ this->simulation_jobs_->set_sim_mut_unit(); }
         else if ( argv_i == "-sim_num_gener" ){ this->simulation_jobs_->set_sim_num_gener();}
-		else if ( argv_i == "-sim_num_mut" || argv_i=="-seg"){ this->simulation_jobs_->set_sim_mut_mut(); } 
+		else if ( argv_i == "-sim_num_mut" ){ this->simulation_jobs_->set_sim_num_mut(); } 
 		else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); check_and_remove("out_table");} // work on code for removing out_table
 		else if ( argv_i == "-mono"){ this->simulation_jobs_->set_mono() ; }
-
-		else if ( argv_i == "-freq" || argv_i == "-f" || argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true; }
-		else if ( argv_i == "-plot" || argv_i == "-plot_file" || argv_i == "-plotF" || argv_i == "-dot" || argv_i == "-dot_file" || argv_i == "-dotF" ){ this->plot_bool=true; }
-        else if ( argv_i == "-label" || argv_i == "-branch" ){ continue; }
-        
-		else if ( argv_i == "-tmrca"     ){ this->tmrca_bool=true;     }
-		else if ( argv_i == "-firstcoal" ){ this->firstcoal_bool=true; }
-		else if ( argv_i == "-bl"   ){ this->bl_bool=true; }
-        
-		else if ( argv_i == "-seg" || argv_i == "-segD" ){ this->seg_bool=true;	}
-		else if ( argv_i == "-print" ){ this->print_tree=true; }
+		else if ( argv_i == "-freq" || argv_i == "-f" ){ this->freq_bool=true; }
+        //else if ( argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true;  this->argc_i++;}
+		else if ( argv_i == "-plot" || argv_i == "-dot" ){ this->plot_bool = true; }
+        //else if ( argv_i == "-plot_file" || argv_i == "-plotF" || argv_i == "-dot_file" || argv_i == "-dotF" ){ this->plot_bool=true; this->argc_i++; }
+        else if ( argv_i == "-label" || argv_i == "-branch" ){ argc_i++; continue; }        
+		else if ( argv_i == "-tmrca"     ){ this->tmrca_bool = true;     }
+		else if ( argv_i == "-firstcoal" ){ this->firstcoal_bool = true; }
+		else if ( argv_i == "-bl"   ){ this->bl_bool = true; }       
+		else if ( argv_i == "-seg"  ){ this->seg_bool = true;	}
+        //else if ( argv_i == "-segD" ){ this->seg_bool=true; readNextStringto( this->seg_dir_name , this->argc_i, this->argc_,  this->argv_ ); }        
+		else if ( argv_i == "-print" ){ this->print_tree_bool = true; }
 		else if ( argv_i == "-fst"   ){ this->fst_bool = true; }
-		//else { throw std::invalid_argument ( "Unknown flag:" + argv_i); }
-        else { cout <<"  need to change this !!!"<<endl; argc_i++;continue; } // need to change this !!!
-        argc_i++;
-	
+		else { throw std::invalid_argument ( "Unknown flag:" + argv_i); }
+        //else { cout <<"  need to change this !!!" << argv_i<<endl; argc_i++;continue; } // need to change this !!!
+        argc_i++;	
 	}
 		
-	//srand(seed);	// initialize gnu seed
-	MTRand_closed mt;
-	mt.seed(seed);		// initialize mt seed
+    this->finalize();
 }
 
+void HybridLambda::read_sample_sizes(){
+    this->parameters_->samples_bool = true;
+    while ( argc_i < argc_ ){
+        try {
+            int pop_num = this->readNextInput<int>();
+            this->parameters_->sample_size.push_back(pop_num);
+        } catch (std::invalid_argument e) {
+            --argc_i;
+            break;
+        }
+    }
+}
+
+
+void HybridLambda::finalize(){
+    if ( this->gt_file_name.size() > 0 ) this->read_input_lines( this->gt_file_name.c_str(), this->gt_tree_str_s);
+    if ( this->mt_file_name.size() > 0 ) this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
+    if ( this->simulation_bool ) this->parameters()->finalize( );    
+    if ( this->seg_bool ) {
+        this->simulation_jobs_->set_sim_num_mut();
+        this->seg_dir_name = this->prefix + "seg_sites" ;
+        }
+    if ( this->print_tree_bool ) this->print();
+    if ( this->plot_bool ){
+        Figure figure_para ( this->argc_, this->argv_ );
+        figure_para.figure_file_prefix = this->prefix;
+        figure_para.finalize();
+        figure_para.plot( this->parameters()->net_str );
+        exit(EXIT_SUCCESS);
+        }
+}
+
+void HybridLambda::print(){
+    Net net( this->parameters_->net_str );
+    net.print_all_node();
+    exit(EXIT_SUCCESS);
+}
 
 void HybridLambda::extract_tmrca(){
     if ( !this->tmrca_bool ){ return; }
@@ -183,15 +208,13 @@ void HybridLambda::extract_firstcoal(){
 
 /*! \brief  sim_n_gt constructor */
 void HybridLambda::HybridLambda_core( ){
+    if ( !simulation_bool ){ return; }
+   	//srand(seed);	// initialize gnu seed
+    MTRand_closed mt;
+	mt.seed( this->seed );		// initialize mt seed
+    clog << "Random seed: " << this->seed <<endl;
 	dout<<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
-	
-    string para_string =  this->parameters_->para_string;
-    
-	string sp_string_coal_unit =  this->parameters_->sp_string_coal_unit;
-	string sp_string_pop_size  =  this->parameters_->sp_string_pop_size;
-	
-	//int num_sim_gt= this->parameters_->num_sim_gt;
-	
+		
 	string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
 	string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
 	string gene_tree_file_num_gener = this->prefix + "_num_gener";
@@ -207,9 +230,9 @@ void HybridLambda::HybridLambda_core( ){
     sim_gt_file_num_gener.open ( gene_tree_file_num_gener.c_str(), ios::out | ios::app | ios::binary); 
     sim_gt_file_num_mut.open   ( gene_tree_file_num_mut.c_str(),   ios::out | ios::app | ios::binary); 
 
-	if ( this->simulation_jobs_->Si_num_bool){
+	if ( this->simulation_jobs_->Si_num_bool ){
 		int total_lineage=0;
-		for (size_t i=0; i< this->parameters_->sample_size.size();i++){
+		for ( size_t i = 0; i < this->parameters_->sample_size.size();i++){
 			total_lineage=total_lineage+ this->parameters_->sample_size[i];
 		}
 		outtable_header(total_lineage);
@@ -263,3 +286,90 @@ void HybridLambda::HybridLambda_core( ){
 	dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 }
 
+
+string HybridLambda::read_input_line(const char *inchar){
+	string out_str;
+    ifstream in_file( inchar );
+	if (in_file.good())	getline ( in_file, out_str); 
+	else{
+		string dummy_str(inchar);
+		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos) out_str=dummy_str;
+		else  throw std::invalid_argument("Invalid input file. " + string (inchar) );
+	}
+	in_file.close();			
+    return 	out_str;
+}
+
+void HybridLambda::read_input_lines(const char inchar[], vector <string> & out_vec){
+	ifstream in_file( inchar );
+	string out_str;
+	if ( in_file.good() ){
+		getline ( in_file, out_str );
+		while ( out_str.size() > 0 ){   
+			out_vec.push_back( out_str );
+			getline ( in_file, out_str );
+		}
+	}	
+	else{
+		string dummy_str(inchar);
+		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
+			out_str=dummy_str;
+			out_vec.push_back(out_str);
+		}else{
+			throw std::invalid_argument("Invalid input file. " + string (inchar) );
+		}
+	}
+	in_file.close();
+}
+
+
+bool HybridLambda::is_num(const char *inchar){
+	bool is_num_return=true;
+	string in_str(inchar);
+	for (size_t i=0;i<in_str.size();i++){
+		if (isalpha(in_str[i]) && in_str[i]!='e'){
+			is_num_return=false;
+			break;
+		}
+	}
+	return is_num_return;
+}
+
+/*! \brief remove old segregating sites data, and generate new ones */
+void HybridLambda::create_site_data_dir(){
+    if ( !this->seg_bool ){ return; }
+	string rm_commond="rm -rf " + this->seg_dir_name;
+	int sys = system( rm_commond.c_str() );
+	string mkdir_commond="mkdir "+ this->seg_dir_name;
+	sys=system( mkdir_commond.c_str() );
+	for ( size_t i = 0; i < mt_tree_str_s.size(); i++ ){
+		create_new_site_data( mt_tree_str_s[i], i+1 );
+	}
+    clog << "Segregating site data saved at: "<< this->seg_dir_name <<"\n"; 
+}
+
+/*! \brief Generate segrateing site data */
+void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i ){
+	Net mt_tree( gt_string_mut_num );
+    ostringstream site_i_str;
+	site_i_str << site_i;
+	string sitefile_name = seg_dir_name + "/site" + site_i_str.str();
+	extract_file.open (sitefile_name.c_str()); 
+	
+	int total_mut = 0;
+	for ( size_t node_i = 0; node_i < mt_tree.Net_nodes.size(); node_i++ ){
+		total_mut = total_mut + mt_tree.Net_nodes[node_i].brchlen1;
+	}
+	for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
+		extract_file << mt_tree.tip_name[tip_i] << " ";
+		for ( size_t node_i = 0; node_i < mt_tree.Net_nodes.size(); node_i++ ){
+			if ( mt_tree.Net_nodes[node_i].brchlen1 > 0 ){
+				for ( int num_repeat = 0; num_repeat < mt_tree.Net_nodes[node_i].brchlen1; num_repeat++ ){				
+					extract_file << mt_tree.descndnt2[node_i][tip_i] ;
+				}
+			}
+		}
+		extract_file<<"\n";
+	}
+	extract_file.close();	
+}

@@ -13,8 +13,7 @@ shared_SOURCES = hybridLambda.cpp \
 				 sim_gt.cpp \
 				 freq.cpp \
 				 utility.cpp  mtrand.cpp \
-				 figure.cpp  \
-				 seg-site.cpp 
+				 figure.cpp  
 
 hybrid_Lambda_SOURCES = $(shared_SOURCES) main.cpp  
 hybrid_Lambda_dbg_SOURCES = $(shared_SOURCES) main.cpp  
@@ -25,6 +24,6 @@ unit_tests_SOURCES = figure.cpp utility.cpp net.cpp node.cpp tests/test_figure.c
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x 
 unit_tests_LDADD= -lcppunit -ldl
 
-include_HEADERS = seg-site.hpp sim_gt.hpp freq.hpp utility.hpp mtrand.h hybridLambda.hpp node.hpp net.hpp 
+include_HEADERS = sim_gt.hpp freq.hpp utility.hpp mtrand.h hybridLambda.hpp node.hpp net.hpp 
 
 

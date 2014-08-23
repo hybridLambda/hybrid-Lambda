@@ -26,9 +26,12 @@ enum FIGURE_OPTION { PLOT_DEFAULT, BRANCH, LABEL};
 enum FIGURE_PROGRAM { NO_METHOD, LATEX, DOT };
 
 class Figure{
+    friend class HybridLambda;
     public:
-        Figure ( int argc, char *argv[] );
+        Figure () { this->init(); }
+        Figure ( int argc, char * const* argv );
         void plot( string net_str );
+        string figure_file_prefix;
         
     private:
         FIGURE_PROGRAM method;
@@ -58,7 +61,6 @@ class Figure{
         void edge_entry(string from, string to, size_t label, double bl, bool tip);
         
         ofstream figure_ofstream;
-        string figure_file_prefix;
         string figure_file_suffix;
         string figure_file_name;
         Net obj_net;

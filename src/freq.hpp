@@ -30,11 +30,12 @@ class Freq{
     public:
         Freq ( int argc, char *argv[] );
         void compute_gt_frequencies( vector <string> &gt_tree_str_s );
+        string freq_out_filename;
+
     private:
         int argc_;
         int argc_i;
         char * const* argv_;
-        string freq_out_filename;
         ofstream freq_out_file;
 
         vector <string> gene_topo; /*!< \brief Different gene topologies */

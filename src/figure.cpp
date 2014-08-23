@@ -23,7 +23,7 @@
 #include"figure.hpp"
 #include <stdexcept>      // std::invalid_argument
 
-Figure::Figure( int argc, char *argv[] ):
+Figure::Figure( int argc, char* const *argv ):
     argc_(argc), argv_(argv){
     this->init();
 	while( argc_i < argc_ ){
@@ -204,7 +204,7 @@ void Figure::plot_in_dot( ){
 
 void Figure::execute_dot(string method, string suffix){
 	string command = "dot -T" + method + " " + this->figure_file_prefix + ".dot -o " + this->figure_file_prefix + suffix;
-	(void)system( command.c_str() );
+	int sys = system( command.c_str() );
     }
 
 

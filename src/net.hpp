@@ -19,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 //net.hpp
-//#include"utility.hpp"
 #include"node.hpp"
-//#include<cassert>
+#include<valarray>
 
 /*!\file net.cpp
  *  \brief Core function of converting a Newick (extended Newick) format string into a species tree (network), and simple string manipulation for tree strings
@@ -31,17 +31,6 @@
 #ifndef NETWORK
 #define NETWORK
 
-/*! \brief Collection of Networks in a vector container*/
-class Network_s{
-	public:
-	vector <class Net *> Net_vec;
-	void clear(){Net_vec.clear();};
-	
-	Network_s(){
-		vector <class Net *> Net_vec;
-	}
-	
-};
 
 /*! \brief Network class*/
 class Net{	
@@ -53,10 +42,8 @@ class Net{
 		bool is_ultrametric_func(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
 	    size_t first_coal_rank();
         
-	public:
-	
+	public:	
 		string net_str; /*!< \brief species network string \todo this is new!!!*/
-	//	class Network_s SubNetworkS; /*!< \brief sub species networks \todo this is new!!!*/
 		int max_rank;
 		vector< valarray <int> > descndnt;
 		vector< valarray <int> > descndnt2;
@@ -79,13 +66,7 @@ class Net{
 			vector <Node> Net_nodes;
 			//vector <Node*> Net_nodes_ptr;
 		}
-		
-		//~Net(){
-			//tax_name.clear();
-			//tip_name.clear();
-			//Net_nodes.clear();
-		//}
-		
+				
 		Net(string Net_str);
 };
 

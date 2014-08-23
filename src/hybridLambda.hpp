@@ -31,6 +31,7 @@ using namespace std;
 #include <iomanip>      // std::setw
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
 
+
 void print_example();
 void print_help();
 void print_option();
@@ -40,72 +41,84 @@ class HybridLambda{
 	//class param{
     public:	
         /*! Constructors and Destructors */  
-        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { this->init(); this->parse(); }
-        ~HybridLambda(){ 
-            delete simulation_jobs_; 
-            delete parameters_; }
-
+        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { this->init(); this->parse(); }        
+        ~HybridLambda();
         /*! Members */              
+        string prefix;
+
+        vector <double> monophyly;
+        bool plot_bool;
+        bool freq_bool;
+
+        bool simulation_bool;
+
+        vector <string> gt_tree_str_s;
+        
+        void HybridLambda_core(  );
+        action_board* simulation_jobs() const { return this->simulation_jobs_; }
+        SimulationParameters* parameters() const { return this->parameters_;   } 
+
+        void print();
+        void extract_tmrca();
+        void extract_bl();
+        void extract_firstcoal();       
+        void create_site_data_dir();
+        
+    private:
+        action_board* simulation_jobs_;
+        SimulationParameters* parameters_;
+
+        /*! Methods */              
+        
+        void init();
+        void parse() ;
+
+        std::ofstream extract_file;
+        string extract_file_name;
+        
+        bool print_tree_bool;
+        // Extract time from can first coalscent from the gene trees
+        bool tmrca_bool;
+        bool bl_bool;        
+        bool firstcoal_bool;
+
         size_t seed;				
         string gt_file_name;
         string mt_file_name;
         
         bool fst_bool;
-
-        vector <string> gt_tree_str_s;
         vector <string> mt_tree_str_s;
 
-        bool freq_bool;
-        bool print_tree;
-        bool plot_bool;
 
         bool seg_bool;
         bool read_GENE_trees;
         bool read_mt_trees;
-        bool simulation_bool;
-        vector <double> monophyly;
-        
-        /*! Methods */              
-        void parse() ;
-        void HybridLambda_core(  );
-        action_board* simulation_jobs() const { return this->simulation_jobs_; }
-        SimulationParameters* parameters() const { return this->parameters_;   } 
-        void extract_tmrca();
-        void extract_bl();
-        void extract_firstcoal();       
-        
-    private:
-        action_board* simulation_jobs_;
-        SimulationParameters* parameters_;
-        
-        void init();
-        std::ofstream extract_file;
-        string extract_file_name;
-        
-        // Extract time from can first coalscent from the gene trees
-        bool tmrca_bool;
-        bool bl_bool;        
-        bool firstcoal_bool;
         
        	ofstream sim_gt_file_coal_unit;
         ofstream sim_gt_file_mut_unit;
         ofstream sim_gt_file_num_gener;
         ofstream sim_gt_file_num_mut;
 
-        string prefix;
-        
-        bool mm_bool;
-        bool pop_bool;
         
 		vector <string> tax_name;
         int argc_;
         int argc_i;
         char * const* argv_;
-        //size_t random_seed_;  
         int num_sim_gt;
         
         string tmp_input_str;
+void read_sp_str( string & argv_i );
+void extract_mm_or_pop_param( string & mm_pop_string );
+
         string read_input_para(const char *inchar,string in_str);
+        string read_input_line(const char *inchar);
+        void  read_input_lines(const char inchar[], vector <string> & out_vec);
+        bool is_num(const char *inchar);
+        void finalize();
+        void read_sample_sizes();
+
+        string seg_dir_name;
+        void create_new_site_data(string &gt_string_mut_num, int site_i);
 
         template<class T>
         T readNextInput() {
@@ -119,7 +132,7 @@ class HybridLambda{
             if (ss.fail() || ss.get(c)) throw std::invalid_argument( std::string( "Failed to parse option: ") + argv_[argc_i]); 
             return input;
         }
-
+        
 };
 	
 

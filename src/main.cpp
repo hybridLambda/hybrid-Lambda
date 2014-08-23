@@ -24,11 +24,9 @@
 /*! \file main.cpp
  *  \brief Main function of hybrid-Lambda */
 
-#include"hybridLambda.hpp"
-#include"freq.hpp"
-#include"figure.hpp"
-#include"seg-site.hpp"
-#include"fst.hpp"
+#include "hybridLambda.hpp"
+#include "freq.hpp"
+#include "fst.hpp"
 
 
 int main(int argc, char *argv[]){
@@ -37,34 +35,13 @@ int main(int argc, char *argv[]){
 
     try {
 	    HybridLambda hybrid_para ( argc, argv );
-        //hybrid_para.parse();
-        Figure figure_para ( argc, argv );
 	    Freq freq_para ( argc, argv );
-	    seg::param seg_para(argc,argv);
+        freq_para.freq_out_filename = hybrid_para.prefix + "freqout";
+
         double Fst;
 
-   	    //if ( hybrid_para.seg_bool ){my_action.sim_num_mut_bool=true;}
-
-		//time_t start_time = time(0);
-		if (hybrid_para.simulation_bool){
-			//sim::param sim_para(argc, argv);	
-
-			Net new_net_dummy(hybrid_para.parameters()->net_str);
-			if (hybrid_para.print_tree){
-				new_net_dummy.print_all_node();
-				return EXIT_SUCCESS;
-			}
-			
-			if (hybrid_para.plot_bool){
-				figure_para.plot(hybrid_para.parameters()->net_str);
-				return EXIT_SUCCESS;
-			}
-			
-			if (!new_net_dummy.is_ultrametric){
-				cout<<"WARNING! NOT ULTRAMETRIC!!!"<<endl;
-				//return EXIT_SUCCESS;
-			}
-			
+		if ( hybrid_para.simulation_bool ){
+						
             hybrid_para.HybridLambda_core( );
 			
 			if (hybrid_para.simulation_jobs()->mono() ){
@@ -81,25 +58,15 @@ int main(int argc, char *argv[]){
 			}
 		}
 		//time_t sim_end_time = time(0);
-		
-		if (hybrid_para.read_GENE_trees) hybrid_para.gt_tree_str_s = read_input_lines(hybrid_para.gt_file_name.c_str());
-		
+				
         hybrid_para.extract_tmrca ();
         hybrid_para.extract_bl ();
         hybrid_para.extract_firstcoal();
-        
-        //frequencies			
+        hybrid_para.create_site_data_dir(); // segregating site data were generated
+
+        // frequencies			
 		if ( hybrid_para.freq_bool ) freq_para.compute_gt_frequencies( hybrid_para.gt_tree_str_s );       
-
-		if (hybrid_para.read_mt_trees) hybrid_para.mt_tree_str_s = read_input_lines(hybrid_para.mt_file_name.c_str());
         
-		//time_t freq_end_time=time(0);	
-		if (hybrid_para.seg_bool){ 	//seggreating data were generated
-			//seg_para.create_site_data_dir(mt_tree_str_s);
-            seg_para.create_site_data_dir( hybrid_para.mt_tree_str_s );
-		}
-		//time_t seg_end_time =time(0);
-
 
 /// need to work         
 //if (hybrid_para.fst_bool){
@@ -116,37 +83,8 @@ int main(int argc, char *argv[]){
 //cout << "Expected[Fst] = " << Fst << endl;
 //}
 
-        //if (hybrid_para.log_bool){      
-			//remove(hybrid_para.log_NAME.c_str());    
-			//std::ofstream log_file;
-			//log_file.open (hybrid_para.log_NAME.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
-			//if (hybrid_para.simulation_bool){
-				////simulation 
-				////files were saved at where
-				//log_file << "Simulation took about " << sim_end_time - start_time << " second(s) \n";
-				//log_file << "Random seed is :"<<hybrid_para.seed << "\n";
-				//if ( !hybrid_para.mm_bool ){
-					//log_file<<"Default Kingman coalescent on all branches. \n";
-					//}
-				//if ( !hybrid_para.pop_bool ){
-					//log_file << "Default population size of 10000 on all branches. \n";
-					//}
-				
-			//}
-						
-			//if (hybrid_para.seg_bool){
-				////seggreating data were generated
-				//log_file << "Generating segregating site data took about " << seg_end_time - freq_end_time << " second(s) \n";
-				//log_file << "Segregating site data saved at: "<<seg_para.seg_dir_name<<"\n";
-			//}
-            //if (hybrid_para.fst_bool){
-                //log_file << "Fst = " << Fst << "\n";
-            //}
-            
-			//log_file.close();
-			//string showlog="cat "+ hybrid_para.log_NAME;
-			//int sys=system(showlog.c_str());
 		//}
+			
     }
     catch (const exception &e)
     {
@@ -222,6 +160,3 @@ void print_help(){
 	print_example();
     exit (EXIT_SUCCESS);
 }
-
-
-

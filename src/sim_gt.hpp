@@ -24,12 +24,11 @@
 /*! \file sim_gt.hpp
  * \brief Header file for sim_gt.cpp */
 
-
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/special_functions/binomial.hpp>
 #include <stdio.h>
-//#include <ctime>
 #include "net.hpp"
+
 
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
@@ -40,114 +39,73 @@ class SimulationParameters{
     friend class sim_one_gt;
     
     double mutation_rate;
-    //double pop_size;
-    //double mm;
-    //bool pop_size_string_bool;
     bool mm_bool;
     bool pop_bool;
+    bool samples_bool;
     string sp_string_coal_unit;
     string sp_string_pop_size;
     string para_string;
-    vector < int > sample_size;
-    
     
     bool num_gener_bool;
     bool sp_coal_unit_bool;
     SimulationParameters();
     ~SimulationParameters(){};
+    void finalize();
+
     public:
-    string net_str;
+        string net_str;
+        vector < int > sample_size;
 };
 
-
-//namespace sim{
-	//class param{
-		//public:
-			//param(int argc, char *argv[]);
-			
-			//double mutation_rate;
-			////double pop_size;
-			////double mm;
-			////bool pop_size_string_bool;
-			//bool mm_bool;
-			//bool pop_bool;
-			//string sp_string_coal_unit;
-			//string sp_string_pop_size;
-			//string para_string;
-			//vector < int > sample_size;
-            //string net_str;
-			
-			////,action_board my_action
-			//bool num_gener_bool;
-			//bool sp_coal_unit_bool;
-		//private:
-			//param();
-	//};
-//}
 
 
 class action_board {
     friend class HybridLambda;
     friend class sim_one_gt;
-    public:
-	bool mono()          const { return mono_bool; }  // \todo, make this private
 
-    private:
-	bool sim_mut_unit()  const { return sim_mut_unit_bool;  }
-	bool sim_num_gener() const { return sim_num_gener_bool; }
-	bool sim_num_mut()   const { return sim_num_mut_bool;   }
-	bool Si_num()        const { return Si_num_bool; }
-
+    bool sim_mut_unit()  const { return sim_mut_unit_bool;  }
+    bool sim_num_gener() const { return sim_num_gener_bool; }
+    bool sim_num_mut()   const { return sim_num_mut_bool;   }
+    bool Si_num()        const { return Si_num_bool; }    
     
     void set_sim_mut_unit()  { this->sim_mut_unit_bool  = true; }
     void set_sim_num_gener() { this->sim_num_gener_bool = true; }
-    void set_sim_mut_mut()   { this->sim_num_mut_bool   = true; }	
-	bool set_Si_num() {this->Si_num_bool = true; this->sim_num_mut_bool=true; }
+    void set_sim_num_mut()   { this->sim_num_mut_bool   = true; }	
+    bool set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
     bool set_mono() { this->mono_bool = true; } 
     
-	bool sim_mut_unit_bool;
-	bool sim_num_gener_bool;
-	bool sim_num_mut_bool;
-	bool mono_bool;
-	bool Si_num_bool;
-    
-	action_board();
+    bool sim_mut_unit_bool;
+    bool sim_num_gener_bool;
+    bool sim_num_mut_bool;
+    bool mono_bool;
+    bool Si_num_bool;
+
+    action_board();
     ~action_board(){};
+    public:
+    	bool mono()          const { return mono_bool; }  // \todo, make this private
 };
 
 
 /*! \brief One simulated gene tree from a network under Kingman or multi merger coalescent process*/
 class sim_one_gt{
     friend class HybridLambda;
-	//private:
-        void compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size);
-        void build_gt_string_mut_unit(double mutation_rate);
-        void Si_num_out_table(Net mt_tree,int total_mut);
-        action_board* simulation_jobs_;
-        SimulationParameters* parameters_;
 
-	//public:
-        string gt_string_coal_unit;
-        string gt_string_mut_num;
-        string gt_string_mut_unit;
-        string gt_string_gener_num;
-        
-        
-        vector <string> tax_name;
-        vector <double> monophyly;
-        double total_brchlen;
+    void compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size);
+    void build_gt_string_mut_unit(double mutation_rate);
+    void Si_num_out_table(Net mt_tree,int total_mut);
+    action_board* simulation_jobs_;
+    SimulationParameters* parameters_;
+    string gt_string_coal_unit;
+    string gt_string_mut_num;
+    string gt_string_mut_unit;
+    string gt_string_gener_num;
+    vector <string> tax_name;
+    vector <double> monophyly;
+    double total_brchlen;
         
     sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs);    
     ~sim_one_gt(){};
-		
-	//void clear(){
-		//gt_string_coal_unit.clear();
-		//gt_string_mut_num.clear();
-		//gt_string_mut_unit.clear();
-		//gt_string_gener_num.clear();
-		//monophyly.clear();
-		//tax_name.clear();
-		//}
 		
 };
 
