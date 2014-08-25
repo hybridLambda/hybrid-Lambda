@@ -25,51 +25,27 @@
  *  \brief Main function of hybrid-Lambda */
 
 #include "hybridLambda.hpp"
-#include "freq.hpp"
 #include "fst.hpp"
-
 
 int main(int argc, char *argv[]){
 
 	if ( argc == 1 ) print_help(); 	//else, proceed
 
     try {
-	    HybridLambda hybrid_para ( argc, argv );
-	    Freq freq_para ( argc, argv );
-        freq_para.freq_out_filename = hybrid_para.prefix + "freqout";
-
+	    HybridLambda run_hybridLambda ( argc, argv );
         double Fst;
 
-		if ( hybrid_para.simulation_bool ){
-						
-            hybrid_para.HybridLambda_core( );
-			
-			if (hybrid_para.simulation_jobs()->mono() ){
-                if ( hybrid_para.parameters()->sample_size.size() == 2 ){ //\todo check population structure is a species tree
-                    cout << "   A mono     B mono Recip mono     A para     B para  Polyphyly" << endl;
-                    for ( size_t mono_i = 0; mono_i < hybrid_para.monophyly.size(); mono_i++){
-                        cout << setw(9) << hybrid_para.monophyly[mono_i] << "  ";
-                    }
-                    cout << endl;
-                }
-                else {
-                    throw std::invalid_argument(std::string(" -mono flag can only apply to species tree of two population") );
-                    }
-			}
-		}
-		//time_t sim_end_time = time(0);
-				
-        hybrid_para.extract_tmrca ();
-        hybrid_para.extract_bl ();
-        hybrid_para.extract_firstcoal();
-        hybrid_para.create_site_data_dir(); // segregating site data were generated
+        run_hybridLambda.HybridLambda_core( );
+        run_hybridLambda.create_site_data_dir(); // segregating site data were generated				
 
-        // frequencies			
-		if ( hybrid_para.freq_bool ) freq_para.compute_gt_frequencies( hybrid_para.gt_tree_str_s );       
-        
+        run_hybridLambda.extract_tmrca ();
+        run_hybridLambda.extract_bl ();
+        run_hybridLambda.extract_firstcoal();
+        run_hybridLambda.extract_frequency();
+
 
 /// need to work         
-//if (hybrid_para.fst_bool){
+//if (run_hybridLambda.fst_bool){
 ////sim::param sim_para(argc, argv);	
 //Net coal_unit_net(sim_para.net_str);
 //double tau = coal_unit_net.Net_nodes[0].brchlen1;
@@ -83,11 +59,9 @@ int main(int argc, char *argv[]){
 //cout << "Expected[Fst] = " << Fst << endl;
 //}
 
-		//}
-			
+		//}			
     }
-    catch (const exception &e)
-    {
+    catch (const exception &e) {
       std::cerr << "Error: " << e.what() << std::endl;
       return EXIT_FAILURE;
     }
@@ -103,33 +77,36 @@ void print_example(){
 	cout<<"hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
 	cout<<"hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
 	cout<<"hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE_TREE_FILE -f"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
-	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -o GENE -fF OUTPUT"<<endl;	
+	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE -f"<<endl;	
+	//cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE_TREE_FILE -fF FRENQUENCY_FILE"<<endl;	
+	//cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -o GENE -fF OUTPUT"<<endl;	
 	cout<<"hybrid-Lambda -gt GENE_coal_unit -f "<<endl;	
+    cout<<"hybrid-Lambda -mt GENE_num_mut -seg "<<endl;	
 	cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4"<<endl;
 	cout<<endl;
 }
 
 void print_option(){
 	cout<<setw(20)<<"-h or -help"<<"  --  "<<"Help. List the following content."<<endl;
-	cout<<setw(20)<<"-spcu INPUT"<<"  --  "<<"Input the species network/tree string through command line or a file."<<endl;
+	cout<<setw(20)<<"-spcu STR"<<"  --  "<<"Input the species network/tree string through command line or a file."<<endl;
 	cout<<setw(26)<<" "<<"Branch lengths of the INPUT are in coalescent unit."<<endl;
-	cout<<setw(20)<<"-spng INPUT"<<"  --  "<<"Input the species network/tree string through command line or a file. "<<endl;
+	cout<<setw(20)<<"-spng STR"<<"  --  "<<"Input the species network/tree string through command line or a file. "<<endl;
 	cout<<setw(26)<<" "<<"Branch lengths of the INPUT are in number of generation."<<endl;
-	cout<<setw(20)<<"-pop INPUT"<<"  --  "<<"Population sizes are defined by a single numerical constant, "<<endl;
+    cout<<setw(20)<<"-gt STR"<<"  --  "<<"Specify the FILE of trees to analyse tree topology frequencies."<<endl;
+    cout<<setw(20)<<"-mt STR"<<"  --  "<<"Specify the FILE of trees to analyse tree topology frequencies."<<endl;
+	cout<<setw(20)<<"-pop STR/FLOAT"<<"  --  "<<"Population sizes are defined by a single numerical constant, "<<endl;
 	cout<<setw(26)<<" "<<"or a string which specifies the population size on each branch. "<<endl;
 	cout<<setw(26)<<" "<<"The string can be input through command line or a file. "<<endl;
 	cout<<setw(26)<<" "<<"By default, population size 10,000 is used."<<endl;
-	cout<<setw(20)<<"-mm INPUT"<<"  --  "<<"Multiple merger parameters are defined by a single numerical constant, "<<endl;
+	cout<<setw(20)<<"-mm STR/FLOAT"<<"  --  "<<"Multiple merger parameters are defined by a single numerical constant, "<<endl;
 	cout<<setw(26)<<" "<<"or a string which speifies the parameter on each branch. "<<endl;
 	cout<<setw(26)<<" "<<"The string can be input through command line or a file. "<<endl;
 	cout<<setw(26)<<" "<<"By default, Kingman coalescent is used."<<endl;
-	cout<<setw(20)<<"-S n1 n2 ..."<<"  --  "<<"Specify the number of samples for each taxon."<<endl;
-	cout<<setw(20)<<"-num N"<<"  --  "<<"The number of gene trees will be simulated."<<endl;
-	cout<<setw(20)<<"-seed SEED"<<"  --  "<<"User define random SEED"<<endl;
-	cout<<setw(20)<<"-mu MU"<<"  --  "<<"User defined constant mutation rate MU. By default mutation rate 0.00005 is used."<<endl;
-	cout<<setw(20)<<"-o FILE [option]"<<"  --  "<<"Specify the file name prefix for simulated gene trees. \"GENE_TREE\" by default"<<endl;
+	cout<<setw(20)<<"-S INT INT ..."<<"  --  "<<"Specify the number of samples for each taxon."<<endl;
+	cout<<setw(20)<<"-num INT"<<"  --  "<<"The number of gene trees will be simulated."<<endl;
+	cout<<setw(20)<<"-seed INT"<<"  --  "<<"User define random SEED"<<endl;
+	cout<<setw(20)<<"-mu FLOAT"<<"  --  "<<"User defined constant mutation rate MU. By default mutation rate 0.00005 is used."<<endl;
+	cout<<setw(20)<<"-o STR [option]"<<"  --  "<<"Specify the file name prefix for simulated gene trees. \"GENE_TREE\" by default"<<endl;
 	//cout<<"     By default, gene tree branch lengths are in coalescent unit "<<endl;
 	cout<<setw(20)<<"-sim_mut_unit"<<"  --  "<<"Convert the simulated gene tree branch lengths to mutation unit."<<endl;
 	cout<<setw(20)<<"-sim_num_gener"<<"  --  "<<"Convert the simulated gene tree branch lengths to number of generations."<<endl;
@@ -138,12 +115,11 @@ void print_option(){
 	cout<<setw(26)<<" "<<"sites and the total branch length of the gene tree in coalescent unit."<<endl;
 	cout<<setw(20)<<"-f"<<"  --  "<<"Generate a topology frequency table of a set of input trees or simulated gene trees."<<endl;
 	cout<<setw(26)<<" "<<"Frequency table is saved in file freq out by default."<<endl;
-	cout<<setw(20)<<"-fF FILE"<<"  --  "<<"The topology frequency table will be saved in the FILE."<<endl;
-	cout<<setw(20)<<"-gt FILE"<<"  --  "<<"Specify the FILE of trees to analyse tree topology frequencies."<<endl;
+	//cout<<setw(20)<<"-fF FILE"<<"  --  "<<"The topology frequency table will be saved in the FILE."<<endl;	
 	cout<<setw(20)<<"-mono"<<"  --  "<<"Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. "<<endl;
 	cout<<setw(20)<<"-plot/-dot [option]"<<"  --  "<<"Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree)."<<endl;
 	cout<<setw(20)<<"      -branch"<<"  --  "<<"Branch lengths will be labelled in the figure."<<endl;
-	cout<<setw(20)<<"-plotF/-dotF FILE"<<"  --  "<<"Generated figure will be saved in FILE."<<endl;			
+	//cout<<setw(20)<<"-plotF/-dotF FILE"<<"  --  "<<"Generated figure will be saved in FILE."<<endl;			
 	cout<<endl;	
 }
 

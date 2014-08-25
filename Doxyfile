@@ -575,22 +575,20 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = src/utility.hpp \
-                         src/utility.cpp \
-                         src/main.cpp \
-                         src/sim_gt.cpp \
-                         src/sim_gt.hpp \
-                         src/freq.cpp \
-                         src/freq.hpp \
-			src/figure.hpp \
-			src/figure.cpp \
-			src/net.cpp \
-			src/net.hpp \
-			src/node.cpp \
-			src/node.hpp \
-			src/hybridLambda.hpp \
-			src/hybridLambda.cpp \
-			src/seg-site.cpp \
-			src/seg-site.hpp \
+                        src/utility.cpp \
+                        src/main.cpp \
+                        src/sim_gt.cpp \
+                        src/sim_gt.hpp \
+                        src/freq.cpp \
+                        src/freq.hpp \
+                        src/figure.hpp \
+                        src/figure.cpp \
+                        src/net.cpp \
+                        src/net.hpp \
+                        src/node.cpp \
+                        src/node.hpp \
+                        src/hybridLambda.hpp \
+                        src/hybridLambda.cpp \
 
 
 # This tag can be used to specify the character encoding of the source files

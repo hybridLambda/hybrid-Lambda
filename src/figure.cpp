@@ -291,6 +291,7 @@ void Figure::x_node_shift(){
 
 
 void Figure::plot( string net_str ){
+    if ( net_str.size() == 0 ) { throw std::invalid_argument ("Population structure is undefined!!!");}
 	this->obj_net = Net (net_str);
 	if ( this->method == LATEX ){ this->plot_in_latex(); }
 	if ( this->method == DOT   ){ this->plot_in_dot();   }

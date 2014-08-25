@@ -41,10 +41,11 @@ SimulationParameters::SimulationParameters(){
 	//pop_size=10000;
 	//pop_size_string_bool=false;
 	//mm=2.0;
+    //this->net_str = "";
 	pop_bool=false;
 	mm_bool=false;
 	samples_bool=false;
-    
+    this->is_net = false;
 	num_gener_bool=false;
 	sp_coal_unit_bool=false;
 }
@@ -68,6 +69,8 @@ void SimulationParameters::finalize(){
 	    clog<<"WARNING! NOT ULTRAMETRIC!!!"<<endl;
 		//return EXIT_FAIL;
     }
+    
+    this->is_net = net_dummy.is_net;
     
 	if ( !this->samples_bool ){
 		for (int i = 0; i < net_dummy.tax_name.size(); i++){

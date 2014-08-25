@@ -42,6 +42,7 @@ class SimulationParameters{
     bool mm_bool;
     bool pop_bool;
     bool samples_bool;
+    bool is_net;
     string sp_string_coal_unit;
     string sp_string_pop_size;
     string para_string;

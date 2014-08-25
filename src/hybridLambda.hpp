@@ -38,86 +38,82 @@ void print_option();
 
 
 class HybridLambda{
-	//class param{
     public:	
         /*! Constructors and Destructors */  
         HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { this->init(); this->parse(); }        
         ~HybridLambda();
-        /*! Members */              
-        string prefix;
-
-        vector <double> monophyly;
-        bool plot_bool;
-        bool freq_bool;
-
-        bool simulation_bool;
-
-        vector <string> gt_tree_str_s;
         
-        void HybridLambda_core(  );
-        action_board* simulation_jobs() const { return this->simulation_jobs_; }
-        SimulationParameters* parameters() const { return this->parameters_;   } 
-
-        void print();
+        // ACTION
+        void HybridLambda_core ( );
         void extract_tmrca();
         void extract_bl();
         void extract_firstcoal();       
         void create_site_data_dir();
+        void extract_frequency();
+        void extract_mono();
         
     private:
-        action_board* simulation_jobs_;
-        SimulationParameters* parameters_;
+    
+        /*! Members */ 
+        int argc_;
+        int argc_i;
+        char * const* argv_;        
+        string tmp_input_str;
 
-        /*! Methods */              
-        
-        void init();
-        void parse() ;
-
-        std::ofstream extract_file;
-        string extract_file_name;
-        
+        int num_sim_gt;
         bool print_tree_bool;
-        // Extract time from can first coalscent from the gene trees
+        bool plot_bool;
+        bool simulation_bool;
+        bool seg_bool;
         bool tmrca_bool;
         bool bl_bool;        
-        bool firstcoal_bool;
-
-        size_t seed;				
+        bool firstcoal_bool;        
+        bool freq_bool;
+        bool fst_bool;
+        size_t seed;	
+        			
         string gt_file_name;
         string mt_file_name;
-        
-        bool fst_bool;
         vector <string> mt_tree_str_s;
+        vector <string> gt_tree_str_s;
+        std::ofstream extract_file;
+        string seg_dir_name;
+        string extract_file_name;
 
-
-        bool seg_bool;
-        bool read_GENE_trees;
-        bool read_mt_trees;
-        
        	ofstream sim_gt_file_coal_unit;
         ofstream sim_gt_file_mut_unit;
         ofstream sim_gt_file_num_gener;
         ofstream sim_gt_file_num_mut;
-
         
 		vector <string> tax_name;
-        int argc_;
-        int argc_i;
-        char * const* argv_;
-        int num_sim_gt;
+        vector <double> monophyly;
+
+        action_board* simulation_jobs_;
+        SimulationParameters* parameters_;
+        string prefix;
+
+        /*! Methods */              
+        action_board* simulation_jobs() const { return this->simulation_jobs_; }
+        SimulationParameters* parameters() const { return this->parameters_;   }         
+        void init();
+        void parse() ;
+        void print();
         
-        string tmp_input_str;
-void read_sp_str( string & argv_i );
-void extract_mm_or_pop_param( string & mm_pop_string );
+        bool mono_fst_not_feasiable ( string flag );
+        bool read_GENE_trees;
+        bool read_mt_trees;        
 
         string read_input_para(const char *inchar,string in_str);
         string read_input_line(const char *inchar);
         void  read_input_lines(const char inchar[], vector <string> & out_vec);
-        bool is_num(const char *inchar);
-        void finalize();
+        void read_sp_str( string & argv_i );
         void read_sample_sizes();
 
-        string seg_dir_name;
+        void extract_mm_or_pop_param( string & mm_pop_string );
+
+        bool is_num(const char *inchar);
+        void finalize();
+
         void create_new_site_data(string &gt_string_mut_num, int site_i);
 
         template<class T>

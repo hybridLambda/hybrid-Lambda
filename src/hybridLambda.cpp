@@ -20,9 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "hybridLambda.hpp"
 #include "figure.hpp"
-
-#include<hybridLambda.hpp>
+#include "freq.hpp"
 #include <stdlib.h>     /* strtod */
 
 void HybridLambda::init(){
@@ -35,19 +35,17 @@ void HybridLambda::init(){
 	this->seg_bool        = false;
 	this->read_GENE_trees = false;
 	this->read_mt_trees   = false;
+    this->fst_bool        = false;    
+    this->tmrca_bool      = false;
+    this->bl_bool         = false;
     this->firstcoal_bool  = false;
-    this->fst_bool        = false;
-    
-    this->tmrca_bool = false;
-    this->bl_bool = false;
-    this->firstcoal_bool = false;
     this->argc_i = 1;
     
     this->gt_file_name = "";
     this->mt_file_name = "";
     this->num_sim_gt = 1;
     this->simulation_jobs_ = new action_board();
-    this->parameters_ = new SimulationParameters();
+    this->parameters_      = new SimulationParameters();
 }
 
 HybridLambda::~HybridLambda(){ 
@@ -85,7 +83,7 @@ void HybridLambda::parse(){
         /*! read number of mutations site and simulate segregating sites*/
 		else if ( argv_i =="-mt" ){ readNextStringto( this->mt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
 		else if ( argv_i =="-seed" ){ this->seed = this->readNextInput<size_t>(); }
-        else if ( argv_i =="-num"){ this->num_sim_gt = this->readNextInput<int>(); }
+        else if ( argv_i =="-num" ){ this->num_sim_gt = this->readNextInput<int>(); }
         else if ( argv_i =="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i == "-spcu" || argv_i=="-spng"){ this->read_sp_str(argv_i); }
 		else if ( argv_i =="-mm" ){ this->parameters_->mm_bool = true; this->extract_mm_or_pop_param( this->parameters_->para_string ) ; }
         else if ( argv_i =="-pop" ){ this->parameters_->pop_bool = true; this->extract_mm_or_pop_param( this->parameters_->sp_string_pop_size ) ; }        
@@ -132,20 +130,34 @@ void HybridLambda::read_sample_sizes(){
 
 
 void HybridLambda::finalize(){
-    if ( this->gt_file_name.size() > 0 ) this->read_input_lines( this->gt_file_name.c_str(), this->gt_tree_str_s);
-    if ( this->mt_file_name.size() > 0 ) this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
-    if ( this->simulation_bool ) this->parameters()->finalize( );    
-    if ( this->seg_bool ) {
-        this->simulation_jobs_->set_sim_num_mut();
-        this->seg_dir_name = this->prefix + "seg_sites" ;
-        }
-    if ( this->print_tree_bool ) this->print();
-    if ( this->plot_bool ){
-        Figure figure_para ( this->argc_, this->argv_ );
-        figure_para.figure_file_prefix = this->prefix;
-        figure_para.finalize();
-        figure_para.plot( this->parameters()->net_str );
-        exit(EXIT_SUCCESS);
+    
+    if ( this->simulation_bool ) {
+        if ( this->gt_file_name.size() > 0 ) clog << "WARNING: \"-gt\" option is ignored" << endl; 
+        if ( this->mt_file_name.size() > 0 ) clog << "WARNING: \"-mt\" option is ignored" << endl; 
+        
+        this->parameters()->finalize( );    
+        
+        if ( this->seg_bool ) {
+            this->simulation_jobs_->set_sim_num_mut();
+            this->seg_dir_name = this->prefix + "seg_sites" ;
+            }
+        if ( this->print_tree_bool ) this->print();
+        if ( this->plot_bool ){
+            Figure figure_para ( this->argc_, this->argv_ );
+            figure_para.figure_file_prefix = this->prefix;
+            figure_para.finalize();
+            figure_para.plot( this->parameters()->net_str );
+            exit(EXIT_SUCCESS);
+            }
+    }
+    else {
+        if ( this->gt_file_name.size() > 0 ) {
+            this->read_input_lines( this->gt_file_name.c_str(), this->gt_tree_str_s);
+            }
+        else if ( this->mt_file_name.size() > 0 ) {
+            this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
+            }
+        else throw std::invalid_argument( "No input was provided!" );
         }
 }
 
@@ -205,6 +217,33 @@ void HybridLambda::extract_firstcoal(){
 
 }
 
+void HybridLambda::extract_frequency(){
+    if ( !this->freq_bool ) return; 
+    Freq freq_para ( this->argc_, this->argv_ );
+    freq_para.freq_out_filename = this->prefix + "freqout";
+    freq_para.compute_gt_frequencies( this->gt_tree_str_s );
+}
+
+
+bool HybridLambda::mono_fst_not_feasiable( string flag ){ // flag is either -mono or -fst
+    if ( this->parameters()->sample_size.size() != 2 || this->parameters()->is_net ) {
+        cout << flag + " flag can only apply to species tree of two population" << endl;
+        return true; 
+    }
+    else false;
+}
+
+void HybridLambda::extract_mono() {
+    if ( !this->simulation_jobs()->mono() ) { return ;}
+                
+    if ( this->mono_fst_not_feasiable ("-mono") ) return; 
+    
+    cout << "   A mono     B mono Recip mono     A para     B para  Polyphyly" << endl;
+    for ( size_t mono_i = 0; mono_i < this->monophyly.size(); mono_i++){
+        cout << setw(9) << this->monophyly[mono_i] << "  ";
+    }
+    cout << endl;        
+}
 
 /*! \brief  sim_n_gt constructor */
 void HybridLambda::HybridLambda_core( ){
@@ -213,7 +252,7 @@ void HybridLambda::HybridLambda_core( ){
     MTRand_closed mt;
 	mt.seed( this->seed );		// initialize mt seed
     clog << "Random seed: " << this->seed <<endl;
-	dout<<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+	dout <<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 		
 	string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
 	string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
@@ -284,6 +323,9 @@ void HybridLambda::HybridLambda_core( ){
     if (  this->simulation_jobs_->sim_num_mut_bool   ) std::clog << gene_tree_file_num_mut   << "\n"; 
     else remove (gene_tree_file_num_mut.c_str()) ;
 	dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+    
+    this->extract_mono();
+    
 }
 
 
@@ -345,7 +387,7 @@ void HybridLambda::create_site_data_dir(){
 	for ( size_t i = 0; i < mt_tree_str_s.size(); i++ ){
 		create_new_site_data( mt_tree_str_s[i], i+1 );
 	}
-    clog << "Segregating site data saved at: "<< this->seg_dir_name <<"\n"; 
+    clog << "Segregating site data saved at: "<< this->seg_dir_name << "\n"; 
 }
 
 /*! \brief Generate segrateing site data */

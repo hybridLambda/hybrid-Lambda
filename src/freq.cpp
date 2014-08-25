@@ -24,7 +24,7 @@
 
 #include"freq.hpp"
 
-Freq::Freq( int argc, char *argv[] ):
+Freq::Freq( int argc, char * const* argv ):
     argc_(argc), argv_(argv){
 	this->freq_out_filename = "freq_out";
 	for (  argc_i = 1; argc_i < argc; argc_i++ ){
