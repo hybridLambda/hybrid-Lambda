@@ -62,7 +62,6 @@ Options              | Useage
 -mono                | Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. 
 -plot/-dot [option]  | Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).
 -branch              | Branch lengths will be labelled in the figure.
--plotF/-dotF FILE    | Generated figure will be saved in FILE.
 
 ##Examples:
 ```bash
