@@ -49,7 +49,7 @@ Options                  | Useage |
 -mm STR/FLT            | Multiple merger parameters are defined by a single numerical constant, or a string which speifies the parameter on each branch. The string can be input through command line or a file. By **default**, Kingman coalescent is used.|
 -S INT INT ...         | Specify the number of samples for each taxon.|
 -num INT               | The number of gene trees will be simulated.|
--seed INT           | User define random SEED|
+-seed INT           | User define random seed|
 -mu FLT               | User defined constant mutation rate per locus. By **default** mutation rate 0.00005 is used.|
 -o STR _[option]_   | Specify the file name prefix for simulated gene trees. Prefix is set as "OUT" by **default**, When options are not specified, only output trees with branch lengths are in coalescent unit.|
 -_sim\_mut\_unit_    | Convert the simulated gene tree branch lengths to mutation unit.|
