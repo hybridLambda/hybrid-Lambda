@@ -1,3 +1,5 @@
+### This is outdated....
+
 COMPILER = g++
 FLAGS = -Wall -g
 #FLAGS = 
