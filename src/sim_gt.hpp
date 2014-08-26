@@ -29,11 +29,9 @@
 #include <stdio.h>
 #include "net.hpp"
 
-
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
 	
-    
 class SimulationParameters{
     friend class HybridLambda;
     friend class sim_one_gt;
@@ -46,18 +44,16 @@ class SimulationParameters{
     string sp_string_coal_unit;
     string sp_string_pop_size;
     string para_string;
+    int total_num_lineage;
     
     bool num_gener_bool;
     bool sp_coal_unit_bool;
     SimulationParameters();
     ~SimulationParameters(){};
     void finalize();
-
-    public:
-        string net_str;
-        vector < int > sample_size;
+    string net_str;
+    vector < int > sample_size;
 };
-
 
 
 class action_board {
@@ -74,6 +70,7 @@ class action_board {
     void set_sim_num_mut()   { this->sim_num_mut_bool   = true; }	
     bool set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
     bool set_mono() { this->mono_bool = true; } 
+    bool mono()          const { return mono_bool; }  // \todo, make this private
     
     bool sim_mut_unit_bool;
     bool sim_num_gener_bool;
@@ -83,8 +80,6 @@ class action_board {
 
     action_board();
     ~action_board(){};
-    public:
-    	bool mono()          const { return mono_bool; }  // \todo, make this private
 };
 
 
@@ -94,7 +89,7 @@ class sim_one_gt{
 
     void compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size);
     void build_gt_string_mut_unit(double mutation_rate);
-    void Si_num_out_table(Net mt_tree,int total_mut);
+    void Si_num_out_table(Net mt_tree);
     action_board* simulation_jobs_;
     SimulationParameters* parameters_;
     string gt_string_coal_unit;
@@ -104,22 +99,19 @@ class sim_one_gt{
     vector <string> tax_name;
     vector <double> monophyly;
     double total_brchlen;
-        
-    sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs);    
-    ~sim_one_gt(){};
-		
+    int total_mut;    
+    ofstream * Si_table_;
+    sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
+    ~sim_one_gt(){};		
 };
 
 
 double Beta(double x, double y);
 double unifRand();
 int poisson_rand_var(double lambda);
-void create_new_site_data(string gt_string_mut_num,int site_i);
-string write_sp_string_in_coal_unit(string sp_num_gener_string,string pop_size_string);
+string write_sp_string_in_coal_unit(string sp_num_gener_string, string pop_size_string);
 string rewrite_pop_string_by_para_string(string para_string,string pop_size_string);
-void outtable_header(int total_lineage);
-void create_site_data_dir(vector <string> mt_tree_str_s);
-void append_seed_to_log_file(unsigned int seed);
+
 valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double num_lineage);
 vector < vector <double> > build_lambda_bk_mat(double para, double num_lineage);
 int update_nc(valarray <double> nc_X);

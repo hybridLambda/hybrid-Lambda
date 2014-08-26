@@ -579,14 +579,14 @@ INPUT                  = src/utility.hpp \
                         src/main.cpp \
                         src/sim_gt.cpp \
                         src/sim_gt.hpp \
-                        src/freq.cpp \
-                        src/freq.hpp \
                         src/figure.hpp \
                         src/figure.cpp \
                         src/net.cpp \
                         src/net.hpp \
                         src/node.cpp \
                         src/node.hpp \
+                        src/freq.cpp \
+                        src/freq.hpp \
                         src/hybridLambda.hpp \
                         src/hybridLambda.cpp \
 

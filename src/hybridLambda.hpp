@@ -76,7 +76,6 @@ class HybridLambda{
         string mt_file_name;
         vector <string> mt_tree_str_s;
         vector <string> gt_tree_str_s;
-        std::ofstream extract_file;
         string seg_dir_name;
         string extract_file_name;
 
@@ -84,8 +83,9 @@ class HybridLambda{
         ofstream sim_gt_file_mut_unit;
         ofstream sim_gt_file_num_gener;
         ofstream sim_gt_file_num_mut;
-        
-		vector <string> tax_name;
+        ofstream extract_file;
+
+		//vector <string> tax_name;
         vector <double> monophyly;
 
         action_board* simulation_jobs_;
@@ -116,6 +116,8 @@ class HybridLambda{
 
         void create_new_site_data(string &gt_string_mut_num, int site_i);
 
+        void outtable_header( std::ofstream &output );
+
         template<class T>
         T readNextInput() {
             ++argc_i;        
@@ -130,6 +132,5 @@ class HybridLambda{
         }
         
 };
-	
 
 #endif //HYBRDRIDLAMBDA_PARAM_INCLUDED

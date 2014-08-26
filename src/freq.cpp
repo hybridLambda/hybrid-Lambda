@@ -19,12 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*! \file freq.cpp
- * \brief Count frequencies of tree topologies */
 
-#include"freq.hpp"
+#include "freq.hpp"
 
-Freq::Freq( int argc, char * const* argv ):
+Frequency::Frequency( int argc, char * const* argv ):
     argc_(argc), argv_(argv){
 	this->freq_out_filename = "freq_out";
 	for (  argc_i = 1; argc_i < argc; argc_i++ ){
@@ -45,7 +43,7 @@ Freq::Freq( int argc, char * const* argv ):
  * 
  */  
 /*! \brief Compute gene tree frequencies */
-void Freq::compute_gt_frequencies( vector <string> &gt_tree_str_s ){
+void Frequency::compute_gt_frequencies( vector <string> &gt_tree_str_s ){
     this->gt_tree_str_tmp = gt_tree_str_s;
 	this->compute_gt_frequencies_core();
 	freq_out_file.open (this->freq_out_filename.c_str(), ios::out | ios::app | ios::binary); 
@@ -59,7 +57,7 @@ void Freq::compute_gt_frequencies( vector <string> &gt_tree_str_s ){
     clog << "Frequency file is saved at: " << this->freq_out_filename << "\n";
 }
 
-void Freq::compute_gt_frequencies_core(){
+void Frequency::compute_gt_frequencies_core(){
     Net checking_topo( this->gt_tree_str_tmp[0] );
 	this->gene_topo.push_back( tree_topo( this->gt_tree_str_tmp[0]) );
 	this->gene_freq.push_back(1);
@@ -82,7 +80,7 @@ void Freq::compute_gt_frequencies_core(){
 
 /*! \brief determine two tree strings have the same topology or not
  */
-bool Freq::same_topo( string gt_string1, string gt_string2 ){
+bool Frequency::same_topo( string gt_string1, string gt_string2 ){
 	bool same_topo_return=false;
 	Net gt1(gt_string1);
 	Net gt2(gt_string2);
@@ -129,7 +127,7 @@ bool Freq::same_topo( string gt_string1, string gt_string2 ){
 }
 
 /*! \brief Remove branch length in a tree string, gives the tree topology */
-string Freq::remove_brchlen(string in_str /*!< input newick form string */){
+string Frequency::remove_brchlen(string in_str /*!< input newick form string */){
 	string out_str = in_str;
 	size_t found_col=out_str.find(':');
 	while ( found_col<out_str.size() ){
@@ -142,7 +140,7 @@ string Freq::remove_brchlen(string in_str /*!< input newick form string */){
 }
 
 /*! \brief Remove branch length in a tree string, gives the tree topology \todo combine with remove_brchlen, only keep one of them*/
-string Freq::tree_topo(string in_str /*!< input newick form string */){
+string Frequency::tree_topo(string in_str /*!< input newick form string */){
 	return remove_brchlen(remove_interior_label(in_str));
 }
 

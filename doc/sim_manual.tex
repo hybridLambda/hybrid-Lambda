@@ -81,7 +81,7 @@ Normally, standard Newick formatted and extended Newick formatted strings do not
 
 \section{Commands for simulation:}
 \subsection{Simulating gene trees}
-\cm{\mbox{hybrid-Lambda -spcu INPUT [-num N] [-seed SEED] [-o OUTPUT-FILE]}.}
+\cm{\mbox{hybrid-Lambda -spcu INPUT [-num N] [-seed SEED] [-o PREFIX]}.}
 
 % This is the basic command of \hs.
 {\tt INPUT} is a(n) (extended) Newick formatted string (see Section \ref{sim_man:input}), which can be entered through the command line or from a text file.
@@ -91,31 +91,31 @@ If the input is followed by the flag {\tt -spcu}, its branch lengths must be in 
 The value {\tt N} following the flag {\tt -num} is the number of gene trees simulated.
 % {\tt -seed} allows users to define random seed for simulation.
 Users can specify a random seed for simulation by declaring it after {\tt -seed}.
-By default, the branch lengths of the output trees are in coalescent units. They are saved in the file {\tt GENE\_TREE\_coal\_unit}. The flag {\tt -o} enables the users to specify the file name prefix. For example:
-\cm{\mbox{hybrid-Lambda -spcu '((1:1,2:1):1,3:2);'\  -num 3 -seed 2 -o example1} -log}
+By default, the branch lengths of the output trees are in coalescent units. They are saved in the file {\tt PREFIX\_coal\_unit}. The flag {\tt -o} enables the users to specify the file name prefix. For example:
+\cm{\mbox{hybrid-Lambda -spcu '((1:1,2:1):1,3:2);'\  -num 3 -seed 2 -o example1} }
 will print the following message:
 \begin{verbatim}
-Default Kingman coalescent on all branches
-Random Seed  2  used
-Produced gene tree files:
+Default Kingman coalescent on all branches.
+Default population size of 10000 on all branches. 
+Random seed: 2
+Produced gene tree files: 
 example1_coal_unit
-3 trees simulated.
 \end{verbatim}
 The following gene trees are saved in the file {\tt example1\_coal\_unit}:
 \begin{verbatim}
-(1_1:2.98119,(3_1:2.55301,2_1:2.55301):0.428181);
-(3_1:6.66739,(2_1:1.06869,1_1:1.06869):5.5987);
-(3_1:2.38966,(2_1:1.0722,1_1:1.0722):1.31746);
+(3_1:2.20467,(2_1:1.57269,1_1:1.57269):0.631976);
+((2_1:1.02627,1_1:1.02627):3.65525,3_1:4.68152);
+((2_1:1.79776,1_1:1.79776):3.15359,3_1:4.95134);
 \end{verbatim}
 
 \subsection{Gene tree output options and user-defined mutation rate}
-\cm{\mbox{hybrid-Lambda -spcu INPUT [-o OUTPUT-PREFIX] [-mu MU] [option]}}
+\cm{\mbox{hybrid-Lambda -spcu INPUT [-o PREFIX] [-mu MU] [option]}}
 By default, the mutation rate $\mu=0.00005$ is used. The flag {\tt -mu } makes it possible for users to define a constant mutation rate. Moreover, the options in {\tt [ ]} enable more manipulations of the output gene trees. These options include:
 \begin{longtable}{lp{9cm}}
 {\tt -sim\_mut\_unit }& Convert the simulated gene tree branch lengths to mutation units.\\
 {\tt -sim\_num\_gener }& Convert the simulated gene tree branch lengths to number of generations.\\
 {\tt -sim\_num\_mut }& Simulate the number of mutations on each branch of the simulated gene trees.\\
-{\tt -sim\_Si\_num }&  Generate the file {\tt out\_table}, which includes the number of segregating sites and the total branch length of the gene tree in coalescent units.\\
+{\tt -sim\_Si\_num }&  Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.\\
 \end{longtable}
 
 For example, suppose the input network string in the file {\tt 4\_tax\_sp\_nt1\_para} is %\\{\verb ((((B:1,C:1)s1:1)h1#.5:1,A:3)s2:1,(h1#.5:1,D:3)s3:1)r; }. \\
@@ -142,7 +142,7 @@ $ cat example2_num_mut
 By the default setting, the population sizes for each species are assumed to be equal and unchanged at any time, which is 10,000. This can be reassigned to other constant values followed by {\tt -pop}. As a result, the branch lengths of the gene trees in number of generations will change. This can be observed though the option {\tt -sim\_num\_gener}. For example, to simulate gene trees within a species network/tree with a population size of 25,000,
 we use the following:
 \cm{hybrid-Lambda -spcu INPUT -num N -pop 25000 -sim\_num\_gener.}
-This command will also produce gene trees for which the branch lengths are in number of generations, saved in the file {\tt GENE\_TREE\_num\_gener}.
+This command will also produce gene trees for which the branch lengths are in number of generations, saved in the file {\tt OUT\_num\_gener}.
 \newline\noindent{\bf Note:} The population size refers to the number of gene copies, not the number of individuals.
 
 Instead of inputting a species network with branch lengths in coalescent units, input strings can have branch lengths representing the number of generations.
@@ -179,16 +179,14 @@ Moreover, similar to assigning particular population sizes on branches (see the 
 \subsubsection{Plot}
 % \cm{ hybrid-Lambda -spcu FILENAME -dot [-branch]}
 % \subsubsection{Plot by \LaTeX}
-\cm{ hybrid-Lambda -spcu INPUT -dotF OUTPUT [-branch] }
+\cm{ hybrid-Lambda -spcu INPUT -dot -o OUTPUT [-branch] }
 {\tt Hybrid-Lambda} uses the program {\tt dot} to generate figures. The option {\tt [-branch]} will label the branch lengths in the figure, e.g.:
-\cm{hybrid-Lambda -spcu trees/7\_tax\_sp\_nt1\_para -dotF branch -branch}
+\cm{hybrid-Lambda -spcu trees/7\_tax\_sp\_nt1\_para -dot -o branch -branch}
 \begin{center}
 \includegraphics[width=.8\textwidth]{branch.pdf}
 \end{center}
-If the option {\tt -dot} is used instead of {\tt -dotF OUTPUT}, the figure will be saved in the file {\tt dotfigure.pdf} by default.
 
-Alternatively, by replacing {\tt -dotF} with {\tt plotF}, {\tt Hybrid-Lambda} can generate \LaTeX\ code for plotting a network or tree.
-If {\tt -plot} is used instead of {\tt -plotF OUTPUT}, the \LaTeX\ code will be saved in the file {\tt texfigure.tex} by default.
+Alternatively, by replacing {\tt -dot} with {\tt plot}, {\tt Hybrid-Lambda} can generate \LaTeX\ code for plotting a network or tree.
 % \begin{figure}
 % \centering
 % \includegraphics[width=10cm]{label.pdf}%
@@ -196,17 +194,16 @@ If {\tt -plot} is used instead of {\tt -plotF OUTPUT}, the \LaTeX\ code will be 
 
 \subsubsection{Analysing the frequencies of gene trees}
 {\tt Hybrid-Lambda} can generate a topology frequency table for the simulated gene trees by:
-\cm{ hybrid-Lambda -spcu INPUT -num N -fF OUTPUT .}
+\cm{ hybrid-Lambda -spcu INPUT -num N -f.}
 
-\cm{ hybrid-Lambda -gt INPUT -fF OUTPUT}
-reads trees in the file {\tt INPUT}, and generates a topology frequency table in the file {\tt OUTPUT}.
-If the option {\tt -f} is used instead of {\tt -fF OUTPUT}, the analysed frequency table will be saved in the file {\tt freq\_out} by default.
+The command ``{\tt hybrid-Lambda -gt INPUT -f -o OUTPUT}''
+reads trees in the file {\tt INPUT}, and generates a topology frequency table in the file {\tt OUTPUT\_frequencies}.
 
 \subsubsection{Simulating and analysing the monophyly topology of the gene trees}
 \cm{ hybrid-Lambda -spcu INPUT-1 -S n1 n2 -mono [-mm INPUT-2]}
 Recent studies on the shape of genealogies between two species investigated the probabilities of monophyletic taxa \citep{Eldon2012,Rosenberg2003}. The option {\tt -mm} generates a frequency table of the gene trees whose taxa are monophyletic in one population, both populations, or are paraphyletic and polyphyletic.
 For example:
-\cm{hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4 -log}
+\cm{hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4 }
 will print the following message:
 \begin{verbatim}
    A mono     B mono Recip mono     A para     B para  Polyphyly
@@ -218,38 +215,37 @@ GENE_TREE_coal_unit
 \end{verbatim}
 
 
+%\subsubsection{FST}
 
 
 \section{Summary of command line options}
 \begin{longtable}{lp{9cm}}
 {\tt -h } or {\tt -help } &  Help. List the following content.\\
-{\verb -spcu } {\tt INPUT} & Input the species network/tree string through the command line or from a file. Branch lengths of the {\tt INPUT} are in coalescent units.\\
-{\verb -spng } {\tt INPUT}& Input the species network/tree string through the command line or from a file. Branch lengths of the {\tt INPUT} are in number of generations.\\
-{\verb -pop } {\tt INPUT} & Population sizes are defined by a single numerical constant, or a string which specifies the population size on each branch. The string can be inputted through the command line or from a file. By default, the population size 10,000 is used.\\
-{\tt -mm INPUT}  & Multiple merger parameters are defined by a single numerical constant, or a string which specifies the parameter on each branch. The string can be inputted through the command line or from a file. By default, the Kingman coalescent is used.\\
-{\verb -S } {\tt n1 n2 ...} & Specify the number of samples for each taxon.\\
-{\tt -num N}  & The number of gene trees to be simulated.\\
-{\verb -seed } {\tt SEED} & User defined random {\tt SEED}.\\
-{\tt -mu MU }  & User defined constant mutation rate $\mathbf{\mu}$. By default, a mutation rate of $0.00005$ is used.\\
-{\verb -o } {\tt FILE [option]} & Specify the filename for the simulated gene trees. \\%Define the name of file that gene trees will be saved, "GENE\_TREE" by default\\
+{\verb -spcu } {\tt STR} & Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in coalescent unit.\\
+{\verb -spng } {\tt STR} & Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in number of generation.\\
+{\verb -pop } {\tt STR/FLT} & Population sizes are defined by a single numerical constant, or a string which specifies the population size on each branch. The string can be input through command line or a file. By default, population size 10,000 is used.\\
+{\tt -mm STR/FLT}  & Multiple merger parameters are defined by a single numerical constant, or a string which speifies the parameter on each branch. The string can be input through command line or a file. By default, Kingman coalescent is used.\\
+{\verb -S } {\tt INT INT ...} & Specify the number of samples for each taxon.\\
+{\tt -num INT}  & The number of gene trees to be simulated.\\
+{\verb -seed } {\tt INT} & User defined random seed.\\
+{\tt -mu FLT }  & User defined constant mutation rate per locus. By **default** mutation rate 0.00005 is used.\\
+{\verb -o } {\tt STR [option]} & Specify the file name prefix for simulated gene trees. Prefix is set as "OUT" by default. When options are not specified, only output trees with branch lengths are in coalescent unit. \\
 $\qquad${\verb -sim_mut_unit }& Convert the simulated gene tree branch lengths to mutation units.\\
 $\qquad${\verb -sim_num_gener } &Convert the simulated gene tree branch lengths to number of generations.\\
 $\qquad${\verb -sim_num_mut }& Simulate the number of mutations on each branch of the simulated gene trees.\\
-% $\qquad${\verb -sim_Si_num } & Generate the file {\tt out\_table}, which includes the number of segregating sites and the total branch length of the gene tree in coalescent unit. \\
+ $\qquad${\verb -sim_Si_num } & Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA. \\
 
-{\verb -f } & Generate a topology frequency table for a set of input trees or simulated gene trees. The frequency table is saved in the file {\tt freq\_out} by default.\\
-{\verb -fF } {\tt FILE}& The topology frequency table will be saved in {\tt FILE}.\\
-{\verb -gt } {\tt FILE} & Specify the file to analyse tree topology frequencies.\\
+{\verb -f } & Generate a topology frequency table of a set of input trees or simulated gene trees.\\
+{\verb -gt } {\tt FILE} & Specify the FILE NAME of trees to analyse tree topology frequencies.\\
 %{\verb -tmrca } {\tt [FILE]}& Return the TMRCA of the gene trees. TMRCA file is saved in ``tmrcaFILE'' by default, user can define the TMRCA file name by option FILE.\\
-%{\verb -log } {\tt [FILE]}& Enable the log function. Log file is saved in ``LOG'' by default, user can define the log file name by option FILE.\\
 
-% {\verb -seg } & Generate segregating site data\\
+ {\verb -seg } & Generate segregating site data\\
 {\verb -mono } & Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees.\\
 {\tt -plot}/{\tt -dot} {\tt [option]} & Use \LaTeX ({\tt -plot}) or {\tt Dot} ({\tt -dot}) to draw the input (defined by {\tt -spcu}) network (tree).\\
 $\qquad${\tt -branch}& Branch lengths will be labelled in the figure.\\
 % $\qquad${\tt -label}& Branches will be labelled by post-ordered traversal.\\
-{\tt -plotF}/{\tt -dotF} {\tt FILE}& The generated figure will be saved in {\tt FILE}.\\
-{\tt -plotF}/{\tt -dotF} {\tt FILE}& The generated figure will be saved in {\tt FILE}.\\
+%{\tt -plotF}/{\tt -dotF} {\tt FILE}& The generated figure will be saved in {\tt FILE}.\\
+%{\tt -plotF}/{\tt -dotF} {\tt FILE}& The generated figure will be saved in {\tt FILE}.\\
 \end{longtable}
 
 \section*{Acknowledgements}

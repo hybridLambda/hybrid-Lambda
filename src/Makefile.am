@@ -19,11 +19,11 @@ hybrid_Lambda_SOURCES = $(shared_SOURCES) main.cpp
 hybrid_Lambda_dbg_SOURCES = $(shared_SOURCES) main.cpp  
 hybrid_Lambda_prof_SOURCES = $(shared_SOURCES) main.cpp  
 
-unit_tests_SOURCES = figure.cpp utility.cpp net.cpp node.cpp tests/test_figure.cpp tests/test_runner.cpp 
+unit_tests_SOURCES = $(shared_SOURCES) tests/test_hybridLambda.cpp tests/test_figure.cpp tests/test_runner.cpp 
 
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x 
 unit_tests_LDADD= -lcppunit -ldl
 
-include_HEADERS = sim_gt.hpp freq.hpp utility.hpp mtrand.h hybridLambda.hpp node.hpp net.hpp 
+include_HEADERS = sim_gt.hpp figure.hpp freq.hpp utility.hpp mtrand.h hybridLambda.hpp node.hpp net.hpp 
 
 

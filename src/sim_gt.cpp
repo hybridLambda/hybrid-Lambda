@@ -24,7 +24,6 @@
 /*! \file sim_gt.cpp
  * \brief Core functions used to simulate gene trees for given species network or tree */
 
-
 #include"sim_gt.hpp"
 #include"mtrand.h"
 
@@ -32,8 +31,8 @@ action_board::action_board(){
 	this->sim_mut_unit_bool  = false;
 	this->sim_num_gener_bool = false;
 	this->sim_num_mut_bool   = false;
-	this->mono_bool          = false;
 	this->Si_num_bool        = false;
+	this->mono_bool          = false;
 }
 
 SimulationParameters::SimulationParameters(){
@@ -42,12 +41,12 @@ SimulationParameters::SimulationParameters(){
 	//pop_size_string_bool=false;
 	//mm=2.0;
     //this->net_str = "";
-	pop_bool=false;
-	mm_bool=false;
-	samples_bool=false;
+	this->pop_bool=false;
+	this->mm_bool=false;
+	this->samples_bool=false;
     this->is_net = false;
-	num_gener_bool=false;
-	sp_coal_unit_bool=false;
+	this->num_gener_bool=false;
+	this->sp_coal_unit_bool=false;
 }
 
 
@@ -80,10 +79,15 @@ void SimulationParameters::finalize(){
 	else{ //  check the number of lineages and the number of species 
 		if (sample_size.size() != net_dummy.tax_name.size()) 	throw std::invalid_argument("Numbers of samples and numbers of species not equal!!!");
 	}
-	
+    
+    this->total_num_lineage = 0;
+    for ( size_t i = 0; i < this->sample_size.size();i++){
+		this->total_num_lineage += this->sample_size[i];
+	}
+    
 	sp_string_pop_size = rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
 
-	if ( this->num_gener_bool ) net_str = write_sp_string_in_coal_unit(net_str,sp_string_pop_size);	// Convert number of generations and population size to coalescent unit
+	if ( this->num_gener_bool ) net_str = write_sp_string_in_coal_unit(net_str, sp_string_pop_size);	// Convert number of generations and population size to coalescent unit
 	
     sp_string_coal_unit = net_str;
 
@@ -127,10 +131,10 @@ int poisson_rand_var(double lambda){
 }
 
 
-sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulation_jobs): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
+sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
 	dout<<"	Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
 	//dout<<"	begin of sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action)"<<endl;
-
+    this->Si_table_ = &Si_table;
 	string sp_string_coal_unit= this->parameters_->sp_string_coal_unit;
 	string sp_string_pop_size= this->parameters_->sp_string_pop_size;
 	string para_string= this->parameters_->para_string;
@@ -617,9 +621,8 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 		brch_total.back()=0;
 		//cout<<total_brchlen<<endl;
 		//double theta=1.0;
-		int total_mut = poisson_rand_var(mutation_rate*total_brchlen);
-		//cout<<total_mut<<endl;
-		for (int mut_i=0;mut_i<total_mut;mut_i++){
+		this->total_mut = poisson_rand_var(mutation_rate*total_brchlen);
+		for ( int mut_i=0; mut_i < this->total_mut; mut_i++){
 			 size_t brch_index=0;
 			double u=unifRand()*total_brchlen;
 			while (u>brch_total[brch_index]){
@@ -632,7 +635,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 		gt_string_mut_num=remove_interior_label(gt_string_mut_num);
 		
 		if ( this->simulation_jobs_->Si_num_bool){	
-			Si_num_out_table(mt_tree,total_mut);
+			Si_num_out_table(mt_tree);
 		}
 	}
 
@@ -643,7 +646,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 }
 
 
-void sim_one_gt::Si_num_out_table(Net mt_tree,int total_mut){
+void sim_one_gt::Si_num_out_table(Net mt_tree){
 	vector <int> S_i(mt_tree.tip_name.size()-1,0);
 	for ( size_t sii=0;sii<S_i.size();sii++){
 		for ( size_t node_i=0;node_i<mt_tree.Net_nodes.size();node_i++){
@@ -656,15 +659,11 @@ void sim_one_gt::Si_num_out_table(Net mt_tree,int total_mut){
 		}
 	}
 		
-	ofstream out_table_file;
-	out_table_file.open ("out_table", ios::out | ios::app | ios::binary); 
-	out_table_file <<setw(12)<< total_brchlen<<setw(14)<<mt_tree.Net_nodes.back().absolute_time<<setw(7)<<total_mut<<"  ";
+	*Si_table_ << setw(12)<< total_brchlen<<setw(14)<<mt_tree.Net_nodes.back().absolute_time<<setw(7)<<this->total_mut<<"  ";
 	for ( size_t sii=0;sii<S_i.size();sii++){
-		out_table_file<<setw(4)<<S_i[sii]<<" ";
+		*Si_table_<<setw(4)<<S_i[sii]<<" ";
 	}
-	out_table_file<<endl;
-	out_table_file.close();
-	
+    *Si_table_ << endl;	
 }
 
 
@@ -680,14 +679,15 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
                 //cout<<"normal calculation : "<<exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)))<<endl;
                 lambda_bk_mat_b_k=exp(log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i))) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
                 //cout<<"boost calculation : "<<lambda_bk_mat_b_k<<endl;
-				if (isnan(lambda_bk_mat_b_k)){
-					throw std::domain_error("Function \"build_lambda_bk_mat\" returns NaN");
-					//dout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
-					//dout<<"b="<<b_i<<"  k="<<k_i<<endl;
-					//dout<<"log(boost::math::binomial_coefficient(b_i,k_i)) " <<log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))<<endl;
-					//dout<<"log(pow(para,k_i)) "<< log(pow(para,k_i))<<endl;
-					//dout<<"log(pow(1-para,b_i-k_i)) "<<log(pow(1-para,b_i-k_i))<<endl;
-				}
+// DEBUG
+				//if (isnan(lambda_bk_mat_b_k)){
+					//throw std::domain_error("Function \"build_lambda_bk_mat\" returns NaN");
+					////dout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
+					////dout<<"b="<<b_i<<"  k="<<k_i<<endl;
+					////dout<<"log(boost::math::binomial_coefficient(b_i,k_i)) " <<log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))<<endl;
+					////dout<<"log(pow(para,k_i)) "<< log(pow(para,k_i))<<endl;
+					////dout<<"log(pow(1-para,b_i-k_i)) "<<log(pow(1-para,b_i-k_i))<<endl;
+				//}
 			}
 			else{//1<alpha<2
 				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para);// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
@@ -721,7 +721,7 @@ void sim_one_gt::build_gt_string_mut_unit(double mutation_rate){
 
 void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size){
 	vector <double> monophyly_initial(6,0);
-	monophyly=monophyly_initial;
+	monophyly = monophyly_initial;
 	for ( size_t tax_i=0;tax_i<2;tax_i++){
 		for ( size_t node_i=0;node_i<my_gt_coal_unit.Net_nodes.size();node_i++){
 			if (my_gt_coal_unit.descndnt[node_i].sum()==0){
@@ -733,20 +733,20 @@ void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample
 			}
 		}
 	}
-	if (monophyly[0]==1){
-		if (monophyly[1]==1){
-			monophyly[2]=1;
+	if ( monophyly[0] == 1 ){
+		if ( monophyly[1] == 1 ){
+			monophyly[2] = 1;
 		}
 		else{
-			monophyly[3]=1;
+			monophyly[3] = 1;
 		}	
 	}
 	else{
-		if (monophyly[1]==1){
-			monophyly[4]=1;
+		if (monophyly[1] == 1){
+			monophyly[4] = 1;
 		}
 		else{
-			monophyly[5]=1;
+			monophyly[5] = 1;
 		}
 	}
 
@@ -809,23 +809,6 @@ string rewrite_pop_string_by_para_string(
 	string pop_size_string_return = construct_adding_new_Net_str(pop_size_check);
 	return pop_size_string_return;
 }
-
-
-
-
-/*! \brief Printing out the header for out_table*/
-void outtable_header(int total_lineage){
-	ofstream out_table_file;
-	out_table_file.open ("out_table", ios::out | ios::app | ios::binary); 
-	out_table_file <<"t_total       t_MRCA       S_total  ";
-	for (int sii=0;sii<total_lineage-1 ;sii++){
-		out_table_file<<"S_"<<sii+1<<"  ";
-	}
-	out_table_file<<endl;
-	out_table_file.close();
-}
-
-
 
 
 double update_coal_para(vector < vector <double> > lambda_bk_mat, double num_lineage){

@@ -27,39 +27,39 @@ enum FIGURE_PROGRAM { NO_METHOD, LATEX, DOT };
 
 class Figure{
     friend class HybridLambda;
-    
-    Figure ( int argc, char * const* argv );
-    void plot( string net_str );
+    #ifdef UNITTEST
+    friend class TestFigure;
+    #endif
+    // Members
     string figure_file_prefix;
 
     FIGURE_PROGRAM method;
-    FIGURE_OPTION option;
-    
+    FIGURE_OPTION option;    
     int argc_;
     int argc_i;
     char * const* argv_;
-             
+    valarray <int> x_node;
+    vector <int> x_node_tmp;
+    vector <size_t> x_node_tmp_index;
+    ofstream figure_ofstream;
+    string figure_file_suffix;
+    string figure_file_name;
+    Net obj_net;
+    
+    // Methods    
+    Figure ( int argc, char * const* argv );
+    ~Figure(){}
+    void plot( string net_str );
     void init();
     void initialize_method( FIGURE_PROGRAM program, string suffix);
     void check_option();
     void check_method();
     void finalize();
-
-    void  det_x_node ( );
+    void det_x_node ( );
     void x_node_shift();
-    valarray <int> x_node;
-    vector <int> x_node_tmp;
-    vector <size_t> x_node_tmp_index;
-
     void plot_in_latex();
     void plot_in_dot( );
     void plot_core();
     void execute_dot(string method, string suffix);
-    
     void edge_entry(string from, string to, size_t label, double bl, bool tip);
-    
-    ofstream figure_ofstream;
-    string figure_file_suffix;
-    string figure_file_name;
-    Net obj_net;
 };

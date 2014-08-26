@@ -23,13 +23,14 @@
 /*! \file freq.hpp
  * \brief Header file for freq.cpp */
 
-#include"net.hpp"
+#include "net.hpp"
 
-class Freq{
+class Frequency{
     friend class HybridLambda;
-
-    Freq ( int argc, char * const* argv );
-    ~Freq(){}
+    
+    Frequency (){};
+    Frequency ( int argc, char * const* argv );
+    ~Frequency(){}
     void compute_gt_frequencies( vector <string> &gt_tree_str_s );
     string freq_out_filename;
     int argc_;
