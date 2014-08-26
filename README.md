@@ -39,29 +39,30 @@ GPL Version 3 or later.
 
 Program parameters and options:
 
-Options              | Useage
--------------------- | -----------------------
--h or -help          | Help. List the following content.
--spcu STR          | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in coalescent unit.
--spng STR          | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in number of generation.
--pop STR/FLT           | Population sizes are defined by a single numerical constant, or a string which specifies the population size on each branch. The string can be input through command line or a file. By **default**, population size 10,000 is used.
--mm STR/FLT            | Multiple merger parameters are defined by a single numerical constant, or a string which speifies the parameter on each branch. The string can be input through command line or a file. By **default**, Kingman coalescent is used.
--S INT INT ...         | Specify the number of samples for each taxon.
--num INT               | The number of gene trees will be simulated.
--seed INT           | User define random SEED
--mu FLT               | User defined constant mutation rate per locus. By **default** mutation rate 0.00005 is used.
--o STR [option]   | Specify the file name prefix for simulated gene trees. Prefix is set as "OUT" by **default**, When options are not specified, only output trees with branch lengths are in coalescent unit.
--sim_mut_unit        | Convert the simulated gene tree branch lengths to mutation unit.
--sim_num_gener       | Convert the simulated gene tree branch lengths to number of generations.
--sim_num_mut         | Simulate numbers of mutations on each branch of simulated gene trees.
--sim_Si_num          | Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.
--f                   | Generate a topology frequency table of a set of input trees or simulated gene trees. 
--gt STR             | Specify the FILE NAME of trees to analyse tree topology frequencies.
--seg  |  Generate segregating site data.
--mt STR  |  Specify the FILE NAME of trees to generate segregating site data. Tree branch lengths indicate number of mutations on the branch.
--mono                | Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. 
--plot/-dot [option]  | Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).
--branch              | Branch lengths will be labelled in the figure.
+
+Options                  | Useage |
+:------------------------:| ------------------------------- |
+-h or -help          | Help. List the following content. |
+-spcu STR          | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in coalescent unit. |
+-spng STR          | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in number of generation. |
+-pop STR/FLT           | Population sizes are defined by a single numerical constant, or a string which specifies the population size on each branch. The string can be input through command line or a file. By **default**, population size 10,000 is used.|
+-mm STR/FLT            | Multiple merger parameters are defined by a single numerical constant, or a string which speifies the parameter on each branch. The string can be input through command line or a file. By **default**, Kingman coalescent is used.|
+-S INT INT ...         | Specify the number of samples for each taxon.|
+-num INT               | The number of gene trees will be simulated.|
+-seed INT           | User define random SEED|
+-mu FLT               | User defined constant mutation rate per locus. By **default** mutation rate 0.00005 is used.|
+-o STR _[option]_   | Specify the file name prefix for simulated gene trees. Prefix is set as "OUT" by **default**, When options are not specified, only output trees with branch lengths are in coalescent unit.|
+_-sim\_mut\_unit_    | Convert the simulated gene tree branch lengths to mutation unit.|
+_-sim\_num\_gener_ | Convert the simulated gene tree branch lengths to number of generations.|
+_-sim\_num\_mut_     | Simulate numbers of mutations on each branch of simulated gene trees.|
+_-sim\_Si\_num_  | Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.|
+-f                   | Generate a topology frequency table of a set of input trees or simulated gene trees. |
+-gt STR             | Specify the FILE NAME of trees to analyse tree topology frequencies.|
+-seg  |  Generate segregating site data.|
+-mt STR  |  Specify the FILE NAME of trees to generate segregating site data. Tree branch lengths indicate number of mutations on the branch.|
+-mono                | Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. |
+-plot/-dot _[option]_  | Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).|
+-_branch_            | Branch lengths will be labelled in the figure.|
 
 ##Examples:
 ```bash
