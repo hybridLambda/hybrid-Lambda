@@ -51,10 +51,10 @@ Options              | Useage
 -seed INT           | User define random SEED
 -mu FLT               | User defined constant mutation rate per locus. By **default** mutation rate 0.00005 is used.
 -o STR [option]   | Specify the file name prefix for simulated gene trees. Prefix is set as "OUT" by **default**, When options are not specified, only output trees with branch lengths are in coalescent unit.
-[-sim_mut_unit]        | Convert the simulated gene tree branch lengths to mutation unit.
-[-sim_num_gener]       | Convert the simulated gene tree branch lengths to number of generations.
-[-sim_num_mut]         | Simulate numbers of mutations on each branch of simulated gene trees.
-[-sim_Si_num]          | Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.
+-sim_mut_unit        | Convert the simulated gene tree branch lengths to mutation unit.
+-sim_num_gener       | Convert the simulated gene tree branch lengths to number of generations.
+-sim_num_mut         | Simulate numbers of mutations on each branch of simulated gene trees.
+-sim_Si_num          | Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.
 -f                   | Generate a topology frequency table of a set of input trees or simulated gene trees. 
 -gt STR             | Specify the FILE NAME of trees to analyse tree topology frequencies.
 -seg  |  Generate segregating site data.
