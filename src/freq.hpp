@@ -1,4 +1,4 @@
-/*/*
+/*
  * hybrid-Lambda is used to simulate gene trees given species network under 
  * coalescent process.
  * 
