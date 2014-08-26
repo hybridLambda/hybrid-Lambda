@@ -54,8 +54,8 @@ Options                  | Useage |
 -o STR _[option]_   | Specify the file name prefix for simulated gene trees. Prefix is set as "OUT" by **default**, When options are not specified, only output trees with branch lengths are in coalescent unit.|
 -_sim\_mut\_unit_    | Convert the simulated gene tree branch lengths to mutation unit.|
 -_sim\_num\_gener_ | Convert the simulated gene tree branch lengths to number of generations.|
-_-sim\_num\_mut_     | Simulate numbers of mutations on each branch of simulated gene trees.|
-_-sim\_Si\_num_  | Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.|
+-_sim\_num\_mut_     | Simulate numbers of mutations on each branch of simulated gene trees.|
+-_sim\_Si\_num_  | Generate a table, which includes the number of segregating sites and the total branch length of the gene tree, as well as the TMRCA.|
 -f                   | Generate a topology frequency table of a set of input trees or simulated gene trees. |
 -gt STR             | Specify the FILE NAME of trees to analyse tree topology frequencies.|
 -seg  |  Generate segregating site data.|
