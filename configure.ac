@@ -64,27 +64,6 @@ AC_CHECK_FUNCS([floor])
 AC_CHECK_FUNCS([pow])
 AC_HEADER_STDBOOL
 
-DX_INIT_DOXYGEN(hybrid-Lambda, Doxyfile, html/)
-DX_HTML_FEATURE(ON)
-DX_CHM_FEATURE(OFF)
-DX_CHI_FEATURE(OFF)
-DX_MAN_FEATURE(OFF)
-DX_RTF_FEATURE(OFF)
-DX_XML_FEATURE(OFF)
-DX_PDF_FEATURE(OFF)
-DX_PS_FEATURE(OFF)
-
-
-# Check for presence of pdfLaTeX
-#AC_CHECK_PROG(PDFLATEX, pdflatex, pdflatex)
-#AC_CHECK_PROG(BIBTEX, bibtex,bibtex)
-#if test -z "$PDFLATEX"; then
-  #AC_MSG_WARN([Unable to create PDF version of the user manual.])
-#fi
-
-#AM_CONDITIONAL([HAVE_PDFLATEX], test -n "$PDFLATEX")
-
-#AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
