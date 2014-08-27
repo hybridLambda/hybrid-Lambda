@@ -8,7 +8,7 @@ script:
 - ./tests/test_binaries.sh
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq libcppunit-dev valgrind
+- sudo apt-get install -qq libcppunit-dev valgrind libboost-all-dev
 before_script:
 - CXXFLAGS='-O3' ./bootstrap
 os:
