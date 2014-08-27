@@ -7,7 +7,7 @@ script:
 - make unit_tests
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq libcppunit-dev valgrind libboost-all-dev
+- sudo apt-get install -qq libcppunit-dev libboost-all-dev graphviz
 before_script:
 - ./bootstrap
 os:
