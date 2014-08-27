@@ -1,3 +1,5 @@
+Hybrid-Lambda
+=============
 
 Hybrid-Lambda is a software package that can simulate gene trees within a rooted
 species network or a rooted species tree under the coalescent process. The
@@ -6,6 +8,8 @@ Kingman coalescent process, which produces bifurcating genealogies, or two
 other Lambda coalescent processes, which produce multifurcating genealo-
 gies. The other feature is that hybrid sim uses extended Newick formatted
 strings to make it easier to represent hybridization events between species.
+
+[![Build Status](https://travis-ci.org/shajoezhu/hybrid-Lambda.svg)](https://travis-ci.org/shajoezhu/hybrid-Lambda)
 
 
 ##INSTALLATION
