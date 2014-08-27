@@ -22,7 +22,7 @@
 */
 #include <cppunit/TestCase.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include "../src/figure.hpp"
+#include "src/figure.hpp"
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
 class TestFigure : public CppUnit::TestCase {
