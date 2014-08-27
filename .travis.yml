@@ -9,7 +9,7 @@ before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq libcppunit-dev valgrind libboost-all-dev
 before_script:
-- CXXFLAGS='-O3' ./bootstrap
+- ./bootstrap
 os:
   - linux
   - osx
