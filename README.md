@@ -11,6 +11,9 @@ strings to make it easier to represent hybridization events between species.
 
 [![Build Status](https://travis-ci.org/shajoezhu/hybrid-Lambda.svg?branch=master)](https://travis-ci.org/shajoezhu/hybrid-Lambda)
 
+
+##[DOCUMENTATION](http://shajoezhu.github.io/hybrid-Lambda/doc/manual.pdf)
+
 ##INSTALLATION
 To install hybrid-Lambda, first install the following packages and libraries
 
