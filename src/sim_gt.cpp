@@ -353,7 +353,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.push_back(remaining_gt_node[0]);// introducing a new lineage gamma
 
 
-				gt_nodes_ptr[remaining_gt_node[0]]->absolute_time=gt_nodes_ptr[remaining_gt_node[0]]->child[0]->absolute_time+gt_nodes_ptr[remaining_gt_node[0]]->child[0]->brchlen1; // a_gamma <- a_alpha + b_alpha
+				gt_nodes_ptr[remaining_gt_node[0]]->height=gt_nodes_ptr[remaining_gt_node[0]]->child[0]->height+gt_nodes_ptr[remaining_gt_node[0]]->child[0]->brchlen1; // a_gamma <- a_alpha + b_alpha
 				for ( size_t update_brch_i=0;update_brch_i<my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size()-1;update_brch_i++){
 					gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[update_brch_i]]->brchlen1=gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[update_brch_i]]->brchlen1+length;		
 					if (sim_num_gener_bool){
@@ -453,7 +453,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 					}
 					my_Net.Net_nodes[node_i].Net_node_contains_gt_node2.push_back(remaining_gt_node[0]);
 
-					gt_nodes_ptr[remaining_gt_node[0]]->absolute_time=gt_nodes_ptr[remaining_gt_node[0]]->child[0]->absolute_time+gt_nodes_ptr[remaining_gt_node[0]]->child[0]->brchlen1;
+					gt_nodes_ptr[remaining_gt_node[0]]->height=gt_nodes_ptr[remaining_gt_node[0]]->child[0]->height+gt_nodes_ptr[remaining_gt_node[0]]->child[0]->brchlen1;
 					for ( size_t update_brch_i=0;update_brch_i<my_Net.Net_nodes[node_i].Net_node_contains_gt_node2.size()-1;update_brch_i++){
 						gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[update_brch_i]]->brchlen1=gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[update_brch_i]]->brchlen1+length;		
 						if (sim_num_gener_bool){
@@ -488,22 +488,22 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			}
 					
 			dout<<"*************************before adjusting***************"<<endl;
-			my_gt_coal_unit.print_all_node_dout()	;
+			assert(my_gt_coal_unit.print_all_node_dout());
 			
 			if (rank_i<my_Net.max_rank){
 				if (my_Net.Net_nodes[node_i].parent2){
 					for ( size_t num_lineage_i=0;num_lineage_i<my_Net.Net_nodes[node_i].Net_node_contains_gt_node2.size();num_lineage_i++){
-					//	gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->brchlen1=gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->brchlen1+my_Net.Net_nodes[node_i].parent1->absolute_time-gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->absolute_time;
-					//	gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->absolute_time=my_Net.Net_nodes[node_i].parent1->absolute_time;	
+					//	gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->brchlen1=gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->brchlen1+my_Net.Net_nodes[node_i].parent1->height-gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->height;
+					//	gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node[num_lineage_i]]->height=my_Net.Net_nodes[node_i].parent1->height;	
 						if (sim_num_gener_bool){
-							if ((gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->absolute_time)>  my_Net.Net_nodes[node_i].absolute_time){
-							  num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent2->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->absolute_time)*my_pop_net.Net_nodes[node_i].brchlen2;//+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
+							if ((gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height)>  my_Net.Net_nodes[node_i].height){
+							  num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent2->height - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height)*my_pop_net.Net_nodes[node_i].brchlen2;//+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
 							}
 							else{
-							  num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent2->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->absolute_time- gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1)*my_pop_net.Net_nodes[node_i].brchlen2+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1;						
+							  num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent2->height - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height- gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1)*my_pop_net.Net_nodes[node_i].brchlen2+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1;						
 							}
 						}
-						gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent2->absolute_time -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->absolute_time;
+						gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent2->height -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height;
 					}					
 				}
 				//else{
@@ -511,19 +511,19 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				
 				for ( size_t num_lineage_i=0;num_lineage_i<my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.size();num_lineage_i++){
 					if (sim_num_gener_bool){
-						if ((gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time)>  my_Net.Net_nodes[node_i].absolute_time){
-							num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time)*my_pop_net.Net_nodes[node_i].brchlen1;//+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
+						if ((gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height)>  my_Net.Net_nodes[node_i].height){
+							num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->height - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height)*my_pop_net.Net_nodes[node_i].brchlen1;//+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
 						}
 						else{
-							num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->absolute_time - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time- gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1)*my_pop_net.Net_nodes[node_i].brchlen1+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
+							num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1= (my_Net.Net_nodes[node_i].parent1->height - gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height- gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1)*my_pop_net.Net_nodes[node_i].brchlen1+num_gener_gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
 						}
 					}
-					gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent1->absolute_time -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->absolute_time;
+					gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1=my_Net.Net_nodes[node_i].parent1->height -gt_nodes_ptr[my_Net.Net_nodes[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height;
 				}
 				//}
 				
 					dout<<"************************* after adjusting***************"<<endl;
-					my_gt_coal_unit.print_all_node_dout()	;
+					assert(my_gt_coal_unit.print_all_node_dout());
 
 			}
 			remaining_sp_node.erase(remaining_sp_node.begin()+remaining_sp_node_i);
@@ -659,7 +659,7 @@ void sim_one_gt::Si_num_out_table(Net mt_tree){
 		}
 	}
 		
-	*Si_table_ << setw(12)<< total_brchlen<<setw(14)<<mt_tree.Net_nodes.back().absolute_time<<setw(7)<<this->total_mut<<"  ";
+	*Si_table_ << setw(12)<< total_brchlen<<setw(14)<<mt_tree.Net_nodes.back().height<<setw(7)<<this->total_mut<<"  ";
 	for ( size_t sii=0;sii<S_i.size();sii++){
 		*Si_table_<<setw(4)<<S_i[sii]<<" ";
 	}

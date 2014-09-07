@@ -57,8 +57,8 @@ class Net{
         size_t first_coal_index ();
         void clear(); 
 		void print_all_node();
-		void print_all_node_dout();
-
+		bool print_all_node_dout();
+        ~Net(){};
 		Net (){
 			string net_str;
 			vector <string> tax_name;

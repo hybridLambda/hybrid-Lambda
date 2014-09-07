@@ -37,7 +37,7 @@ class TestHybirdLambda : public CppUnit::TestCase {
  private:
 
     void test_CMD() {
-        char* argv1[] = { "hybrid-Lambda", "-spcu", "../trees/7_tax_sp_nt1_para", "-seg", "-o", "blah", "-sim_mut_unit", "-sim_num_gener" };
+        char* argv1[] = { "hybrid-Lambda", "-spcu", "trees/7_tax_sp_nt1_para", "-seg", "-o", "blah", "-sim_mut_unit", "-sim_num_gener" };
         CPPUNIT_ASSERT_NO_THROW ( HybridLambda( 8, argv1 ) ); 
         CPPUNIT_ASSERT_NO_THROW ( HybridLambda( 7, argv1 ) ); 
         CPPUNIT_ASSERT_NO_THROW ( HybridLambda( 6, argv1 ) );

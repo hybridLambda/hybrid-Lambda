@@ -20,9 +20,12 @@ shared_SOURCES = src/hybridLambda.cpp \
 				 src/utility.cpp \
 				 src/mtrand.cpp \
 				 src/figure.cpp  
+				 
+debug_SOURCES = src/debug/net_debug.cpp \
+			    src/debug/node_debug.cpp
 
 hybrid_Lambda_SOURCES = $(shared_SOURCES) src/main.cpp  
-hybrid_Lambda_dbg_SOURCES = $(shared_SOURCES) src/main.cpp  
+hybrid_Lambda_dbg_SOURCES = $(shared_SOURCES) $(debug_SOURCES) src/main.cpp  
 hybrid_Lambda_prof_SOURCES = $(shared_SOURCES) src/main.cpp  
 
 unit_tests_SOURCES = $(shared_SOURCES) src/tests/test_hybridLambda.cpp src/tests/test_figure.cpp src/tests/test_runner.cpp 

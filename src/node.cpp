@@ -41,153 +41,37 @@ Node::Node(){
 	descndnt_of_hybrid=false;
 	tip_bool=false;
 	//clade=" ";
-	absolute_time=0.0;
+	height=0.0;
 	//prob_to_hybrid_left=1.0;
 	visited = false;
 	//double pAC=0.0;
 }
 
 
-
-
-void Node::print_net_Node(){
-	cout<<setw(12)<<label;
-	cout<<setw(6)<<hybrid;
-	cout<<setw(8)<<descndnt_of_hybrid;
-	cout<<setw(5)<<tip_bool;
-	if (parent1){cout<<setw (11)<<(parent1->label);}
-	else cout<<"           ";
-	cout<<setw (8)<<absolute_time;
-	cout<<setw (8)<<brchlen1;
-	if (parent2){cout<<setw (9)<<parent2->label;}
-	else cout<<"         ";
-	cout<<setw (8)<<brchlen2;
-	cout<<setw (7)<<num_child;
-	cout<<setw (8)<<num_descndnt;
-	cout<<setw(4)<<num_descndnt_interior;
-//	cout<<setw (7)<<current.e_num;
-//	cout<<setw (3)<<current.e_num2;
-	cout<<setw (6)<<rank<<"   ";
+void Node::print( bool is_net ){
+    cout << setw(12) << label;
+	if ( is_net ) cout << setw(6) << hybrid;
+    if ( is_net ) cout << setw(8) << descndnt_of_hybrid;
+	cout << setw(5) << tip_bool;
+    cout << setw (11) << (this->parent1) ? (parent1->label) : "" ;
+	cout << setw (8) << height;
+	cout << setw (8) << brchlen1;
+    if (is_net){
+        cout<<setw (11) << (parent2) ? (parent2->label) : "" ;
+        cout<<setw (8) << brchlen2;
+    }
+	cout << setw (7) << num_child;
+	cout << setw (8) << num_descndnt;
+	cout << setw(4) << num_descndnt_interior;
+	cout << setw(6) << rank << "   ";
 	//for (size_t i=0;i<descndnt.size();i++){
 		//cout<<setw (1)<<descndnt[i];
 	//}
-	cout<<setw(2)<<e_num;
-	cout<<setw(3)<<e_num2;
-	cout<<"    "<<clade;
+	cout << setw(2)<<e_num;
+	if ( is_net ) cout << setw(3) << e_num2;
+	cout << "    " << this->clade;
 	//cout<<endl;
 }
-
-
-void Node::print_tree_Node(){
-	cout<<setw (12)<<label;
-	cout<<setw(5)<<tip_bool;
-	if (parent1){cout<<setw (11)<<(parent1->label);}
-	else cout<<"           ";
-	cout<<setw (11)<<absolute_time;
-	cout<<setw (11)<<brchlen1;
-	cout<<setw (7)<<num_child;
-	cout<<setw (8)<<num_descndnt;
-	cout<<setw(4)<<num_descndnt_interior;
-	cout<<setw (6)<<rank<<"   ";
-	//for (size_t i=0;i<descndnt.size();i++){
-		//cout<<setw (1)<<descndnt[i];
-	//}	
-	cout<<setw(3)<<e_num;
-	cout<<"    "<<clade;
-	//cout<<setw(3)<<num_descndnt_interior;
-}
-
-
-void Node::print_net_Node_dout(){
-	dout<<setw(12)<<label;
-	dout<<setw(6)<<hybrid;
-	dout<<setw(8)<<descndnt_of_hybrid;
-	dout<<setw(5)<<tip_bool;
-	if (parent1){dout<<setw (11)<<(parent1->label);}
-	else dout<<"           ";
-	dout<<setw (8)<<absolute_time;
-	dout<<setw (8)<<brchlen1;
-	if (parent2){dout<<setw (9)<<parent2->label;}
-	else dout<<"         ";
-	dout<<setw (8)<<brchlen2;
-	dout<<setw (7)<<num_child;
-	dout<<setw (8)<<num_descndnt;
-	dout<<setw(4)<<num_descndnt_interior;
-//	dout<<setw (7)<<current.e_num;
-//	dout<<setw (3)<<current.e_num2;
-	dout<<setw (6)<<rank<<"   ";
-	//for (size_t i=0;i<descndnt.size();i++){
-		//dout<<setw (1)<<descndnt[i];
-	//}
-	dout<<setw(2)<<e_num;
-	dout<<setw(3)<<e_num2;
-	dout<<"    "<<clade;
-	//dout<<endl;
-}
-
-
-void Node::print_tree_Node_dout(){
-	dout<<setw (12)<<label;
-	dout<<setw(5)<<tip_bool;
-	if (parent1){dout<<setw (11)<<(parent1->label);}
-	else dout<<"           ";
-	dout<<setw (11)<<absolute_time;
-	dout<<setw (11)<<brchlen1;
-	dout<<setw (7)<<num_child;
-	dout<<setw (8)<<num_descndnt;
-	dout<<setw(4)<<num_descndnt_interior;
-	dout<<setw (6)<<rank<<"   ";
-	//for (size_t i=0;i<descndnt.size();i++){
-		//dout<<setw (1)<<descndnt[i];
-	//}	
-	dout<<setw(3)<<e_num;
-	dout<<"    "<<clade;
-	//dout<<setw(3)<<num_descndnt_interior;
-}
-
-
-
-
-	//~Node(){
-void Node::clear(){
-	//clade=" ";
-	clade.clear();
-	//~clade();
-	label=" ";
-	node_content=" ";
-	num_child=0;
-	num_descndnt=0;
-	parent1=NULL;
-	parent2=NULL;
-	brchlen1=0.0;
-	brchlen2=0.0;
-	rank=0;
-	e_num=0;
-	//visit=0;
-	hybrid=false;
-	e_num2=0;
-	descndnt_of_hybrid=false;
-	tip_bool=false;
-	label.clear();
-	node_content.clear();
-	child.clear();
-	//descndnt.clear();
-}
-
-
-void print_all_child(Node *parent /*! pointer to the parent node*/){
-    cout << parent->label << " has " << parent->num_child << " kids" << endl;
-    for (int i_num_child=0;i_num_child<=parent->num_child-1;i_num_child++){
-        cout<<parent->child[i_num_child]->label<<endl;
-    }
-}
-
-
-void print_parent(Node *child /*! pointer to the child node*/){
-	cout<<child->label<<" has parents "<<endl;
-	cout<<child->parent1->label<<" and "<<child->parent2->label <<endl;
-}
-
 
 /*! \brief Add child node to parent node */
 void add_node(

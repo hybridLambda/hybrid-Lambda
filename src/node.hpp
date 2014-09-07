@@ -45,7 +45,7 @@ class Node {
 	int num_descndnt; /*!< \brief number of the tip nodes, that are descendant from this node */
 	int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
 	vector <double> path_time; 
-	double absolute_time; /*!< \brief distance to the bottom of the tree */
+	double height; /*!< \brief distance to the bottom of the tree */
 	double brchlen1; /*!< \brief Branch length */
 	bool visited;
 	bool descndnt_of_hybrid; /*!< \brief Indicator of descendant of hybrid nodes. It's true, if it is a descendant of hybrid nodes; false, otherwise. */
@@ -67,11 +67,13 @@ class Node {
 	vector <size_t> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	
 	Node(); /*!< \brief Initialize Node class*/
-	void print_net_Node();
-	void print_tree_Node();
-		void print_tree_Node_dout();
-void print_net_Node_dout();
-	void clear();
+	//void print_net_Node();
+	//void print_tree_Node();
+    
+    void print_tree_Node_dout();
+    void print_net_Node_dout();
+    void print( bool is_net );
+	//void clear();
 	
 		
 };

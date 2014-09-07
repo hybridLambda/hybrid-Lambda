@@ -24,8 +24,12 @@
 
 /*! \brief Construct Net object from a (extended) Newick string */
 Net::Net(string old_string /*! input (extended) newick form string */){
-	if (old_string.size()>0){
-
+	if (old_string.size()==0){
+		descndnt.clear();
+		tax_name.clear();
+		Net_nodes.clear();
+        return;
+	}
 		checking_Parenthesis(old_string);
 		net_str=checking_labeled(old_string);
 	
@@ -369,12 +373,8 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		//is_ultrametric=true;
 		is_ultrametric=is_ultrametric_func();
 
-	}
-	else{
-		descndnt.clear();
-		tax_name.clear();
-		Net_nodes.clear();
-	}
+
+
 	//dout<<"Net constructed"<<endl;
 }
 
@@ -398,6 +398,7 @@ string Net::checking_labeled(string in_str){
 		out_str=label_interior_node(in_str);
 	}	
 	return out_str;
+    //return labeled_bool? in_str:label_interior_node(in_str);
 }
 
 
@@ -473,7 +474,7 @@ bool Net::is_ultrametric_func(){
 		//if (!is_ultrametric){
 			//break;
 		//}
-		Net_nodes[node_i].absolute_time=Net_nodes[node_i].path_time[0];
+		Net_nodes[node_i].height=Net_nodes[node_i].path_time[0];
 	}
 	return is_ultrametric_return;
 }
@@ -537,69 +538,21 @@ bool Net::is_net_func(){
 }
 
 void Net::print_all_node(){
-	if ( is_net ){
-		cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			for (size_t j=0;j<descndnt[i].size();j++){
-				cout<<setw(3)<<descndnt[i][j];
-			}
+    if ( this->is_net ) cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
+    else cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
+    for (size_t i=0; i < this->Net_nodes.size(); i++ ){
+        for (size_t j=0; j < this->descndnt[i].size();j++) cout<<setw(3)<<this->descndnt[i][j];
 
-			Net_nodes[i].print_net_Node();
-			cout<<"  ";
-			for (size_t j=0;j<descndnt2[i].size();j++){
-				cout<<setw(3)<<descndnt2[i][j];
-			}
-			cout<<endl;
-		}	
-	}
-	else{
-		cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			for (size_t j=0;j<descndnt[i].size();j++){
-				cout<<setw(3)<<descndnt[i][j];
-			}
-			Net_nodes[i].print_tree_Node();
-						cout<<"  ";
-			for (size_t j=0;j<descndnt2[i].size();j++){
-				cout<<setw(3)<<descndnt2[i][j];
-			}
-			cout<<endl;
-		}	
-	}		
+        //if ( this->is_net ) Net_nodes[i].print_net_Node();
+        //else Net_nodes[i].print_tree_Node();
+        Net_nodes[i].print( this->is_net );
+        cout<<"  ";
+        
+        for (size_t j=0;j<this->descndnt2[i].size();j++) cout<<this->descndnt2[i][j];        
+        cout<<endl;
+    }	
 }
 
-void Net::print_all_node_dout(){
-	if ( is_net ){
-		dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			for (size_t j=0;j<descndnt[i].size();j++){
-				dout<<setw(3)<<descndnt[i][j];
-			}
-
-			//Net_nodes[i].print_net_Node();
-			Net_nodes[i].print_net_Node_dout();
-			dout<<"  ";
-			for (size_t j=0;j<descndnt2[i].size();j++){
-				dout<<descndnt2[i][j];
-			}
-			dout<<endl;
-		}	
-	}
-	else{
-		dout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			for (size_t j=0;j<descndnt[i].size();j++){
-				dout<<setw(3)<<descndnt[i][j];
-			}
-			Net_nodes[i].print_tree_Node_dout();
-						dout<<"  ";
-			for (size_t j=0;j<descndnt2[i].size();j++){
-				dout<<descndnt2[i][j];
-			}
-			dout<<endl;
-		}	
-	}		
-}
 
 /*! \brief Label interior node if the interior nodes of the tree string are not labeled */
 string Net::label_interior_node(string in_str /*!< input newick form string */){
@@ -677,22 +630,22 @@ double para /*! Coalescent parameter or fixed population sizes */){
 size_t Net::first_coal_rank(){
     size_t min_rank = (size_t)Net_nodes.back().rank;
     for (size_t i = 0 ; i < Net_nodes.size(); i++){
-        if ( !Net_nodes[i].tip_bool ){
-            min_rank = ( Net_nodes[i].rank < min_rank ) ?  Net_nodes[i].rank : min_rank ;
-            }
-        }
-    return min_rank;
+        if ( Net_nodes[i].tip_bool ) continue;
+        min_rank = ( Net_nodes[i].rank < min_rank ) ?  Net_nodes[i].rank : min_rank ;
     }
+    return min_rank;
+}
+
 
 size_t Net::first_coal_index (){    
     size_t min_rank = this->first_coal_rank();
     size_t dummy_index = this->Net_nodes.size()-1;
-    double min_coal_time = this->Net_nodes[dummy_index].absolute_time;
+    double min_coal_time = this->Net_nodes[dummy_index].height;
     //cout<<"min_rank = "<<min_rank<<endl;
     for (size_t i = 0 ; i < Net_nodes.size(); i++){
-        if ( this->Net_nodes[i].rank == min_rank &&  this->Net_nodes[i].absolute_time < min_coal_time ){
+        if ( this->Net_nodes[i].rank == min_rank &&  this->Net_nodes[i].height < min_coal_time ){
             dummy_index = i;
-            min_coal_time = this->Net_nodes[dummy_index].absolute_time;
+            min_coal_time = this->Net_nodes[dummy_index].height;
             }
         
         }

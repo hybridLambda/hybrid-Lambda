@@ -175,7 +175,7 @@ void HybridLambda::extract_tmrca(){
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Net gt(gt_tree_str_s[i]);
-        this->extract_file << gt.Net_nodes.back().absolute_time << endl;
+        this->extract_file << gt.Net_nodes.back().height << endl;
     }
     this->extract_file.close();
     std::clog << "TMRCA file is saved at: "<< extract_file_name << "\n";
@@ -210,7 +210,7 @@ void HybridLambda::extract_firstcoal(){
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Net gt(gt_tree_str_s[i]);
         size_t first_coal_index_dummy = gt.first_coal_index();
-        extract_file << gt.Net_nodes[first_coal_index_dummy].absolute_time << "\t" << gt.Net_nodes[first_coal_index_dummy].clade << endl;
+        extract_file << gt.Net_nodes[first_coal_index_dummy].height << "\t" << gt.Net_nodes[first_coal_index_dummy].clade << endl;
     }
     this->extract_file.close();
     std::clog << "First Coalescent event is saved at: "<< extract_file_name << "\n";
