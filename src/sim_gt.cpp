@@ -277,7 +277,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			//here to choose go left or right for hybrid node.			
 			if (my_Net.Net_nodes[node_i].parent2){
 				dout<<"hybrid node"<<endl;
-				vector < unsigned int > Net_node_contains_gt_node_dummy=my_Net.Net_nodes[node_i].Net_node_contains_gt_node1;
+				vector < size_t > Net_node_contains_gt_node_dummy=my_Net.Net_nodes[node_i].Net_node_contains_gt_node1;
 				my_Net.Net_nodes[node_i].Net_node_contains_gt_node1.clear();
 				double left_para=extract_hybrid_para(my_Net.Net_nodes[node_i].label);
 				for ( size_t contains_gt_node_i=0;contains_gt_node_i<Net_node_contains_gt_node_dummy.size();contains_gt_node_i++){

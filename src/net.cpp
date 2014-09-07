@@ -100,8 +100,8 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			istr>>Net_nodes[new_i_label].brchlen1;
 		}
 		//int repeated_num_node=0;
-		for (unsigned int i=1;i<Net_nodes.size()-1;i++){
-			unsigned int j;
+		for (size_t i=1;i<Net_nodes.size()-1;i++){
+			size_t j;
 			for ( j=i+1;j<Net_nodes.size()-1;j++){
 				if (Net_nodes[j].label==Net_nodes[i].label){
 					//repeated_num_node++;
@@ -124,14 +124,14 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			}
 		}
 		//bool multi_label_bool=false;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<Net_nodes.size();i++){
 			if(Net_nodes[i].label==Net_nodes[i].node_content){
 				if (Net_nodes[i].label.find("_")>0){
 					//multi_label_bool=true;
 					Net_nodes[i].name=Net_nodes[i].label.substr(0,Net_nodes[i].label.find("_"));
 					//cout<<Net_nodes[i].name<<endl;
 					bool new_tax_bool=true;
-					for (unsigned int tax_i=0;tax_i<tax_name.size();tax_i++){
+					for (size_t tax_i=0;tax_i<tax_name.size();tax_i++){
 						if (tax_name[tax_i]==Net_nodes[i].name){
 							new_tax_bool=false;
 							break;
@@ -150,7 +150,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		}
 		sort(tax_name.begin(), tax_name.end());
 		sort(tip_name.begin(), tip_name.end());
-		//for (unsigned int i=0;i<Net_nodes.size();i++){
+		//for (size_t i=0;i<Net_nodes.size();i++){
 				//valarray <int> intial_descndnt(0,tax_name.size());
 				//descndnt.push_back(intial_descndnt);
 		//}
@@ -158,17 +158,17 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			//dout<<"Net::Net flag3"<<endl;
 		
 		vector <Node*> Net_nodes_ptr;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<Net_nodes.size();i++){
 			Net_nodes[i].node_index=i;
 			Node* new_node_ptr=NULL;
 			Net_nodes_ptr.push_back(new_node_ptr);
 			Net_nodes_ptr[i]=&Net_nodes[i];
 		}
-		for (unsigned int i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<Net_nodes.size();i++){
 			if (Net_nodes[i].node_content[0]=='('){
 				char child_node1[Net_nodes[i].node_content.length()];
-				unsigned int i_content_len;
-				unsigned int j_content_len;
+				size_t i_content_len;
+				size_t j_content_len;
 				for (i_content_len=1;i_content_len<Net_nodes[i].node_content.length();){
 					//if (Net_nodes[i].node_content[i_content_len]=='(' ||  isalpha(Net_nodes[i].node_content[i_content_len])){	
 					if (Net_nodes[i].node_content[i_content_len]=='(' ||  start_of_tax_name(Net_nodes[i].node_content,i_content_len) ){	
@@ -190,7 +190,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 							}
 							string child_node1_str=child_node1;		
 							i_content_len=j_content_len+2;
-							for (unsigned int j=0;j<Net_nodes.size();j++){
+							for (size_t j=0;j<Net_nodes.size();j++){
 								if (child_node1_str==Net_nodes[j].label){
 									add_node(Net_nodes_ptr[i],Net_nodes_ptr[j]);
 								}
@@ -209,13 +209,13 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		find_hybrid_descndnt(Net_nodes_ptr.back());
 		max_rank=ranking(Net_nodes_ptr.back());
 	
-		for (unsigned int i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<Net_nodes.size();i++){
 			valarray <int> descndnt_dummy(0,tax_name.size());
 			descndnt.push_back(descndnt_dummy);
 			valarray <int> descndnt2_dummy(0,tip_name.size());
 			descndnt2.push_back(descndnt2_dummy);
 			//dout<<Net_nodes_ptr[i]->name<<"  "<<Net_nodes_ptr[i]->label<<"  "<<Net_nodes_ptr[i]->tip_bool << " ";
-			for (unsigned int tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
+			for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 				//dout<<Net_nodes_ptr[i]->label<<"   "<<tax_name[tax_name_i]<<"  ";
 				if (find_descndnt(Net_nodes_ptr[i],tax_name[tax_name_i])){
 					descndnt[i][tax_name_i]=1;
@@ -223,7 +223,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 				//dout<<descndnt[i][tax_name_i];
 			}
 			//dout<<endl;
-			for (unsigned int tip_name_i=0;tip_name_i<tip_name.size();tip_name_i++){
+			for (size_t tip_name_i=0;tip_name_i<tip_name.size();tip_name_i++){
 				if (find_descndnt2(Net_nodes_ptr[i],tip_name[tip_name_i])){
 					descndnt2[i][tip_name_i]=1;
 				}
@@ -233,8 +233,8 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			//dout<<"Net::Net flag5"<<endl;
 		
 		//num_descndnt_interior(Net_nodes_ptr.back()); //replace by following
-		for (unsigned int i=0;i<Net_nodes_ptr.size();i++){
-			for (unsigned int j=0;j<Net_nodes_ptr.size();j++){
+		for (size_t i=0;i<Net_nodes_ptr.size();i++){
+			for (size_t j=0;j<Net_nodes_ptr.size();j++){
 				if (i!=j){
 					valarray <int> descndnt_diff=(descndnt[i]-descndnt[j]);
 					if (descndnt_diff.min() >= 0 && Net_nodes[i].rank > Net_nodes[j].rank && Net_nodes[j].rank>=2){
@@ -255,16 +255,16 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		
 		//dout<<descndnt.size()<<endl;
 		//dout<<net_str<<endl;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<Net_nodes.size();i++){
 			//Net_nodes[i].print_tree_Node();
 			//cout<<endl;
-			//for (unsigned int tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
+			//for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 				//cout<<descndnt[i][tax_name_i];
 			//}
 			//cout<<endl;
 			//cout<<i<<" "<<Net_nodes[i].name<<" " <<Net_nodes[i].label<<Net_nodes[i].clade<<endl;
 			//cout<<tax_name.size()<<endl;
-			for (unsigned int tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
+			for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 				//cout<<tax_name[tax_name_i]<<endl;
 				if (descndnt[i][tax_name_i] == 1){
 					//cout<<i<<" "<<Net_nodes[i].label<<" "<<Net_nodes[i].clade<<endl;
@@ -285,9 +285,9 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 
 		//check for coaleased tips(& sign in the tips)
 		bool rewrite_descndnt=false;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<Net_nodes.size();i++){
 			if (Net_nodes[i].tip_bool ){
-				for (unsigned int i_str=0;i_str<Net_nodes[i].clade.size();i_str++){
+				for (size_t i_str=0;i_str<Net_nodes[i].clade.size();i_str++){
 					if (Net_nodes[i].clade[i_str]=='&'){
 						rewrite_descndnt=true;
 						break;
@@ -303,7 +303,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			tax_name.clear();
 			int tax_name_start=0;
 			int tax_name_length=0;
-			for (unsigned int new_i_str=0;new_i_str<Net_nodes.back().clade.size();new_i_str++){
+			for (size_t new_i_str=0;new_i_str<Net_nodes.back().clade.size();new_i_str++){
 				tax_name_length++;
 				if (Net_nodes.back().clade[new_i_str]=='&'){
 					tax_name_length--;
@@ -320,12 +320,12 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			descndnt.clear();
 		//	cout<<descndnt.size()<<endl;
 			//~descndnt();
-			for (unsigned int i=0;i<Net_nodes.size();i++){
+			for (size_t i=0;i<Net_nodes.size();i++){
 				vector <string> contained_tips;
 				valarray <int> re_initial_descndnt(0,tax_name.size());
 				int tax_name_start=0;
 				int tax_name_length=0;
-				for (unsigned int new_i_str=0;new_i_str<Net_nodes[i].clade.size();new_i_str++){
+				for (size_t new_i_str=0;new_i_str<Net_nodes[i].clade.size();new_i_str++){
 					tax_name_length++;
 					if (Net_nodes.back().clade[new_i_str]=='&'){
 						tax_name_length--;
@@ -337,8 +337,8 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 						contained_tips.push_back(Net_nodes[i].clade.substr(tax_name_start,tax_name_length));
 					}
 				}
-				for (unsigned int tax_i=0;tax_i<tax_name.size();tax_i++){
-					for (unsigned int contained_tax_i=0;contained_tax_i<contained_tips.size();contained_tax_i++){
+				for (size_t tax_i=0;tax_i<tax_name.size();tax_i++){
+					for (size_t contained_tax_i=0;contained_tax_i<contained_tips.size();contained_tax_i++){
 						if (tax_name[tax_i]==contained_tips[contained_tax_i]){
 							//descndnt[i][tax_i]=1;
 							re_initial_descndnt[tax_i]=1;
@@ -348,9 +348,9 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 				descndnt.push_back(re_initial_descndnt);
 			}
 			
-			for (unsigned int i=0;i<Net_nodes.size();i++){
+			for (size_t i=0;i<Net_nodes.size();i++){
 				Net_nodes[i].clade=" ";
-				for (unsigned int tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
+				for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 					if (descndnt[i][tax_name_i] == 1){
 						if (Net_nodes[i].clade == " "){
 							Net_nodes[i].clade=tax_name[tax_name_i];
@@ -406,15 +406,15 @@ string Net::checking_labeled(string in_str){
 bool Net::is_ultrametric_func(){
 	bool is_ultrametric_return=true;
 	vector <int> remaining_node(Net_nodes.size(),0);
-	for (unsigned int node_i=0;node_i<Net_nodes.size();node_i++){
+	for (size_t node_i=0;node_i<Net_nodes.size();node_i++){
 		remaining_node[node_i]=node_i;
 	
 	}
 	//cout<<remaining_node.size()<<endl;
 	//for (int rank_i=1;rank_i<=max_rank;rank_i++){
-		//for (unsigned int node_i=0;node_i<Net_nodes.size();node_i++){
+		//for (size_t node_i=0;node_i<Net_nodes.size();node_i++){
 	int rank_i=1;
-	unsigned int remaining_node_i=0;	
+	size_t remaining_node_i=0;	
 	while (remaining_node.size()>0){
 		//remaining_node_i=0;
 		int node_i=remaining_node[remaining_node_i];
@@ -425,7 +425,7 @@ bool Net::is_ultrametric_func(){
 				Net_nodes[node_i].path_time.push_back(0.0);
 			}
 			else{
-				for (unsigned int child_i=0;child_i<Net_nodes[node_i].child.size();child_i++){
+				for (size_t child_i=0;child_i<Net_nodes[node_i].child.size();child_i++){
 					double current_child_time;
 					if (Net_nodes[node_i].child[child_i]->parent1->label==Net_nodes[node_i].label){
 						current_child_time=Net_nodes[node_i].child[child_i]->brchlen1;
@@ -439,7 +439,7 @@ bool Net::is_ultrametric_func(){
 						//}
 							
 					}
-					for (unsigned int child_i_time_i=0;child_i_time_i<Net_nodes[node_i].child[child_i]->path_time.size();child_i_time_i++){
+					for (size_t child_i_time_i=0;child_i_time_i<Net_nodes[node_i].child[child_i]->path_time.size();child_i_time_i++){
 						Net_nodes[node_i].path_time.push_back(current_child_time+Net_nodes[node_i].child[child_i]->path_time[child_i_time_i]);
 					}
 				}
@@ -458,10 +458,10 @@ bool Net::is_ultrametric_func(){
 		}
 	}
 	//}
-	for (unsigned int node_i=0;node_i<Net_nodes.size();node_i++){
+	for (size_t node_i=0;node_i<Net_nodes.size();node_i++){
 		//bool node_i_path_time_eq=true;
 		//cout<<Net_nodes[node_i].label<<"  ";
-		for (unsigned int path_time_i=0;path_time_i<Net_nodes[node_i].path_time.size();path_time_i++){
+		for (size_t path_time_i=0;path_time_i<Net_nodes[node_i].path_time.size();path_time_i++){
 			if (pow((Net_nodes[node_i].path_time[path_time_i]-Net_nodes[node_i].path_time[0]),2)>0.000001){
 				is_ultrametric_return=false;
 				//cout<<Net_nodes[node_i].label<<endl;
@@ -527,7 +527,7 @@ void Net::clear(){
 bool Net::is_net_func(){
 	//false stands for tree, true stands for net_work
 	bool is_net_return=false;
-	for (unsigned int i=0;i<Net_nodes.size();i++){
+	for (size_t i=0;i<Net_nodes.size();i++){
 		if (Net_nodes[i].parent2){
 			is_net_return=true;
 			break;
@@ -539,14 +539,14 @@ bool Net::is_net_func(){
 void Net::print_all_node(){
 	if ( is_net ){
 		cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
-			for (unsigned int j=0;j<descndnt[i].size();j++){
+		for (size_t i=0;i<Net_nodes.size();i++){
+			for (size_t j=0;j<descndnt[i].size();j++){
 				cout<<setw(3)<<descndnt[i][j];
 			}
 
 			Net_nodes[i].print_net_Node();
 			cout<<"  ";
-			for (unsigned int j=0;j<descndnt2[i].size();j++){
+			for (size_t j=0;j<descndnt2[i].size();j++){
 				cout<<setw(3)<<descndnt2[i][j];
 			}
 			cout<<endl;
@@ -554,13 +554,13 @@ void Net::print_all_node(){
 	}
 	else{
 		cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
-			for (unsigned int j=0;j<descndnt[i].size();j++){
+		for (size_t i=0;i<Net_nodes.size();i++){
+			for (size_t j=0;j<descndnt[i].size();j++){
 				cout<<setw(3)<<descndnt[i][j];
 			}
 			Net_nodes[i].print_tree_Node();
 						cout<<"  ";
-			for (unsigned int j=0;j<descndnt2[i].size();j++){
+			for (size_t j=0;j<descndnt2[i].size();j++){
 				cout<<setw(3)<<descndnt2[i][j];
 			}
 			cout<<endl;
@@ -571,15 +571,15 @@ void Net::print_all_node(){
 void Net::print_all_node_dout(){
 	if ( is_net ){
 		dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
-			for (unsigned int j=0;j<descndnt[i].size();j++){
+		for (size_t i=0;i<Net_nodes.size();i++){
+			for (size_t j=0;j<descndnt[i].size();j++){
 				dout<<setw(3)<<descndnt[i][j];
 			}
 
 			//Net_nodes[i].print_net_Node();
 			Net_nodes[i].print_net_Node_dout();
 			dout<<"  ";
-			for (unsigned int j=0;j<descndnt2[i].size();j++){
+			for (size_t j=0;j<descndnt2[i].size();j++){
 				dout<<descndnt2[i][j];
 			}
 			dout<<endl;
@@ -587,13 +587,13 @@ void Net::print_all_node_dout(){
 	}
 	else{
 		dout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-		for (unsigned int i=0;i<Net_nodes.size();i++){
-			for (unsigned int j=0;j<descndnt[i].size();j++){
+		for (size_t i=0;i<Net_nodes.size();i++){
+			for (size_t j=0;j<descndnt[i].size();j++){
 				dout<<setw(3)<<descndnt[i][j];
 			}
 			Net_nodes[i].print_tree_Node_dout();
 						dout<<"  ";
-			for (unsigned int j=0;j<descndnt2[i].size();j++){
+			for (size_t j=0;j<descndnt2[i].size();j++){
 				dout<<descndnt2[i][j];
 			}
 			dout<<endl;
@@ -658,7 +658,7 @@ double para /*! Coalescent parameter or fixed population sizes */){
 	}
 	Net para_Net(in_str);
 	vector <Node*> para_Net_node_ptr;
-	for (unsigned int node_i=0;node_i<para_Net.Net_nodes.size();node_i++){
+	for (size_t node_i=0;node_i<para_Net.Net_nodes.size();node_i++){
 		Node* new_node_ptr=NULL;
         para_Net_node_ptr.push_back(new_node_ptr);
         para_Net_node_ptr[node_i]=&para_Net.Net_nodes[node_i];

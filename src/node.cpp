@@ -68,7 +68,7 @@ void Node::print_net_Node(){
 //	cout<<setw (7)<<current.e_num;
 //	cout<<setw (3)<<current.e_num2;
 	cout<<setw (6)<<rank<<"   ";
-	//for (unsigned int i=0;i<descndnt.size();i++){
+	//for (size_t i=0;i<descndnt.size();i++){
 		//cout<<setw (1)<<descndnt[i];
 	//}
 	cout<<setw(2)<<e_num;
@@ -89,7 +89,7 @@ void Node::print_tree_Node(){
 	cout<<setw (8)<<num_descndnt;
 	cout<<setw(4)<<num_descndnt_interior;
 	cout<<setw (6)<<rank<<"   ";
-	//for (unsigned int i=0;i<descndnt.size();i++){
+	//for (size_t i=0;i<descndnt.size();i++){
 		//cout<<setw (1)<<descndnt[i];
 	//}	
 	cout<<setw(3)<<e_num;
@@ -116,7 +116,7 @@ void Node::print_net_Node_dout(){
 //	dout<<setw (7)<<current.e_num;
 //	dout<<setw (3)<<current.e_num2;
 	dout<<setw (6)<<rank<<"   ";
-	//for (unsigned int i=0;i<descndnt.size();i++){
+	//for (size_t i=0;i<descndnt.size();i++){
 		//dout<<setw (1)<<descndnt[i];
 	//}
 	dout<<setw(2)<<e_num;
@@ -137,7 +137,7 @@ void Node::print_tree_Node_dout(){
 	dout<<setw (8)<<num_descndnt;
 	dout<<setw(4)<<num_descndnt_interior;
 	dout<<setw (6)<<rank<<"   ";
-	//for (unsigned int i=0;i<descndnt.size();i++){
+	//for (size_t i=0;i<descndnt.size();i++){
 		//dout<<setw (1)<<descndnt[i];
 	//}	
 	dout<<setw(3)<<e_num;
@@ -318,23 +318,23 @@ void find_hybrid_descndnt(Node *current/*! pointer to a node*/){
 /*! \brief rewrite node content of nodes */
 void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing to nodes */){
 	int highest_i=0;
-	for (unsigned int i =0; i<Net_ptr.size();i++){
+	for (size_t i =0; i<Net_ptr.size();i++){
 		if (Net_ptr[i]->num_descndnt > Net_ptr[highest_i]->num_descndnt ){highest_i=i;}
 	}
 	
-	//for (unsigned int node_i=0;node_i<Net_ptr.size();node_i++){
+	//for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
 		//Net_ptr[node_i]->print_net_Node();
 		//cout<<endl;
 	//}
 	
 	ranking(Net_ptr[highest_i]);
 	//cout<<Net_ptr[highest_i]->node_content<<endl;
-	//for (unsigned int node_i=0;node_i<Net_ptr.size();node_i++){
+	//for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
 		//Net_ptr[node_i]->print_net_Node();
 		//cout<<endl;
 	//}
 	for (int rank_i=1;rank_i<=Net_ptr.back()->rank;rank_i++){
-		for (unsigned int node_i=0;node_i<Net_ptr.size();node_i++){
+		for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
 			if (Net_ptr[node_i]->rank==1){
 				Net_ptr[node_i]->node_content=Net_ptr[node_i]->label;
 			}
@@ -349,7 +349,7 @@ void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing
 						new_node_content=new_node_content+Net_ptr[node_i]->child[child_i]->label+":"+brchlen_str.str();}
 					else{
 						bool new_hybrid_node=false;
-						for (unsigned int node_ii=0;node_ii<node_i;node_ii++){
+						for (size_t node_ii=0;node_ii<node_i;node_ii++){
 							for (int node_ii_child_i=0;node_ii_child_i<Net_ptr[node_ii]->num_child;node_ii_child_i++){
 								if (Net_ptr[node_ii]->child[node_ii_child_i]->node_content==Net_ptr[node_i]->child[child_i]->node_content){
 									new_hybrid_node=true;
@@ -376,7 +376,7 @@ void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing
 			}
 		}	
 	}
-	//for (unsigned int i =0; i<Net_ptr.size();i++){
+	//for (size_t i =0; i<Net_ptr.size();i++){
 		//cout<<Net_ptr[i]->label<<" "<<Net_ptr[i]->node_content<<endl;//<<"!!!!";
 	//}
 }

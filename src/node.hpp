@@ -39,7 +39,7 @@ class Node {
 	string label; /*!< \brief String label of a node, each node has unique label */
 	string node_content; /*!< \brief node content, the subtree string at this node */
 //	class Net * SubNetwork; /*!< \brief \todo pointer to the subtree of this node */
-	unsigned int e_num; /*!< \brief numbering the branch */
+	size_t e_num; /*!< \brief numbering the branch */
 	int rank; /*!< \brief rank of the node, tip node has rank one, the root has the highest rank */
 	int num_child; /*!< \brief number of child \todo this can be replaced by child.size */
 	int num_descndnt; /*!< \brief number of the tip nodes, that are descendant from this node */
@@ -51,20 +51,20 @@ class Node {
 	bool descndnt_of_hybrid; /*!< \brief Indicator of descendant of hybrid nodes. It's true, if it is a descendant of hybrid nodes; false, otherwise. */
 	bool tip_bool; /*!< \brief Indicator of tip nodes. It's true, if it is a tip node, otherwise it is false. */
 	
-	unsigned int node_index; /*!< \brief node index in the array, \todo use this more often!!!*/
+	size_t node_index; /*!< \brief node index in the array, \todo use this more often!!!*/
 	
 	
 	/* These members apply to only hybrid nodes */
 	bool hybrid; /*!< \brief Hybrid node only, indicator of a hybrid node */
 	Node* parent2; /*!< \brief Hybrid node only, pointer to its second parent node. */
-	unsigned int e_num2; /*!< \brief Hybrid node only, numbering the branch between the node and its second parent */
+	size_t e_num2; /*!< \brief Hybrid node only, numbering the branch between the node and its second parent */
 	//double prob_to_hybrid_left; /*!< \brief Hybrid node only, the probability that a lineage goes to the left */
 	double brchlen2;/*!< \brief Hybrid node only, Branch length to the second parent*/
 
 	string name; /*!< \brief Name of a node, this is not unique for nodes. e.g. if its label is A_1, name is A */
 	
-	vector <unsigned int> Net_node_contains_gt_node1; /*!< Used while simulation, check if a Network node contains a gene tree node */
-	vector <unsigned int> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
+	vector <size_t> Net_node_contains_gt_node1; /*!< Used while simulation, check if a Network node contains a gene tree node */
+	vector <size_t> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	
 	Node(); /*!< \brief Initialize Node class*/
 	void print_net_Node();
