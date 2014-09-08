@@ -27,8 +27,8 @@
 #include <iostream> //std::cout
 #include <string>
 #include <fstream>
-#include<cassert>
-#include<stdexcept>
+#include <cassert>
+#include <stdexcept>
 #include <sstream> //std::istringstream
 
 //Unless compiled with options NDEBUG, we will produce a debug output using 
@@ -45,15 +45,12 @@ using namespace std;
 #ifndef GLOBAL_H
 #define GLOBAL_H	
 
-bool start_of_tax_name(string in_str,size_t i);
 string remove_interior_label(string in_str);
 string rm_and_hash_sign(string in_str);
 string rm_and_sign(string in_str);
 string rm_hash_sign(string in_str);
 //void check_and_remove(const char* file_name);
-size_t Parenthesis_balance_index_backwards(string in_str,size_t i);
-size_t Parenthesis_balance_index_forwards(string in_str,size_t i);
-void checking_Parenthesis(string in_str);
+
 string extract_label(string in_str, size_t i);
 size_t end_of_label_or_bl(string in_str, size_t i);
 size_t hybrid_hash_index(string in_str);

@@ -120,5 +120,6 @@ double kingman_bl(double num_lineage);
 
 string write_para_into_tree(string sp_string, double para);
 
+string construct_adding_new_Net_str(Net & old_Net);
 
 #endif

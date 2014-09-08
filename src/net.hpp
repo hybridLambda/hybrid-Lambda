@@ -21,8 +21,8 @@
 */
 
 //net.hpp
-#include"node.hpp"
-#include<valarray>
+#include "node.hpp"
+#include <valarray>
 
 /*!\file net.cpp
  *  \brief Core function of converting a Newick (extended Newick) format string into a species tree (network), and simple string manipulation for tree strings
@@ -33,13 +33,14 @@
 
 
 /*! \brief Network class*/
-class Net{	
+class Net{
+    friend class HybridLambda;
+    friend class sim_one_gt;
 	private:
-		string checking_labeled(string in_str);
+		
 		string label_interior_node(string in_str);
 		void enumerate_internal_branch( Node &node );
-		void check_isNet(); /*!< \brief To determin if a Net is network or not. \return is_Net */
-		bool is_ultrametric_func(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
+		
 	    size_t first_coal_rank();
         size_t current_enum_;
         void init(){
@@ -47,9 +48,34 @@ class Net{
             this->is_Net = false;
             this->is_ultrametric = true;
             }
+
+        bool start_of_tax_name(string in_str, size_t i);
+        size_t Parenthesis_balance_index_backwards( string &in_str, size_t i );
+        size_t Parenthesis_balance_index_forwards( string &in_str, size_t i );
+        
+        void check_Parenthesis(string &in_str);
+        void check_labeled( string in_str );
+        
+        void check_isNet(); /*!< \brief To determin if a Net is network or not. \return is_Net */
+		void check_isUltrametric(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
+
+        size_t first_coal_index ();
+        //void clear(); 
+		void print_all_node();
+		bool print_all_node_dout();
+        
+        string rewrite_internal_node_content( size_t i);       
+        void connect_graph();
+        void extract_tax_and_tip_names();
+        
+        void init_descendant();
+        void init_node_clade();
+        void rewrite_descendant();
+        void rewrite_node_clade();
         
 	public:	
-		string net_str; /*!< \brief species network string \todo this is new!!!*/
+		void rewrite_node_content();
+        string net_str; /*!< \brief species network string \todo this is new!!!*/
 		size_t max_rank;
 		vector< valarray <int> > descndnt;
 		vector< valarray <int> > descndnt2;
@@ -60,12 +86,9 @@ class Net{
 		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
 		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
 		
-        size_t first_coal_index ();
-        //void clear(); 
-		void print_all_node();
-		bool print_all_node_dout();
+
         ~Net(){};
-        Net (){this->init();};
+        Net (){ this->init(); }
 		//Net (){
 			//string net_str;
 			//vector <string> tax_name;
@@ -77,5 +100,4 @@ class Net{
 		Net(string Net_str);
 };
 
-string construct_adding_new_Net_str(Net old_Net);
 #endif

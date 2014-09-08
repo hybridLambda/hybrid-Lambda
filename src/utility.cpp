@@ -25,67 +25,6 @@
 
 #include"utility.hpp"
 
-/*! \brief Identify if its the start of the taxon name in a newick string, should be replaced by using (isalpha() || isdigit())  */
-bool start_of_tax_name(string in_str,size_t i){
-	bool start_bool=false;
-	if ( (in_str[i]!='(' && in_str[i-1]=='(') || (in_str[i-1]==',' && in_str[i]!='(') || ( (in_str[i-1]==')') && ( in_str[i]!=')' || in_str[i]!=':' || in_str[i]!=',' || in_str[i]!=';' ) ) ) {
-		start_bool=true;	
-	}
-	
-	return 	start_bool;
-}
-
-/*! \brief Checking Parenthesis of a (extended) Newick string */
-void checking_Parenthesis(string in_str){
-	int num_b=0;
-	for (size_t i=0;i<in_str.size();i++){
-		if (in_str[i]=='('){
-			num_b++;
-		}
-		if (in_str[i]==')'){
-			num_b--;
-		}
-	}
-	if (num_b!=0){
-		throw std::invalid_argument(in_str + "Parenthesis not balanced!" );
-	}
-}
-
-size_t Parenthesis_balance_index_backwards(string in_str,size_t i){
-	size_t j=i;
-	int num_b=0;
-	for (;j>0;j--){
-		if (in_str[j]=='('){
-			num_b--;
-		}
-		if (in_str[j]==')'){
-			num_b++;
-		}
-		if (num_b==0){
-			break;
-		}
-	}
-	return j;
-}
-
-size_t Parenthesis_balance_index_forwards(string in_str,size_t i){
-	size_t j=i;
-	int num_b=0;
-	for (;j<in_str.size();j++){
-		if (in_str[j]=='('){
-			num_b++;
-		}
-		if (in_str[j]==')'){
-			num_b--;
-		}
-		if (num_b==0){
-			break;
-		}
-	}
-	return j;
-}
-
-
 /*! \brief Remove interior nodes label of a string */
 string remove_interior_label(string in_str/*!< input newick form string */){
 	string out_str;
@@ -105,9 +44,6 @@ string remove_interior_label(string in_str/*!< input newick form string */){
 
 	return out_str;
 }
-
-
-
 
 
 /*! \brief Remove the '&' and '#' signs from a string \return string */
@@ -134,13 +70,13 @@ string rm_hash_sign( string in_str ){
 	return in_str;
 }
 
+
 string rm_and_sign(string in_str){
 	while (int(in_str.find('&'))>0 && in_str.find('&')!=string::npos) {
 		in_str.erase(in_str.find('&'),1);
 	}
 	return in_str;
 }
-
 
 
 size_t end_of_label_or_bl(string in_str, size_t i){

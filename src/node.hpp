@@ -29,6 +29,8 @@
 /*! \brief Node of a tree or network, it also represent the branch between this node and its parent node
  */
 
+enum NAMETYPE { TAXA, TIP };
+
 class Node {
     friend class Net;
     friend class sim_one_gt;
@@ -43,7 +45,7 @@ class Node {
 	string node_content; /*!< \brief node content, the subtree string at this node */
     
 	size_t rank() const { return this->rank_; }
-	int num_child; /*!< \brief number of child \todo this can be replaced by child.size */
+	//int num_child; /*!< \brief number of child \todo this can be replaced by child.size */
 	int num_descndnt; /*!< \brief number of the tip nodes, that are descendant from this node */
 	int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
 	vector <double> path_time; 
@@ -66,7 +68,7 @@ class Node {
 	vector <size_t> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	
 	Node(); /*!< \brief Initialize Node class*/
-            
+    void add_child( Node *child_node /*! pointer to the child node*/);
     void CalculateRank();
     
         size_t e_num() const {return this->e_num_;}
@@ -96,12 +98,9 @@ class Node {
         size_t e_num2_;   /*!< \brief Hybrid node only, numbering the branch between the node and its second parent */
         double brchlen1_; /*!< \brief Branch length */
         double brchlen2_;/*!< \brief Hybrid node only, Branch length to the second parent*/
+        
+        bool find_descndnt ( string name, NAMETYPE type );
 };
-
-void add_node(Node *parent_node, Node *child_node);
-bool find_descndnt(Node* current, string taxname);
-bool find_descndnt2(Node* current, string taxname);
-void rewrite_node_content(vector <Node*> Net_ptr);
 
 
 #endif

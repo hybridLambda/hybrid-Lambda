@@ -333,10 +333,12 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 						gt_child_node_index=my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[lineage_index];
 						gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( gt_nodes_ptr[gt_child_node_index]->brchlen1() + length ); // b_alpha <- b_alpha + l
 
-						add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
+						//add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
+                        gt_nodes_ptr[remaining_gt_node[0]]->add_child( gt_nodes_ptr[gt_child_node_index] );
 						if (sim_num_gener_bool){
 							num_gener_gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( num_gener_gt_nodes_ptr[gt_child_node_index]->brchlen1()+(length * my_pop_net.NodeContainer[node_i].brchlen1()) ) ; // b_alpha <- b_alpha + l*pop_size
-							add_node(num_gener_gt_nodes_ptr[remaining_gt_node[0]],num_gener_gt_nodes_ptr[gt_child_node_index]);
+							//add_node(num_gener_gt_nodes_ptr[remaining_gt_node[0]],num_gener_gt_nodes_ptr[gt_child_node_index]);
+                            num_gener_gt_nodes_ptr[remaining_gt_node[0]]->add_child(num_gener_gt_nodes_ptr[gt_child_node_index]);
 						}
 						my_gt_coal_unit.descndnt[remaining_gt_node[0]]=my_gt_coal_unit.descndnt[remaining_gt_node[0]]+my_gt_coal_unit.descndnt[gt_child_node_index];
 						if (sim_num_gener_bool){
@@ -433,10 +435,12 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 							lineage_index= rand() % my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.size();
 							gt_child_node_index=my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[lineage_index];
 							gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( gt_nodes_ptr[gt_child_node_index]->brchlen1() + length ); // b_alpha <- b_alpha + l
-							add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
+							//add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
+                            gt_nodes_ptr[remaining_gt_node[0]]->add_child( gt_nodes_ptr[gt_child_node_index] );
 							if (sim_num_gener_bool){
 								num_gener_gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( num_gener_gt_nodes_ptr[gt_child_node_index]->brchlen1() + length*my_pop_net.NodeContainer[node_i].brchlen2() ); // b_alpha <- b_alpha + l
-								add_node(num_gener_gt_nodes_ptr[remaining_gt_node[0]],num_gener_gt_nodes_ptr[gt_child_node_index]);
+								//add_node(num_gener_gt_nodes_ptr[remaining_gt_node[0]],num_gener_gt_nodes_ptr[gt_child_node_index]);
+                                num_gener_gt_nodes_ptr[remaining_gt_node[0]]->add_child( num_gener_gt_nodes_ptr[gt_child_node_index] );
 							}
 							my_gt_coal_unit.descndnt[remaining_gt_node[0]]=my_gt_coal_unit.descndnt[remaining_gt_node[0]]+my_gt_coal_unit.descndnt[gt_child_node_index];
 							if (sim_num_gener_bool){
@@ -573,14 +577,16 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	}
 	
 
-	//if (!my_gt_coal_unit.is_ultrametric_func()){throw "not ultrametic";}
+	//if (!my_gt_coal_unit.check_isUltrametric()){throw "not ultrametic";}
 	
 
-	rewrite_node_content(gt_nodes_ptr);
+	//rewrite_node_content(gt_nodes_ptr);
+    my_gt_coal_unit.rewrite_node_content();
 	string old_gt_string_coal_unit=gt_nodes_ptr.back()->node_content+gt_nodes_ptr.back()->label+";";
 
 	if (sim_num_gener_bool){
-		rewrite_node_content(num_gener_gt_nodes_ptr);
+        my_gt_num_gener.rewrite_node_content();
+		//rewrite_node_content(num_gener_gt_nodes_ptr);
 		string old_gt_string_num_gener=num_gener_gt_nodes_ptr.back()->node_content+num_gener_gt_nodes_ptr.back()->label+";";
 		gt_string_gener_num=remove_interior_label(old_gt_string_num_gener);
 	}
@@ -630,7 +636,8 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			}
 			mt_nodes_ptr[brch_index]->set_brchlen1 ( mt_nodes_ptr[brch_index]->brchlen1() + 1 );
 		}
-		rewrite_node_content(mt_nodes_ptr);
+		//rewrite_node_content(mt_nodes_ptr);
+        mt_tree.rewrite_node_content();
 		gt_string_mut_num=mt_nodes_ptr.back()->node_content+mt_nodes_ptr.back()->label+";";
 		gt_string_mut_num=remove_interior_label(gt_string_mut_num);
 		
@@ -706,15 +713,11 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
 
 void sim_one_gt::build_gt_string_mut_unit(double mutation_rate){
 	Net gt_mut_unit(gt_string_gener_num);
-	vector <Node*> gt_mut_unit_nodes_ptr; // for removal
 	for ( size_t i = 0; i < gt_mut_unit.NodeContainer.size(); i++){
-		Node* new_node_ptr=NULL; // for removal
-		gt_mut_unit_nodes_ptr.push_back(new_node_ptr); // for removal
-		gt_mut_unit_nodes_ptr[i]=&gt_mut_unit.NodeContainer[i]; // for removal
 		gt_mut_unit.NodeContainer[i].set_brchlen1 ( gt_mut_unit.NodeContainer[i].brchlen1() * mutation_rate );
 	}
-	rewrite_node_content(gt_mut_unit_nodes_ptr);
-	gt_string_mut_unit=gt_mut_unit_nodes_ptr.back()->node_content+gt_mut_unit_nodes_ptr.back()->label+";";
+    gt_mut_unit.rewrite_node_content();
+    gt_string_mut_unit = gt_mut_unit.NodeContainer.back().node_content + gt_mut_unit.NodeContainer.back().label + ";";
 	gt_string_mut_unit=remove_interior_label(gt_string_mut_unit);
 }
 
@@ -763,21 +766,17 @@ string write_sp_string_in_coal_unit(string sp_num_gener_string /*! Network in ex
 string pop_size_string /*! Network in extended newick form, branch lengths are the population sizes*/){
 	Net sp_num_gener_net(sp_num_gener_string);
 	Net pop_size_net(pop_size_string);
-	
-	vector <Node*> sp_num_gener_net_node_ptr;
-	for ( size_t node_i=0;node_i<sp_num_gener_net.NodeContainer.size();node_i++){
-		Node* new_node_ptr=NULL;
-        sp_num_gener_net_node_ptr.push_back(new_node_ptr);
-        sp_num_gener_net_node_ptr[node_i]=&sp_num_gener_net.NodeContainer[node_i];
-		if (node_i<sp_num_gener_net.NodeContainer.size()-1){
-			sp_num_gener_net_node_ptr[node_i]->set_brchlen1 ( sp_num_gener_net_node_ptr[node_i]->brchlen1() / pop_size_net.NodeContainer[node_i].brchlen1() );
+	for ( size_t node_i=0; node_i < sp_num_gener_net.NodeContainer.size(); node_i++){
+		if ( node_i < sp_num_gener_net.NodeContainer.size()-1 ){
+			sp_num_gener_net.NodeContainer[node_i].set_brchlen1 ( sp_num_gener_net.NodeContainer[node_i].brchlen1() / pop_size_net.NodeContainer[node_i].brchlen1() );
 			if ( pop_size_net.NodeContainer[node_i].hybrid ){
-				sp_num_gener_net_node_ptr[node_i]->set_brchlen2( sp_num_gener_net_node_ptr[node_i]->brchlen2() / pop_size_net.NodeContainer[node_i].brchlen2() );
+				sp_num_gener_net.NodeContainer[node_i].set_brchlen2 ( sp_num_gener_net.NodeContainer[node_i].brchlen2() / pop_size_net.NodeContainer[node_i].brchlen2() );
 			}
 		}
 	}
-	rewrite_node_content(sp_num_gener_net_node_ptr);
-	string sp_coal_unit_string=construct_adding_new_Net_str(sp_num_gener_net);
+    sp_num_gener_net.rewrite_node_content();
+	//rewrite_node_content(sp_num_gener_net_node_ptr);
+	string sp_coal_unit_string = construct_adding_new_Net_str(sp_num_gener_net);
 	
 	return sp_coal_unit_string;
 }
@@ -791,21 +790,16 @@ string rewrite_pop_string_by_para_string(
 	){
 	Net para_net_check(para_string);
 	Net pop_size_check(pop_size_string);
-	vector <Node*> pop_size_node_ptr;
-	for ( size_t node_i=0;node_i<para_net_check.NodeContainer.size();node_i++){
-		Node* new_node_ptr=NULL;
-		pop_size_node_ptr.push_back(new_node_ptr);
-		pop_size_node_ptr[node_i]=&pop_size_check.NodeContainer[node_i];
-		if (para_net_check.NodeContainer[node_i].brchlen1() < 2 && para_net_check.NodeContainer[node_i].brchlen1() > 1){ // rescale the number of generations for alpha
-			pop_size_node_ptr[node_i]->set_brchlen1 ( pow(pop_size_node_ptr[node_i]->brchlen1(), para_net_check.NodeContainer[node_i].brchlen1()-1) );
+	for ( size_t node_i = 0; node_i < para_net_check.NodeContainer.size(); node_i++){
+		if ( para_net_check.NodeContainer[node_i].brchlen1() < 2 && para_net_check.NodeContainer[node_i].brchlen1() > 1){ // rescale the number of generations for alpha
+			pop_size_check.NodeContainer[node_i].set_brchlen1 ( pow( pop_size_check.NodeContainer[node_i].brchlen1(), para_net_check.NodeContainer[node_i].brchlen1() - 1 ) );
 		}
-		if (para_net_check.NodeContainer[node_i].hybrid){
-			if (para_net_check.NodeContainer[node_i].brchlen2() < 2 && para_net_check.NodeContainer[node_i].brchlen2() > 1){
-				pop_size_node_ptr[node_i]->set_brchlen2 ( pow(pop_size_node_ptr[node_i]->brchlen2(), para_net_check.NodeContainer[node_i].brchlen2()-1) );
-			}
-		}
+        if ( !pop_size_check.NodeContainer[node_i].hybrid ) continue;
+        if ( para_net_check.NodeContainer[node_i].brchlen2() < 2 && para_net_check.NodeContainer[node_i].brchlen2() > 1){
+            pop_size_check.NodeContainer[node_i].set_brchlen2 ( pow(pop_size_check.NodeContainer[node_i].brchlen2(), para_net_check.NodeContainer[node_i].brchlen2()-1) );
+        }
 	}
-	rewrite_node_content(pop_size_node_ptr);
+    pop_size_check.rewrite_node_content();
 	string pop_size_string_return = construct_adding_new_Net_str(pop_size_check);
 	return pop_size_string_return;
 }
@@ -856,20 +850,27 @@ double para /*! Coalescent parameter or fixed population sizes */){
 		throw std::invalid_argument("Please define the input tree (network).");
 	}
 	Net para_Net(in_str);
-	vector <Node*> para_Net_node_ptr; // for removal
 	for ( size_t i = 0; i < para_Net.NodeContainer.size(); i++){
-		Node* new_node_ptr=NULL; // for removal
-        para_Net_node_ptr.push_back(new_node_ptr); // for removal
-        para_Net_node_ptr[i]=&para_Net.NodeContainer[i]; // for removal
-        
 		para_Net.NodeContainer[i].set_brchlen1( para );
 		if ( para_Net.NodeContainer[i].hybrid ){
             para_Net.NodeContainer[i].set_brchlen2( para );
-			//para_Net_node_ptr[i]->brchlen2=para;
 		}
 	}
-	//para_Net.NodeContainer.back()->brchlen1=para;
-	rewrite_node_content(para_Net_node_ptr);
-	string para_string=construct_adding_new_Net_str(para_Net);
-	return para_string;	
+    para_Net.rewrite_node_content();
+	return construct_adding_new_Net_str(para_Net);
+}
+
+
+string construct_adding_new_Net_str(Net &in_Net){
+	//string out_str;
+	//out_str=in_Net.NodeContainer.back().node_content;
+	//out_str=out_str+in_Net.NodeContainer.back().label;
+    string out_str = in_Net.NodeContainer.back().node_content + in_Net.NodeContainer.back().label;
+	if (in_Net.NodeContainer.back().brchlen1()!=0){
+		ostringstream brchlen_str;
+		brchlen_str<<in_Net.NodeContainer.back().brchlen1();
+		out_str=out_str+":"+brchlen_str.str();
+	}
+	out_str.push_back(';');
+	return out_str;
 }

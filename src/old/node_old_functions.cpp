@@ -94,3 +94,34 @@ int ranking(Node *current){
 	
 	return current_rank=current->rank;
 }
+
+
+/*! \brief Add child node to parent node */
+void add_node(
+Node *parent_node /*! pointer to the parent node*/, 
+Node *child_node /*! pointer to the child node*/){
+    parent_node->child.push_back(child_node);
+	if (child_node->parent1){
+		child_node->parent2=parent_node;
+		child_node->hybrid=true;
+	}
+	else {
+		child_node->parent1=parent_node;
+		//cout<<child_node->label<<" parent1 is "<<child_node->parent1->label<<endl;
+	}
+	//Node *kidspintr=parent_node->child[parent_node->num_child];
+	//parent_node->num_child++;
+} 
+
+
+bool Node::find_descndnt2 ( string taxname ){	
+	if ( this->tip_bool ) return ( this->label == taxname ) ? true : false;
+	else {
+        bool descndnt_found = false;
+    	for ( size_t i = 0; i < this->child.size(); i++ ){
+            descndnt_found = this->child[i].find_descndnt2( taxname );
+            if ( descndnt_found ) break;
+		}
+        return descndnt_found;
+	}	
+}

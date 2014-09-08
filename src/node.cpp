@@ -25,7 +25,7 @@
 Node::Node(){
 	label=" ";
 	node_content=" ";
-	num_child=0;
+	//num_child=0;
 	num_descndnt=0;
 	num_descndnt_interior=0;
 	parent1=NULL;
@@ -58,7 +58,7 @@ void Node::print( bool is_Net ){
         cout<<setw (11) << (parent2) ? (parent2->label) : "" ;
         cout<<setw (8) << this->brchlen2();
     }
-	cout << setw (7) << num_child;
+	cout << setw (7) << this->child.size();
 	cout << setw (8) << num_descndnt;
 	cout << setw(4) << num_descndnt_interior;
 	cout << setw(6) << this->rank() << "   ";
@@ -72,20 +72,13 @@ void Node::print( bool is_Net ){
 }
 
 /*! \brief Add child node to parent node */
-void add_node(
-Node *parent_node /*! pointer to the parent node*/, 
-Node *child_node /*! pointer to the child node*/){
-    parent_node->child.push_back(child_node);
-	if (child_node->parent1){
-		child_node->parent2=parent_node;
-		child_node->hybrid=true;
+void Node::add_child( Node *child_node /*! pointer to the child node*/){
+    this->child.push_back(child_node);
+	if ( child_node->parent1 ){
+		child_node->parent2 = (this);
+		child_node->hybrid = true;
 	}
-	else {
-		child_node->parent1=parent_node;
-		//cout<<child_node->label<<" parent1 is "<<child_node->parent1->label<<endl;
-	}
-	//Node *kidspintr=parent_node->child[parent_node->num_child];
-	parent_node->num_child++;
+	else child_node->parent1 = (this);
 } 
 
 
@@ -106,44 +99,19 @@ void Node::CalculateRank(){
 }
 
 
-bool find_descndnt(Node* current, string taxname){
-	bool descndnt_found=false;
-	if (current->tip_bool){
-		if (current->name==taxname){
-			descndnt_found=true;
-		}
-	}
+bool Node::find_descndnt ( string name, NAMETYPE type ){	
+	if ( this->tip_bool ) {
+        string tmp = ( type == TAXA ) ? this->name : this->label;
+        return ( tmp == name ) ? true : false;
+    }
 	else {
-		for (int i=0;i<current->num_child;i++){
-			if (find_descndnt(current->child[i],taxname)){
-				descndnt_found=true;
-				break;
-			}
+        bool descndnt_found = false;
+		for (size_t i = 0; i < this->child.size(); i++ ){
+            descndnt_found = this->child[i]->find_descndnt( name, type );
+            if ( descndnt_found ) break;
 		}
+        return descndnt_found;
 	}	
-	return descndnt_found;
-}
-
-bool find_descndnt2(Node* current, string taxname){
-	bool descndnt_found=false;
-	if (current->tip_bool){
-		if (current->label==taxname){
-			descndnt_found=true;
-		}
-		else{
-			descndnt_found=false;
-		}
-	}
-	else {
-		for (int i=0;i<current->num_child;i++){
-			if (find_descndnt2(current->child[i],taxname)){
-				descndnt_found=true;
-				break;
-			}
-			else descndnt_found=false;
-		}
-	}	
-	return descndnt_found;
 }
 
 
@@ -156,68 +124,6 @@ void Node::find_tip(){
             //this->child[ith_child]->find_tip();
 		}
 	}
-}
-
-
-/*! \brief rewrite node content of nodes */
-void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing to nodes */){
-	int highest_i=0;
-	for (size_t i =0; i<Net_ptr.size();i++){
-		if (Net_ptr[i]->num_descndnt > Net_ptr[highest_i]->num_descndnt ){highest_i=i;}
-	}
-	
-	//for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
-		//Net_ptr[node_i]->print_net_Node();
-		//cout<<endl;
-	//}
-	Net_ptr[highest_i]->CalculateRank();
-
-	for (int rank_i=1;rank_i<=Net_ptr.back()->rank();rank_i++){
-		for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
-			if (Net_ptr[node_i]->rank()==1){
-				Net_ptr[node_i]->node_content=Net_ptr[node_i]->label;
-			}
-			else{
-			if (Net_ptr[node_i]->rank()==rank_i){
-				string new_node_content="(";
-				for (int child_i=0;child_i<Net_ptr[node_i]->num_child;child_i++){
-					ostringstream brchlen_str;
-					ostringstream brchlen_str2;
-					brchlen_str << Net_ptr[node_i]->child[child_i]->brchlen1();
-					if (Net_ptr[node_i]->child[child_i]->node_content==Net_ptr[node_i]->child[child_i]->label){
-						new_node_content=new_node_content+Net_ptr[node_i]->child[child_i]->label+":"+brchlen_str.str();}
-					else{
-						bool new_hybrid_node=false;
-						for (size_t node_ii=0;node_ii<node_i;node_ii++){
-							for (int node_ii_child_i=0;node_ii_child_i<Net_ptr[node_ii]->num_child;node_ii_child_i++){
-								if (Net_ptr[node_ii]->child[node_ii_child_i]->node_content==Net_ptr[node_i]->child[child_i]->node_content){
-									new_hybrid_node=true;
-									brchlen_str2 << Net_ptr[node_i]->child[child_i]->brchlen2();
-								break;}
-							}
-							//if (new_hybrid_node==1){break;}
-						}
-						if (new_hybrid_node){
-							new_node_content=new_node_content+Net_ptr[node_i]->child[child_i]->label+":"+brchlen_str2.str();
-						}
-						else{
-							new_node_content=new_node_content+Net_ptr[node_i]->child[child_i]->node_content+Net_ptr[node_i]->child[child_i]->label+":"+brchlen_str.str();
-						}
-					}
-					//new_node_content=new_node_content+sp_nodes_ptr_rm1[node_i]->child[child_i]->node_content+sp_nodes_ptr_rm1[node_i]->child[child_i]->label+":"+brchlen_str.str();
-					if (child_i<Net_ptr[node_i]->num_child-1){
-						new_node_content=new_node_content+",";
-					}
-				}
-				new_node_content=new_node_content+")";
-				Net_ptr[node_i]->node_content=new_node_content;
-				}
-			}
-		}	
-	}
-	//for (size_t i =0; i<Net_ptr.size();i++){
-		//cout<<Net_ptr[i]->label<<" "<<Net_ptr[i]->node_content<<endl;//<<"!!!!";
-	//}
 }
 
 
