@@ -30,11 +30,11 @@ Node::Node(){
 	num_descndnt_interior=0;
 	parent1=NULL;
 	parent2=NULL;
-	brchlen1=0.0;
-	brchlen2=0.0;
-	this->rank_    = 0;
-	this->e_num_   = 0;
-	this->e_num2_  = 0;
+	this->brchlen1_ = 0.0;
+	this->brchlen2_ = 0.0;
+	this->rank_     = 0;
+	this->e_num_    = 0;
+	this->e_num2_   = 0;
 	//visit=0;
 	hybrid=false;
 	descndnt_of_hybrid=false;
@@ -53,10 +53,10 @@ void Node::print( bool is_Net ){
 	cout << setw(5) << tip_bool;
     cout << setw (11) << (this->parent1) ? (parent1->label) : "" ;
 	cout << setw (8) << height;
-	cout << setw (8) << brchlen1;
+	cout << setw (8) << this->brchlen1();
     if (is_Net){
         cout<<setw (11) << (parent2) ? (parent2->label) : "" ;
-        cout<<setw (8) << brchlen2;
+        cout<<setw (8) << this->brchlen2();
     }
 	cout << setw (7) << num_child;
 	cout << setw (8) << num_descndnt;
@@ -152,7 +152,8 @@ void Node::find_tip(){
 	if ( this->child.size() == 0) this->tip_bool = true;
 	else {
 		for ( size_t ith_child = 0; ith_child < this->child.size(); ith_child++ ){
-			this->child[ith_child]->find_tip();
+			(*this->child[ith_child]).find_tip();
+            //this->child[ith_child]->find_tip();
 		}
 	}
 }
@@ -182,7 +183,7 @@ void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing
 				for (int child_i=0;child_i<Net_ptr[node_i]->num_child;child_i++){
 					ostringstream brchlen_str;
 					ostringstream brchlen_str2;
-					brchlen_str<<Net_ptr[node_i]->child[child_i]->brchlen1;
+					brchlen_str << Net_ptr[node_i]->child[child_i]->brchlen1();
 					if (Net_ptr[node_i]->child[child_i]->node_content==Net_ptr[node_i]->child[child_i]->label){
 						new_node_content=new_node_content+Net_ptr[node_i]->child[child_i]->label+":"+brchlen_str.str();}
 					else{
@@ -191,7 +192,7 @@ void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing
 							for (int node_ii_child_i=0;node_ii_child_i<Net_ptr[node_ii]->num_child;node_ii_child_i++){
 								if (Net_ptr[node_ii]->child[node_ii_child_i]->node_content==Net_ptr[node_i]->child[child_i]->node_content){
 									new_hybrid_node=true;
-									brchlen_str2<<Net_ptr[node_i]->child[child_i]->brchlen2;
+									brchlen_str2 << Net_ptr[node_i]->child[child_i]->brchlen2();
 								break;}
 							}
 							//if (new_hybrid_node==1){break;}

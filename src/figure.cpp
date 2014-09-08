@@ -163,11 +163,11 @@ void Figure::plot_core(){
 		string sp_node_parent1_label=obj_net.NodeContainer[node_i].parent1->label;
 		sp_node_parent1_label=rm_and_hash_sign(sp_node_parent1_label);
 
-        this->edge_entry(sp_node_label, sp_node_parent1_label, obj_net.NodeContainer[node_i].e_num(), obj_net.NodeContainer[node_i].brchlen1, !obj_net.NodeContainer[node_i].tip_bool);
+        this->edge_entry(sp_node_label, sp_node_parent1_label, obj_net.NodeContainer[node_i].e_num(), obj_net.NodeContainer[node_i].brchlen1(), !obj_net.NodeContainer[node_i].tip_bool);
         if (obj_net.NodeContainer[node_i].parent2){
             string sp_node_parent2_label=obj_net.NodeContainer[node_i].parent2->label;
             sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
-            this->edge_entry( sp_node_label, sp_node_parent2_label, obj_net.NodeContainer[node_i].e_num2(), obj_net.NodeContainer[node_i].brchlen2, !obj_net.NodeContainer[node_i].tip_bool);
+            this->edge_entry( sp_node_label, sp_node_parent2_label, obj_net.NodeContainer[node_i].e_num2(), obj_net.NodeContainer[node_i].brchlen2(), !obj_net.NodeContainer[node_i].tip_bool);
         }
 	}
 }

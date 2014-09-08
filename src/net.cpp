@@ -95,9 +95,10 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			NodeContainer[new_i_label].label=labels[new_i_label];
 			NodeContainer[new_i_label].node_content=node_contents[new_i_label];
 			//cout<<NodeContainer[new_i_label].label<<" "<<NodeContainer[new_i_label].node_content<<endl;
-			string s(brchlens[new_i_label]);
-			istringstream istr(s);
-			istr>>NodeContainer[new_i_label].brchlen1;
+			//string s(brchlens[new_i_label]);
+			//istringstream istr(s);
+			//istr>>NodeContainer[new_i_label].brchlen1;
+            NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
 		}
 		//int repeated_num_node=0;
 		for (size_t i=1;i<NodeContainer.size()-1;i++){
@@ -113,7 +114,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 	//					brch_ptr_i=brch_ptr_j;
 					}
 	//				else{
-					NodeContainer[i].brchlen2=NodeContainer[j].brchlen1;
+					NodeContainer[i].set_brchlen2 ( NodeContainer[j].brchlen1() );
 	//				}
 					break;
 				}
@@ -204,7 +205,8 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		//cout<<descndnt.size()<<endl;
 		
 			//dout<<"Net::Net flag4"<<endl;
-        NodeContainer_ptr.back()->find_tip();
+        //NodeContainer_ptr.back()->find_tip();
+        this->NodeContainer.back().find_tip();
 		NodeContainer_ptr.back()->find_hybrid_descndnt();
         NodeContainer_ptr.back()->CalculateRank();
         this->max_rank = NodeContainer_ptr.back()->rank();
@@ -393,8 +395,6 @@ string Net::checking_labeled(string in_str){
 }
 
 
-
-
 bool Net::is_ultrametric_func(){
 	bool is_ultrametric_return=true;
 	vector <int> remaining_node(NodeContainer.size(),0);
@@ -411,14 +411,17 @@ bool Net::is_ultrametric_func(){
 				NodeContainer[node_i].path_time.push_back(0.0);
 			}
 			else{
-				for (size_t child_i=0;child_i<NodeContainer[node_i].child.size();child_i++){
-					double current_child_time;
-					if (NodeContainer[node_i].child[child_i]->parent1->label==NodeContainer[node_i].label){
-						current_child_time=NodeContainer[node_i].child[child_i]->brchlen1;
-					}
-					else{
-                        current_child_time=NodeContainer[node_i].child[child_i]->brchlen2;							
-					}
+				for (size_t child_i = 0; child_i < NodeContainer[node_i].child.size(); child_i++ ){
+					//double current_child_time;
+					//if (NodeContainer[node_i].child[child_i]->parent1->label==NodeContainer[node_i].label){
+						//current_child_time=NodeContainer[node_i].child[child_i]->brchlen1();
+					//}
+					//else{
+                        //current_child_time=NodeContainer[node_i].child[child_i]->brchlen2();
+					//}
+                    double current_child_time = (NodeContainer[node_i].child[child_i]->parent1->label==NodeContainer[node_i].label)?					
+						                        NodeContainer[node_i].child[child_i]->brchlen1():
+                                                NodeContainer[node_i].child[child_i]->brchlen2();
 					for (size_t child_i_time_i=0;child_i_time_i<NodeContainer[node_i].child[child_i]->path_time.size();child_i_time_i++){
 						NodeContainer[node_i].path_time.push_back(current_child_time+NodeContainer[node_i].child[child_i]->path_time[child_i_time_i]);
 					}
@@ -457,9 +460,6 @@ bool Net::is_ultrametric_func(){
 	}
 	return is_ultrametric_return;
 }
-
-
-
 
 
 void Net::check_isNet(){ //false stands for tree, true stands for net_work
@@ -527,17 +527,14 @@ string construct_adding_new_Net_str(Net in_Net){
 	//out_str=in_Net.NodeContainer.back().node_content;
 	//out_str=out_str+in_Net.NodeContainer.back().label;
     string out_str = in_Net.NodeContainer.back().node_content + in_Net.NodeContainer.back().label;
-	if (in_Net.NodeContainer.back().brchlen1!=0){
+	if (in_Net.NodeContainer.back().brchlen1()!=0){
 		ostringstream brchlen_str;
-		brchlen_str<<in_Net.NodeContainer.back().brchlen1;
+		brchlen_str<<in_Net.NodeContainer.back().brchlen1();
 		out_str=out_str+":"+brchlen_str.str();
 	}
 	out_str.push_back(';');
 	return out_str;
 }
-
-
-
 
 
 size_t Net::first_coal_rank(){

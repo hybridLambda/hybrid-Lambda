@@ -48,19 +48,17 @@ class Node {
 	int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
 	vector <double> path_time; 
 	double height; /*!< \brief distance to the bottom of the tree */
-	double brchlen1; /*!< \brief Branch length */
+	
 	
 	bool descndnt_of_hybrid; /*!< \brief Indicator of descendant of hybrid nodes. It's true, if it is a descendant of hybrid nodes; false, otherwise. */
 	bool tip_bool; /*!< \brief Indicator of tip nodes. It's true, if it is a tip node, otherwise it is false. */
 	
 	size_t node_index; /*!< \brief node index in the array, \todo use this more often!!!*/
-	
-	
+		
 	/* These members apply to only hybrid nodes */
 	bool hybrid; /*!< \brief Hybrid node only, indicator of a hybrid node */
 	Node* parent2; /*!< \brief Hybrid node only, pointer to its second parent node. */
 	//double prob_to_hybrid_left; /*!< \brief Hybrid node only, the probability that a lineage goes to the left */
-	double brchlen2;/*!< \brief Hybrid node only, Branch length to the second parent*/
 
 	string name; /*!< \brief Name of a node, this is not unique for nodes. e.g. if its label is A_1, name is A */
 	
@@ -68,17 +66,24 @@ class Node {
 	vector <size_t> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	
 	Node(); /*!< \brief Initialize Node class*/
-        
-    
+            
     void CalculateRank();
     
         size_t e_num() const {return this->e_num_;}
         void set_enum( size_t num ) { this->e_num_ = num; }
+    
         size_t e_num2() const {return this->e_num2_;}
         void set_enum2( size_t num ) { this->e_num2_ = num; }
+    
         bool visited() const { return this->visited_; }
         void set_visited ( bool TorF ){ this->visited_ = TorF; }
-    
+        
+        double brchlen1() const { return this->brchlen1_;}
+        void set_brchlen1 ( double bl ){ this->brchlen1_ = bl; }
+        
+        double brchlen2() const { return this->brchlen2_;}
+        void set_brchlen2 ( double bl ){ this->brchlen2_ = bl; }
+        
     private:    
         void print( bool is_Net );
         void print_dout( bool is_Net );
@@ -89,7 +94,8 @@ class Node {
         bool visited_;
         size_t e_num_;    /*!< \brief numbering the branch */
         size_t e_num2_;   /*!< \brief Hybrid node only, numbering the branch between the node and its second parent */
-
+        double brchlen1_; /*!< \brief Branch length */
+        double brchlen2_;/*!< \brief Hybrid node only, Branch length to the second parent*/
 };
 
 void add_node(Node *parent_node, Node *child_node);
