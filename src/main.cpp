@@ -48,11 +48,11 @@ int main(int argc, char *argv[]){
 //if (run_hybridLambda.fst_bool){
 ////sim::param sim_para(argc, argv);	
 //Net coal_unit_net(sim_para.net_str);
-//double tau = coal_unit_net.Net_nodes[0].brchlen1;
+//double tau = coal_unit_net.NodeContainer[0].brchlen1;
 
 ////Net para_net(sim_para.para_string);
-////double lambdaA  = para_net.Net_nodes[0].brchlen1;
-////double lambdaAB = para_net.Net_nodes.back().brchlen1;
+////double lambdaA  = para_net.NodeContainer[0].brchlen1;
+////double lambdaAB = para_net.NodeContainer.back().brchlen1;
 ////cout<<"tau = " << tau <<endl;
 ////cout << "( 1 - exp( -tau ) )= "<<( 1 - exp( -tau ) )<<endl;
 //Fst = ( 1 - exp( -tau ) ) * ( tau / ( 1 + tau ) );

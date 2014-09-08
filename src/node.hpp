@@ -30,6 +30,9 @@
  */
 
 class Node {
+    friend class Net;
+    friend class sim_one_gt;
+    friend class HybridLambda;
 	public:
 	//vector<int> descndnt;
 	vector<Node*> descndnt_interior_node; /*!< \brief list of pointers to its descndent interior nodes */
@@ -38,16 +41,15 @@ class Node {
 	string clade; /*!< \brief clade at this node, \todo this should be modified to a vector <string> */
 	string label; /*!< \brief String label of a node, each node has unique label */
 	string node_content; /*!< \brief node content, the subtree string at this node */
-//	class Net * SubNetwork; /*!< \brief \todo pointer to the subtree of this node */
-	size_t e_num; /*!< \brief numbering the branch */
-	int rank; /*!< \brief rank of the node, tip node has rank one, the root has the highest rank */
+    
+	size_t rank() const { return this->rank_; }
 	int num_child; /*!< \brief number of child \todo this can be replaced by child.size */
 	int num_descndnt; /*!< \brief number of the tip nodes, that are descendant from this node */
 	int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
 	vector <double> path_time; 
 	double height; /*!< \brief distance to the bottom of the tree */
 	double brchlen1; /*!< \brief Branch length */
-	bool visited;
+	
 	bool descndnt_of_hybrid; /*!< \brief Indicator of descendant of hybrid nodes. It's true, if it is a descendant of hybrid nodes; false, otherwise. */
 	bool tip_bool; /*!< \brief Indicator of tip nodes. It's true, if it is a tip node, otherwise it is false. */
 	
@@ -57,7 +59,6 @@ class Node {
 	/* These members apply to only hybrid nodes */
 	bool hybrid; /*!< \brief Hybrid node only, indicator of a hybrid node */
 	Node* parent2; /*!< \brief Hybrid node only, pointer to its second parent node. */
-	size_t e_num2; /*!< \brief Hybrid node only, numbering the branch between the node and its second parent */
 	//double prob_to_hybrid_left; /*!< \brief Hybrid node only, the probability that a lineage goes to the left */
 	double brchlen2;/*!< \brief Hybrid node only, Branch length to the second parent*/
 
@@ -67,24 +68,35 @@ class Node {
 	vector <size_t> Net_node_contains_gt_node2; /*!< Used while simulation, check if a Network node contains a gene tree node */
 	
 	Node(); /*!< \brief Initialize Node class*/
-	//void print_net_Node();
-	//void print_tree_Node();
+        
     
-    void print_tree_Node_dout();
-    void print_net_Node_dout();
-    void print( bool is_net );
-	//void clear();
-	
-		
+    void CalculateRank();
+    
+        size_t e_num() const {return this->e_num_;}
+        void set_enum( size_t num ) { this->e_num_ = num; }
+        size_t e_num2() const {return this->e_num2_;}
+        void set_enum2( size_t num ) { this->e_num2_ = num; }
+        bool visited() const { return this->visited_; }
+        void set_visited ( bool TorF ){ this->visited_ = TorF; }
+    
+    private:    
+        void print( bool is_Net );
+        void print_dout( bool is_Net );
+        void find_tip();
+        void find_hybrid_descndnt();
+        
+        size_t rank_;     /*!< \brief rank of the node, tip node has rank one, the root has the highest rank */        
+        bool visited_;
+        size_t e_num_;    /*!< \brief numbering the branch */
+        size_t e_num2_;   /*!< \brief Hybrid node only, numbering the branch between the node and its second parent */
+
 };
 
 void add_node(Node *parent_node, Node *child_node);
-void find_tip(Node *current);
-void find_hybrid_descndnt(Node *current);
 bool find_descndnt(Node* current, string taxname);
 bool find_descndnt2(Node* current, string taxname);
 void rewrite_node_content(vector <Node*> Net_ptr);
-int ranking(Node *current);
+
 
 #endif
 

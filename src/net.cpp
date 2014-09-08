@@ -27,9 +27,10 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 	if (old_string.size()==0){
 		descndnt.clear();
 		tax_name.clear();
-		Net_nodes.clear();
+		NodeContainer.clear();
         return;
 	}
+    this->init();
 		checking_Parenthesis(old_string);
 		net_str=checking_labeled(old_string);
 	
@@ -87,106 +88,102 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			}
 		}
 			
-		
-	//		dout<<"Net::Net flag2"<<endl;
-		
-		//vector <Node> Net_nodes;
 		int label_counter=brchlens.size();
 		for (int new_i_label=0;new_i_label<label_counter;new_i_label++){
 			Node empty_node;
-			//empty_node.pAC=0.0;
-			Net_nodes.push_back(empty_node);
-			Net_nodes[new_i_label].label=labels[new_i_label];
-			Net_nodes[new_i_label].node_content=node_contents[new_i_label];
-			//cout<<Net_nodes[new_i_label].label<<" "<<Net_nodes[new_i_label].node_content<<endl;
+			NodeContainer.push_back(empty_node);
+			NodeContainer[new_i_label].label=labels[new_i_label];
+			NodeContainer[new_i_label].node_content=node_contents[new_i_label];
+			//cout<<NodeContainer[new_i_label].label<<" "<<NodeContainer[new_i_label].node_content<<endl;
 			string s(brchlens[new_i_label]);
 			istringstream istr(s);
-			istr>>Net_nodes[new_i_label].brchlen1;
+			istr>>NodeContainer[new_i_label].brchlen1;
 		}
 		//int repeated_num_node=0;
-		for (size_t i=1;i<Net_nodes.size()-1;i++){
+		for (size_t i=1;i<NodeContainer.size()-1;i++){
 			size_t j;
-			for ( j=i+1;j<Net_nodes.size()-1;j++){
-				if (Net_nodes[j].label==Net_nodes[i].label){
+			for ( j=i+1;j<NodeContainer.size()-1;j++){
+				if (NodeContainer[j].label==NodeContainer[i].label){
 					//repeated_num_node++;
-					if (Net_nodes[j].node_content[0]=='('){
-						Net_nodes[i].node_content=Net_nodes[j].node_content;
-	//					Net_nodes[i].brchlen2=Net_nodes[i].brchlen1;
-	//					double* brch_ptr_i=&Net_nodes[i].brchlen1;
-	//					double* brch_ptr_j=&Net_nodes[j].brchlen1;
+					if (NodeContainer[j].node_content[0]=='('){
+						NodeContainer[i].node_content=NodeContainer[j].node_content;
+	//					NodeContainer[i].brchlen2=NodeContainer[i].brchlen1;
+	//					double* brch_ptr_i=&NodeContainer[i].brchlen1;
+	//					double* brch_ptr_j=&NodeContainer[j].brchlen1;
 	//					brch_ptr_i=brch_ptr_j;
 					}
 	//				else{
-					Net_nodes[i].brchlen2=Net_nodes[j].brchlen1;
+					NodeContainer[i].brchlen2=NodeContainer[j].brchlen1;
 	//				}
 					break;
 				}
 			}
-			if (Net_nodes[j].label==Net_nodes[i].label){
-				Net_nodes.erase(Net_nodes.begin()+j);
-			//	Net_nodes_ptr.erase(Net_nodes_ptr.begin()+j);
+			if (NodeContainer[j].label==NodeContainer[i].label){
+				NodeContainer.erase(NodeContainer.begin()+j);
+			//	NodeContainer_ptr.erase(NodeContainer_ptr.begin()+j);
 			}
 		}
 		//bool multi_label_bool=false;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			if(Net_nodes[i].label==Net_nodes[i].node_content){
-				if (Net_nodes[i].label.find("_")>0){
+		for (size_t i=0;i<NodeContainer.size();i++){
+			if(NodeContainer[i].label==NodeContainer[i].node_content){
+				if (NodeContainer[i].label.find("_")>0){
 					//multi_label_bool=true;
-					Net_nodes[i].name=Net_nodes[i].label.substr(0,Net_nodes[i].label.find("_"));
-					//cout<<Net_nodes[i].name<<endl;
+					NodeContainer[i].name=NodeContainer[i].label.substr(0,NodeContainer[i].label.find("_"));
+					//cout<<NodeContainer[i].name<<endl;
 					bool new_tax_bool=true;
 					for (size_t tax_i=0;tax_i<tax_name.size();tax_i++){
-						if (tax_name[tax_i]==Net_nodes[i].name){
+						if (tax_name[tax_i]==NodeContainer[i].name){
 							new_tax_bool=false;
 							break;
 						}
 					}
 					if (new_tax_bool){
-						tax_name.push_back(Net_nodes[i].name);
+						tax_name.push_back(NodeContainer[i].name);
 					}
 					//cout<<tax_name.back()<<endl;
 				}
 				else{
-					tax_name.push_back(Net_nodes[i].label);
+					tax_name.push_back(NodeContainer[i].label);
 				}
-				tip_name.push_back(Net_nodes[i].label);
+				tip_name.push_back(NodeContainer[i].label);
 			}
 		}
 		sort(tax_name.begin(), tax_name.end());
 		sort(tip_name.begin(), tip_name.end());
-		//for (size_t i=0;i<Net_nodes.size();i++){
+		//for (size_t i=0;i<NodeContainer.size();i++){
 				//valarray <int> intial_descndnt(0,tax_name.size());
 				//descndnt.push_back(intial_descndnt);
 		//}
 		
 			//dout<<"Net::Net flag3"<<endl;
 		
-		vector <Node*> Net_nodes_ptr;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			Net_nodes[i].node_index=i;
+		vector <Node*> NodeContainer_ptr;
+		for (size_t i=0;i<NodeContainer.size();i++){
+			NodeContainer[i].node_index=i;
 			Node* new_node_ptr=NULL;
-			Net_nodes_ptr.push_back(new_node_ptr);
-			Net_nodes_ptr[i]=&Net_nodes[i];
+			NodeContainer_ptr.push_back(new_node_ptr);
+			NodeContainer_ptr[i]=&NodeContainer[i];
 		}
-		for (size_t i=0;i<Net_nodes.size();i++){
-			if (Net_nodes[i].node_content[0]=='('){
-				char child_node1[Net_nodes[i].node_content.length()];
+        // connect graph
+		for (size_t i=0;i<NodeContainer.size();i++){
+			if (NodeContainer[i].node_content[0]=='('){
+				char child_node1[NodeContainer[i].node_content.length()];
 				size_t i_content_len;
 				size_t j_content_len;
-				for (i_content_len=1;i_content_len<Net_nodes[i].node_content.length();){
-					//if (Net_nodes[i].node_content[i_content_len]=='(' ||  isalpha(Net_nodes[i].node_content[i_content_len])){	
-					if (Net_nodes[i].node_content[i_content_len]=='(' ||  start_of_tax_name(Net_nodes[i].node_content,i_content_len) ){	
-					//if (Net_nodes[i].node_content[i_content_len]=='(' ||  isalpha(Net_nodes[i].node_content[i_content_len]) || isdigit(Net_nodes[i].node_content[i_content_len]) ){	
-						if (Net_nodes[i].node_content[i_content_len]=='('){
-							j_content_len=Parenthesis_balance_index_forwards(Net_nodes[i].node_content,i_content_len)+1;
+				for (i_content_len=1;i_content_len<NodeContainer[i].node_content.length();){
+					//if (NodeContainer[i].node_content[i_content_len]=='(' ||  isalpha(NodeContainer[i].node_content[i_content_len])){	
+					if (NodeContainer[i].node_content[i_content_len]=='(' ||  start_of_tax_name(NodeContainer[i].node_content,i_content_len) ){	
+					//if (NodeContainer[i].node_content[i_content_len]=='(' ||  isalpha(NodeContainer[i].node_content[i_content_len]) || isdigit(NodeContainer[i].node_content[i_content_len]) ){	
+						if (NodeContainer[i].node_content[i_content_len]=='('){
+							j_content_len=Parenthesis_balance_index_forwards(NodeContainer[i].node_content,i_content_len)+1;
 						}
 						else{
 							j_content_len=i_content_len;
 						}
 						int child1_node_content_i=0;
-						for (;j_content_len<Net_nodes[i].node_content.length(); j_content_len++){
-							child_node1[child1_node_content_i]=Net_nodes[i].node_content[j_content_len];
-							char stop=Net_nodes[i].node_content[j_content_len+1];
+						for (;j_content_len<NodeContainer[i].node_content.length(); j_content_len++){
+							child_node1[child1_node_content_i]=NodeContainer[i].node_content[j_content_len];
+							char stop=NodeContainer[i].node_content[j_content_len+1];
 							if (stop==',' || stop==')' || stop==':'){
 								child_node1[child1_node_content_i+1]='\0';
 								break;}
@@ -194,9 +191,9 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 							}
 							string child_node1_str=child_node1;		
 							i_content_len=j_content_len+2;
-							for (size_t j=0;j<Net_nodes.size();j++){
-								if (child_node1_str==Net_nodes[j].label){
-									add_node(Net_nodes_ptr[i],Net_nodes_ptr[j]);
+							for (size_t j=0;j<NodeContainer.size();j++){
+								if (child_node1_str==NodeContainer[j].label){
+									add_node(NodeContainer_ptr[i],NodeContainer_ptr[j]);
 								}
 							}
 					}
@@ -207,92 +204,86 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		//cout<<descndnt.size()<<endl;
 		
 			//dout<<"Net::Net flag4"<<endl;
-		find_tip(Net_nodes_ptr.back());
-		//cout<<"number of child " <<Net_nodes_ptr.back()->child.size()<<endl;
-		//cout<<"node content "<<Net_nodes_ptr.back()->node_content<<endl;
-		find_hybrid_descndnt(Net_nodes_ptr.back());
-		max_rank=ranking(Net_nodes_ptr.back());
+        NodeContainer_ptr.back()->find_tip();
+		NodeContainer_ptr.back()->find_hybrid_descndnt();
+        NodeContainer_ptr.back()->CalculateRank();
+        this->max_rank = NodeContainer_ptr.back()->rank();
 	
-		for (size_t i=0;i<Net_nodes.size();i++){
+		for (size_t i=0;i<NodeContainer.size();i++){
 			valarray <int> descndnt_dummy(0,tax_name.size());
 			descndnt.push_back(descndnt_dummy);
 			valarray <int> descndnt2_dummy(0,tip_name.size());
 			descndnt2.push_back(descndnt2_dummy);
-			//dout<<Net_nodes_ptr[i]->name<<"  "<<Net_nodes_ptr[i]->label<<"  "<<Net_nodes_ptr[i]->tip_bool << " ";
+			//dout<<NodeContainer_ptr[i]->name<<"  "<<NodeContainer_ptr[i]->label<<"  "<<NodeContainer_ptr[i]->tip_bool << " ";
 			for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
-				//dout<<Net_nodes_ptr[i]->label<<"   "<<tax_name[tax_name_i]<<"  ";
-				if (find_descndnt(Net_nodes_ptr[i],tax_name[tax_name_i])){
+				//dout<<NodeContainer_ptr[i]->label<<"   "<<tax_name[tax_name_i]<<"  ";
+				if (find_descndnt(NodeContainer_ptr[i],tax_name[tax_name_i])){
 					descndnt[i][tax_name_i]=1;
 				}
 				//dout<<descndnt[i][tax_name_i];
 			}
 			//dout<<endl;
 			for (size_t tip_name_i=0;tip_name_i<tip_name.size();tip_name_i++){
-				if (find_descndnt2(Net_nodes_ptr[i],tip_name[tip_name_i])){
+				if (find_descndnt2(NodeContainer_ptr[i],tip_name[tip_name_i])){
 					descndnt2[i][tip_name_i]=1;
 				}
 			}
-			Net_nodes[i].num_descndnt=descndnt[i].sum();
+			NodeContainer[i].num_descndnt=descndnt[i].sum();
 		}
 			//dout<<"Net::Net flag5"<<endl;
 		
-		//num_descndnt_interior(Net_nodes_ptr.back()); //replace by following
-		for (size_t i=0;i<Net_nodes_ptr.size();i++){
-			for (size_t j=0;j<Net_nodes_ptr.size();j++){
+		//num_descndnt_interior(NodeContainer_ptr.back()); //replace by following
+		for (size_t i=0;i<NodeContainer_ptr.size();i++){
+			for (size_t j=0;j<NodeContainer_ptr.size();j++){
 				if (i!=j){
 					valarray <int> descndnt_diff=(descndnt[i]-descndnt[j]);
-					if (descndnt_diff.min() >= 0 && Net_nodes[i].rank > Net_nodes[j].rank && Net_nodes[j].rank>=2){
-						Net_nodes_ptr[i]->num_descndnt_interior=Net_nodes_ptr[i]->num_descndnt_interior+1;
-						Net_nodes_ptr[i]->descndnt_interior_node.push_back(Net_nodes_ptr[j]);
+					if (descndnt_diff.min() >= 0 && NodeContainer[i].rank() > NodeContainer[j].rank() && NodeContainer[j].rank() >= 2){
+						NodeContainer_ptr[i]->num_descndnt_interior=NodeContainer_ptr[i]->num_descndnt_interior+1;
+						NodeContainer_ptr[i]->descndnt_interior_node.push_back(NodeContainer_ptr[j]);
 					}
 					
 				}
 			
 			}
-			//dout<<"checking #interior_des "<<Net_nodes_ptr[i]->num_descndnt_interior<<" "<<Net_nodes_ptr[i]->descndnt_interior_node.size()<<endl;
+			//dout<<"checking #interior_des "<<NodeContainer_ptr[i]->num_descndnt_interior<<" "<<NodeContainer_ptr[i]->descndnt_interior_node.size()<<endl;
 		}
 			
-		int e_num_old=0;
-		enumerate_internal_branch(Net_nodes_ptr.back(),e_num_old);
+	this->enumerate_internal_branch( this->NodeContainer.back() );
 		
-			//dout<<"Net::Net flag6.5"<<endl;
-		
-		//dout<<descndnt.size()<<endl;
-		//dout<<net_str<<endl;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			//Net_nodes[i].print_tree_Node();
+		for (size_t i=0;i<NodeContainer.size();i++){
+			//NodeContainer[i].print_tree_Node();
 			//cout<<endl;
 			//for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 				//cout<<descndnt[i][tax_name_i];
 			//}
 			//cout<<endl;
-			//cout<<i<<" "<<Net_nodes[i].name<<" " <<Net_nodes[i].label<<Net_nodes[i].clade<<endl;
+			//cout<<i<<" "<<NodeContainer[i].name<<" " <<NodeContainer[i].label<<NodeContainer[i].clade<<endl;
 			//cout<<tax_name.size()<<endl;
 			for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 				//cout<<tax_name[tax_name_i]<<endl;
 				if (descndnt[i][tax_name_i] == 1){
-					//cout<<i<<" "<<Net_nodes[i].label<<" "<<Net_nodes[i].clade<<endl;
-					if (Net_nodes[i].clade.size()==0){
-						Net_nodes[i].clade=tax_name[tax_name_i];
+					//cout<<i<<" "<<NodeContainer[i].label<<" "<<NodeContainer[i].clade<<endl;
+					if (NodeContainer[i].clade.size()==0){
+						NodeContainer[i].clade=tax_name[tax_name_i];
 					}
 					else{
-						Net_nodes[i].clade=Net_nodes[i].clade+tax_name[tax_name_i];
+						NodeContainer[i].clade=NodeContainer[i].clade+tax_name[tax_name_i];
 					}
-					Net_nodes[i].clade.push_back('&');
+					NodeContainer[i].clade.push_back('&');
 				}
 			}
-			//cout<<i<<" "<<Net_nodes[i].clade<<endl;
+			//cout<<i<<" "<<NodeContainer[i].clade<<endl;
 			
-			Net_nodes[i].clade.erase(Net_nodes[i].clade.size()-1,1);
+			NodeContainer[i].clade.erase(NodeContainer[i].clade.size()-1,1);
 		}
 		
 
 		//check for coaleased tips(& sign in the tips)
 		bool rewrite_descndnt=false;
-		for (size_t i=0;i<Net_nodes.size();i++){
-			if (Net_nodes[i].tip_bool ){
-				for (size_t i_str=0;i_str<Net_nodes[i].clade.size();i_str++){
-					if (Net_nodes[i].clade[i_str]=='&'){
+		for (size_t i=0;i<NodeContainer.size();i++){
+			if (NodeContainer[i].tip_bool ){
+				for (size_t i_str=0;i_str<NodeContainer[i].clade.size();i_str++){
+					if (NodeContainer[i].clade[i_str]=='&'){
 						rewrite_descndnt=true;
 						break;
 					}
@@ -307,16 +298,16 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			tax_name.clear();
 			int tax_name_start=0;
 			int tax_name_length=0;
-			for (size_t new_i_str=0;new_i_str<Net_nodes.back().clade.size();new_i_str++){
+			for (size_t new_i_str=0;new_i_str<NodeContainer.back().clade.size();new_i_str++){
 				tax_name_length++;
-				if (Net_nodes.back().clade[new_i_str]=='&'){
+				if (NodeContainer.back().clade[new_i_str]=='&'){
 					tax_name_length--;
-					tax_name.push_back(Net_nodes.back().clade.substr(tax_name_start,tax_name_length));
+					tax_name.push_back(NodeContainer.back().clade.substr(tax_name_start,tax_name_length));
 					tax_name_start=new_i_str+1;
 					tax_name_length=0;
 				}				
-				if (new_i_str==Net_nodes.back().clade.size()-1){
-					tax_name.push_back(Net_nodes.back().clade.substr(tax_name_start,tax_name_length));
+				if (new_i_str==NodeContainer.back().clade.size()-1){
+					tax_name.push_back(NodeContainer.back().clade.substr(tax_name_start,tax_name_length));
 				}
 			}
 			sort(tax_name.begin(), tax_name.end());
@@ -324,21 +315,21 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			descndnt.clear();
 		//	cout<<descndnt.size()<<endl;
 			//~descndnt();
-			for (size_t i=0;i<Net_nodes.size();i++){
+			for (size_t i=0;i<NodeContainer.size();i++){
 				vector <string> contained_tips;
 				valarray <int> re_initial_descndnt(0,tax_name.size());
 				int tax_name_start=0;
 				int tax_name_length=0;
-				for (size_t new_i_str=0;new_i_str<Net_nodes[i].clade.size();new_i_str++){
+				for (size_t new_i_str=0;new_i_str<NodeContainer[i].clade.size();new_i_str++){
 					tax_name_length++;
-					if (Net_nodes.back().clade[new_i_str]=='&'){
+					if (NodeContainer.back().clade[new_i_str]=='&'){
 						tax_name_length--;
-						contained_tips.push_back(Net_nodes[i].clade.substr(tax_name_start,tax_name_length));
+						contained_tips.push_back(NodeContainer[i].clade.substr(tax_name_start,tax_name_length));
 						tax_name_start=new_i_str+1;
 						tax_name_length=0;
 					}				
-					if (new_i_str==Net_nodes[i].clade.size()-1){
-						contained_tips.push_back(Net_nodes[i].clade.substr(tax_name_start,tax_name_length));
+					if (new_i_str==NodeContainer[i].clade.size()-1){
+						contained_tips.push_back(NodeContainer[i].clade.substr(tax_name_start,tax_name_length));
 					}
 				}
 				for (size_t tax_i=0;tax_i<tax_name.size();tax_i++){
@@ -352,24 +343,24 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 				descndnt.push_back(re_initial_descndnt);
 			}
 			
-			for (size_t i=0;i<Net_nodes.size();i++){
-				Net_nodes[i].clade=" ";
+			for (size_t i=0;i<NodeContainer.size();i++){
+				NodeContainer[i].clade=" ";
 				for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
 					if (descndnt[i][tax_name_i] == 1){
-						if (Net_nodes[i].clade == " "){
-							Net_nodes[i].clade=tax_name[tax_name_i];
+						if (NodeContainer[i].clade == " "){
+							NodeContainer[i].clade=tax_name[tax_name_i];
 						}
 						else{
-							Net_nodes[i].clade=Net_nodes[i].clade+tax_name[tax_name_i];
+							NodeContainer[i].clade=NodeContainer[i].clade+tax_name[tax_name_i];
 						}
-						Net_nodes[i].clade.push_back('&');
+						NodeContainer[i].clade.push_back('&');
 					}
 				}
-				Net_nodes[i].clade.erase(Net_nodes[i].clade.size()-1,1);				
+				NodeContainer[i].clade.erase(NodeContainer[i].clade.size()-1,1);				
 			}
 		}
 		
-		is_net=is_net_func();
+		this->check_isNet();
 		//is_ultrametric=true;
 		is_ultrametric=is_ultrametric_func();
 
@@ -383,22 +374,22 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 
 string Net::checking_labeled(string in_str){
 	bool labeled_bool=true;
-	string out_str;
-	for (size_t i=0;i<in_str.size();i++){
-		if (in_str[i]==')' && i==end_of_label_or_bl(in_str, i) ){
-			labeled_bool=false;
+	//string out_str;
+	for ( size_t i = 0; i < in_str.size(); i++ ){
+		if ( in_str[i] == ')' && i == end_of_label_or_bl(in_str, i) ){
+			labeled_bool = false;
 			break;
 		}
 	}
 	
-	if (labeled_bool){
-		out_str=in_str;
-	}
-	else{
-		out_str=label_interior_node(in_str);
-	}	
-	return out_str;
-    //return labeled_bool? in_str:label_interior_node(in_str);
+	//if (labeled_bool){
+		//out_str=in_str;
+	//}
+	//else{
+		//out_str=label_interior_node(in_str);
+	//}	
+	//return out_str;
+    return labeled_bool? in_str:label_interior_node(in_str);
 }
 
 
@@ -406,48 +397,36 @@ string Net::checking_labeled(string in_str){
 
 bool Net::is_ultrametric_func(){
 	bool is_ultrametric_return=true;
-	vector <int> remaining_node(Net_nodes.size(),0);
-	for (size_t node_i=0;node_i<Net_nodes.size();node_i++){
+	vector <int> remaining_node(NodeContainer.size(),0);
+	for (size_t node_i=0;node_i<NodeContainer.size();node_i++){
 		remaining_node[node_i]=node_i;
 	
 	}
-	//cout<<remaining_node.size()<<endl;
-	//for (int rank_i=1;rank_i<=max_rank;rank_i++){
-		//for (size_t node_i=0;node_i<Net_nodes.size();node_i++){
-	int rank_i=1;
+	size_t rank_i = 1;
 	size_t remaining_node_i=0;	
 	while (remaining_node.size()>0){
-		//remaining_node_i=0;
 		int node_i=remaining_node[remaining_node_i];
-		//cout<<remaining_node[remaining_node_i]<<endl;
-		//rank_i=1;
-		if (Net_nodes[node_i].rank==rank_i){
-			if (rank_i==1){
-				Net_nodes[node_i].path_time.push_back(0.0);
+		if (NodeContainer[node_i].rank() == rank_i){
+			if (rank_i == 1){
+				NodeContainer[node_i].path_time.push_back(0.0);
 			}
 			else{
-				for (size_t child_i=0;child_i<Net_nodes[node_i].child.size();child_i++){
+				for (size_t child_i=0;child_i<NodeContainer[node_i].child.size();child_i++){
 					double current_child_time;
-					if (Net_nodes[node_i].child[child_i]->parent1->label==Net_nodes[node_i].label){
-						current_child_time=Net_nodes[node_i].child[child_i]->brchlen1;
+					if (NodeContainer[node_i].child[child_i]->parent1->label==NodeContainer[node_i].label){
+						current_child_time=NodeContainer[node_i].child[child_i]->brchlen1;
 					}
 					else{
-						//if (Net_nodes[node_i].child[child_i]->parent2->label==Net_nodes[node_i].label){
-							current_child_time=Net_nodes[node_i].child[child_i]->brchlen2;
-						//}
-						//else{
-							//cout<<"warning!!!!! check code again"<<endl;
-						//}
-							
+                        current_child_time=NodeContainer[node_i].child[child_i]->brchlen2;							
 					}
-					for (size_t child_i_time_i=0;child_i_time_i<Net_nodes[node_i].child[child_i]->path_time.size();child_i_time_i++){
-						Net_nodes[node_i].path_time.push_back(current_child_time+Net_nodes[node_i].child[child_i]->path_time[child_i_time_i]);
+					for (size_t child_i_time_i=0;child_i_time_i<NodeContainer[node_i].child[child_i]->path_time.size();child_i_time_i++){
+						NodeContainer[node_i].path_time.push_back(current_child_time+NodeContainer[node_i].child[child_i]->path_time[child_i_time_i]);
 					}
 				}
 			}
 			
 			remaining_node.erase(remaining_node.begin()+remaining_node_i);
-			//cout<<rank_i<<" "<<Net_nodes[node_i].label<<" "<<Net_nodes[node_i].path_time.size()<<endl;
+			//cout<<rank_i<<" "<<NodeContainer[node_i].label<<" "<<NodeContainer[node_i].path_time.size()<<endl;
 		}
 		else{
 			remaining_node_i++;
@@ -459,93 +438,48 @@ bool Net::is_ultrametric_func(){
 		}
 	}
 	//}
-	for (size_t node_i=0;node_i<Net_nodes.size();node_i++){
+	for (size_t node_i=0;node_i<NodeContainer.size();node_i++){
 		//bool node_i_path_time_eq=true;
-		//cout<<Net_nodes[node_i].label<<"  ";
-		for (size_t path_time_i=0;path_time_i<Net_nodes[node_i].path_time.size();path_time_i++){
-			if (pow((Net_nodes[node_i].path_time[path_time_i]-Net_nodes[node_i].path_time[0]),2)>0.000001){
+		//cout<<NodeContainer[node_i].label<<"  ";
+		for (size_t path_time_i=0;path_time_i<NodeContainer[node_i].path_time.size();path_time_i++){
+			if (pow((NodeContainer[node_i].path_time[path_time_i]-NodeContainer[node_i].path_time[0]),2)>0.000001){
 				is_ultrametric_return=false;
-				//cout<<Net_nodes[node_i].label<<endl;
+				//cout<<NodeContainer[node_i].label<<endl;
 				break;
 			}
-			//cout<<Net_nodes[node_i].path_time[path_time_i]<<" ";
+			//cout<<NodeContainer[node_i].path_time[path_time_i]<<" ";
 		}
-		//cout<<Net_nodes[node_i].label<<endl;
+		//cout<<NodeContainer[node_i].label<<endl;
 		//if (!is_ultrametric){
 			//break;
 		//}
-		Net_nodes[node_i].height=Net_nodes[node_i].path_time[0];
+		NodeContainer[node_i].height=NodeContainer[node_i].path_time[0];
 	}
 	return is_ultrametric_return;
 }
 
 
 
-//int enumerate_internal_branch(Node *current,int e_num_old){
-/*! \brief enumerate the internal branches */
-int Net::enumerate_internal_branch(Node *current, /*!< pointer to the node that is enumerated */
-	int e_num_old) /*!< enumerator which is about to be updated \todo change e_num_old to int* type */ 
-{
-	
-		//dout<<"Net::enumerate_internal_branch start"<<endl;
-	int e_num_new;
-	if (current->tip_bool){
-		e_num_new=e_num_old;}
-	else {
-		if ((current->visited)==true){
-			e_num_new=e_num_old+1;
-			current->e_num2=e_num_new;
-			}
-		else{
-			int e_num_dummy=e_num_old;
-			for (int i_num_child=0;i_num_child<current->num_child;i_num_child++){
-				e_num_dummy=enumerate_internal_branch(current->child[i_num_child],e_num_dummy);
-			}
-			current->visited=true;
-			e_num_new=e_num_dummy+1;
-			//if (current->e_num>0 && ){
-				//current->e_num2=e_num_new;
-			//}
-			//else{
-			current->e_num=e_num_new;
-			//}
-		}
+
+
+void Net::check_isNet(){ //false stands for tree, true stands for net_work
+	for (size_t i=0; i < this->NodeContainer.size(); i++){
+		if ( !this->NodeContainer[i].parent2 ) continue;
+        this->is_Net = true;
+        return;
 	}
-		//dout<<"Net::enumerate_internal_branch end"<<endl;
-	return e_num_new;
 }
 
-
-
-/*! \brief free the meomory */
-void Net::clear(){
-	tax_name.clear();
-	Net_nodes.clear();
-};
-
-
-
-bool Net::is_net_func(){
-	//false stands for tree, true stands for net_work
-	bool is_net_return=false;
-	for (size_t i=0;i<Net_nodes.size();i++){
-		if (Net_nodes[i].parent2){
-			is_net_return=true;
-			break;
-		}
-	}
-	return is_net_return;	/*!< if its net or not*/
-}
 
 void Net::print_all_node(){
-    if ( this->is_net ) cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
+    if ( this->is_Net ) cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
     else cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-    for (size_t i=0; i < this->Net_nodes.size(); i++ ){
+    for (size_t i=0; i < this->NodeContainer.size(); i++ ){
         for (size_t j=0; j < this->descndnt[i].size();j++) cout<<setw(3)<<this->descndnt[i][j];
 
-        //if ( this->is_net ) Net_nodes[i].print_net_Node();
-        //else Net_nodes[i].print_tree_Node();
-        Net_nodes[i].print( this->is_net );
+        //if ( this->is_Net ) NodeContainer[i].print_net_Node();
+        //else NodeContainer[i].print_tree_Node();
+        NodeContainer[i].print( this->is_Net );
         cout<<"  ";
         
         for (size_t j=0;j<this->descndnt2[i].size();j++) cout<<this->descndnt2[i][j];        
@@ -589,12 +523,13 @@ string Net::label_interior_node(string in_str /*!< input newick form string */){
 
 
 string construct_adding_new_Net_str(Net in_Net){
-	string out_str;
-	out_str=in_Net.Net_nodes.back().node_content;
-	out_str=out_str+in_Net.Net_nodes.back().label;
-	if (in_Net.Net_nodes.back().brchlen1!=0){
+	//string out_str;
+	//out_str=in_Net.NodeContainer.back().node_content;
+	//out_str=out_str+in_Net.NodeContainer.back().label;
+    string out_str = in_Net.NodeContainer.back().node_content + in_Net.NodeContainer.back().label;
+	if (in_Net.NodeContainer.back().brchlen1!=0){
 		ostringstream brchlen_str;
-		brchlen_str<<in_Net.Net_nodes.back().brchlen1;
+		brchlen_str<<in_Net.NodeContainer.back().brchlen1;
 		out_str=out_str+":"+brchlen_str.str();
 	}
 	out_str.push_back(';');
@@ -602,36 +537,14 @@ string construct_adding_new_Net_str(Net in_Net){
 }
 
 
-	
-/*! \brief Write a fixed parameter into a externed newick formatted network string*/
-string write_para_into_tree(string in_str /*! Externed newick formatted network string*/, 
-double para /*! Coalescent parameter or fixed population sizes */){
-	if (in_str.size()==0){
-		throw std::invalid_argument("Please define the input tree (network).");
-	}
-	Net para_Net(in_str);
-	vector <Node*> para_Net_node_ptr;
-	for (size_t node_i=0;node_i<para_Net.Net_nodes.size();node_i++){
-		Node* new_node_ptr=NULL;
-        para_Net_node_ptr.push_back(new_node_ptr);
-        para_Net_node_ptr[node_i]=&para_Net.Net_nodes[node_i];
-		para_Net_node_ptr[node_i]->brchlen1=para;
-		if (para_Net.Net_nodes[node_i].hybrid){
-			para_Net_node_ptr[node_i]->brchlen2=para;
-		}
-	}
-	para_Net_node_ptr.back()->brchlen1=para;
-	rewrite_node_content(para_Net_node_ptr);
-	string para_string=construct_adding_new_Net_str(para_Net);
-	return para_string;	
-}
+
 
 
 size_t Net::first_coal_rank(){
-    size_t min_rank = (size_t)Net_nodes.back().rank;
-    for (size_t i = 0 ; i < Net_nodes.size(); i++){
-        if ( Net_nodes[i].tip_bool ) continue;
-        min_rank = ( Net_nodes[i].rank < min_rank ) ?  Net_nodes[i].rank : min_rank ;
+    size_t min_rank = NodeContainer.back().rank();
+    for (size_t i = 0 ; i < NodeContainer.size(); i++){
+        if ( NodeContainer[i].tip_bool ) continue;
+        min_rank = ( NodeContainer[i].rank() < min_rank ) ?  NodeContainer[i].rank() : min_rank ;
     }
     return min_rank;
 }
@@ -639,16 +552,35 @@ size_t Net::first_coal_rank(){
 
 size_t Net::first_coal_index (){    
     size_t min_rank = this->first_coal_rank();
-    size_t dummy_index = this->Net_nodes.size()-1;
-    double min_coal_time = this->Net_nodes[dummy_index].height;
+    size_t dummy_index = this->NodeContainer.size()-1;
+    double min_coal_time = this->NodeContainer[dummy_index].height;
     //cout<<"min_rank = "<<min_rank<<endl;
-    for (size_t i = 0 ; i < Net_nodes.size(); i++){
-        if ( this->Net_nodes[i].rank == min_rank &&  this->Net_nodes[i].height < min_coal_time ){
+    for (size_t i = 0 ; i < NodeContainer.size(); i++){
+        if ( this->NodeContainer[i].rank() == min_rank &&  this->NodeContainer[i].height < min_coal_time ){
             dummy_index = i;
-            min_coal_time = this->Net_nodes[dummy_index].height;
-            }
-        
-        }
-        //cout << "min_coal_time = " << min_coal_time  <<endl;
-    return dummy_index;
+            min_coal_time = this->NodeContainer[dummy_index].height;
+        }        
     }
+    //cout << "min_coal_time = " << min_coal_time  <<endl;
+    return dummy_index;
+}
+
+
+/*! \brief enumerate the internal branches */
+void Net::enumerate_internal_branch( Node & node ) {
+	if ( node.tip_bool ) return;
+
+    if ( node.visited() ){
+        this->current_enum_ ++;
+        node.set_enum2( current_enum_ );
+        }
+    else{
+        for ( size_t i = 0; i < node.child.size(); i++){
+            this->enumerate_internal_branch( *node.child[i] );
+        }
+        node.set_visited( true );
+        this->current_enum_ ++;
+        node.set_enum( current_enum_ );
+    }
+}
+

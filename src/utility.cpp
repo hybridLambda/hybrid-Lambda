@@ -125,9 +125,9 @@ string rm_and_hash_sign(string in_str){
 
 
 /*! \brief Remove '#' signs and the gamma parameter from a string \return string */
-string rm_hash_sign(string in_str){
-	while (int(in_str.find('#'))>0 && in_str.find('#')!=string::npos) {
-		size_t i=end_of_label_or_bl(in_str, in_str.find('#'));
+string rm_hash_sign( string in_str ){
+	while ( int(in_str.find('#'))>0 && in_str.find('#')!=string::npos ) {
+		size_t i = end_of_label_or_bl(in_str, in_str.find('#'));
 		in_str.erase(in_str.find('#'),i-in_str.find('#')+1);
 		//in_str.erase(in_str.find('#'),1);
 	}
@@ -142,14 +142,6 @@ string rm_and_sign(string in_str){
 }
 
 
-/*! Check and remove files*/
-void check_and_remove(const char* file_name){
-	ifstream my_file(file_name);
-	if (my_file.good())
-	{
-	  remove(file_name);
-	}
-}
 
 size_t end_of_label_or_bl(string in_str, size_t i){
 	size_t j ;

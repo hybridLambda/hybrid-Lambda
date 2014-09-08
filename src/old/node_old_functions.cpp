@@ -74,3 +74,23 @@ void Node::print_tree_Node(){
 	cout<<"    "<<clade;
 	//cout<<setw(3)<<num_descndnt_interior;
 }
+
+
+int ranking(Node *current){
+	int current_rank;
+	if (current->tip_bool){
+		current->rank=1;}
+	else
+	{
+		int child_max_rank=0;
+		for (int ith_child=0;ith_child<current->num_child;ith_child++){
+			int child_rank=ranking(current->child[ith_child]);
+			child_max_rank=max(child_rank,child_max_rank);
+		}
+		current->rank=child_max_rank+1;
+	}
+		
+	//cout<<current->label<<"  "<<current->rank<<endl;
+	
+	return current_rank=current->rank;
+}

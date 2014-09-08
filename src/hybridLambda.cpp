@@ -93,7 +93,7 @@ void HybridLambda::parse(){
         else if ( argv_i == "-sim_mut_unit"  ){ this->simulation_jobs_->set_sim_mut_unit(); }
         else if ( argv_i == "-sim_num_gener" ){ this->simulation_jobs_->set_sim_num_gener();}
 		else if ( argv_i == "-sim_num_mut" ){ this->simulation_jobs_->set_sim_num_mut(); } 
-		else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); check_and_remove("out_table");} // work on code for removing out_table
+		else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); } // work on code for removing out_table
 		else if ( argv_i == "-mono"){ this->simulation_jobs_->set_mono() ; }
 		else if ( argv_i == "-freq" || argv_i == "-f" ){ this->freq_bool=true; }
         //else if ( argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true;  this->argc_i++;}
@@ -175,7 +175,7 @@ void HybridLambda::extract_tmrca(){
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Net gt(gt_tree_str_s[i]);
-        this->extract_file << gt.Net_nodes.back().height << endl;
+        this->extract_file << gt.NodeContainer.back().height << endl;
     }
     this->extract_file.close();
     std::clog << "TMRCA file is saved at: "<< extract_file_name << "\n";
@@ -191,8 +191,8 @@ void HybridLambda::extract_bl(){
     for ( size_t i=0; i < gt_tree_str_s.size(); i++ ){
         Net gt(gt_tree_str_s[i]);
         double totalbl=0;
-        for (size_t node_i = 0 ; node_i < gt.Net_nodes.size(); node_i++){
-            totalbl = totalbl + gt.Net_nodes[node_i].brchlen1;
+        for (size_t node_i = 0 ; node_i < gt.NodeContainer.size(); node_i++){
+            totalbl = totalbl + gt.NodeContainer[node_i].brchlen1;
         }
         this->extract_file << totalbl << endl;
     }
@@ -210,7 +210,7 @@ void HybridLambda::extract_firstcoal(){
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Net gt(gt_tree_str_s[i]);
         size_t first_coal_index_dummy = gt.first_coal_index();
-        extract_file << gt.Net_nodes[first_coal_index_dummy].height << "\t" << gt.Net_nodes[first_coal_index_dummy].clade << endl;
+        extract_file << gt.NodeContainer[first_coal_index_dummy].height << "\t" << gt.NodeContainer[first_coal_index_dummy].clade << endl;
     }
     this->extract_file.close();
     std::clog << "First Coalescent event is saved at: "<< extract_file_name << "\n";
@@ -226,7 +226,7 @@ void HybridLambda::extract_frequency(){
 
 
 bool HybridLambda::mono_fst_not_feasiable( string flag ){ // flag is either -mono or -fst
-    if ( this->parameters()->sample_size.size() != 2 || this->parameters()->is_net ) {
+    if ( this->parameters()->sample_size.size() != 2 || this->parameters()->is_Net ) {
         std::clog << "ERROR: \"" + flag + "\" flag only applies to species tree of two population." << endl;
         return true; 
     }
@@ -403,14 +403,14 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
 	extract_file.open (sitefile_name.c_str()); 
 	
 	int total_mut = 0;
-	for ( size_t node_i = 0; node_i < mt_tree.Net_nodes.size(); node_i++ ){
-		total_mut = total_mut + mt_tree.Net_nodes[node_i].brchlen1;
+	for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
+		total_mut = total_mut + mt_tree.NodeContainer[node_i].brchlen1;
 	}
 	for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
 		extract_file << mt_tree.tip_name[tip_i] << " ";
-		for ( size_t node_i = 0; node_i < mt_tree.Net_nodes.size(); node_i++ ){
-			if ( mt_tree.Net_nodes[node_i].brchlen1 > 0 ){
-				for ( int num_repeat = 0; num_repeat < mt_tree.Net_nodes[node_i].brchlen1; num_repeat++ ){				
+		for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
+			if ( mt_tree.NodeContainer[node_i].brchlen1 > 0 ){
+				for ( int num_repeat = 0; num_repeat < mt_tree.NodeContainer[node_i].brchlen1; num_repeat++ ){				
 					extract_file << mt_tree.descndnt2[node_i][tip_i] ;
 				}
 			}

@@ -106,14 +106,14 @@ void Figure::plot_in_latex( ){
 	figure_ofstream << "\\begin{center}\n";
     figure_ofstream << "\\begin{tikzpicture}[thick]\n";
     this->det_x_node ( );
-	for (size_t node_i = 0; node_i < this->obj_net.Net_nodes.size();node_i++){
-		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
+	for (size_t node_i = 0; node_i < this->obj_net.NodeContainer.size();node_i++){
+		string sp_node_label = this->obj_net.NodeContainer[node_i].label;
 		sp_node_label=rm_and_hash_sign(sp_node_label);
-		if (obj_net.Net_nodes[node_i].tip_bool){
-			figure_ofstream<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
+		if (obj_net.NodeContainer[node_i].tip_bool){
+			figure_ofstream<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.NodeContainer[node_i].rank() << "\\du) [circle,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
 		}
 		else{
-			figure_ofstream<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.Net_nodes[node_i].rank<<"\\du) [circle,fill=orange,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
+			figure_ofstream<<"\\node at ("<<x_node[node_i]<<"\\du,"<<obj_net.NodeContainer[node_i].rank() << "\\du) [circle,fill=orange,draw] ("<<sp_node_label <<") {$"<<sp_node_label <<"$};\n";
 		}
 	}
     this->plot_core();	    
@@ -157,17 +157,17 @@ void Figure::edge_entry(string from, string to, size_t label, double bl, bool ti
 
 
 void Figure::plot_core(){
-   	for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size()-1; node_i++ ){    
-		string sp_node_label = this->obj_net.Net_nodes[node_i].label;
+   	for ( size_t node_i = 0; node_i < this->obj_net.NodeContainer.size()-1; node_i++ ){    
+		string sp_node_label = this->obj_net.NodeContainer[node_i].label;
 		sp_node_label=rm_and_hash_sign(sp_node_label);
-		string sp_node_parent1_label=obj_net.Net_nodes[node_i].parent1->label;
+		string sp_node_parent1_label=obj_net.NodeContainer[node_i].parent1->label;
 		sp_node_parent1_label=rm_and_hash_sign(sp_node_parent1_label);
 
-        this->edge_entry(sp_node_label, sp_node_parent1_label, obj_net.Net_nodes[node_i].e_num, obj_net.Net_nodes[node_i].brchlen1, !obj_net.Net_nodes[node_i].tip_bool);
-        if (obj_net.Net_nodes[node_i].parent2){
-            string sp_node_parent2_label=obj_net.Net_nodes[node_i].parent2->label;
+        this->edge_entry(sp_node_label, sp_node_parent1_label, obj_net.NodeContainer[node_i].e_num(), obj_net.NodeContainer[node_i].brchlen1, !obj_net.NodeContainer[node_i].tip_bool);
+        if (obj_net.NodeContainer[node_i].parent2){
+            string sp_node_parent2_label=obj_net.NodeContainer[node_i].parent2->label;
             sp_node_parent2_label=rm_and_hash_sign(sp_node_parent2_label);
-            this->edge_entry( sp_node_label, sp_node_parent2_label, obj_net.Net_nodes[node_i].e_num2, obj_net.Net_nodes[node_i].brchlen2, !obj_net.Net_nodes[node_i].tip_bool);
+            this->edge_entry( sp_node_label, sp_node_parent2_label, obj_net.NodeContainer[node_i].e_num2(), obj_net.NodeContainer[node_i].brchlen2, !obj_net.NodeContainer[node_i].tip_bool);
         }
 	}
 }
@@ -181,11 +181,11 @@ void Figure::plot_in_dot( ){
     this->plot_core();	
 
 	if (this->obj_net.is_ultrametric){
-		for (int rank_i = this->obj_net.Net_nodes.back().rank; rank_i > 0; rank_i--){
+		for (size_t rank_i = this->obj_net.NodeContainer.back().rank(); rank_i > 0; rank_i--){
 			figure_ofstream<<"{ rank=same; ";
-			for (size_t node_i=0;node_i<obj_net.Net_nodes.size();node_i++){
-				if (obj_net.Net_nodes[node_i].rank==rank_i){
-					string sp_node_label = obj_net.Net_nodes[node_i].label;
+			for (size_t node_i=0;node_i<obj_net.NodeContainer.size();node_i++){
+				if (obj_net.NodeContainer[node_i].rank() == rank_i){
+					string sp_node_label = obj_net.NodeContainer[node_i].label;
 					sp_node_label = rm_and_hash_sign(sp_node_label);
 					figure_ofstream << sp_node_label << " ";
 				}	
@@ -211,16 +211,16 @@ void Figure::execute_dot(string method, string suffix){
 /*! \brief When drawing network in .tex files, detemine the x coordinates of nodes
  */
 void  Figure::det_x_node ( ){
-    this->x_node = valarray <int> (this->obj_net.Net_nodes.size());
+    this->x_node = valarray <int> (this->obj_net.NodeContainer.size());
 	x_node[x_node.size()-1] = 0; //root x-axis value is zero
 
-	for ( int rank_i = this->obj_net.Net_nodes.back().rank-1; rank_i > 0; rank_i-- ){ // start from the children of the root
+	for ( size_t rank_i = this->obj_net.NodeContainer.back().rank()-1; rank_i > 0; rank_i-- ){ // start from the children of the root
 		this->x_node_tmp.clear();
 		this->x_node_tmp_index.clear();
         
-		for ( size_t node_i = 0; node_i < this->obj_net.Net_nodes.size(); node_i++ ){
-			if ( this->obj_net.Net_nodes[node_i].rank == rank_i){
-				size_t n_child = this->obj_net.Net_nodes[node_i].child.size();
+		for ( size_t node_i = 0; node_i < this->obj_net.NodeContainer.size(); node_i++ ){
+			if ( this->obj_net.NodeContainer[node_i].rank() == rank_i){
+				size_t n_child = this->obj_net.NodeContainer[node_i].child.size();
 				int parent_x = x_node[node_i];
 				int start_child_x = parent_x - floor( n_child / 2 );
 
@@ -228,8 +228,8 @@ void  Figure::det_x_node ( ){
                 //cout << "parent x = " << parent_x <<" " << "start_child_x = "<<start_child_x <<" ";
                 for ( size_t child_i = 0; child_i < n_child; child_i++ ){                    
                     //cout << " child_"<<child_i << " x = " ;
-                    for ( size_t node_j = 0; node_j < this->obj_net.Net_nodes.size(); node_j++ ){                    
-                        if ( node_j == this->obj_net.Net_nodes[node_i].child[child_i]->node_index ){
+                    for ( size_t node_j = 0; node_j < this->obj_net.NodeContainer.size(); node_j++ ){                    
+                        if ( node_j == this->obj_net.NodeContainer[node_i].child[child_i]->node_index ){
                             if ( !odd_num_child && start_child_x == parent_x ){
                                 start_child_x++;
                             }

@@ -40,7 +40,7 @@ class SimulationParameters{
     bool mm_bool;
     bool pop_bool;
     bool samples_bool;
-    bool is_net;
+    bool is_Net;
     string sp_string_coal_unit;
     string sp_string_pop_size;
     string para_string;
@@ -117,5 +117,8 @@ vector < vector <double> > build_lambda_bk_mat(double para, double num_lineage);
 int update_nc(valarray <double> nc_X);
 double update_coal_para(vector < vector <double> > lambda_bk_mat, double num_lineage);
 double kingman_bl(double num_lineage);
+
+string write_para_into_tree(string sp_string, double para);
+
 
 #endif

@@ -32,43 +32,41 @@ Node::Node(){
 	parent2=NULL;
 	brchlen1=0.0;
 	brchlen2=0.0;
-	rank=0;
-	e_num=0;
-	e_num2=0;
+	this->rank_    = 0;
+	this->e_num_   = 0;
+	this->e_num2_  = 0;
 	//visit=0;
 	hybrid=false;
-	e_num2=0;
 	descndnt_of_hybrid=false;
 	tip_bool=false;
 	//clade=" ";
 	height=0.0;
 	//prob_to_hybrid_left=1.0;
-	visited = false;
-	//double pAC=0.0;
+	this->visited_ = false;
 }
 
 
-void Node::print( bool is_net ){
+void Node::print( bool is_Net ){
     cout << setw(12) << label;
-	if ( is_net ) cout << setw(6) << hybrid;
-    if ( is_net ) cout << setw(8) << descndnt_of_hybrid;
+	if ( is_Net ) cout << setw(6) << hybrid;
+    if ( is_Net ) cout << setw(8) << descndnt_of_hybrid;
 	cout << setw(5) << tip_bool;
     cout << setw (11) << (this->parent1) ? (parent1->label) : "" ;
 	cout << setw (8) << height;
 	cout << setw (8) << brchlen1;
-    if (is_net){
+    if (is_Net){
         cout<<setw (11) << (parent2) ? (parent2->label) : "" ;
         cout<<setw (8) << brchlen2;
     }
 	cout << setw (7) << num_child;
 	cout << setw (8) << num_descndnt;
 	cout << setw(4) << num_descndnt_interior;
-	cout << setw(6) << rank << "   ";
+	cout << setw(6) << this->rank() << "   ";
 	//for (size_t i=0;i<descndnt.size();i++){
 		//cout<<setw (1)<<descndnt[i];
 	//}
-	cout << setw(2)<<e_num;
-	if ( is_net ) cout << setw(3) << e_num2;
+	cout << setw(2)<<this->e_num();
+	if ( is_Net ) cout << setw(3) << this->e_num2();
 	cout << "    " << this->clade;
 	//cout<<endl;
 }
@@ -95,46 +93,32 @@ Node *child_node /*! pointer to the child node*/){
  * 
  * Child node has lower rank than the parent node. Tip nodes have rank one, the root node has the highest rank
  */
-int ranking(Node *current){
-	int current_rank;
-	if (current->tip_bool){
-		current->rank=1;}
-	else
-	{
-		int child_max_rank=0;
-		for (int i_num_child=0;i_num_child<current->num_child;i_num_child++){
-			int child_rank=ranking(current->child[i_num_child]);
-			child_max_rank=max(child_rank,child_max_rank);
+void Node::CalculateRank(){
+	if ( this->tip_bool ) this->rank_ = 1;
+	else {
+		size_t child_max_rank = 0;
+		for ( size_t ith_child = 0; ith_child < this->child.size(); ith_child++ ){
+            this->child[ith_child]->CalculateRank();			
+			child_max_rank = max( child_max_rank, this->child[ith_child]->rank() );
 		}
-		current->rank=child_max_rank+1;
+		this->rank_ = child_max_rank + 1;
 	}
-		
-	//cout<<current->label<<"  "<<current->rank<<endl;
-	
-	return current_rank=current->rank;
 }
 
 
 bool find_descndnt(Node* current, string taxname){
 	bool descndnt_found=false;
 	if (current->tip_bool){
-		//if (current->label==taxname){
-			//cout<<current->name<<endl;
-			//cout<<taxname<<endl;
 		if (current->name==taxname){
 			descndnt_found=true;
 		}
-		//else{
-			//descndnt_found=false;
-		//}
 	}
-	else {//int i;
+	else {
 		for (int i=0;i<current->num_child;i++){
 			if (find_descndnt(current->child[i],taxname)){
 				descndnt_found=true;
 				break;
 			}
-			//else descndnt_found=false;
 		}
 	}	
 	return descndnt_found;
@@ -143,7 +127,6 @@ bool find_descndnt(Node* current, string taxname){
 bool find_descndnt2(Node* current, string taxname){
 	bool descndnt_found=false;
 	if (current->tip_bool){
-		//if (current->label==taxname){
 		if (current->label==taxname){
 			descndnt_found=true;
 		}
@@ -151,7 +134,7 @@ bool find_descndnt2(Node* current, string taxname){
 			descndnt_found=false;
 		}
 	}
-	else {//int i;
+	else {
 		for (int i=0;i<current->num_child;i++){
 			if (find_descndnt2(current->child[i],taxname)){
 				descndnt_found=true;
@@ -165,38 +148,14 @@ bool find_descndnt2(Node* current, string taxname){
 
 
 /*! \brief label a node if its a tip node */
-void find_tip(Node *current /*! pointer to a node*/){
-	if (current->num_child==0){
-	//cout<<current->label<<" is a tip "<<endl;
-		current->tip_bool=true;
-	}
+void Node::find_tip(){
+	if ( this->child.size() == 0) this->tip_bool = true;
 	else {
-		for (int i_num_child=0;i_num_child < current->num_child;i_num_child++){
-			//if (current->hybrid || current->descndnt_of_hybrid){
-				//current->child[i_num_child]->descndnt_of_hybrid=true;
-			//}
-			find_tip(current->child[i_num_child]);
+		for ( size_t ith_child = 0; ith_child < this->child.size(); ith_child++ ){
+			this->child[ith_child]->find_tip();
 		}
 	}
 }
-
-
-/*! \brief Label a node if its a descendant of a hybrid node */
-void find_hybrid_descndnt(Node *current/*! pointer to a node*/){
-	//if (current->num_child==0){
-		//current->tip_bool=false;}
-	//else {
-	if (!current->tip_bool){
-		for (int i_num_child=0;i_num_child<current->num_child;i_num_child++){
-			if (current->hybrid || current->descndnt_of_hybrid){
-				current->child[i_num_child]->descndnt_of_hybrid=true;
-			}
-			find_hybrid_descndnt(current->child[i_num_child]);
-		}
-	}
-}
-
-
 
 
 /*! \brief rewrite node content of nodes */
@@ -210,20 +169,15 @@ void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing
 		//Net_ptr[node_i]->print_net_Node();
 		//cout<<endl;
 	//}
-	
-	ranking(Net_ptr[highest_i]);
-	//cout<<Net_ptr[highest_i]->node_content<<endl;
-	//for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
-		//Net_ptr[node_i]->print_net_Node();
-		//cout<<endl;
-	//}
-	for (int rank_i=1;rank_i<=Net_ptr.back()->rank;rank_i++){
+	Net_ptr[highest_i]->CalculateRank();
+
+	for (int rank_i=1;rank_i<=Net_ptr.back()->rank();rank_i++){
 		for (size_t node_i=0;node_i<Net_ptr.size();node_i++){
-			if (Net_ptr[node_i]->rank==1){
+			if (Net_ptr[node_i]->rank()==1){
 				Net_ptr[node_i]->node_content=Net_ptr[node_i]->label;
 			}
 			else{
-			if (Net_ptr[node_i]->rank==rank_i){
+			if (Net_ptr[node_i]->rank()==rank_i){
 				string new_node_content="(";
 				for (int child_i=0;child_i<Net_ptr[node_i]->num_child;child_i++){
 					ostringstream brchlen_str;
@@ -265,3 +219,14 @@ void rewrite_node_content(vector <Node*> Net_ptr /*! vector of pointers pointing
 	//}
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////// consider removed
+
+/*! \brief Label a node if its a descendant of a hybrid node */
+void Node::find_hybrid_descndnt(){
+	if ( this->tip_bool ) return;
+    for ( size_t ith_child = 0; ith_child < this->child.size(); ith_child++){
+        if ( this->hybrid || this->descndnt_of_hybrid ) this->child[ith_child]->descndnt_of_hybrid = true;
+        this->child[ith_child]->find_hybrid_descndnt();
+    }
+}

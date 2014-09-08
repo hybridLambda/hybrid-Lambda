@@ -24,13 +24,13 @@
 
 bool Net::print_all_node_dout(){
 
-    if ( is_net ) dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
+    if ( is_Net ) dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
     else dout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-    for (size_t i=0;i<Net_nodes.size();i++){
+    for (size_t i=0;i<NodeContainer.size();i++){
         for (size_t j=0;j<descndnt[i].size();j++) dout<<setw(3)<<descndnt[i][j];
 
-        if ( is_net ) Net_nodes[i].print_net_Node_dout();
-        else Net_nodes[i].print_tree_Node_dout();
+        if ( is_Net ) NodeContainer[i].print_net_Node_dout();
+        else NodeContainer[i].print_tree_Node_dout();
         dout<<"  ";
         
         for (size_t j=0;j<descndnt2[i].size();j++) dout<<descndnt2[i][j];        

@@ -37,35 +37,42 @@ class Net{
 	private:
 		string checking_labeled(string in_str);
 		string label_interior_node(string in_str);
-		int enumerate_internal_branch(Node *current,int e_num_old);
-		bool is_net_func(); /*!< \brief To determin if a Net is network or not. \return is_net */
+		void enumerate_internal_branch( Node &node );
+		void check_isNet(); /*!< \brief To determin if a Net is network or not. \return is_Net */
 		bool is_ultrametric_func(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
 	    size_t first_coal_rank();
+        size_t current_enum_;
+        void init(){
+            this->current_enum_ = 0;
+            this->is_Net = false;
+            this->is_ultrametric = true;
+            }
         
 	public:	
 		string net_str; /*!< \brief species network string \todo this is new!!!*/
-		int max_rank;
+		size_t max_rank;
 		vector< valarray <int> > descndnt;
 		vector< valarray <int> > descndnt2;
 		vector<string> tax_name;
 		vector<string> tip_name;
-		//vector <Node*> Net_nodes_ptr; /*!< \brief pointers to the nodes of Net \todo use this instead of Net_nodes */
-		vector <Node> Net_nodes;  /*!< \brief vector of nodes */
-		bool is_net; /*!< \brief true if Net is a network; false if it's a tree */
+		//vector <Node*> NodeContainer_ptr; /*!< \brief pointers to the nodes of Net \todo use this instead of NodeContainer */
+		vector <Node> NodeContainer;  /*!< \brief vector of nodes */
+		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
 		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
 		
         size_t first_coal_index ();
-        void clear(); 
+        //void clear(); 
 		void print_all_node();
 		bool print_all_node_dout();
         ~Net(){};
-		Net (){
-			string net_str;
-			vector <string> tax_name;
-			vector <string> tip_name;
-			vector <Node> Net_nodes;
-			//vector <Node*> Net_nodes_ptr;
-		}
+        Net (){this->init();};
+		//Net (){
+			//string net_str;
+			//vector <string> tax_name;
+			//vector <string> tip_name;
+			//vector <Node> NodeContainer;
+			////vector <Node*> NodeContainer_ptr;
+		//}
 				
 		Net(string Net_str);
 };

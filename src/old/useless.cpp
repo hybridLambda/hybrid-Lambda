@@ -40,6 +40,14 @@ class AC{
 
 
 
+/*! Check and remove files*/
+void check_and_remove(const char* file_name){
+	ifstream my_file(file_name);
+	if (my_file.good())
+	{
+	  remove(file_name);
+	}
+}
 
 
 

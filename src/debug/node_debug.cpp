@@ -21,48 +21,28 @@
 */
 
 #include "../node.hpp"
-void Node::print_net_Node_dout(){
-	dout<<setw(12)<<label;
-	dout<<setw(6)<<hybrid;
-	dout<<setw(8)<<descndnt_of_hybrid;
-	dout<<setw(5)<<tip_bool;
-    dout<<setw (11)<< (parent1) ? (parent1->label) : "" ;
 
-	dout<<setw (8)<<height;
-	dout<<setw (8)<<brchlen1;
-    dout<<setw (11)<< (parent2) ? (parent2->label) : "" ;
-
-	dout<<setw (8)<<brchlen2;
-	dout<<setw (7)<<num_child;
-	dout<<setw (8)<<num_descndnt;
-	dout<<setw(4)<<num_descndnt_interior;
-//	dout<<setw (7)<<current.e_num;
-//	dout<<setw (3)<<current.e_num2;
-	dout<<setw (6)<<rank<<"   ";
+void Node::print_dout( bool is_Net ){
+    dout << setw(12) << label;
+	if ( is_Net ) dout << setw(6) << hybrid;
+    if ( is_Net ) dout << setw(8) << descndnt_of_hybrid;
+	dout << setw(5) << tip_bool;
+    dout << setw (11) << (this->parent1) ? (parent1->label) : "" ;
+	dout << setw (8) << height;
+	dout << setw (8) << brchlen1;
+    if (is_Net){
+        dout<<setw (11) << (parent2) ? (parent2->label) : "" ;
+        dout<<setw (8) << brchlen2;
+    }
+	dout << setw (7) << num_child;
+	dout << setw (8) << num_descndnt;
+	dout << setw(4) << num_descndnt_interior;
+	dout << setw(6) << this->rank() << "   ";
 	//for (size_t i=0;i<descndnt.size();i++){
 		//dout<<setw (1)<<descndnt[i];
 	//}
-	dout<<setw(2)<<e_num;
-	dout<<setw(3)<<e_num2;
-	dout<<"    "<<clade;
+	dout << setw(2)<<e_num;
+	if ( is_Net ) dout << setw(3) << e_num2;
+	dout << "    " << this->clade;
 	//dout<<endl;
-}
-
-
-void Node::print_tree_Node_dout(){
-	dout<<setw (12)<<label;
-	dout<<setw(5)<<tip_bool;
-    dout<<setw (11)<< (parent1) ? (parent1->label) : "" ;
-	dout<<setw (11)<<height;
-	dout<<setw (11)<<brchlen1;
-	dout<<setw (7)<<num_child;
-	dout<<setw (8)<<num_descndnt;
-	dout<<setw(4)<<num_descndnt_interior;
-	dout<<setw (6)<<rank<<"   ";
-	//for (size_t i=0;i<descndnt.size();i++){
-		//dout<<setw (1)<<descndnt[i];
-	//}	
-	dout<<setw(3)<<e_num;
-	dout<<"    "<<clade;
-	//dout<<setw(3)<<num_descndnt_interior;
 }
