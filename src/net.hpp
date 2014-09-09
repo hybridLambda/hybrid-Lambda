@@ -81,7 +81,7 @@ class Net{
 		
         Net (){ this->init(); }
 	
-
+        bool is_Net_() const { return this->is_Net ; }
     public:	
     	Net(string Net_str);
         ~Net(){};

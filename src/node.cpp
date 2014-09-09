@@ -51,11 +51,13 @@ void Node::print( bool is_Net ){
 	if ( is_Net ) cout << setw(6) << hybrid;
     if ( is_Net ) cout << setw(8) << descndnt_of_hybrid;
 	cout << setw(5) << tip_bool;
-    cout << setw (11) << (this->parent1) ? (parent1->label) : "" ;
+    if (this->parent1) cout << setw (11) << (parent1->label);
+    else cout << "           ";
 	cout << setw (8) << height;
 	cout << setw (8) << this->brchlen1();
     if (is_Net){
-        cout<<setw (11) << (parent2) ? (parent2->label) : "" ;
+        if (this->parent2) cout << setw (11) << (parent2->label);
+        else cout << "           ";
         cout<<setw (8) << this->brchlen2();
     }
 	cout << setw (7) << this->child.size();

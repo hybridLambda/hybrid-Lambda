@@ -80,12 +80,13 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		for ( size_t new_i_label=0 ; new_i_label < brchlens.size(); new_i_label++ ){
 			Node empty_node;
 			NodeContainer.push_back(empty_node);
+            //cout <<new_i_label <<" "<<labels[new_i_label]<<endl;
 			NodeContainer[new_i_label].label = labels[new_i_label];
 			NodeContainer[new_i_label].node_content = node_contents[new_i_label];
             NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
 		}
 
-		for (size_t i=1;i<NodeContainer.size()-1;i++){
+		for ( size_t i = 1; i < NodeContainer.size()-1; i++ ){
 			size_t j;
 			for ( j = i+1; j < NodeContainer.size()-1; j++ ){
 				if ( NodeContainer[j].label==NodeContainer[i].label ){
@@ -117,7 +118,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
     
     this->init_descendant();
     this->init_node_clade();
-    this->rewrite_descendant();
+    //this->rewrite_descendant();
 
     this->check_isNet();
     this->check_isUltrametric();
@@ -134,7 +135,9 @@ void Net::init_descendant(){
         descndnt2.push_back(descndnt2_dummy);
         //dout<<NodeContainer_ptr[i]->name<<"  "<<NodeContainer_ptr[i]->label<<"  "<<NodeContainer_ptr[i]->tip_bool << " ";
         for ( size_t tax_name_i = 0; tax_name_i < tax_name.size(); tax_name_i++ ) descndnt[i][tax_name_i] = this->NodeContainer[i].find_descndnt( tax_name[tax_name_i], TAXA) ? 1:0;
-            
+        //cout << i <<" ";
+        //for ( size_t tax_name_i = 0; tax_name_i < tax_name.size(); tax_name_i++ ) cout << descndnt[i][tax_name_i] ;
+        //cout<<endl;
         for ( size_t tip_name_i = 0; tip_name_i < tip_name.size(); tip_name_i++ ) descndnt2[i][tip_name_i] = this->NodeContainer[i].find_descndnt( tip_name[tip_name_i], TIP) ? 1:0;
 
         this->NodeContainer[i].num_descndnt = descndnt[i].sum();
@@ -303,15 +306,18 @@ void Net::check_isNet(){ //false stands for tree, true stands for net_work
 void Net::print_all_node(){
     if ( this->is_Net ) cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
     else cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
-    for (size_t i=0; i < this->NodeContainer.size(); i++ ){
-        for (size_t j=0; j < this->descndnt[i].size();j++) cout<<setw(3)<<this->descndnt[i][j];
-
-        NodeContainer[i].print( this->is_Net );
+    for (size_t i = 0; i < this->NodeContainer.size(); i++ ){
+        //cout << i <<" " << this->descndnt[i].size()<<" " <<this->descndnt[i][0]<<this->descndnt[i][1]<<this->descndnt[i][2]<<endl; 
+        for (size_t j = 0; j < this->descndnt[i].size(); j++ ) {cout<<setw(3)<<this->descndnt[i][j];}
+//cout<<&this->NodeContainer[i]<<endl;
+//Node tmp( this->NodeContainer[i]);
+//tmp.print( this->is_Net_() );
+        this->NodeContainer[i].print( this->is_Net_() );
         cout<<"  ";
         
-        for (size_t j=0;j<this->descndnt2[i].size();j++) cout<<this->descndnt2[i][j];        
+        for (size_t j=0;j<this->descndnt2[i].size();j++) {cout<<this->descndnt2[i][j]; }
         cout<<endl;
-    }	
+    }
 }
 
 
