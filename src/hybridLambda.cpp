@@ -221,6 +221,10 @@ void HybridLambda::extract_frequency(){
     if ( !this->freq_bool ) return; 
     Frequency freq_para;
     freq_para.freq_out_filename = this->prefix + "_frequencies";
+    
+    ifstream tmp_file( freq_para.freq_out_filename.c_str() );
+	if ( tmp_file.good() ) 	{  remove(freq_para.freq_out_filename.c_str()); 	}
+    
     freq_para.compute_gt_frequencies( this->gt_tree_str_s );
 }
 

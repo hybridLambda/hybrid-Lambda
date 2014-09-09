@@ -125,3 +125,21 @@ bool Node::find_descndnt2 ( string taxname ){
         return descndnt_found;
 	}	
 }
+
+void Net::rewrite_node_clade(){
+    for (size_t i=0;i<NodeContainer.size();i++){
+        NodeContainer[i].clade=" ";
+        for (size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
+            if (descndnt[i][tax_name_i] == 1){
+                if (NodeContainer[i].clade == " "){
+                    NodeContainer[i].clade=tax_name[tax_name_i];
+                }
+                else{
+                    NodeContainer[i].clade=NodeContainer[i].clade+tax_name[tax_name_i];
+                }
+                NodeContainer[i].clade.push_back('&');
+            }
+        }
+        NodeContainer[i].clade.erase(NodeContainer[i].clade.size()-1,1);				
+    }    
+}

@@ -36,8 +36,9 @@
 class Net{
     friend class HybridLambda;
     friend class sim_one_gt;
-	private:
-		
+    friend class Frequency;
+    friend class Figure;
+	private:		
 		string label_interior_node(string in_str);
 		void enumerate_internal_branch( Node &node );
 		
@@ -60,7 +61,6 @@ class Net{
 		void check_isUltrametric(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
 
         size_t first_coal_index ();
-        //void clear(); 
 		void print_all_node();
 		bool print_all_node_dout();
         
@@ -73,31 +73,25 @@ class Net{
         void rewrite_descendant();
         void rewrite_node_clade();
         
-	public:	
-		void rewrite_node_content();
         string net_str; /*!< \brief species network string \todo this is new!!!*/
 		size_t max_rank;
 		vector< valarray <int> > descndnt;
 		vector< valarray <int> > descndnt2;
-		vector<string> tax_name;
 		vector<string> tip_name;
-		//vector <Node*> NodeContainer_ptr; /*!< \brief pointers to the nodes of Net \todo use this instead of NodeContainer */
-		vector <Node> NodeContainer;  /*!< \brief vector of nodes */
-		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
-		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
 		
-
-        ~Net(){};
         Net (){ this->init(); }
-		//Net (){
-			//string net_str;
-			//vector <string> tax_name;
-			//vector <string> tip_name;
-			//vector <Node> NodeContainer;
-			////vector <Node*> NodeContainer_ptr;
-		//}
-				
-		Net(string Net_str);
+	
+
+    public:	
+    	Net(string Net_str);
+        ~Net(){};
+		void rewrite_node_content();
+
+		vector <Node> NodeContainer;  /*!< \brief vector of nodes */
+		vector<string> tax_name;
+		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
+		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
+
 };
 
 #endif

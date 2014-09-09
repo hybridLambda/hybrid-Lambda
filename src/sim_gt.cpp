@@ -118,15 +118,15 @@ double unifRand(){
  * \brief Simulating Poisson random variable from given lambda
  */
 int poisson_rand_var(double lambda){
-	double L=exp(-lambda);
-	int k=0;
-	double p=1;
-	while (p>L){
-         k =k + 1;
-         p=p*unifRand();
+	double L = exp(-lambda);
+	int k = 0;
+	double p = 1;
+	while ( p > L ){
+         k++; //k =k + 1;
+         p *= unifRand(); //p=p*unifRand();
 	}
 	//Generate uniform random number u in [0,1] and let pp × u.
-    k=k-1;	
+    k--;//k=k-1;	
 	return k;
 }
 
@@ -139,15 +139,17 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	string sp_string_pop_size= this->parameters_->sp_string_pop_size;
 	string para_string= this->parameters_->para_string;
 	vector < int > sample_size= this->parameters_->sample_size;
-	double mutation_rate= this->parameters_->mutation_rate;
 	
 	bool sim_num_gener_bool= this->simulation_jobs_->sim_num_gener_bool;
 	if ( this->simulation_jobs_->sim_mut_unit_bool ||  this->simulation_jobs_->sim_num_mut_bool){
 		sim_num_gener_bool=true;
 	}
-	Net my_Net(sp_string_coal_unit);
+	
+    // \todo the following three trees should have been passed with parameters_
+    Net my_Net(sp_string_coal_unit);
 	Net my_pop_net(sp_string_pop_size);
 	Net my_para_net(para_string);
+    
 	//vector <Node*> Net_node_ptr;
 	//for ( size_t node_i=0;node_i<my_Net.NodeContainer.size();node_i++){
 		//Node* new_node_ptr=NULL;
@@ -156,15 +158,15 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	//}
 	tax_name=my_Net.tax_name;
 	Net my_gt_coal_unit;
-	my_gt_coal_unit.is_Net=false;
+	//my_gt_coal_unit.is_Net=false;
 	
 	Net my_gt_num_gener;
-	if (sim_num_gener_bool){
-		my_gt_num_gener.is_Net=false;
-	}
+	//if (sim_num_gener_bool){
+		//my_gt_num_gener.is_Net=false;
+	//}
 	
-	for ( size_t i=0;i < my_Net.NodeContainer.size();i++){
-		if (my_Net.NodeContainer[i].tip_bool){
+	for ( size_t i = 0; i < my_Net.NodeContainer.size(); i++ ){
+		if ( my_Net.NodeContainer[i].tip_bool ){
 			for ( size_t sample_size_i=0;sample_size_i<sample_size.size();sample_size_i++){
 				if (my_Net.descndnt[i][sample_size_i]>0){
 					for (int pop_i=0;pop_i<sample_size[sample_size_i];pop_i++){
@@ -591,74 +593,60 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 		gt_string_gener_num=remove_interior_label(old_gt_string_num_gener);
 	}
 
-	//dout<<"flag 2"<<endl;
-	//dout<<gt_nodes_ptr.back()->label<<endl;
-	//if (sim_num_gener_bool){
-		//dout<<num_gener_gt_nodes_ptr.back()->label<<endl;
-	//}
-	//dout<<old_gt_string_coal_unit<<endl;
-
 	gt_string_coal_unit=remove_interior_label(old_gt_string_coal_unit);
+        
 	// check if the gene tree is ultramatric.
 	dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
-	Net checking_ultra_net(gt_string_coal_unit);
+	//Net checking_ultra_net(gt_string_coal_unit);
 	//if (!checking_ultra_net.is_ultrametric){throw "Gene tree is not ultrametric";}
 	
 	
-	if ( this->simulation_jobs_->sim_mut_unit_bool){
-		build_gt_string_mut_unit(mutation_rate);
-	}	
+	if ( this->simulation_jobs_->sim_mut_unit_bool ) build_gt_string_mut_unit( );
 	
-	
-	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool){
-		Net mt_tree(gt_string_gener_num);
-		vector <double> brch_total;
-		vector <Node*> mt_nodes_ptr;
-		total_brchlen=0;
-		for ( size_t gt_node_i=0;gt_node_i<mt_tree.NodeContainer.size();gt_node_i++){
-			Node* new_node_ptr=NULL;
-			mt_nodes_ptr.push_back(new_node_ptr);
-			total_brchlen += mt_tree.NodeContainer[gt_node_i].brchlen1();
-			mt_nodes_ptr[gt_node_i]=&mt_tree.NodeContainer[gt_node_i];
-			mt_nodes_ptr[gt_node_i]->set_brchlen1( 0.0 );
-			brch_total.push_back(total_brchlen);
-		}	
-		
-		brch_total.back()=0;
-		//cout<<total_brchlen<<endl;
-		//double theta=1.0;
-		this->total_mut = poisson_rand_var(mutation_rate*total_brchlen);
-		for ( int mut_i=0; mut_i < this->total_mut; mut_i++){
-			 size_t brch_index=0;
-			double u=unifRand()*total_brchlen;
-			while (u>brch_total[brch_index]){
-				 brch_index =brch_index + 1;	
-			}
-			mt_nodes_ptr[brch_index]->set_brchlen1 ( mt_nodes_ptr[brch_index]->brchlen1() + 1 );
-		}
-		//rewrite_node_content(mt_nodes_ptr);
-        mt_tree.rewrite_node_content();
-		gt_string_mut_num=mt_nodes_ptr.back()->node_content+mt_nodes_ptr.back()->label+";";
-		gt_string_mut_num=remove_interior_label(gt_string_mut_num);
-		
-		if ( this->simulation_jobs_->Si_num_bool){	
-			Si_num_out_table(mt_tree);
-		}
-	}
+	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool ) this->sim_mt_tree( );
 
-	if (tax_name.size()==2 &&  this->simulation_jobs_->mono_bool){
-		compute_monophyly_vec(my_gt_coal_unit,sample_size);
-	}
+	if ( tax_name.size()==2 && this->simulation_jobs_->mono_bool) compute_monophyly_vec(my_gt_coal_unit,sample_size);
+
 	dout<<"	end of sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action)"<<endl;
 }
 
 
-void sim_one_gt::Si_num_out_table(Net mt_tree){
+void sim_one_gt::sim_mt_tree(){
+  	double mutation_rate = this->parameters_->mutation_rate;
+    Net mt_tree(gt_string_gener_num);
+    vector <double> brch_total;
+    total_brchlen = 0;
+    for ( size_t i = 0 ; i < mt_tree.NodeContainer.size() ; i++ ){
+        total_brchlen += mt_tree.NodeContainer[i].brchlen1();
+        mt_tree.NodeContainer[i].set_brchlen1( 0.0 );
+        brch_total.push_back(total_brchlen);
+    }	
+    
+    brch_total.back()=0;
+    this->total_mut = poisson_rand_var(mutation_rate*total_brchlen);
+    for ( int mut_i=0; mut_i < this->total_mut; mut_i++){
+        size_t brch_index=0;
+        double u = unifRand()*total_brchlen;
+        while ( u > brch_total[brch_index] ){
+             brch_index++;
+        }
+        mt_tree.NodeContainer[brch_index].set_brchlen1 ( mt_tree.NodeContainer[brch_index].brchlen1() + 1 );
+    }
+    mt_tree.rewrite_node_content();
+    gt_string_mut_num = mt_tree.NodeContainer.back().node_content + mt_tree.NodeContainer.back().label + ";";
+    gt_string_mut_num = remove_interior_label(gt_string_mut_num);
+    
+    if ( this->simulation_jobs_->Si_num_bool) this->Si_num_out_table(mt_tree);
+}
+
+
+
+void sim_one_gt::Si_num_out_table( Net &mt_tree ){
 	vector <int> S_i(mt_tree.tip_name.size()-1,0);
 	for ( size_t sii = 0; sii < S_i.size(); sii++){
 		for ( size_t i = 0; i < mt_tree.NodeContainer.size(); i++){
 			int sii_pluse_1 = sii+1;
-			if ((mt_tree.NodeContainer[i].brchlen1() > 0) && (sii_pluse_1==mt_tree.descndnt2[i].sum() )){
+			if ((mt_tree.NodeContainer[i].brchlen1() > 0) && (sii_pluse_1 == mt_tree.descndnt2[i].sum() )){
 				//if ((sii+1)==mt_tree.descndnt2[i].sum()){
 					S_i[sii]=S_i[sii]+mt_tree.NodeContainer[i].brchlen1();
 				//}
@@ -674,7 +662,7 @@ void sim_one_gt::Si_num_out_table(Net mt_tree){
 }
 
 
-vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
+vector < vector <double> > sim_one_gt::build_lambda_bk_mat( double para, double num_lineage ){
 	vector < vector <double> > lambda_bk_mat;
 	for (double b_i=2;b_i<=num_lineage;b_i++){
 		vector <double> lambda_bk_mat_b;
@@ -711,7 +699,10 @@ vector < vector <double> > build_lambda_bk_mat(double para,double num_lineage){
 	return lambda_bk_mat;
 }
 
-void sim_one_gt::build_gt_string_mut_unit(double mutation_rate){
+
+void sim_one_gt::build_gt_string_mut_unit(){
+   	double mutation_rate = this->parameters_->mutation_rate;
+
 	Net gt_mut_unit(gt_string_gener_num);
 	for ( size_t i = 0; i < gt_mut_unit.NodeContainer.size(); i++){
 		gt_mut_unit.NodeContainer[i].set_brchlen1 ( gt_mut_unit.NodeContainer[i].brchlen1() * mutation_rate );
@@ -722,7 +713,7 @@ void sim_one_gt::build_gt_string_mut_unit(double mutation_rate){
 }
 
 
-void sim_one_gt::compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size){
+void sim_one_gt::compute_monophyly_vec( Net &my_gt_coal_unit,vector < int > sample_size){
 	vector <double> monophyly_initial(6,0);
 	monophyly = monophyly_initial;
 	for ( size_t tax_i=0;tax_i<2;tax_i++){
@@ -805,9 +796,9 @@ string rewrite_pop_string_by_para_string(
 }
 
 
-double update_coal_para(vector < vector <double> > lambda_bk_mat, double num_lineage){
-	double coal_para=0;
-	for (int lambda_bk_i=0;lambda_bk_i<=num_lineage-2;lambda_bk_i++){
+double update_coal_para( vector < vector <double> > lambda_bk_mat, double num_lineage ){
+	double coal_para = 0;
+	for ( int lambda_bk_i = 0; lambda_bk_i <= num_lineage-2; lambda_bk_i++ ){
 		coal_para=coal_para+lambda_bk_mat[num_lineage-2][lambda_bk_i];
 		dout<<"lambda_bk_mat[num_lineage-2].size() "<<lambda_bk_mat[num_lineage-2].size()<<endl;
 		dout<< " !!! "<<num_lineage<<"  "<< lambda_bk_i+2<<endl;

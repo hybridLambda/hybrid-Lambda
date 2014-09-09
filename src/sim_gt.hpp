@@ -87,9 +87,8 @@ class action_board {
 class sim_one_gt{
     friend class HybridLambda;
 
-    void compute_monophyly_vec(Net my_gt_coal_unit,vector < int > sample_size);
-    void build_gt_string_mut_unit(double mutation_rate);
-    void Si_num_out_table(Net mt_tree);
+    void compute_monophyly_vec(Net &my_gt_coal_unit,vector < int > sample_size);
+    void Si_num_out_table(Net &mt_tree);
     action_board* simulation_jobs_;
     SimulationParameters* parameters_;
     string gt_string_coal_unit;
@@ -103,6 +102,12 @@ class sim_one_gt{
     ofstream * Si_table_;
     sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
     ~sim_one_gt(){};		
+    
+    vector < vector <double> > build_lambda_bk_mat(double para, double num_lineage);
+    void build_gt_string_mut_unit();
+    void sim_mt_tree();
+
+
 };
 
 
@@ -113,7 +118,6 @@ string write_sp_string_in_coal_unit(string sp_num_gener_string, string pop_size_
 string rewrite_pop_string_by_para_string(string para_string,string pop_size_string);
 
 valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double num_lineage);
-vector < vector <double> > build_lambda_bk_mat(double para, double num_lineage);
 int update_nc(valarray <double> nc_X);
 double update_coal_para(vector < vector <double> > lambda_bk_mat, double num_lineage);
 double kingman_bl(double num_lineage);

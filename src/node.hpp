@@ -35,14 +35,25 @@ class Node {
     friend class Net;
     friend class sim_one_gt;
     friend class HybridLambda;
+    friend class Figure;
 	public:
-	//vector<int> descndnt;
+        double brchlen1() const { return this->brchlen1_;}
+        void set_brchlen1 ( double bl ){ this->brchlen1_ = bl; }
+        
+        double brchlen2() const { return this->brchlen2_;}
+        void set_brchlen2 ( double bl ){ this->brchlen2_ = bl; }
+
+        string label; /*!< \brief String label of a node, each node has unique label */
+        size_t node_index; /*!< \brief node index in the array, \todo use this more often!!!*/
+        string node_content; /*!< \brief node content, the subtree string at this node */
+        bool hybrid; /*!< \brief Hybrid node only, indicator of a hybrid node */
+        
+    private:    
+    //vector<int> descndnt;
 	vector<Node*> descndnt_interior_node; /*!< \brief list of pointers to its descndent interior nodes */
 	vector<Node*> child; /*!< \brief list of pointers to its child nodes */	
 	Node* parent1; /*!< \brief pointer to its parent node. */
 	string clade; /*!< \brief clade at this node, \todo this should be modified to a vector <string> */
-	string label; /*!< \brief String label of a node, each node has unique label */
-	string node_content; /*!< \brief node content, the subtree string at this node */
     
 	size_t rank() const { return this->rank_; }
 	//int num_child; /*!< \brief number of child \todo this can be replaced by child.size */
@@ -50,15 +61,10 @@ class Node {
 	int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
 	vector <double> path_time; 
 	double height; /*!< \brief distance to the bottom of the tree */
-	
-	
+		
 	bool descndnt_of_hybrid; /*!< \brief Indicator of descendant of hybrid nodes. It's true, if it is a descendant of hybrid nodes; false, otherwise. */
 	bool tip_bool; /*!< \brief Indicator of tip nodes. It's true, if it is a tip node, otherwise it is false. */
-	
-	size_t node_index; /*!< \brief node index in the array, \todo use this more often!!!*/
 		
-	/* These members apply to only hybrid nodes */
-	bool hybrid; /*!< \brief Hybrid node only, indicator of a hybrid node */
 	Node* parent2; /*!< \brief Hybrid node only, pointer to its second parent node. */
 	//double prob_to_hybrid_left; /*!< \brief Hybrid node only, the probability that a lineage goes to the left */
 
@@ -79,14 +85,7 @@ class Node {
     
         bool visited() const { return this->visited_; }
         void set_visited ( bool TorF ){ this->visited_ = TorF; }
-        
-        double brchlen1() const { return this->brchlen1_;}
-        void set_brchlen1 ( double bl ){ this->brchlen1_ = bl; }
-        
-        double brchlen2() const { return this->brchlen2_;}
-        void set_brchlen2 ( double bl ){ this->brchlen2_ = bl; }
-        
-    private:    
+    
         void print( bool is_Net );
         void print_dout( bool is_Net );
         void find_tip();
