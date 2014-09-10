@@ -101,22 +101,11 @@ size_t hybrid_hash_index(string in_str){
 	return in_str.find('#');
 }
 
-string extract_hybrid_label(string in_str){
-	size_t hash_index=hybrid_hash_index(in_str);
-	return in_str.substr(0,hash_index);
-}
+//string extract_hybrid_label(string in_str){
+	//size_t hash_index = hybrid_hash_index(in_str);
+	//return in_str.substr(0,hash_index);
+//}
 
-string extract_hybrid_para_str(string in_str){
-	size_t hash_index=hybrid_hash_index(in_str);
-	return in_str.substr(hash_index+1);//,in_str.size()-1);
-}
-
-double extract_hybrid_para(string in_str){
-	double para;
-	istringstream para_istr(extract_hybrid_para_str(in_str));
-	para_istr>>para;
-	return para;
-}
 	
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ ){
     argc_i++;

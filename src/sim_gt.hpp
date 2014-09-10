@@ -106,6 +106,18 @@ class sim_one_gt{
     vector < vector <double> > build_lambda_bk_mat(double para, double num_lineage);
     void build_gt_string_mut_unit();
     void sim_mt_tree();
+    
+    string extract_hybrid_para_str(string in_str){
+        size_t hash_index = hybrid_hash_index(in_str);
+        return in_str.substr(hash_index+1);//,in_str.size()-1);
+    }
+    
+    double extract_hybrid_para( string in_str ){
+        double para;
+        istringstream para_istr(extract_hybrid_para_str(in_str));
+        para_istr>>para;
+        return para;
+    }
 
 
 };

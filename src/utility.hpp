@@ -54,9 +54,9 @@ string rm_hash_sign(string in_str);
 string extract_label(string in_str, size_t i);
 size_t end_of_label_or_bl(string in_str, size_t i);
 size_t hybrid_hash_index(string in_str);
-string extract_hybrid_label(string in_str);
-string extract_hybrid_para_str(string in_str);
-double extract_hybrid_para(string in_str);
+//string extract_hybrid_label(string in_str);
+//string extract_hybrid_para_str(string in_str);
+//double extract_hybrid_para(string in_str);
 
 /*! \brief Compute factorial of a \return double a! */
 template<class T>

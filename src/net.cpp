@@ -330,19 +330,17 @@ string Net::label_interior_node(string in_str /*!< input newick form string */){
 	while ( i<in_str.size() ){
 		interior_node_counter++;
 		string current_string;
-		size_t found_next_bracket = min(in_str.find(")",sub_str_start_index),in_str.size());
-		current_string = in_str.substr(sub_str_start_index,found_next_bracket - sub_str_start_index +1);
+		size_t found_next_bracket = min(in_str.find(")", sub_str_start_index),in_str.size());
+		current_string = in_str.substr(sub_str_start_index, found_next_bracket - sub_str_start_index +1);
 		if ( in_str[i+1] == ';' || i == (in_str.size()-1) ){
 			current_string += "root";
-			in_str_partition.push_back(current_string);
 		}
 		else {
-			ostringstream interior_node_counter_str;
-			interior_node_counter_str<<interior_node_counter;
-            current_string += "Int_" + interior_node_counter_str.str();
-			in_str_partition.push_back(current_string);
+            current_string += "Int_" + to_string( interior_node_counter );
 			sub_str_start_index = i+1;
 		}
+		in_str_partition.push_back(current_string);
+
 		i = in_str.find( ")", i+1 );
 	}
 	string out_str;
@@ -472,24 +470,25 @@ void Net::rewrite_node_content(){
 string Net::rewrite_internal_node_content( size_t i ){
     string new_node_content="(";
     for (size_t child_i = 0; child_i < this->NodeContainer[i].child.size(); child_i++ ){
-        ostringstream brchlen_str;        
-        brchlen_str << this->NodeContainer[i].child[child_i]->brchlen1();
         if ( this->NodeContainer[i].child[child_i]->node_content == this->NodeContainer[i].child[child_i]->label ) {
-            new_node_content += this->NodeContainer[i].child[child_i]->label+":"+brchlen_str.str();}
-        else {
-            ostringstream brchlen_str2;
+            new_node_content += this->NodeContainer[i].child[child_i]->label+":" + to_string ( this->NodeContainer[i].child[child_i]->brchlen1() ) ;
+        }
+        else {            
             bool new_hybrid_node=false;
+            string brchlen_str2;
             for ( size_t node_ii=0; node_ii < i; node_ii++){
                 for ( size_t node_ii_child_i = 0; node_ii_child_i < this->NodeContainer[node_ii].child.size(); node_ii_child_i++ ){
                     if ( this->NodeContainer[node_ii].child[node_ii_child_i]->node_content == this->NodeContainer[i].child[child_i]->node_content){
                         new_hybrid_node=true;
-                        brchlen_str2 << this->NodeContainer[i].child[child_i]->brchlen2();
+                        brchlen_str2 = to_string(this->NodeContainer[i].child[child_i]->brchlen2() );
                     break;}
                 }
-                //if (new_hybrid_node==1){break;}
+                if (new_hybrid_node){break;}
             }
-            new_node_content += new_hybrid_node ? this->NodeContainer[i].child[child_i]->label+":"+brchlen_str2.str() : 
-                                                  this->NodeContainer[i].child[child_i]->node_content + this->NodeContainer[i].child[child_i]->label+":"+brchlen_str.str();
+            if ( !new_hybrid_node ) new_node_content += this->NodeContainer[i].child[child_i]->node_content;
+            new_node_content += this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2;
+            //new_node_content += new_hybrid_node ? this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2 : 
+                                                  //this->NodeContainer[i].child[child_i]->node_content + this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2 ;
         }
         if ( child_i < this->NodeContainer[i].child.size() - 1 ) new_node_content += ",";
     }

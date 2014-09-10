@@ -8,9 +8,10 @@ PROG = HYBRID-LAMBDA
 check_PROGRAMS = hybrid-Lambda_dbg hybrid-Lambda_prof unit_tests
 TESTS = unit_tests 
 
-hybrid_Lambda_CXXFLAGS = -O3 -g -DNDEBUG  -fpermissive #options for not showing debug messages.
-hybrid_Lambda_dbg_CXXFLAGS =  -O3 -g -fpermissive
-hybrid_Lambda_prof_CXXFLAGS = -O3 -g -DNDEBUG -fpermissive #options for not showing debug messages.
+common_flags = -O3 -g -std=c++0x
+hybrid_Lambda_CXXFLAGS = -DNDEBUG $(common_flags) #options for not showing debug messages.
+hybrid_Lambda_dbg_CXXFLAGS = $(common_flags)
+hybrid_Lambda_prof_CXXFLAGS = $(common_flags) -DNDEBUG -pg #options for not showing debug messages. -fpermissive
 
 shared_SOURCES = src/hybridLambda.cpp \
 				 src/node.cpp \
