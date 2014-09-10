@@ -101,11 +101,6 @@ size_t hybrid_hash_index(string in_str){
 	return in_str.find('#');
 }
 
-//string extract_hybrid_label(string in_str){
-	//size_t hash_index = hybrid_hash_index(in_str);
-	//return in_str.substr(0,hash_index);
-//}
-
 	
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ ){
     argc_i++;

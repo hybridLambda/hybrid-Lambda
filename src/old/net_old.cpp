@@ -33,3 +33,9 @@ string Net::rewrite_internal_node_content( size_t i ){
     new_node_content += ")";
     return new_node_content;
 }
+
+
+string extract_hybrid_label(string in_str){
+	size_t hash_index = hybrid_hash_index(in_str);
+	return in_str.substr(0,hash_index);
+}

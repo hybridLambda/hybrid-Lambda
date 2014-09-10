@@ -24,8 +24,8 @@
 /*! \file sim_gt.cpp
  * \brief Core functions used to simulate gene trees for given species network or tree */
 
-#include"sim_gt.hpp"
-#include"mtrand.h"
+#include "sim_gt.hpp"
+
 
 action_board::action_board(){
 	this->sim_mut_unit_bool  = false;
@@ -91,44 +91,8 @@ void SimulationParameters::finalize(){
 	
     sp_string_coal_unit = net_str;
 
-    }
-
-
-/*! \brief Beta function, requires tgamma function from math.h \return double */
-double Beta(double x,double y){
-	double Beta_return;
-//	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
-    Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
-	return Beta_return;
 }
 
-
-/*! \fn double unifRand()
- * \brief Simulate random variable between 0 and 1.
- */
-double unifRand(){
-	MTRand_closed return_value;
-	return return_value();
-    //return rand()/(double(RAND_MAX)+1);
-    //return rand() / double(RAND_MAX); //generates a psuedo-random float between 0.0 and 0.999...
-} 
-
-
-/*! \fn int poisson_rand_var(double lambda)
- * \brief Simulating Poisson random variable from given lambda
- */
-int poisson_rand_var(double lambda){
-	double L = exp(-lambda);
-	int k = 0;
-	double p = 1;
-	while ( p > L ){
-         k++; //k =k + 1;
-         p *= unifRand(); //p=p*unifRand();
-	}
-	//Generate uniform random number u in [0,1] and let pp × u.
-    k--;//k=k-1;	
-	return k;
-}
 
 
 sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
@@ -157,13 +121,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
         //Net_node_ptr[node_i]=&my_Net.NodeContainer[node_i];
 	//}
 	tax_name=my_Net.tax_name;
-	Net my_gt_coal_unit;
-	//my_gt_coal_unit.is_Net=false;
-	
-	Net my_gt_num_gener;
-	//if (sim_num_gener_bool){
-		//my_gt_num_gener.is_Net=false;
-	//}
+    
 	
 	for ( size_t i = 0; i < my_Net.NodeContainer.size(); i++ ){
 		if ( my_Net.NodeContainer[i].tip_bool ){
@@ -172,9 +130,10 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 					for (int pop_i=0;pop_i<sample_size[sample_size_i];pop_i++){
 						my_gt_coal_unit.NodeContainer.push_back(my_Net.NodeContainer[i]);
 						my_gt_coal_unit.descndnt.push_back(my_Net.descndnt[i]);
-						ostringstream pop_i_size_str;
-						pop_i_size_str<<pop_i+1;
-						my_gt_coal_unit.NodeContainer.back().label=my_gt_coal_unit.NodeContainer.back().label+"_"+pop_i_size_str.str();
+						//ostringstream pop_i_size_str;
+						//pop_i_size_str<<pop_i+1;
+						//my_gt_coal_unit.NodeContainer.back().label=my_gt_coal_unit.NodeContainer.back().label+"_"+pop_i_size_str.str();
+                        my_gt_coal_unit.NodeContainer.back().label=my_gt_coal_unit.NodeContainer.back().label+"_" + to_string(pop_i+1);
 						my_gt_coal_unit.NodeContainer.back().set_brchlen1( 0.0 );
 						my_gt_coal_unit.NodeContainer.back().parent1 = NULL;
 						my_gt_coal_unit.NodeContainer.back().parent2 = NULL;
@@ -188,7 +147,8 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 		}	
 	}
 	
-	vector < size_t> remaining_sp_node;
+    // mapping remaining_sp_node
+	vector <size_t> remaining_sp_node;
 	for ( size_t sp_node_i=0;sp_node_i < my_Net.NodeContainer.size();sp_node_i++){
 		if (!my_Net.NodeContainer[sp_node_i].tip_bool){
 			remaining_sp_node.push_back(sp_node_i);
@@ -198,29 +158,29 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				remaining_sp_node.push_back(sp_node_i);
 			}
 			for ( size_t gt_node_i=0;gt_node_i<my_gt_coal_unit.NodeContainer.size();gt_node_i++){
-				valarray <bool> comp = (my_gt_coal_unit.descndnt[gt_node_i]==my_Net.descndnt[sp_node_i]);
+				valarray <bool> comp = (my_gt_coal_unit.descndnt[gt_node_i] == my_Net.descndnt[sp_node_i]);
 				if ( comp.min() == true ){
 					my_Net.NodeContainer[sp_node_i].Net_node_contains_gt_node1.push_back(gt_node_i);
 				}
 			}
 		}
 	}
-	int num_tax=my_Net.tax_name.size();
+    
+	int num_tax = my_Net.tax_name.size();
 	vector < size_t> remaining_gt_node;
-	int gt_num_tips=my_gt_coal_unit.NodeContainer.size();
+	int gt_num_tips = my_gt_coal_unit.NodeContainer.size();
 	for (int interior_i=1;interior_i<gt_num_tips;interior_i++){
 		Node new_interior_node;
-		string interior_node_label_str;
-		if (interior_i==(gt_num_tips-1)){
-			interior_node_label_str="root";
-		}
-		else{
-			interior_node_label_str="Int_";
-			ostringstream interior_i_str;
-			interior_i_str<<interior_i;
-			interior_node_label_str=interior_node_label_str+interior_i_str.str();
-		}
-		new_interior_node.label=interior_node_label_str;
+		//string interior_node_label_str;
+		//if ( interior_i == (gt_num_tips-1) ) interior_node_label_str="root";
+		//else {
+			//interior_node_label_str = "Int_" + to_string(interior_i);
+		//}
+        //string interior_node_label_str = ( interior_i == (gt_num_tips-1) ) ? "root" : 
+                                                                             //"Int_" + to_string(interior_i) ;
+		//new_interior_node.label = interior_node_label_str;
+        new_interior_node.label = ( interior_i == (gt_num_tips-1) ) ? "root" : 
+                                                                      "Int_" + to_string(interior_i) ;
 		remaining_gt_node.push_back(my_gt_coal_unit.NodeContainer.size());//my_gt_coal_unit.NodeContainer.size() is the current index of the gt interior node.
 		my_gt_coal_unit.NodeContainer.push_back(new_interior_node);
 		valarray <int> intialize_descndnt(num_tax);
@@ -250,21 +210,21 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	
 		}
 	}
+    
 	int rank_i=1;
-
-	 size_t remaining_sp_node_i=0;	
+    size_t remaining_sp_node_i=0;	
 	while (remaining_sp_node.size()>0){
-		
-		int node_i=remaining_sp_node[remaining_sp_node_i];
-		if (my_Net.NodeContainer[node_i].rank() == rank_i){
+		size_t node_i = remaining_sp_node[remaining_sp_node_i];
+        //Node current_population = &my_Net.NodeContainer[node_i];
+		if ( my_Net.NodeContainer[node_i].rank() == rank_i ){
 			for ( size_t child_i=0;child_i<my_Net.NodeContainer[node_i].child.size();child_i++){
-				if (my_Net.NodeContainer[node_i].child[child_i]->parent1->label==my_Net.NodeContainer[node_i].label){
+				if (my_Net.NodeContainer[node_i].child[child_i]->parent1->label == my_Net.NodeContainer[node_i].label){
 					for ( size_t child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node1.size();child_i_contains_gt_node1_i++){
 						my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.push_back(my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node1[child_i_contains_gt_node1_i]);
 					}
 				}
 				else{
-					if (my_Net.NodeContainer[node_i].child[child_i]->parent2->label!=my_Net.NodeContainer[node_i].label){
+					if (my_Net.NodeContainer[node_i].child[child_i]->parent2->label != my_Net.NodeContainer[node_i].label ){
 						throw std::invalid_argument("parent2 is not correct!!!");
 					}
 					for ( size_t child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node2.size();child_i_contains_gt_node1_i++){
@@ -539,61 +499,59 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			remaining_sp_node_i++;
 		}
 
-		if (remaining_sp_node_i==remaining_sp_node.size()-1){
+		if ( remaining_sp_node_i == remaining_sp_node.size()-1 ){
 			rank_i++;
-			remaining_sp_node_i=0;
+			remaining_sp_node_i = 0;
 		}
 	}
 	
-	for ( size_t node_i=0;node_i<gt_nodes_ptr.size();){
-		if (gt_nodes_ptr[node_i]->num_descndnt==0){
+	for ( size_t node_i = 0; node_i < gt_nodes_ptr.size(); ){
+		if ( gt_nodes_ptr[node_i]->num_descndnt == 0 ){
 			gt_nodes_ptr.erase(gt_nodes_ptr.begin()+node_i);
 			if (sim_num_gener_bool){
-				num_gener_gt_nodes_ptr.erase(num_gener_gt_nodes_ptr.begin()+node_i);
+				num_gener_gt_nodes_ptr.erase(num_gener_gt_nodes_ptr.begin() + node_i);
 			}
 		}
 		else{
 			node_i++;
 		}
 	}
-	
-	
-	for ( size_t node_i=0;node_i<my_gt_coal_unit.NodeContainer.size();node_i++){
-		if (my_gt_coal_unit.descndnt[node_i].sum()==0){
-			break;
-		}
-		if (!my_gt_coal_unit.NodeContainer[node_i].tip_bool){
-			for ( size_t tax_name_i=0;tax_name_i<tax_name.size();tax_name_i++){
-				if (my_gt_coal_unit.descndnt[node_i][tax_name_i] > 0 ){
-					if (my_gt_coal_unit.NodeContainer[node_i].clade.size()==0){
-						my_gt_coal_unit.NodeContainer[node_i].clade=tax_name[tax_name_i];
-					}
-					else{
-						my_gt_coal_unit.NodeContainer[node_i].clade=my_gt_coal_unit.NodeContainer[node_i].clade+tax_name[tax_name_i];
-					}
-					my_gt_coal_unit.NodeContainer[node_i].clade.push_back('&');
-				}
-			}
-			my_gt_coal_unit.NodeContainer[node_i].clade.erase(my_gt_coal_unit.NodeContainer[node_i].clade.size()-1,1);
-		}
-	}
+    
+	//my_gt_coal_unit.tax_name = tax_name;
+	//my_gt_coal_unit.init_node_clade(); //use this to replace the following
+	//for ( size_t node_i = 0; node_i < my_gt_coal_unit.NodeContainer.size(); node_i++ ){
+		//if ( my_gt_coal_unit.descndnt[node_i].sum() == 0 ) break;
+		//if ( my_gt_coal_unit.NodeContainer[node_i].tip_bool ) continue;
+
+        //for ( size_t tax_name_i=0; tax_name_i < tax_name.size(); tax_name_i++ ){
+            //if ( my_gt_coal_unit.descndnt[node_i][tax_name_i] == 0 ) continue;
+            
+            //if (my_gt_coal_unit.NodeContainer[node_i].clade.size()==0){
+                //my_gt_coal_unit.NodeContainer[node_i].clade=tax_name[tax_name_i];
+            //}
+            //else{
+                //my_gt_coal_unit.NodeContainer[node_i].clade=my_gt_coal_unit.NodeContainer[node_i].clade+tax_name[tax_name_i];
+            //}
+            //my_gt_coal_unit.NodeContainer[node_i].clade.push_back('&');
+        //}
+        //my_gt_coal_unit.NodeContainer[node_i].clade.erase(my_gt_coal_unit.NodeContainer[node_i].clade.size()-1,1);
+		
+	//}
 	
 
 	//if (!my_gt_coal_unit.check_isUltrametric()){throw "not ultrametic";}
 	
-
 	//rewrite_node_content(gt_nodes_ptr);
     my_gt_coal_unit.rewrite_node_content();
-	string old_gt_string_coal_unit=gt_nodes_ptr.back()->node_content+gt_nodes_ptr.back()->label+";";
+	string old_gt_string_coal_unit = gt_nodes_ptr.back()->node_content + gt_nodes_ptr.back()->label+";";
+	gt_string_coal_unit = remove_interior_label(old_gt_string_coal_unit);
 
 	if (sim_num_gener_bool){
         my_gt_num_gener.rewrite_node_content();
-		//rewrite_node_content(num_gener_gt_nodes_ptr);
-		string old_gt_string_num_gener=num_gener_gt_nodes_ptr.back()->node_content+num_gener_gt_nodes_ptr.back()->label+";";
-		gt_string_gener_num=remove_interior_label(old_gt_string_num_gener);
+		string old_gt_string_num_gener = num_gener_gt_nodes_ptr.back()->node_content+num_gener_gt_nodes_ptr.back()->label+";";
+		gt_string_gener_num = remove_interior_label(old_gt_string_num_gener);
 	}
 
-	gt_string_coal_unit=remove_interior_label(old_gt_string_coal_unit);
         
 	// check if the gene tree is ultramatric.
 	dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
@@ -603,7 +561,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	
 	if ( this->simulation_jobs_->sim_mut_unit_bool ) build_gt_string_mut_unit( );
 	
-	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool ) this->sim_mt_tree( );
+	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool ) this->build_mt_tree( );
 
 	if ( tax_name.size()==2 && this->simulation_jobs_->mono_bool) compute_monophyly_vec(my_gt_coal_unit,sample_size);
 
@@ -611,7 +569,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 }
 
 
-void sim_one_gt::sim_mt_tree(){
+void sim_one_gt::build_mt_tree(){
   	double mutation_rate = this->parameters_->mutation_rate;
     Net mt_tree(gt_string_gener_num);
     vector <double> brch_total;
@@ -622,10 +580,10 @@ void sim_one_gt::sim_mt_tree(){
         brch_total.push_back(total_brchlen);
     }	
     
-    brch_total.back()=0;
+    brch_total.back() = 0;
     this->total_mut = poisson_rand_var(mutation_rate*total_brchlen);
     for ( int mut_i=0; mut_i < this->total_mut; mut_i++){
-        size_t brch_index=0;
+        size_t brch_index = 0;
         double u = unifRand()*total_brchlen;
         while ( u > brch_total[brch_index] ){
              brch_index++;
@@ -796,10 +754,10 @@ string rewrite_pop_string_by_para_string(
 }
 
 
-double update_coal_para( vector < vector <double> > lambda_bk_mat, double num_lineage ){
+double sim_one_gt::update_coal_para( vector < vector <double> > &lambda_bk_mat, double num_lineage ){
 	double coal_para = 0;
 	for ( int lambda_bk_i = 0; lambda_bk_i <= num_lineage-2; lambda_bk_i++ ){
-		coal_para=coal_para+lambda_bk_mat[num_lineage-2][lambda_bk_i];
+		coal_para += lambda_bk_mat[num_lineage-2][lambda_bk_i];
 		dout<<"lambda_bk_mat[num_lineage-2].size() "<<lambda_bk_mat[num_lineage-2].size()<<endl;
 		dout<< " !!! "<<num_lineage<<"  "<< lambda_bk_i+2<<endl;
 		dout<<"coal_para "<<coal_para<<endl;
@@ -807,7 +765,8 @@ double update_coal_para( vector < vector <double> > lambda_bk_mat, double num_li
 	return coal_para;
 }
 
-valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double num_lineage){
+
+valarray <double> sim_one_gt::build_nc_X(vector < vector <double> > &lambda_bk_mat, double num_lineage){
 	valarray <double> nc_X(num_lineage-1);
 	for ( size_t kmerge=0;kmerge<nc_X.size();kmerge++){
 		nc_X[kmerge]= -log( 1-unifRand() )/ lambda_bk_mat[num_lineage-2][kmerge];
@@ -817,51 +776,38 @@ valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double nu
 	return nc_X;
 }
 
+
 //use heap structure for this!
-int update_nc(valarray <double> nc_X){	
+int sim_one_gt::update_nc(valarray <double> nc_X){	
 	for (int kmerge = 0; kmerge < int(nc_X.size()); kmerge++){
-		if (nc_X[kmerge] == nc_X.min()){
+		if ( nc_X[kmerge] == nc_X.min()){
 			//nc=kmerge+2;
-			return kmerge+2;
+			return kmerge + 2;
 			//break;
 		}
 	}
     dout << "k merger was never found ... " << endl;
 }
 
-double kingman_bl(double num_lineage){
-	return -log( 1-unifRand() ) / num_lineage / (num_lineage-1) * 2.0;
-}
-
 	
 /*! \brief Write a fixed parameter into a externed newick formatted network string*/
-string write_para_into_tree(string in_str /*! Externed newick formatted network string*/, 
-double para /*! Coalescent parameter or fixed population sizes */){
-	if ( in_str.size() == 0 ){
-		throw std::invalid_argument("Please define the input tree (network).");
-	}
+string write_para_into_tree( string in_str /*! Externed newick formatted network string*/, 
+                             double para /*! Coalescent parameter or fixed population sizes */){
+	if ( in_str.size() == 0 ) throw std::invalid_argument("Please define the input tree (network).");
+
 	Net para_Net(in_str);
 	for ( size_t i = 0; i < para_Net.NodeContainer.size(); i++){
 		para_Net.NodeContainer[i].set_brchlen1( para );
-		if ( para_Net.NodeContainer[i].hybrid ){
-            para_Net.NodeContainer[i].set_brchlen2( para );
-		}
+		if ( para_Net.NodeContainer[i].hybrid )  para_Net.NodeContainer[i].set_brchlen2( para );
 	}
     para_Net.rewrite_node_content();
 	return construct_adding_new_Net_str(para_Net);
 }
 
 
-string construct_adding_new_Net_str(Net &in_Net){
-	//string out_str;
-	//out_str=in_Net.NodeContainer.back().node_content;
-	//out_str=out_str+in_Net.NodeContainer.back().label;
+string construct_adding_new_Net_str( Net &in_Net ){
     string out_str = in_Net.NodeContainer.back().node_content + in_Net.NodeContainer.back().label;
-	if (in_Net.NodeContainer.back().brchlen1()!=0){
-		ostringstream brchlen_str;
-		brchlen_str<<in_Net.NodeContainer.back().brchlen1();
-		out_str=out_str+":"+brchlen_str.str();
-	}
+	if ( in_Net.NodeContainer.back().brchlen1() != 0 ) 	out_str += ":" + to_string( in_Net.NodeContainer.back().brchlen1() );
 	out_str.push_back(';');
 	return out_str;
 }

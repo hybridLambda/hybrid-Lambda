@@ -29,8 +29,8 @@ bool Net::print_all_node_dout(){
     for (size_t i=0;i<NodeContainer.size();i++){
         for (size_t j=0;j<descndnt[i].size();j++) dout<<setw(3)<<descndnt[i][j];
 
-        if ( is_Net ) NodeContainer[i].print_net_Node_dout();
-        else NodeContainer[i].print_tree_Node_dout();
+        this->NodeContainer[i].print_dout( this->is_Net_() );
+
         dout<<"  ";
         
         for (size_t j=0;j<descndnt2[i].size();j++) dout<<descndnt2[i][j];        

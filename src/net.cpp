@@ -159,6 +159,8 @@ void Net::init_descendant(){
 
 void Net::init_node_clade(){
     for ( size_t i = 0; i < NodeContainer.size(); i++ ){
+        //if ( this->descndnt[i].sum() == 0 ) break;
+
         this->NodeContainer[i].clade.clear();
         for ( size_t tax_name_i = 0; tax_name_i < tax_name.size(); tax_name_i++ ){
             if ( descndnt[i][tax_name_i] != 1) continue;

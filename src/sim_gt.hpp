@@ -28,7 +28,7 @@
 #include <boost/math/special_functions/binomial.hpp>
 #include <stdio.h>
 #include "net.hpp"
-
+#include "mtrand.h"
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
 	
@@ -87,8 +87,6 @@ class action_board {
 class sim_one_gt{
     friend class HybridLambda;
 
-    void compute_monophyly_vec(Net &my_gt_coal_unit,vector < int > sample_size);
-    void Si_num_out_table(Net &mt_tree);
     action_board* simulation_jobs_;
     SimulationParameters* parameters_;
     string gt_string_coal_unit;
@@ -100,13 +98,26 @@ class sim_one_gt{
     double total_brchlen;
     int total_mut;    
     ofstream * Si_table_;
+
     sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
     ~sim_one_gt(){};		
+
+	Net my_gt_coal_unit;
+	
+	Net my_gt_num_gener;
+
+
+    void compute_monophyly_vec( Net &my_gt_coal_unit,vector < int > sample_size );
+    void Si_num_out_table ( Net &mt_tree );
     
     vector < vector <double> > build_lambda_bk_mat(double para, double num_lineage);
     void build_gt_string_mut_unit();
-    void sim_mt_tree();
+    void build_mt_tree();
     
+    double update_coal_para( vector < vector <double> > &lambda_bk_mat, double num_lineage);
+    valarray <double> build_nc_X(vector < vector <double> > &lambda_bk_mat, double num_lineage);
+    int update_nc(valarray <double> nc_X);
+
     string extract_hybrid_para_str(string in_str){
         size_t hash_index = hybrid_hash_index(in_str);
         return in_str.substr(hash_index+1);//,in_str.size()-1);
@@ -119,23 +130,68 @@ class sim_one_gt{
         return para;
     }
 
+    /*! \brief Beta function, requires tgamma function from math.h \return double */
+    double Beta(double x,double y){
+        double Beta_return;
+    //	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
+        Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
+        return Beta_return;
+    }
+    
+    /*! \fn double unifRand()
+     * \brief Simulate random variable between 0 and 1.
+     */
+    double unifRand(){
+        MTRand_closed return_value;
+        return return_value();
+        //return rand()/(double(RAND_MAX)+1);
+        //return rand() / double(RAND_MAX); //generates a psuedo-random float between 0.0 and 0.999...
+    } 
+    
+    double kingman_bl( double num_lineage ){
+	    return -log( 1-unifRand() ) / num_lineage / (num_lineage-1) * 2.0;
+    }
+    
+    /*! \fn int poisson_rand_var(double lambda)
+     * \brief Simulating Poisson random variable from given lambda
+     */
+    int poisson_rand_var( double lambda ){
+        double L = exp(-lambda);
+        int k = 0;
+        double p = 1;
+        while ( p > L ){
+             k++; //k =k + 1;
+             p *= unifRand(); //p=p*unifRand();
+        }
+        //Generate uniform random number u in [0,1] and let pp × u.
+        k--;//k=k-1;	
+        return k;
+    }
+    
+    /*! \brief Compute factorial of a \return double a! */
+    template < class T > T factorial ( T a ){
+        if (a > 1) return (a * factorial (a-1));
+        else       return (1);
+    }
+    
+    /*! \brief Compute a permutations of n \return double */
+    template < class T > T n_permu_a ( T n, T a ){
+        if   ( a > 1 ) return (n*n_permu_a(n-1,a-1));
+        else if (a==1) return (n);
+        else           return (1);
+    }
+    
+    /*! \brief Compute n choose k \return double */
+    template < class T > T n_choose_k ( T n, T k ){
+        if ( k < ( n/2 ) ) return (n_choose_k(n,n-k));
+        else               return (n_permu_a(n,k)/factorial(k));
+    }
 
 };
 
-
-double Beta(double x, double y);
-double unifRand();
-int poisson_rand_var(double lambda);
 string write_sp_string_in_coal_unit(string sp_num_gener_string, string pop_size_string);
 string rewrite_pop_string_by_para_string(string para_string,string pop_size_string);
-
-valarray <double> build_nc_X(vector < vector <double> > lambda_bk_mat, double num_lineage);
-int update_nc(valarray <double> nc_X);
-double update_coal_para(vector < vector <double> > lambda_bk_mat, double num_lineage);
-double kingman_bl(double num_lineage);
-
 string write_para_into_tree(string sp_string, double para);
-
 string construct_adding_new_Net_str(Net & old_Net);
 
 #endif

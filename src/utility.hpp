@@ -49,50 +49,9 @@ string remove_interior_label(string in_str);
 string rm_and_hash_sign(string in_str);
 string rm_and_sign(string in_str);
 string rm_hash_sign(string in_str);
-//void check_and_remove(const char* file_name);
-
 string extract_label(string in_str, size_t i);
 size_t end_of_label_or_bl(string in_str, size_t i);
 size_t hybrid_hash_index(string in_str);
-//string extract_hybrid_label(string in_str);
-//string extract_hybrid_para_str(string in_str);
-//double extract_hybrid_para(string in_str);
-
-/*! \brief Compute factorial of a \return double a! */
-template<class T>
-T factorial (T a){
-	if (a > 1){
-		return (a * factorial (a-1));}
-	else{
-		return (1);}
-}
-
-
-/*! \brief Compute a permutations of n \return double */
-template<class T>
-T n_permu_a (T n, T a){
-	if (a>1){
-		return (n*n_permu_a(n-1,a-1));
-	}
-	else{
-		if (a==1){
-			return (n);
-		}
-		else{
-			return (1);
-		}
-	}
-}
-
-/*! \brief Compute n choose k \return double */
-template<class T>
-T n_choose_k(T n, T k){
-	if (k<(n/2)){
-		return (n_choose_k(n,n-k));}
-	else{
-		return (n_permu_a(n,k)/factorial(k));}
-}
-
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ );
 
 #endif
