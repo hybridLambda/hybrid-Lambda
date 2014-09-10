@@ -215,52 +215,53 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
     size_t remaining_sp_node_i=0;	
 	while (remaining_sp_node.size()>0){
 		size_t node_i = remaining_sp_node[remaining_sp_node_i];
-        //Node current_population = &my_Net.NodeContainer[node_i];
-		if ( my_Net.NodeContainer[node_i].rank() == rank_i ){
-			for ( size_t child_i=0;child_i<my_Net.NodeContainer[node_i].child.size();child_i++){
-				if (my_Net.NodeContainer[node_i].child[child_i]->parent1->label == my_Net.NodeContainer[node_i].label){
-					for ( size_t child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node1.size();child_i_contains_gt_node1_i++){
-						my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.push_back(my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node1[child_i_contains_gt_node1_i]);
+        Node *current_population = &my_Net.NodeContainer[node_i];
+		if ( current_population->rank() == rank_i ){
+			for ( size_t child_i=0;child_i<current_population->child.size();child_i++){
+				if (current_population->child[child_i]->parent1->label == current_population->label){
+                //if ( current_population->child[child_i]->parent1 == current_population ){ // to be used, check later
+					for ( size_t child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<current_population->child[child_i]->Net_node_contains_gt_node1.size();child_i_contains_gt_node1_i++){
+						current_population->Net_node_contains_gt_node1.push_back(current_population->child[child_i]->Net_node_contains_gt_node1[child_i_contains_gt_node1_i]);
 					}
 				}
 				else{
-					if (my_Net.NodeContainer[node_i].child[child_i]->parent2->label != my_Net.NodeContainer[node_i].label ){
+					if (current_population->child[child_i]->parent2->label != current_population->label ){
 						throw std::invalid_argument("parent2 is not correct!!!");
 					}
-					for ( size_t child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node2.size();child_i_contains_gt_node1_i++){
-						my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.push_back(my_Net.NodeContainer[node_i].child[child_i]->Net_node_contains_gt_node2[child_i_contains_gt_node1_i]);
+					for ( size_t child_i_contains_gt_node1_i=0;child_i_contains_gt_node1_i<current_population->child[child_i]->Net_node_contains_gt_node2.size();child_i_contains_gt_node1_i++){
+						current_population->Net_node_contains_gt_node1.push_back(current_population->child[child_i]->Net_node_contains_gt_node2[child_i_contains_gt_node1_i]);
 					}					
 				}
 			}
 
-			dout<<"In population: "<< my_Net.NodeContainer[node_i].label<<" with rank  "<<rank_i;
+			dout<<"In population: "<< current_population->label<<" with rank  "<<rank_i;
 			
 			if (rank_i==my_Net.max_rank){dout<<", at the root, everything coalesces"<<endl;}else{dout<<endl;}
 			//here to choose go left or right for hybrid node.			
-			if (my_Net.NodeContainer[node_i].parent2){
+			if (current_population->parent2){
 				dout<<"hybrid node"<<endl;
-				vector < size_t > Net_node_contains_gt_node_dummy=my_Net.NodeContainer[node_i].Net_node_contains_gt_node1;
-				my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.clear();
-				double left_para=extract_hybrid_para(my_Net.NodeContainer[node_i].label);
+				vector < size_t > Net_node_contains_gt_node_dummy=current_population->Net_node_contains_gt_node1;
+				current_population->Net_node_contains_gt_node1.clear();
+				double left_para=extract_hybrid_para(current_population->label);
 				for ( size_t contains_gt_node_i=0;contains_gt_node_i<Net_node_contains_gt_node_dummy.size();contains_gt_node_i++){
 					if (unifRand()<left_para){
-						my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.push_back(Net_node_contains_gt_node_dummy[contains_gt_node_i]);
+						current_population->Net_node_contains_gt_node1.push_back(Net_node_contains_gt_node_dummy[contains_gt_node_i]);
 					}
 					else{
-						my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.push_back(Net_node_contains_gt_node_dummy[contains_gt_node_i]);
+						current_population->Net_node_contains_gt_node2.push_back(Net_node_contains_gt_node_dummy[contains_gt_node_i]);
 					}
 				}
 			}
 			
-			double num_lineage=double(my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.size());
+			double num_lineage=double(current_population->Net_node_contains_gt_node1.size());
 						
 			vector < vector <double> > lambda_bk_mat;
 			if (my_para_net.NodeContainer[node_i].brchlen1()!=2){
 				lambda_bk_mat=build_lambda_bk_mat(my_para_net.NodeContainer[node_i].brchlen1(), num_lineage);			
 			}
 			
-			double remaining_length=my_Net.NodeContainer[node_i].brchlen1();
-			dout<<num_lineage<<" lineages entering population "<< my_Net.NodeContainer[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+			double remaining_length=current_population->brchlen1();
+			dout<<num_lineage<<" lineages entering population "<< current_population->label <<" with remaining branch length of "<<remaining_length  <<endl;
 
 			int nc=0;
 			double length=0;
@@ -291,8 +292,8 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				if (nc>1){
 					dout<<"  "<<nc<<" lineages coalesce at time "<<length<<endl;
 					for (int nc_i=0;nc_i<nc;nc_i++){
-						lineage_index= rand() % my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.size();
-						gt_child_node_index=my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[lineage_index];
+						lineage_index= rand() % current_population->Net_node_contains_gt_node1.size();
+						gt_child_node_index=current_population->Net_node_contains_gt_node1[lineage_index];
 						gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( gt_nodes_ptr[gt_child_node_index]->brchlen1() + length ); // b_alpha <- b_alpha + l
 
 						//add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
@@ -306,7 +307,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 						if (sim_num_gener_bool){
 							my_gt_num_gener.descndnt[remaining_gt_node[0]]=my_gt_num_gener.descndnt[remaining_gt_node[0]]+my_gt_num_gener.descndnt[gt_child_node_index];
 						}
-						my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.erase(my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.begin()+lineage_index); // X'\{alpha}
+						current_population->Net_node_contains_gt_node1.erase(current_population->Net_node_contains_gt_node1.begin()+lineage_index); // X'\{alpha}
 					}
 				}
 				
@@ -314,21 +315,21 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				if (sim_num_gener_bool){
 					my_gt_num_gener.NodeContainer[remaining_gt_node[0]].num_descndnt=my_gt_num_gener.descndnt[remaining_gt_node[0]].sum();
 				}
-				my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.push_back(remaining_gt_node[0]);// introducing a new lineage gamma
+				current_population->Net_node_contains_gt_node1.push_back(remaining_gt_node[0]);// introducing a new lineage gamma
 
 
 				gt_nodes_ptr[remaining_gt_node[0]]->height = gt_nodes_ptr[remaining_gt_node[0]]->child[0]->height + gt_nodes_ptr[remaining_gt_node[0]]->child[0]->brchlen1(); // a_gamma <- a_alpha + b_alpha
-				for ( size_t update_brch_i=0;update_brch_i<my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.size()-1;update_brch_i++){
-					gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[update_brch_i]]->set_brchlen1 ( gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[update_brch_i]]->brchlen1()+length );		
+				for ( size_t update_brch_i=0;update_brch_i<current_population->Net_node_contains_gt_node1.size()-1;update_brch_i++){
+					gt_nodes_ptr[current_population->Net_node_contains_gt_node1[update_brch_i]]->set_brchlen1 ( gt_nodes_ptr[current_population->Net_node_contains_gt_node1[update_brch_i]]->brchlen1()+length );		
 					if (sim_num_gener_bool){
-						num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[update_brch_i]]->set_brchlen1 ( length*my_pop_net.NodeContainer[node_i].brchlen1()+num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[update_brch_i]]->brchlen1()) ;
+						num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[update_brch_i]]->set_brchlen1 ( length*my_pop_net.NodeContainer[node_i].brchlen1()+num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[update_brch_i]]->brchlen1()) ;
 					}
 				}
 				remaining_gt_node.erase(remaining_gt_node.begin());
 				
-				remaining_length= remaining_length - length;
+				remaining_length -= length;
 					//dout<<"remaining_length "<<remaining_length<<endl;
-				num_lineage=double(my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.size());
+				num_lineage=double(current_population->Net_node_contains_gt_node1.size());
 
 					//dout<<"checking num_lineage "<<num_lineage<<endl;
 
@@ -345,22 +346,22 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 						length=kingman_bl(num_lineage);
 					}
 				}
-				dout<<num_lineage<<" live lineages in population "<< my_Net.NodeContainer[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+				dout<<num_lineage<<" live lineages in population "<< current_population->label <<" with remaining branch length of "<<remaining_length  <<endl;
 			
 			}
 			
 				
 			
-			if (my_Net.NodeContainer[node_i].parent2){			
+			if (current_population->parent2){			
 				dout<<"hybrid node parent1 finished, in parent 2 now"<<endl;
-				double num_lineage=(my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.size());
+				double num_lineage=(current_population->Net_node_contains_gt_node2.size());
 				lambda_bk_mat.clear();
 				if (my_para_net.NodeContainer[node_i].brchlen2()!=2){
 					lambda_bk_mat=build_lambda_bk_mat(my_para_net.NodeContainer[node_i].brchlen2(),num_lineage);
 				}
 											
-				double remaining_length = my_Net.NodeContainer[node_i].brchlen2();
-				dout<<num_lineage<<" lineages entering population "<< my_Net.NodeContainer[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+				double remaining_length = current_population->brchlen2();
+				dout<<num_lineage<<" lineages entering population "<< current_population->label <<" with remaining branch length of "<<remaining_length  <<endl;
 
 				double length=0;		
 				int nc=0;
@@ -394,8 +395,8 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 						dout<<"  "<<nc<<" lineages coalesce at time "<<length<<endl;
 
 						for (int nc_i=0;nc_i<nc;nc_i++){
-							lineage_index= rand() % my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.size();
-							gt_child_node_index=my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[lineage_index];
+							lineage_index= rand() % current_population->Net_node_contains_gt_node2.size();
+							gt_child_node_index=current_population->Net_node_contains_gt_node2[lineage_index];
 							gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( gt_nodes_ptr[gt_child_node_index]->brchlen1() + length ); // b_alpha <- b_alpha + l
 							//add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
                             gt_nodes_ptr[remaining_gt_node[0]]->add_child( gt_nodes_ptr[gt_child_node_index] );
@@ -408,7 +409,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 							if (sim_num_gener_bool){
 								my_gt_num_gener.descndnt[remaining_gt_node[0]]=my_gt_num_gener.descndnt[remaining_gt_node[0]]+my_gt_num_gener.descndnt[gt_child_node_index];
 							}
-							my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.erase(my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.begin()+lineage_index); // X'\{alpha}
+							current_population->Net_node_contains_gt_node2.erase(current_population->Net_node_contains_gt_node2.begin()+lineage_index); // X'\{alpha}
 							
 						}
 					}
@@ -417,18 +418,18 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 					if (sim_num_gener_bool){
 						my_gt_num_gener.NodeContainer[remaining_gt_node[0]].num_descndnt=my_gt_num_gener.descndnt[remaining_gt_node[0]].sum();
 					}
-					my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.push_back(remaining_gt_node[0]);
+					current_population->Net_node_contains_gt_node2.push_back(remaining_gt_node[0]);
 
 					gt_nodes_ptr[remaining_gt_node[0]]->height=gt_nodes_ptr[remaining_gt_node[0]]->child[0]->height+gt_nodes_ptr[remaining_gt_node[0]]->child[0]->brchlen1();
-					for ( size_t update_brch_i=0;update_brch_i<my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.size()-1;update_brch_i++){
-						gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[update_brch_i]]->set_brchlen1 ( gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[update_brch_i]]->brchlen1() + length );		
+					for ( size_t update_brch_i=0;update_brch_i<current_population->Net_node_contains_gt_node2.size()-1;update_brch_i++){
+						gt_nodes_ptr[current_population->Net_node_contains_gt_node2[update_brch_i]]->set_brchlen1 ( gt_nodes_ptr[current_population->Net_node_contains_gt_node2[update_brch_i]]->brchlen1() + length );		
 						if (sim_num_gener_bool){
-							num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[update_brch_i]]->set_brchlen1 ( length*my_pop_net.NodeContainer[node_i].brchlen2() + num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[update_brch_i]]->brchlen1());
+							num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node2[update_brch_i]]->set_brchlen1 ( length*my_pop_net.NodeContainer[node_i].brchlen2() + num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node2[update_brch_i]]->brchlen1());
 						}
 					}
 					remaining_gt_node.erase(remaining_gt_node.begin());
 					remaining_length= remaining_length - length;
-					num_lineage=double(my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.size());
+					num_lineage=double(current_population->Net_node_contains_gt_node2.size());
 						//dout<<"checking num_lineage "<<num_lineage<<endl;
 					
 					nc=0;
@@ -448,7 +449,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 						//dout<<"(0)num_lineage "<<num_lineage<<endl;
 						//dout<<"(0)remaining length is   "<<remaining_length<<endl;
 						//dout<<"(0)proposed exp length is   "<<length<<endl;
-					dout<<num_lineage<<" live lineages in population "<< my_Net.NodeContainer[node_i].label <<" with remaining branch length of "<<remaining_length  <<endl;
+					dout<<num_lineage<<" live lineages in population "<< current_population->label <<" with remaining branch length of "<<remaining_length  <<endl;
 
 				}
 			}
@@ -457,34 +458,34 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			assert(my_gt_coal_unit.print_all_node_dout());
 			
 			if (rank_i<my_Net.max_rank){
-				if (my_Net.NodeContainer[node_i].parent2){
-					for ( size_t num_lineage_i=0;num_lineage_i<my_Net.NodeContainer[node_i].Net_node_contains_gt_node2.size();num_lineage_i++){
-					//	gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node[num_lineage_i]]->brchlen1=gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node[num_lineage_i]]->brchlen1+my_Net.NodeContainer[node_i].parent1->height-gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node[num_lineage_i]]->height;
-					//	gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node[num_lineage_i]]->height=my_Net.NodeContainer[node_i].parent1->height;	
+				if (current_population->parent2){
+					for ( size_t num_lineage_i=0;num_lineage_i<current_population->Net_node_contains_gt_node2.size();num_lineage_i++){
+					//	gt_nodes_ptr[current_population->Net_node_contains_gt_node[num_lineage_i]]->brchlen1=gt_nodes_ptr[current_population->Net_node_contains_gt_node[num_lineage_i]]->brchlen1+current_population->parent1->height-gt_nodes_ptr[current_population->Net_node_contains_gt_node[num_lineage_i]]->height;
+					//	gt_nodes_ptr[current_population->Net_node_contains_gt_node[num_lineage_i]]->height=current_population->parent1->height;	
 						if (sim_num_gener_bool){
-							if ((gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height)>  my_Net.NodeContainer[node_i].height){
-							  num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( (my_Net.NodeContainer[node_i].parent2->height - gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height)*my_pop_net.NodeContainer[node_i].brchlen2() );//+num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;		
+							if ((gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->height)>  current_population->height){
+							  num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( (current_population->parent2->height - gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->height)*my_pop_net.NodeContainer[node_i].brchlen2() );//+num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;		
 							}
 							else{
-							  num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( (my_Net.NodeContainer[node_i].parent2->height - gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height- gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1() )*my_pop_net.NodeContainer[node_i].brchlen2() + num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->brchlen1() );
+							  num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( (current_population->parent2->height - gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->height- gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->brchlen1() )*my_pop_net.NodeContainer[node_i].brchlen2() + num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->brchlen1() );
 							}
 						}
-						gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( my_Net.NodeContainer[node_i].parent2->height -gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node2[num_lineage_i]]->height );
+						gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( current_population->parent2->height -gt_nodes_ptr[current_population->Net_node_contains_gt_node2[num_lineage_i]]->height );
 					}					
 				}
 				//else{
 				// through parent 1, it should always be checked!!!	
 				
-				for ( size_t num_lineage_i=0;num_lineage_i<my_Net.NodeContainer[node_i].Net_node_contains_gt_node1.size();num_lineage_i++){
+				for ( size_t num_lineage_i=0;num_lineage_i<current_population->Net_node_contains_gt_node1.size();num_lineage_i++){
 					if (sim_num_gener_bool){
-						if ((gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height)>  my_Net.NodeContainer[node_i].height){
-							num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( (my_Net.NodeContainer[node_i].parent1->height - gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height)*my_pop_net.NodeContainer[node_i].brchlen1() );//+num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
+						if ((gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->height)>  current_population->height){
+							num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( (current_population->parent1->height - gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->height)*my_pop_net.NodeContainer[node_i].brchlen1() );//+num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
 						}
 						else{
-							num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( (my_Net.NodeContainer[node_i].parent1->height - gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height- gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1())*my_pop_net.NodeContainer[node_i].brchlen1() + num_gener_gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->brchlen1() );						
+							num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( (current_population->parent1->height - gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->height- gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->brchlen1())*my_pop_net.NodeContainer[node_i].brchlen1() + num_gener_gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->brchlen1() );						
 						}
 					}
-					gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( my_Net.NodeContainer[node_i].parent1->height -gt_nodes_ptr[my_Net.NodeContainer[node_i].Net_node_contains_gt_node1[num_lineage_i]]->height) ;
+					gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( current_population->parent1->height -gt_nodes_ptr[current_population->Net_node_contains_gt_node1[num_lineage_i]]->height) ;
 				}
 				//}
 				
@@ -493,7 +494,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 
 			}
 			remaining_sp_node.erase(remaining_sp_node.begin()+remaining_sp_node_i);
-				//dout<<rank_i<<" "<<my_Net.NodeContainer[node_i].label<<" "<<my_Net.NodeContainer[node_i].path_time.size()<<endl;
+				//dout<<rank_i<<" "<<current_population->label<<" "<<current_population->path_time.size()<<endl;
 		}
 		else{
 			remaining_sp_node_i++;
