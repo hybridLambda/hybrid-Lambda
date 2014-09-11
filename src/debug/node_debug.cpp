@@ -22,7 +22,7 @@
 
 #include "../node.hpp"
 
-void Node::print_dout( bool is_Net ){
+bool Node::print_dout( bool is_Net ){
     dout << setw(12) << label;
 	if ( is_Net ) dout << setw(6) << hybrid;
     if ( is_Net ) dout << setw(8) << descndnt_of_hybrid;
@@ -47,4 +47,5 @@ void Node::print_dout( bool is_Net ){
 	if ( is_Net ) dout << setw(3) << this->e_num2();
 	dout << "    " << this->clade;
 	//dout<<endl;
+    return true;
 }

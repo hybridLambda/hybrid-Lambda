@@ -87,7 +87,7 @@ class Node {
         void set_visited ( bool TorF ){ this->visited_ = TorF; }
     
         void print( bool is_Net );
-        void print_dout( bool is_Net );
+        bool print_dout( bool is_Net );
         void find_tip();
         void find_hybrid_descndnt();
         

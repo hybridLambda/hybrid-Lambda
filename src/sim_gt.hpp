@@ -98,7 +98,7 @@ class sim_one_gt{
     string gt_string_mut_num;
     string gt_string_mut_unit;
     string gt_string_gener_num;
-    vector <string> tax_name;
+    //vector <string> tax_name;
     vector <double> monophyly;
     double total_brchlen;
     int total_mut;    
@@ -109,9 +109,10 @@ class sim_one_gt{
 
 	Net my_gt_coal_unit;
 	Net my_gt_num_gener;
-
+    void init();
+bool sim_num_gener_bool_;
 	vector <size_t> remaining_sp_node;
-
+void initialize_gt_tip_nodes( Net & my_Net );
 
 Node *current_sp_pop_node;
 

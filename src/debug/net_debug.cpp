@@ -29,7 +29,7 @@ bool Net::print_all_node_dout(){
     for (size_t i=0;i<NodeContainer.size();i++){
         for (size_t j=0;j<descndnt[i].size();j++) dout<<setw(3)<<descndnt[i][j];
 
-        this->NodeContainer[i].print_dout( this->is_Net_() );
+        assert( this->NodeContainer[i].print_dout( this->is_Net_() ) );
 
         dout<<"  ";
         

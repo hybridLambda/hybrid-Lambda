@@ -47,6 +47,7 @@ SimulationParameters::SimulationParameters(){
     this->is_Net = false;
 	this->num_gener_bool=false;
 	this->sp_coal_unit_bool=false;
+    this->total_num_lineage = 0;
 }
 
 
@@ -80,10 +81,7 @@ void SimulationParameters::finalize(){
 		if (sample_size.size() != net_dummy.tax_name.size()) 	throw std::invalid_argument("Numbers of samples and numbers of species not equal!!!");
 	}
     
-    this->total_num_lineage = 0;
-    for ( size_t i = 0; i < this->sample_size.size();i++){
-		this->total_num_lineage += this->sample_size[i];
-	}
+    for ( size_t i = 0; i < this->sample_size.size(); i++) this->total_num_lineage += this->sample_size[i];
     
 	sp_string_pop_size = rewrite_pop_string_by_para_string(para_string,sp_string_pop_size);  // checking if modify pop_size_string is needed,
 
@@ -97,6 +95,47 @@ void SimulationParameters::finalize(){
 
 }
 
+void sim_one_gt::init(){
+    sim_num_gener_bool_ = false;
+}
+
+
+void sim_one_gt::initialize_gt_tip_nodes( Net & my_Net ){
+    dout << " initialize_gt_tip_nodes " << endl;
+	for ( size_t i = 0; i < my_Net.NodeContainer.size(); i++ ){
+		if ( !my_Net.NodeContainer[i].tip_bool ) continue;
+        
+        for ( size_t sample_size_i = 0; sample_size_i < this->parameters_->sample_size.size(); sample_size_i++){
+            if ( my_Net.descndnt[i][sample_size_i] == 0 ) continue;
+
+            for ( size_t sample_i = 0; sample_i < this->parameters_->sample_size[sample_size_i]; sample_i++){
+                my_gt_coal_unit.NodeContainer.push_back(my_Net.NodeContainer[i]);
+                my_gt_coal_unit.descndnt.push_back(my_Net.descndnt[i]);
+                my_gt_coal_unit.NodeContainer.back().label += "_" + to_string( sample_i+1 );
+                my_gt_coal_unit.NodeContainer.back().set_brchlen1( 0.0 );
+                my_gt_coal_unit.NodeContainer.back().parent1 = NULL;
+                my_gt_coal_unit.NodeContainer.back().parent2 = NULL;
+                if ( sim_num_gener_bool_ ){
+                    my_gt_num_gener.NodeContainer.push_back(my_gt_coal_unit.NodeContainer.back());
+                    my_gt_num_gener.descndnt.push_back(my_gt_coal_unit.descndnt.back());
+                }
+                assert( my_gt_coal_unit.NodeContainer.back().print_dout( my_Net.is_Net) );
+                dout << endl;
+            }
+        }
+    }    
+}
+
+
+
+
+//void sim_one_gt::initialize_remaining_sp_node ( Net & my_Net ){
+    
+//}
+
+//void sim_one_gt::mapping_gt_node_to_sp ( Net & my_Net ){
+    
+//}
 
 
 sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
@@ -107,55 +146,31 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	string sp_string_pop_size= this->parameters_->sp_string_pop_size;
 	string para_string = this->parameters_->para_string;
     
-	vector < int > sample_size= this->parameters_->sample_size;
+	//vector < int > sample_size = this->parameters_->sample_size;
 	
-	bool sim_num_gener_bool= this->simulation_jobs_->sim_num_gener_bool;
-	if ( this->simulation_jobs_->sim_mut_unit_bool ||  this->simulation_jobs_->sim_num_mut_bool){
-		sim_num_gener_bool=true;
-	}
+	sim_num_gener_bool_ = this->simulation_jobs_->sim_num_gener_bool;	
+    if ( this->simulation_jobs_->sim_mut_unit_bool ||  this->simulation_jobs_->sim_num_mut_bool) sim_num_gener_bool_ = true;
 	
     // \todo the following three trees should have been passed with parameters_
     Net my_Net(sp_string_coal_unit);
 	Net my_pop_net(sp_string_pop_size);
 	Net my_para_net(para_string);
     
-	tax_name=my_Net.tax_name;
+	//tax_name = my_Net.tax_name;
     	
-	for ( size_t i = 0; i < my_Net.NodeContainer.size(); i++ ){
-		if ( my_Net.NodeContainer[i].tip_bool ){
-			for ( size_t sample_size_i=0;sample_size_i<sample_size.size();sample_size_i++){
-				if (my_Net.descndnt[i][sample_size_i]>0){
-					for (int pop_i=0;pop_i<sample_size[sample_size_i];pop_i++){
-						my_gt_coal_unit.NodeContainer.push_back(my_Net.NodeContainer[i]);
-						my_gt_coal_unit.descndnt.push_back(my_Net.descndnt[i]);
-						//ostringstream pop_i_size_str;
-						//pop_i_size_str<<pop_i+1;
-						//my_gt_coal_unit.NodeContainer.back().label=my_gt_coal_unit.NodeContainer.back().label+"_"+pop_i_size_str.str();
-                        my_gt_coal_unit.NodeContainer.back().label=my_gt_coal_unit.NodeContainer.back().label+"_" + to_string(pop_i+1);
-						my_gt_coal_unit.NodeContainer.back().set_brchlen1( 0.0 );
-						my_gt_coal_unit.NodeContainer.back().parent1 = NULL;
-						my_gt_coal_unit.NodeContainer.back().parent2 = NULL;
-						if (sim_num_gener_bool){
-							my_gt_num_gener.NodeContainer.push_back(my_gt_coal_unit.NodeContainer.back());
-							my_gt_num_gener.descndnt.push_back(my_gt_coal_unit.descndnt.back());
-						}
-					}
-				}
-			}
-		}	
-	}
+    this->initialize_gt_tip_nodes( my_Net );
 	
     // mapping remaining_sp_node
 	//vector <size_t> remaining_sp_node;
 	remaining_sp_node.clear();
 
-	for ( size_t sp_node_i=0;sp_node_i < my_Net.NodeContainer.size();sp_node_i++){
+	for ( size_t sp_node_i=0; sp_node_i < my_Net.NodeContainer.size(); sp_node_i++ ){
 		if (!my_Net.NodeContainer[sp_node_i].tip_bool){
 			remaining_sp_node.push_back(sp_node_i);
 		}
 		else{
-			if (sample_size.size()>1){
-				remaining_sp_node.push_back(sp_node_i);
+			if (this->parameters_->sample_size.size()>1){
+				remaining_sp_node.push_back( sp_node_i );
 			}
 			for ( size_t gt_node_i=0;gt_node_i<my_gt_coal_unit.NodeContainer.size();gt_node_i++){
 				valarray <bool> comp = (my_gt_coal_unit.descndnt[gt_node_i] == my_Net.descndnt[sp_node_i]);
@@ -173,39 +188,36 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 		Node new_interior_node;
         new_interior_node.label = ( interior_i == (gt_num_tips-1) ) ? "root" : 
                                                                       "Int_" + to_string(interior_i) ;
-		remaining_gt_node.push_back(my_gt_coal_unit.NodeContainer.size());//my_gt_coal_unit.NodeContainer.size() is the current index of the gt interior node.
+		remaining_gt_node.push_back(my_gt_coal_unit.NodeContainer.size()); //my_gt_coal_unit.NodeContainer.size() is the current index of the gt interior node.
 		my_gt_coal_unit.NodeContainer.push_back(new_interior_node);
 		valarray <int> intialize_descndnt(num_tax);
 		my_gt_coal_unit.descndnt.push_back(intialize_descndnt);
-		if (sim_num_gener_bool){
+		if ( sim_num_gener_bool_ ){
 			my_gt_num_gener.NodeContainer.push_back(my_gt_coal_unit.NodeContainer.back());
 			my_gt_num_gener.descndnt.push_back(my_gt_coal_unit.descndnt.back());
 		}
 	}
 	
-	//vector <Node*> gt_nodes_ptr;
-	for ( size_t gt_node_i=0; gt_node_i < my_gt_coal_unit.NodeContainer.size();gt_node_i++){
-		//Node* new_node_ptr=NULL;
-		//gt_nodes_ptr.push_back(new_node_ptr);
-		//gt_nodes_ptr[gt_node_i]=&my_gt_coal_unit.NodeContainer[gt_node_i];
-		valarray <int> descndnt2_dummy;
-		my_gt_coal_unit.descndnt2.push_back(descndnt2_dummy);
-	}
+	//for ( size_t gt_node_i=0; gt_node_i < my_gt_coal_unit.NodeContainer.size();gt_node_i++){
+		//valarray <int> descndnt2_dummy;
+		//my_gt_coal_unit.descndnt2.push_back(descndnt2_dummy);
+	//}
+
 	vector <Node*> num_gener_gt_nodes_ptr;
-	if (sim_num_gener_bool){
+	if (sim_num_gener_bool_){
 		for ( size_t gt_node_i=0;gt_node_i<my_gt_num_gener.NodeContainer.size();gt_node_i++){
 			Node* new_node_ptr=NULL;
 			num_gener_gt_nodes_ptr.push_back(new_node_ptr);
 			num_gener_gt_nodes_ptr[gt_node_i]=&my_gt_num_gener.NodeContainer[gt_node_i];
-			valarray <int> descndnt2_dummy;
-			my_gt_num_gener.descndnt2.push_back(descndnt2_dummy);
+			//valarray <int> descndnt2_dummy;
+			//my_gt_num_gener.descndnt2.push_back(descndnt2_dummy);
 	
 		}
 	}
     
 	int rank_i=1;
     size_t remaining_sp_node_i=0;	
-	while (remaining_sp_node.size()>0){
+	while ( remaining_sp_node.size() > 0 ){
 		size_t node_i = remaining_sp_node[remaining_sp_node_i];
         current_sp_pop_node = &my_Net.NodeContainer[node_i];
 		
@@ -272,9 +284,10 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			}
 
 			int lineage_index;
-			 size_t gt_child_node_index;
-			while (((length < remaining_length) && (num_lineage>1) )  || ( (rank_i==my_Net.max_rank) && (num_lineage>1 )) ){
-					
+            size_t gt_child_node_index;
+			// The first condition is valid when proposed coalsecent will happen befoer moving on to the next population. 
+            // The second condition is valid when it is above the root
+            while ( ( (length < remaining_length) && (num_lineage>1) )  || ( (rank_i == my_Net.max_rank) && (num_lineage>1 )) ){
 					//dout<<endl<<endl;
 					//dout<<"(1)num_lineage "<<num_lineage<<endl;
 					//dout<<"(1)remaining length is   "<<remaining_length<<endl;
@@ -288,13 +301,13 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 
 						//add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
                         my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].add_child( &my_gt_coal_unit.NodeContainer[gt_child_node_index] );
-						if (sim_num_gener_bool){
+						if (sim_num_gener_bool_){
 							num_gener_gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( num_gener_gt_nodes_ptr[gt_child_node_index]->brchlen1()+(length * my_pop_net.NodeContainer[node_i].brchlen1()) ) ; // b_alpha <- b_alpha + l*pop_size
 							//add_node(num_gener_gt_nodes_ptr[remaining_gt_node[0]],num_gener_gt_nodes_ptr[gt_child_node_index]);
                             num_gener_gt_nodes_ptr[remaining_gt_node[0]]->add_child(num_gener_gt_nodes_ptr[gt_child_node_index]);
 						}
 						my_gt_coal_unit.descndnt[remaining_gt_node[0]]=my_gt_coal_unit.descndnt[remaining_gt_node[0]]+my_gt_coal_unit.descndnt[gt_child_node_index];
-						if (sim_num_gener_bool){
+						if (sim_num_gener_bool_){
 							my_gt_num_gener.descndnt[remaining_gt_node[0]]=my_gt_num_gener.descndnt[remaining_gt_node[0]]+my_gt_num_gener.descndnt[gt_child_node_index];
 						}
 						current_sp_pop_node->Net_node_contains_gt_node1.erase(current_sp_pop_node->Net_node_contains_gt_node1.begin()+lineage_index); // X'\{alpha}
@@ -302,7 +315,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				}
 				
 				my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].num_descndnt=my_gt_coal_unit.descndnt[remaining_gt_node[0]].sum();
-				if (sim_num_gener_bool){
+				if (sim_num_gener_bool_){
 					my_gt_num_gener.NodeContainer[remaining_gt_node[0]].num_descndnt=my_gt_num_gener.descndnt[remaining_gt_node[0]].sum();
 				}
 				current_sp_pop_node->Net_node_contains_gt_node1.push_back(remaining_gt_node[0]);// introducing a new lineage gamma
@@ -311,7 +324,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 				my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].height = my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].child[0]->height + my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].child[0]->brchlen1(); // a_gamma <- a_alpha + b_alpha
 				for ( size_t update_brch_i=0;update_brch_i<current_sp_pop_node->Net_node_contains_gt_node1.size()-1;update_brch_i++){
 					my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node1[update_brch_i]].set_brchlen1 ( my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node1[update_brch_i]].brchlen1()+length );		
-					if (sim_num_gener_bool){
+					if (sim_num_gener_bool_){
 						num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node1[update_brch_i]]->set_brchlen1 ( length*my_pop_net.NodeContainer[node_i].brchlen1()+num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node1[update_brch_i]]->brchlen1()) ;
 					}
 				}
@@ -390,13 +403,13 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 							my_gt_coal_unit.NodeContainer[gt_child_node_index].set_brchlen1 ( my_gt_coal_unit.NodeContainer[gt_child_node_index].brchlen1() + length ); // b_alpha <- b_alpha + l
 							//add_node(gt_nodes_ptr[remaining_gt_node[0]],gt_nodes_ptr[gt_child_node_index]);
                             my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].add_child( &my_gt_coal_unit.NodeContainer[gt_child_node_index] );
-							if (sim_num_gener_bool){
+							if (sim_num_gener_bool_){
 								num_gener_gt_nodes_ptr[gt_child_node_index]->set_brchlen1 ( num_gener_gt_nodes_ptr[gt_child_node_index]->brchlen1() + length*my_pop_net.NodeContainer[node_i].brchlen2() ); // b_alpha <- b_alpha + l
 								//add_node(num_gener_gt_nodes_ptr[remaining_gt_node[0]],num_gener_gt_nodes_ptr[gt_child_node_index]);
                                 num_gener_gt_nodes_ptr[remaining_gt_node[0]]->add_child( num_gener_gt_nodes_ptr[gt_child_node_index] );
 							}
 							my_gt_coal_unit.descndnt[remaining_gt_node[0]]=my_gt_coal_unit.descndnt[remaining_gt_node[0]]+my_gt_coal_unit.descndnt[gt_child_node_index];
-							if (sim_num_gener_bool){
+							if (sim_num_gener_bool_){
 								my_gt_num_gener.descndnt[remaining_gt_node[0]]=my_gt_num_gener.descndnt[remaining_gt_node[0]]+my_gt_num_gener.descndnt[gt_child_node_index];
 							}
 							current_sp_pop_node->Net_node_contains_gt_node2.erase(current_sp_pop_node->Net_node_contains_gt_node2.begin()+lineage_index); // X'\{alpha}
@@ -405,7 +418,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 					}
 
 					my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].num_descndnt=my_gt_coal_unit.descndnt[remaining_gt_node[0]].sum();
-					if (sim_num_gener_bool){
+					if (sim_num_gener_bool_){
 						my_gt_num_gener.NodeContainer[remaining_gt_node[0]].num_descndnt=my_gt_num_gener.descndnt[remaining_gt_node[0]].sum();
 					}
 					current_sp_pop_node->Net_node_contains_gt_node2.push_back(remaining_gt_node[0]);
@@ -413,7 +426,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 					my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].height=my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].child[0]->height+my_gt_coal_unit.NodeContainer[remaining_gt_node[0]].child[0]->brchlen1();
 					for ( size_t update_brch_i=0;update_brch_i<current_sp_pop_node->Net_node_contains_gt_node2.size()-1;update_brch_i++){
 						my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node2[update_brch_i]].set_brchlen1 ( my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node2[update_brch_i]].brchlen1() + length );		
-						if (sim_num_gener_bool){
+						if (sim_num_gener_bool_){
 							num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node2[update_brch_i]]->set_brchlen1 ( length*my_pop_net.NodeContainer[node_i].brchlen2() + num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node2[update_brch_i]]->brchlen1());
 						}
 					}
@@ -447,12 +460,12 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 			dout<<"*************************before adjusting***************"<<endl;
 			assert(my_gt_coal_unit.print_all_node_dout());
 			
-			if (rank_i<my_Net.max_rank){
-				if (current_sp_pop_node->parent2){
-					for ( size_t num_lineage_i=0;num_lineage_i<current_sp_pop_node->Net_node_contains_gt_node2.size();num_lineage_i++){
+			if ( rank_i < my_Net.max_rank ){
+				if ( current_sp_pop_node-> parent2 ){
+					for ( size_t num_lineage_i=0; num_lineage_i < current_sp_pop_node->Net_node_contains_gt_node2.size(); num_lineage_i++){
 					//	gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node[num_lineage_i]]->brchlen1=gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node[num_lineage_i]]->brchlen1+current_sp_pop_node->parent1->height-gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node[num_lineage_i]]->height;
 					//	gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node[num_lineage_i]]->height=current_sp_pop_node->parent1->height;	
-						if (sim_num_gener_bool){
+						if (sim_num_gener_bool_){
 							if ((my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node2[num_lineage_i]].height )>  current_sp_pop_node->height){
 							  num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node2[num_lineage_i]]->set_brchlen1 ( (current_sp_pop_node->parent2->height - my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node2[num_lineage_i]].height)*my_pop_net.NodeContainer[node_i].brchlen2() );//+num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;		
 							}
@@ -463,11 +476,9 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 						my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node2[num_lineage_i]].set_brchlen1 ( current_sp_pop_node->parent2->height -my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node2[num_lineage_i]].height );
 					}					
 				}
-				//else{
-				// through parent 1, it should always be checked!!!	
 				
-				for ( size_t num_lineage_i=0;num_lineage_i<current_sp_pop_node->Net_node_contains_gt_node1.size();num_lineage_i++){
-					if (sim_num_gener_bool){
+				for ( size_t num_lineage_i = 0; num_lineage_i < current_sp_pop_node->Net_node_contains_gt_node1.size(); num_lineage_i++ ){
+					if (sim_num_gener_bool_){
 						if ((my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]].height)>  current_sp_pop_node->height){
 							num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]]->set_brchlen1 ( (current_sp_pop_node->parent1->height - my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]].height)*my_pop_net.NodeContainer[node_i].brchlen1() );//+num_gener_gt_nodes_ptr[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]]->brchlen1;						
 						}
@@ -477,13 +488,14 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 					}
 					my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]].set_brchlen1 ( current_sp_pop_node->parent1->height -my_gt_coal_unit.NodeContainer[current_sp_pop_node->Net_node_contains_gt_node1[num_lineage_i]].height) ;
 				}
-				//}
 				
 					dout<<"************************* after adjusting***************"<<endl;
 					assert(my_gt_coal_unit.print_all_node_dout());
 
 			}
-			remaining_sp_node.erase(remaining_sp_node.begin()+remaining_sp_node_i);
+            
+            
+			remaining_sp_node.erase( remaining_sp_node.begin() + remaining_sp_node_i );
 				//dout<<rank_i<<" "<<current_sp_pop_node->label<<" "<<current_sp_pop_node->path_time.size()<<endl;
 		}
 		else{
@@ -510,15 +522,21 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	for ( size_t node_i = 0; node_i < my_gt_coal_unit.NodeContainer.size(); ){
 		if ( my_gt_coal_unit.NodeContainer[node_i].num_descndnt == 0 ){
 			my_gt_coal_unit.NodeContainer.erase(my_gt_coal_unit.NodeContainer.begin()+node_i);
-			if (sim_num_gener_bool){
-				my_gt_num_gener.NodeContainer.erase(my_gt_num_gener.NodeContainer.begin() + node_i);
-			}
+			if (sim_num_gener_bool_) my_gt_num_gener.NodeContainer.erase(my_gt_num_gener.NodeContainer.begin() + node_i);
 		}
 		else{
 			node_i++;
 		}
 	}
-	my_gt_coal_unit.tax_name = tax_name;
+
+
+	//for ( size_t node_i = 0; node_i < my_gt_coal_unit.NodeContainer.size(); node_i){
+        //if ( my_gt_coal_unit.NodeContainer[node_i].num_descndnt != 0 ) continue;
+			//my_gt_coal_unit.NodeContainer.erase(my_gt_coal_unit.NodeContainer.begin()+node_i);
+			//if (sim_num_gener_bool) my_gt_num_gener.NodeContainer.erase(my_gt_num_gener.NodeContainer.begin() + node_i);
+	//}
+    
+	my_gt_coal_unit.tax_name =  my_Net.tax_name;
 	my_gt_coal_unit.init_node_clade(); //use this to replace the following
 	//for ( size_t node_i = 0; node_i < my_gt_coal_unit.NodeContainer.size(); node_i++ ){
 		//if ( my_gt_coal_unit.descndnt[node_i].sum() == 0 ) break;
@@ -552,7 +570,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
     string old_gt_string_coal_unit = my_gt_coal_unit.NodeContainer.back().node_content + my_gt_coal_unit.NodeContainer.back().label+";";
 	gt_string_coal_unit = remove_interior_label(old_gt_string_coal_unit);
 
-	if (sim_num_gener_bool){
+	if (sim_num_gener_bool_){
         my_gt_num_gener.rewrite_node_content();
 		string old_gt_string_num_gener = num_gener_gt_nodes_ptr.back()->node_content+num_gener_gt_nodes_ptr.back()->label+";";
 		gt_string_gener_num = remove_interior_label(old_gt_string_num_gener);
@@ -569,7 +587,7 @@ sim_one_gt::sim_one_gt ( SimulationParameters* sim_param, action_board* simulati
 	
 	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool ) this->build_mt_tree( );
 
-	if ( tax_name.size()==2 && this->simulation_jobs_->mono_bool) compute_monophyly_vec(my_gt_coal_unit,sample_size);
+	if ( my_Net.tax_name.size()==2 && this->simulation_jobs_->mono_bool) compute_monophyly_vec( my_gt_coal_unit, this->parameters_->sample_size );
 
 	dout<<"	end of sim_one_gt::sim_one_gt(sim::param sim_param,action_board my_action)"<<endl;
 }
@@ -739,14 +757,12 @@ string SimulationParameters::write_sp_string_in_coal_unit( string &sp_num_gener_
 
 /*! \brief For alpha coalescent, modify the population size according to the multi merger parameter, N=N^(alpha-1), as mutation must scale with the coalescent timescale, in this case is N^(alpha-1)
  * \return string  Network in extended newick form, branch lengths are the population sizes */
-string SimulationParameters::rewrite_pop_string_by_para_string(
-	string para_string /*! Network in extended newick form, branch lengths are the coalescent parameters */,
-	string pop_size_string /*! Network in extended newick form, branch lengths are the population sizes*/
-	){
+string SimulationParameters::rewrite_pop_string_by_para_string( string para_string /*! Network in extended newick form, branch lengths are the coalescent parameters */,
+                                                                string pop_size_string /*! Network in extended newick form, branch lengths are the population sizes*/ ){
 	Net para_net_check(para_string);
 	Net pop_size_check(pop_size_string);
 	for ( size_t node_i = 0; node_i < para_net_check.NodeContainer.size(); node_i++){
-		if ( para_net_check.NodeContainer[node_i].brchlen1() < 2 && para_net_check.NodeContainer[node_i].brchlen1() > 1){ // rescale the number of generations for alpha
+		if ( para_net_check.NodeContainer[node_i].brchlen1() < 2 && para_net_check.NodeContainer[node_i].brchlen1() > 1) { // rescale the number of generations for alpha
 			pop_size_check.NodeContainer[node_i].set_brchlen1 ( pow( pop_size_check.NodeContainer[node_i].brchlen1(), para_net_check.NodeContainer[node_i].brchlen1() - 1 ) );
 		}
         if ( !pop_size_check.NodeContainer[node_i].hybrid ) continue;
@@ -806,7 +822,6 @@ string write_para_into_tree( string in_str /*! Externed newick formatted network
 		para_Net.NodeContainer[i].set_brchlen1( para );
 		if ( para_Net.NodeContainer[i].hybrid )  para_Net.NodeContainer[i].set_brchlen2( para );
 	}
-    //para_Net.print_all_node();
     para_Net.rewrite_node_content();
 	return construct_adding_new_Net_str(para_Net);
 }
