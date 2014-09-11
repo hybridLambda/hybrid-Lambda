@@ -450,7 +450,7 @@ void Net::check_Parenthesis( string &in_str ){
 
 /*! \brief rewrite node content of nodes */
 void Net::rewrite_node_content(){
-	int highest_i=0;
+	int highest_i = 0;
 	for ( size_t i = 0; i < this->NodeContainer.size(); i++ ){
 		if ( this->NodeContainer[i].num_descndnt > this->NodeContainer[highest_i].num_descndnt ){ highest_i = i;}
 	}
@@ -461,7 +461,7 @@ void Net::rewrite_node_content(){
 		for ( size_t i = 0 ; i < this->NodeContainer.size(); i++ ){
             if ( this->NodeContainer[i].rank() != rank_i ) continue;
 
-            this->NodeContainer[i].node_content = (this->NodeContainer[i].rank()==1) ? 
+            this->NodeContainer[i].node_content = ( this->NodeContainer[i].rank() == 1 ) ? 
                                                     this->NodeContainer[i].label :
                                                     this->rewrite_internal_node_content( i );
 		}	
@@ -472,8 +472,10 @@ void Net::rewrite_node_content(){
 string Net::rewrite_internal_node_content( size_t i ){
     string new_node_content="(";
     for (size_t child_i = 0; child_i < this->NodeContainer[i].child.size(); child_i++ ){
+        string brchlen_str1 = to_string ( this->NodeContainer[i].child[child_i]->brchlen1() );
         if ( this->NodeContainer[i].child[child_i]->node_content == this->NodeContainer[i].child[child_i]->label ) {
-            new_node_content += this->NodeContainer[i].child[child_i]->label+":" + to_string ( this->NodeContainer[i].child[child_i]->brchlen1() ) ;
+            //new_node_content += this->NodeContainer[i].child[child_i]->label+":" + to_string ( this->NodeContainer[i].child[child_i]->brchlen1() ) ;
+            new_node_content += this->NodeContainer[i].child[child_i]->label+":" +  brchlen_str1;
         }
         else {            
             bool new_hybrid_node=false;
@@ -487,10 +489,8 @@ string Net::rewrite_internal_node_content( size_t i ){
                 }
                 if (new_hybrid_node){break;}
             }
-            if ( !new_hybrid_node ) new_node_content += this->NodeContainer[i].child[child_i]->node_content;
-            new_node_content += this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2;
-            //new_node_content += new_hybrid_node ? this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2 : 
-                                                  //this->NodeContainer[i].child[child_i]->node_content + this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2 ;
+            new_node_content += new_hybrid_node ? this->NodeContainer[i].child[child_i]->label+":" + brchlen_str2 : 
+                                                  this->NodeContainer[i].child[child_i]->node_content + this->NodeContainer[i].child[child_i]->label+":" +  brchlen_str1;
         }
         if ( child_i < this->NodeContainer[i].child.size() - 1 ) new_node_content += ",";
     }
@@ -517,7 +517,7 @@ void Net::rewrite_descendant(){	//check for coaleased tips(& sign in the tips)
     }
 		
     if ( !rewrite_descndnt ) return;
-//cout<<"hea"<<endl;
+
     tax_name.clear();
     int tax_name_start=0;
     int tax_name_length=0;

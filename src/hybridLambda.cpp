@@ -53,7 +53,7 @@ HybridLambda::~HybridLambda(){
     delete parameters_; 
 }
 
-string HybridLambda::read_input_para(const char *inchar, string in_str){
+string HybridLambda::read_input_para( const char *inchar, string in_str ){
     if ( is_num(inchar) ) return write_para_into_tree( in_str, strtod(inchar, NULL) );
     else return read_input_line( inchar );
 }

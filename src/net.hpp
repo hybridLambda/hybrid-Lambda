@@ -61,7 +61,7 @@ class Net{
 		void check_isUltrametric(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
 
         size_t first_coal_index ();
-		void print_all_node();
+		
 		bool print_all_node_dout();
         
         string rewrite_internal_node_content( size_t i);       
@@ -83,7 +83,8 @@ class Net{
 	
         bool is_Net_() const { return this->is_Net ; }
     public:	
-    	Net(string Net_str);
+    	void print_all_node();
+        Net(string Net_str);
         ~Net(){};
 		void rewrite_node_content();
 

@@ -48,11 +48,16 @@ class SimulationParameters{
     
     bool num_gener_bool;
     bool sp_coal_unit_bool;
-    SimulationParameters();
-    ~SimulationParameters(){};
-    void finalize();
+
     string net_str;
     vector < int > sample_size;
+
+    SimulationParameters();
+    ~SimulationParameters(){};
+    string write_sp_string_in_coal_unit( string &sp_num_gener_string, string &pop_size_string );
+    string rewrite_pop_string_by_para_string( string para_string,string pop_size_string );
+
+    void finalize();
 };
 
 
@@ -103,9 +108,12 @@ class sim_one_gt{
     ~sim_one_gt(){};		
 
 	Net my_gt_coal_unit;
-	
 	Net my_gt_num_gener;
 
+	vector <size_t> remaining_sp_node;
+
+
+Node *current_sp_pop_node;
 
     void compute_monophyly_vec( Net &my_gt_coal_unit,vector < int > sample_size );
     void Si_num_out_table ( Net &mt_tree );
@@ -189,8 +197,6 @@ class sim_one_gt{
 
 };
 
-string write_sp_string_in_coal_unit(string sp_num_gener_string, string pop_size_string);
-string rewrite_pop_string_by_para_string(string para_string,string pop_size_string);
 string write_para_into_tree(string sp_string, double para);
 string construct_adding_new_Net_str(Net & old_Net);
 
