@@ -51,7 +51,7 @@ string rm_and_sign(string in_str);
 string rm_hash_sign(string in_str);
 string extract_label(string in_str, size_t i);
 size_t end_of_label_or_bl(string in_str, size_t i);
-size_t hybrid_hash_index(string in_str);
+//size_t hybrid_hash_index(string in_str);
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ );
 
 #endif

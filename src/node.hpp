@@ -46,7 +46,7 @@ class Node {
         string label; /*!< \brief String label of a node, each node has unique label */
         size_t node_index; /*!< \brief node index in the array, \todo use this more often!!!*/
         string node_content; /*!< \brief node content, the subtree string at this node */
-        bool hybrid; /*!< \brief Hybrid node only, indicator of a hybrid node */
+        bool hybrid() const { return (this->parent2) ? true : false;} /*!< \brief Hybrid node only, indicator of a hybrid node */
         
     private:    
     //vector<int> descndnt;
@@ -99,8 +99,17 @@ class Node {
         double brchlen2_;/*!< \brief Hybrid node only, Branch length to the second parent*/
         
         bool find_descndnt ( string name, NAMETYPE type );
+        
+    double extract_hybrid_para(){
+        size_t hash_index = this->label.find('#');
+        //this->label.substr(hash_index+1);
+        //double para;
+        //istringstream para_istr(extract_hybrid_para_str(in_str));
+        //para_istr>>para;
+        return strtod( this->label.substr(hash_index+1).c_str(), NULL) ;
+    }   
 };
 
 
-#endif
+#endif    
 

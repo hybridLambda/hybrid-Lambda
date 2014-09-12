@@ -23,8 +23,8 @@
 #include"node.hpp"
 
 Node::Node(){
-	label=" ";
-	node_content=" ";
+	label="";
+	node_content="";
 	//num_child=0;
 	num_descndnt=0;
 	num_descndnt_interior=0;
@@ -36,7 +36,6 @@ Node::Node(){
 	this->e_num_    = 0;
 	this->e_num2_   = 0;
 	//visit=0;
-	hybrid=false;
 	descndnt_of_hybrid=false;
 	tip_bool=false;
 	//clade=" ";
@@ -48,17 +47,17 @@ Node::Node(){
 
 void Node::print( bool is_Net ){
     cout << setw(12) << label;
-	if ( is_Net ) cout << setw(6) << hybrid;
+	if ( is_Net ) cout << setw(6) << this->hybrid();
     if ( is_Net ) cout << setw(8) << descndnt_of_hybrid;
 	cout << setw(5) << tip_bool;
     if (this->parent1) cout << setw (11) << (parent1->label);
     else cout << "           ";
-	cout << setw (8) << height;
-	cout << setw (8) << this->brchlen1();
+	cout << setw (12) << height;
+	cout << setw (12) << this->brchlen1();
     if (is_Net){
         if (this->parent2) cout << setw (11) << (parent2->label);
         else cout << "           ";
-        cout<<setw (8) << this->brchlen2();
+        cout<<setw (12) << this->brchlen2();
     }
 	cout << setw (7) << this->child.size();
 	cout << setw (8) << num_descndnt;
@@ -78,7 +77,7 @@ void Node::add_child( Node *child_node /*! pointer to the child node*/){
     this->child.push_back(child_node);
 	if ( child_node->parent1 ){
 		child_node->parent2 = (this);
-		child_node->hybrid = true;
+		//child_node->hybrid = true;
 	}
 	else child_node->parent1 = (this);
 } 
@@ -135,7 +134,7 @@ void Node::find_tip(){
 void Node::find_hybrid_descndnt(){
 	if ( this->tip_bool ) return;
     for ( size_t ith_child = 0; ith_child < this->child.size(); ith_child++){
-        if ( this->hybrid || this->descndnt_of_hybrid ) this->child[ith_child]->descndnt_of_hybrid = true;
+        if ( this->hybrid() || this->descndnt_of_hybrid ) this->child[ith_child]->descndnt_of_hybrid = true;
         this->child[ith_child]->find_hybrid_descndnt();
     }
 }

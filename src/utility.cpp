@@ -97,9 +97,9 @@ string extract_label(string in_str, size_t i){
 }
 
 
-size_t hybrid_hash_index(string in_str){
-	return in_str.find('#');
-}
+//size_t hybrid_hash_index(string in_str){
+	//return in_str.find('#');
+//}
 
 	
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ ){

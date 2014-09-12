@@ -24,17 +24,17 @@
 
 bool Node::print_dout( bool is_Net ){
     dout << setw(12) << label;
-	if ( is_Net ) dout << setw(6) << hybrid;
+	if ( is_Net ) dout << setw(6) << this->hybrid();
     if ( is_Net ) dout << setw(8) << descndnt_of_hybrid;
 	dout << setw(5) << tip_bool;
     if (this->parent1) dout << setw (11) << (parent1->label);
     else dout << "           ";
-	dout << setw (8) << height;
-	dout << setw (8) << this->brchlen1();
+	dout << setw (12) << height;
+	dout << setw (12) << this->brchlen1();
     if (is_Net){
         if (this->parent2) dout << setw (11) << (parent2->label);
         else dout << "           ";
-        dout<<setw (8) << this->brchlen2();
+        dout<<setw (12) << this->brchlen2();
     }
 	dout << setw (7) << this->child.size();
 	dout << setw (8) << num_descndnt;
