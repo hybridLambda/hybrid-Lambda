@@ -23,13 +23,15 @@
 #include "../node.hpp"
 
 bool Node::print_dout( bool is_Net ){
-    dout << setw(12) << label;
+    dout << setw(12) << this;
 	if ( is_Net ) dout << setw(6) << this->hybrid();
     if ( is_Net ) dout << setw(8) << descndnt_of_hybrid;
 	dout << setw(5) << tip_bool;
-    if (this->parent1) dout << setw (11) << (parent1->label);
+    //if (this->parent1) dout << setw (11) << (parent1->label);
+    //else dout << "           ";
+    if (this->parent1) dout << setw (11) << (parent1);
     else dout << "           ";
-	dout << setw (12) << height;
+	dout << setw (6) << this->height();
 	dout << setw (12) << this->brchlen1();
     if (is_Net){
         if (this->parent2) dout << setw (11) << (parent2->label);

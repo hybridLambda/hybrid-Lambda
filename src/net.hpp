@@ -35,9 +35,11 @@
 /*! \brief Network class*/
 class Tree{
     friend class Net;
+    friend class SimulationParameters;
     friend class HybridLambda;
     friend class simTree;
     friend class Frequency;
+    friend class Figure;
 	private:		
 		string label_interior_node(string in_str);
 		void enumerate_internal_branch( Node &node );
@@ -61,9 +63,7 @@ class Tree{
 		void check_isUltrametric(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
 
         size_t first_coal_index ();
-		
-		bool print_all_node_dout();
-        
+    
         string rewrite_internal_node_content( size_t i);       
         void connect_graph();
         void extract_tax_and_tip_names();
@@ -76,26 +76,22 @@ class Tree{
         string net_str; /*!< \brief species network string \todo this is new!!!*/
 		size_t max_rank;
 		vector< valarray <int> > descndnt;
-		vector< valarray <int> > descndnt2;
+		vector< valarray <int> > samples_below;
 		vector<string> tip_name;
-		
-        Tree (){ this->init(); }
-	
         bool is_Net_() const { return this->is_Net ; }
         string extract_label(string in_str, size_t i);
-
-
-    public:	
     	void print_all_node();
+		bool print_all_node_dout();
+        Tree (){ this->init(); }
         Tree(string Tree_str);
         ~Tree(){};
-		void rewrite_node_content();
 
-		vector < Node > NodeContainer;  /*!< \brief vector of nodes */
 		vector <string> tax_name;
 		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
 		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
-
+    public:	
+		vector < Node > NodeContainer;  /*!< \brief vector of nodes */
+		void rewrite_node_content();
 };
 
 class Net: public Tree {
@@ -109,7 +105,7 @@ class Net: public Tree {
     };
 
 string remove_interior_label(string in_str);
-size_t end_of_label_or_bl(string in_str, size_t i);
+size_t end_of_label_or_bl( string &in_str, size_t i);
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ );
 
 #endif

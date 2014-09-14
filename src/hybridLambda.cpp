@@ -175,7 +175,7 @@ void HybridLambda::extract_tmrca(){
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Tree gt(gt_tree_str_s[i]);
-        this->extract_file << gt.NodeContainer.back().height << endl;
+        this->extract_file << gt.NodeContainer.back().height() << endl;
     }
     this->extract_file.close();
     std::clog << "TMRCA file is saved at: "<< extract_file_name << "\n";
@@ -210,7 +210,7 @@ void HybridLambda::extract_firstcoal(){
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Tree gt(gt_tree_str_s[i]);
         size_t first_coal_index_dummy = gt.first_coal_index();
-        extract_file << gt.NodeContainer[first_coal_index_dummy].height << "\t" << gt.NodeContainer[first_coal_index_dummy].clade << endl;
+        extract_file << gt.NodeContainer[first_coal_index_dummy].height() << "\t" << gt.NodeContainer[first_coal_index_dummy].clade << endl;
     }
     this->extract_file.close();
     std::clog << "First Coalescent event is saved at: "<< extract_file_name << "\n";
@@ -279,6 +279,7 @@ void HybridLambda::HybridLambda_core( ){
     this->outtable_header(extract_file);
 
 	for ( int i=0; i < this->num_sim_gt; i++ ){
+        //this->parameters_->my_Net->print_all_node();
 		simTree sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file);
 		gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
 		if ( this->simulation_jobs_->sim_num_mut_bool ) mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
@@ -413,7 +414,7 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
 		for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
 			if ( mt_tree.NodeContainer[node_i].brchlen1() > 0 ){
 				for ( int num_repeat = 0; num_repeat < mt_tree.NodeContainer[node_i].brchlen1(); num_repeat++ ){				
-					extract_file << mt_tree.descndnt2[node_i][tip_i] ;
+					extract_file << mt_tree.samples_below[node_i][tip_i] ;
 				}
 			}
 		}

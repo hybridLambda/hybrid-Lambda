@@ -85,7 +85,7 @@ bool Frequency::same_topo( string gt_string1, string gt_string2 ){
 	Net gt1(gt_string1);
 	Net gt2(gt_string2);
 
-	if (gt1.tax_name.size()!=gt2.tax_name.size() || gt1.descndnt2.size()!=gt2.descndnt2.size()){
+	if (gt1.tax_name.size()!=gt2.tax_name.size() || gt1.samples_below.size()!=gt2.samples_below.size()){
 		same_topo_return=false;
 	}
 	else{
@@ -99,19 +99,19 @@ bool Frequency::same_topo( string gt_string1, string gt_string2 ){
 		}
 		
 		if (same_tax_names){
-			vector <int> gt1_in_gt2(gt1.descndnt2.size(),0);
-			vector <int> gt2_in_gt1(gt2.descndnt2.size(),0);
+			vector <int> gt1_in_gt2(gt1.samples_below.size(),0);
+			vector <int> gt2_in_gt1(gt2.samples_below.size(),0);
 			same_topo_return=true;
-			for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
-				for (size_t node2_i=0;node2_i<gt2.descndnt2.size();node2_i++){
-					valarray <bool> comp=(gt1.descndnt2[node1_i]==gt2.descndnt2[node2_i]);
+			for (size_t node1_i=0;node1_i<gt1.samples_below.size();node1_i++){
+				for (size_t node2_i=0;node2_i<gt2.samples_below.size();node2_i++){
+					valarray <bool> comp=(gt1.samples_below[node1_i]==gt2.samples_below[node2_i]);
 					if (comp.min()==1){
 						gt1_in_gt2[node1_i]=1;
 						gt2_in_gt1[node2_i]=1;
 					}					
 				}
 			}
-			for (size_t node1_i=0;node1_i<gt1.descndnt2.size();node1_i++){
+			for (size_t node1_i=0;node1_i<gt1.samples_below.size();node1_i++){
 				if (gt1_in_gt2[node1_i]==0 || gt2_in_gt1[node1_i]==0){
 					same_topo_return=false;
 					break;// this is newly added. test????

@@ -53,6 +53,9 @@ class Node {
     friend class Figure;
 	public:
         // Getters and Setters
+        double height() const { return this->height_;}
+        void set_height ( double h ){ this->height_ = h; }
+        
         double brchlen1() const { return this->brchlen1_;}
         void set_brchlen1 ( double bl ){ this->brchlen1_ = bl; }
         
@@ -82,7 +85,7 @@ class Node {
         int num_descndnt; /*!< \brief number of the tip nodes, that are descendant from this node */
         int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
         vector <double> path_time; 
-        double height; /*!< \brief distance to the bottom of the tree */
+        double height_; /*!< \brief distance to the bottom of the tree */
             
         bool descndnt_of_hybrid; /*!< \brief Indicator of descendant of hybrid nodes. It's true, if it is a descendant of hybrid nodes; false, otherwise. */
         bool tip_bool; /*!< \brief Indicator of tip nodes. It's true, if it is a tip node, otherwise it is false. */
@@ -111,11 +114,11 @@ class Node {
         Node(); /*!< \brief Initialize Node class*/
         void add_child( Node *child_node /*! pointer to the child node*/);
         void CalculateRank();
-        void print( bool is_Net );
-        bool print_dout( bool is_Net );
+        void print( bool is_Net = false );
+        bool print_dout( bool is_Net = false );
         void find_tip();
         void find_hybrid_descndnt();
-        bool find_descndnt ( string name, NAMETYPE type );
+        bool find_descndnt ( string &name, NAMETYPE type );
         
         double extract_hybrid_para(){
             size_t hash_index = this->label.find('#');

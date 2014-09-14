@@ -24,16 +24,16 @@
 
 bool Tree::print_all_node_dout(){
 
-    if ( is_Net ) dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
-    else dout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
+    if ( is_Net ) dout<<"           label  hybrid hyb_des non-tp parent1  height brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
+    else dout<<"       label non-tp   parent  height brchln #child #dsndnt #id rank e_num   Clade "<<endl;
     for (size_t i=0;i<NodeContainer.size();i++){
-        for (size_t j=0;j<descndnt[i].size();j++) dout<<setw(3)<<descndnt[i][j];
+        //for (size_t j=0;j<descndnt[i].size();j++) dout<<setw(3)<<descndnt[i][j];
 
         assert( this->NodeContainer[i].print_dout( this->is_Net_() ) );
 
         dout<<"  ";
         
-        for (size_t j=0;j<descndnt2[i].size();j++) dout<<descndnt2[i][j];        
+        for (size_t j=0;j<samples_below[i].size();j++) dout<<samples_below[i][j];        
         dout<<endl;
     }
     return true;

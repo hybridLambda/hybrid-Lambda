@@ -52,8 +52,16 @@ class SimulationParameters{
     string net_str;
     vector < int > sample_size;
 
+    Net * my_Net;
+	Net * my_pop_net;
+	Net * my_para_net;
+
     SimulationParameters();
-    ~SimulationParameters(){};
+    ~SimulationParameters(){
+        delete my_Net;
+        delete my_pop_net;
+        delete my_para_net;
+        };
     string write_sp_string_in_coal_unit( string &sp_num_gener_string, string &pop_size_string );
     string rewrite_pop_string_by_para_string( string para_string,string pop_size_string );
 
@@ -110,16 +118,16 @@ class simTree : public Tree {
 	Tree my_gt_num_gener;
     void init();
     bool sim_num_gener_bool_;
-    void initialize_gt_tip_nodes( Net & my_Net );
+    void initialize_gt_tip_nodes( Net * my_Net );
     void initialize_gt_internal_nodes ( size_t num_tax );
     vector <size_t> remaining_sp_node;
     vector < size_t> remaining_gt_node;
-    void initialize_remaining_sp_node ( Net &my_Net );
+    void initialize_remaining_sp_node ( Net *my_Net );
     void push_in_descdent();
-    Node *current_sp_pop_node;
+    //Node *current_sp_pop_node;
     Node *current_sp_pop_size;
     Node *current_sp_multiCoal_para;
-    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node ,double top_time_in_coal_unit);
+    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node ,double top_time_in_coal_unit, double height);
     
     void remove_unused_nodes();
     void finalize( size_t num_taxa );
@@ -127,8 +135,8 @@ class simTree : public Tree {
     void compute_monophyly_vec( vector < int > sample_size );
     void Si_num_out_table ( Tree &mt_tree );
     
-    void include_lineages_at_sp_node( Node * sp_node );
-    void assign_lineages_at_sp_node ( Node * sp_node );
+    void include_lineages_at_sp_node( Node & sp_node );
+    void assign_lineages_at_sp_node ( Node & sp_node );
     
     void build_gt_string_mut_unit();
     void build_mt_tree();
@@ -140,7 +148,7 @@ class simTree : public Tree {
     void build_lambda_bk_mat( double para, size_t num_lineage);
 
 
-    void implement_coalsecent( vector <size_t> & current_alive_lineages, double remaining_length, double multi_merge_para);
+    void implement_coalsecent( vector <size_t> & current_alive_lineages, double remaining_length, double multi_merge_para, string nodelabel);
 
     size_t current_N_lineage_To_Coalesce;
     double current_lineage_Extension; // in coalescent unit

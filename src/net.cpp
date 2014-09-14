@@ -120,10 +120,10 @@ void Tree::init_descendant(){
     for ( size_t i = 0; i < NodeContainer.size(); i++){
         valarray <int> descndnt_dummy(0,tax_name.size());
         descndnt.push_back(descndnt_dummy);
-        valarray <int> descndnt2_dummy(0,tip_name.size());
-        descndnt2.push_back(descndnt2_dummy);
+        valarray <int> samples_below_dummy(0,tip_name.size());
+        samples_below.push_back(samples_below_dummy);
         for ( size_t tax_name_i = 0; tax_name_i < tax_name.size(); tax_name_i++ ) descndnt[i][tax_name_i] = this->NodeContainer[i].find_descndnt( tax_name[tax_name_i], TAXA) ? 1:0;
-        for ( size_t tip_name_i = 0; tip_name_i < tip_name.size(); tip_name_i++ ) descndnt2[i][tip_name_i] = this->NodeContainer[i].find_descndnt( tip_name[tip_name_i], TIP) ? 1:0;
+        for ( size_t tip_name_i = 0; tip_name_i < tip_name.size(); tip_name_i++ ) samples_below[i][tip_name_i] = this->NodeContainer[i].find_descndnt( tip_name[tip_name_i], TIP) ? 1:0;
         this->NodeContainer[i].num_descndnt = descndnt[i].sum();
     }
 
@@ -280,7 +280,7 @@ void Tree::check_isUltrametric(){
 				break;
 			}
 		}
-		NodeContainer[node_i].height=NodeContainer[node_i].path_time[0];
+		NodeContainer[node_i].set_height( NodeContainer[node_i].path_time[0] );
 	}
 }
 
@@ -301,7 +301,7 @@ void Tree::print_all_node(){
         for (size_t j = 0; j < this->descndnt[i].size(); j++ ) {cout<<setw(3)<<this->descndnt[i][j];}
         this->NodeContainer[i].print( this->is_Net_() );
         cout<<"  ";        
-        for (size_t j=0;j<this->descndnt2[i].size();j++) {cout<<this->descndnt2[i][j]; }
+        for (size_t j=0;j<this->samples_below[i].size();j++) {cout<<this->samples_below[i][j]; }
         cout<<endl;
     }
 }
@@ -348,11 +348,11 @@ size_t Tree::first_coal_rank(){
 size_t Tree::first_coal_index (){    
     size_t min_rank = this->first_coal_rank();
     size_t dummy_index = this->NodeContainer.size()-1;
-    double min_coal_time = this->NodeContainer[dummy_index].height;
+    double min_coal_time = this->NodeContainer[dummy_index].height();
     for (size_t i = 0 ; i < NodeContainer.size(); i++){
-        if ( this->NodeContainer[i].rank() == min_rank &&  this->NodeContainer[i].height < min_coal_time ){
+        if ( this->NodeContainer[i].rank() == min_rank &&  this->NodeContainer[i].height() < min_coal_time ){
             dummy_index = i;
-            min_coal_time = this->NodeContainer[dummy_index].height;
+            min_coal_time = this->NodeContainer[dummy_index].height();
         }        
     }
     return dummy_index;
@@ -558,29 +558,32 @@ string remove_interior_label(string in_str/*!< input newick form string */){
 	
 	size_t found_bracket=out_str.find(')');
 	while ( found_bracket<out_str.size() ){
-		if (isalpha(out_str[found_bracket+1]) || isdigit(out_str[found_bracket+1])){
-			size_t char_j=end_of_label_or_bl(out_str, found_bracket+1);
-			//cout<<out_str<<endl;
-			//cout<<out_str[char_j+1]<<endl;
-			out_str.erase(out_str.begin()+found_bracket+1,out_str.begin()+char_j+1);
-			//cout<<out_str<<endl;
+		if ( isalpha(out_str[found_bracket+1]) || isdigit(out_str[found_bracket+1]) ){
+			size_t char_j = end_of_label_or_bl( out_str, found_bracket+1 );
+			out_str.erase(out_str.begin()+found_bracket+1, out_str.begin()+char_j+1);
 		}
-		found_bracket=out_str.find(")",found_bracket+1);
+		found_bracket = out_str.find( ")",found_bracket+1 );
 	}
-
 	return out_str;
 }
 
 
-size_t end_of_label_or_bl(string in_str, size_t i){
-	size_t j ;
-	for (j=i;j<in_str.size();j++){
-		char stop=in_str[j+1];
-		if (stop==',' || stop==')' || stop==':' || stop==';'){
-			break;
-		}
+size_t end_of_label_or_bl( string &in_str, size_t i ){
+	//size_t j ;
+	//for ( j = i; j < in_str.size(); j++){
+		//char stop=in_str[j+1];
+		//if ( stop == ',' || stop==')' || stop==':' || stop==';'){
+			//break;
+		//}
+	//}
+	//return j;
+	for ( size_t j = i; j < in_str.size(); j++){
+		if      ( in_str[j+1] == ',' ) 	return j;
+        else if ( in_str[j+1] == ')' )	return j;
+        else if ( in_str[j+1] == ':' )	return j;
+        else if ( in_str[j+1] == ';' )	return j;
+        else continue;
 	}
-	return j;
 }
 
 	

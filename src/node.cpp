@@ -39,7 +39,7 @@ Node::Node(){
 	descndnt_of_hybrid=false;
 	tip_bool=false;
 	//clade=" ";
-	height=0.0;
+	this->height_ = 1.0/0.0;
 	//prob_to_hybrid_left=1.0;
 	this->visited_ = false;
 }
@@ -52,7 +52,7 @@ void Node::print( bool is_Net ){
 	cout << setw(5) << tip_bool;
     if (this->parent1) cout << setw (11) << (parent1->label);
     else cout << "           ";
-	cout << setw (12) << height;
+	cout << setw (12) << this->height();
 	cout << setw (12) << this->brchlen1();
     if (is_Net){
         if (this->parent2) cout << setw (11) << (parent2->label);
@@ -100,7 +100,7 @@ void Node::CalculateRank(){
 }
 
 
-bool Node::find_descndnt ( string name, NAMETYPE type ){	
+bool Node::find_descndnt ( string &name, NAMETYPE type ){	
 	if ( this->tip_bool ) {
         string tmp = ( type == TAXA ) ? this->name : this->label;
         return ( tmp == name ) ? true : false;
