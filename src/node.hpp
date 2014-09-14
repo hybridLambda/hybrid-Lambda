@@ -46,8 +46,9 @@ using namespace std;
 enum NAMETYPE { TAXA, TIP };
 
 class Node {
+    friend class Tree;
     friend class Net;
-    friend class sim_one_gt;
+    friend class simTree;
     friend class HybridLambda;
     friend class Figure;
 	public:

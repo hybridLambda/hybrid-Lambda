@@ -22,7 +22,7 @@
 
 #include "../net.hpp"
 
-bool Net::print_all_node_dout(){
+bool Tree::print_all_node_dout(){
 
     if ( is_Net ) dout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
     else dout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;

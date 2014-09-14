@@ -23,7 +23,7 @@
 #include"net.hpp"
 
 /*! \brief Construct Net object from a (extended) Newick string */
-Net::Net(string old_string /*! input (extended) newick form string */){
+Tree::Tree(string old_string /*! input (extended) newick form string */){
 	if (old_string.size()==0){
 		descndnt.clear();
 		tax_name.clear();
@@ -116,7 +116,7 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 }
 
 
-void Net::init_descendant(){
+void Tree::init_descendant(){
     for ( size_t i = 0; i < NodeContainer.size(); i++){
         valarray <int> descndnt_dummy(0,tax_name.size());
         descndnt.push_back(descndnt_dummy);
@@ -141,7 +141,7 @@ void Net::init_descendant(){
 }
 
 
-void Net::init_node_clade(){
+void Tree::init_node_clade(){
     for ( size_t i = 0; i < NodeContainer.size(); i++ ){
         //if ( this->descndnt[i].sum() == 0 ) break;
 
@@ -157,7 +157,7 @@ void Net::init_node_clade(){
     }
 }
 
-string Net::extract_label(string in_str, size_t i){
+string Tree::extract_label(string in_str, size_t i){
 	size_t j=end_of_label_or_bl(in_str, i);
 	//cout<<"i="<<i<<", j="<<j<<endl;
 	return in_str.substr(i,j+1-i);
@@ -165,7 +165,7 @@ string Net::extract_label(string in_str, size_t i){
 
 
 
-void Net::extract_tax_and_tip_names(){        
+void Tree::extract_tax_and_tip_names(){        
     for (size_t i=0;i<NodeContainer.size();i++){
         if(NodeContainer[i].label != NodeContainer[i].node_content) continue;
         if ( NodeContainer[i].label.find("_") > 0 ){
@@ -196,7 +196,7 @@ void Net::extract_tax_and_tip_names(){
 }
 
 
-void Net::connect_graph(){
+void Tree::connect_graph(){
     for ( size_t i = 0; i < NodeContainer.size(); i++ ){
         if ( NodeContainer[i].node_content[0] != '(' ) continue;
         
@@ -227,7 +227,7 @@ void Net::connect_graph(){
 }
 
 
-void Net::check_labeled( string in_str ){
+void Tree::check_labeled( string in_str ){
 	bool labeled_bool=true;
 	for ( size_t i = 0; i < in_str.size(); i++ ){
 		if ( in_str[i] == ')' && i == end_of_label_or_bl(in_str, i) ){
@@ -239,7 +239,7 @@ void Net::check_labeled( string in_str ){
 }
 
 
-void Net::check_isUltrametric(){
+void Tree::check_isUltrametric(){
 	vector <int> remaining_node( NodeContainer.size(), 0 );
 	for ( size_t node_i = 0; node_i < NodeContainer.size(); node_i++ ){
 		remaining_node[node_i] = node_i;
@@ -285,7 +285,7 @@ void Net::check_isUltrametric(){
 }
 
 
-void Net::check_isNet(){ //false stands for tree, true stands for net_work
+void Tree::check_isNet(){ //false stands for tree, true stands for net_work
 	for (size_t i = 0; i < this->NodeContainer.size(); i++){
 		if ( !this->NodeContainer[i].parent2 ) continue;
         this->is_Net = true;
@@ -294,7 +294,7 @@ void Net::check_isNet(){ //false stands for tree, true stands for net_work
 }
 
 
-void Net::print_all_node(){
+void Tree::print_all_node(){
     if ( this->is_Net ) cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
     else cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
     for (size_t i = 0; i < this->NodeContainer.size(); i++ ){
@@ -308,7 +308,7 @@ void Net::print_all_node(){
 
 
 /*! \brief Label interior node if the interior nodes of the tree string are not labeled */
-string Net::label_interior_node(string in_str /*!< input newick form string */){
+string Tree::label_interior_node(string in_str /*!< input newick form string */){
 	vector <string> in_str_partition;
 	int interior_node_counter = 0;
 	int sub_str_start_index = 0;			
@@ -335,7 +335,7 @@ string Net::label_interior_node(string in_str /*!< input newick form string */){
 }
 
 
-size_t Net::first_coal_rank(){
+size_t Tree::first_coal_rank(){
     size_t min_rank = NodeContainer.back().rank();
     for (size_t i = 0 ; i < NodeContainer.size(); i++){
         if ( NodeContainer[i].tip_bool ) continue;
@@ -345,7 +345,7 @@ size_t Net::first_coal_rank(){
 }
 
 
-size_t Net::first_coal_index (){    
+size_t Tree::first_coal_index (){    
     size_t min_rank = this->first_coal_rank();
     size_t dummy_index = this->NodeContainer.size()-1;
     double min_coal_time = this->NodeContainer[dummy_index].height;
@@ -360,7 +360,7 @@ size_t Net::first_coal_index (){
 
 
 /*! \brief enumerate the internal branches */
-void Net::enumerate_internal_branch( Node & node ) {
+void Tree::enumerate_internal_branch( Node & node ) {
 	if ( node.tip_bool ) return;
 
     if ( node.visited() ){
@@ -379,7 +379,7 @@ void Net::enumerate_internal_branch( Node & node ) {
 
 
 /*! \brief Identify if its the start of the taxon name in a newick string, should be replaced by using (isalpha() || isdigit())  */
-bool Net::start_of_tax_name( string in_str, size_t i ){
+bool Tree::start_of_tax_name( string in_str, size_t i ){
 	//bool start_bool = false;
 	//if ( (in_str[i]!='(' && in_str[i-1]=='(') || (in_str[i-1]==',' && in_str[i]!='(') || ( (in_str[i-1]==')') && ( in_str[i]!=')' || in_str[i]!=':' || in_str[i]!=',' || in_str[i]!=';' ) ) ) {
 		//start_bool=true;	
@@ -392,7 +392,7 @@ bool Net::start_of_tax_name( string in_str, size_t i ){
 }
 
 
-size_t Net::Parenthesis_balance_index_backwards( string &in_str, size_t i ){
+size_t Tree::Parenthesis_balance_index_backwards( string &in_str, size_t i ){
 	size_t j = i;
 	int num_b = 0;
 	for ( ; j > 0 ; j-- ){
@@ -405,7 +405,7 @@ size_t Net::Parenthesis_balance_index_backwards( string &in_str, size_t i ){
 }
 
 
-size_t Net::Parenthesis_balance_index_forwards( string &in_str, size_t i ){
+size_t Tree::Parenthesis_balance_index_forwards( string &in_str, size_t i ){
 	size_t j = i;
 	int num_b = 0;
 	for ( ; j < in_str.size(); j++ ){
@@ -419,7 +419,7 @@ size_t Net::Parenthesis_balance_index_forwards( string &in_str, size_t i ){
 
 
 /*! \brief Checking Parenthesis of a (extended) Newick string */
-void Net::check_Parenthesis( string &in_str ){
+void Tree::check_Parenthesis( string &in_str ){
 	int num_b = 0;
 	for ( size_t i = 0; i < in_str.size(); i++){
 		if      (in_str[i] == '(') num_b++;
@@ -432,7 +432,7 @@ void Net::check_Parenthesis( string &in_str ){
 
 
 /*! \brief rewrite node content of nodes */
-void Net::rewrite_node_content(){
+void Tree::rewrite_node_content(){
 	int highest_i = 0;
 	for ( size_t i = 0; i < this->NodeContainer.size(); i++ ){
 		if ( this->NodeContainer[i].num_descndnt > this->NodeContainer[highest_i].num_descndnt ){ highest_i = i;}
@@ -452,7 +452,7 @@ void Net::rewrite_node_content(){
 }
 
 
-string Net::rewrite_internal_node_content( size_t i ){
+string Tree::rewrite_internal_node_content( size_t i ){
     string new_node_content="(";
     for (size_t child_i = 0; child_i < this->NodeContainer[i].child.size(); child_i++ ){
         string brchlen_str1 = to_string ( this->NodeContainer[i].child[child_i]->brchlen1() );
@@ -483,7 +483,7 @@ string Net::rewrite_internal_node_content( size_t i ){
 
 /////////////////////////////////////////// consider for removal
 
-void Net::rewrite_descendant(){	//check for coaleased tips(& sign in the tips)
+void Tree::rewrite_descendant(){	//check for coaleased tips(& sign in the tips)
     bool rewrite_descndnt=false;
     for (size_t i=0;i<NodeContainer.size();i++){
         if (NodeContainer[i].tip_bool ){

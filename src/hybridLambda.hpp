@@ -20,22 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include"mtrand.h"
-#include"sim_gt.hpp"
+#include "sim_gt.hpp"
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
 
 #ifndef HYBRDRIDLAMBDA_PARAM_INCLUDED
 #define HYBRDRIDLAMBDA_PARAM_INCLUDED
 using namespace std;
 
-#include <iostream>     // std::cout, std::endl
-#include <iomanip>      // std::setw
-#include <stdlib.h>     /* exit, EXIT_FAILURE */
-
-
 void print_example();
 void print_help();
 void print_option();
-
 
 class HybridLambda{
     public:	

@@ -34,7 +34,7 @@
 	
 class SimulationParameters{
     friend class HybridLambda;
-    friend class sim_one_gt;
+    friend class simTree;
     
     double mutation_rate;
     bool mm_bool;
@@ -63,7 +63,7 @@ class SimulationParameters{
 
 class action_board {
     friend class HybridLambda;
-    friend class sim_one_gt;
+    friend class simTree;
 
     bool sim_mut_unit()  const { return sim_mut_unit_bool;  }
     bool sim_num_gener() const { return sim_num_gener_bool; }
@@ -89,7 +89,7 @@ class action_board {
 
 // \todo make this as an inherited class for Net
 /*! \brief One simulated gene tree from a network under Kingman or multi merger coalescent process*/
-class sim_one_gt{
+class simTree : public Tree {
     friend class HybridLambda;
 
     action_board* simulation_jobs_;
@@ -103,11 +103,11 @@ class sim_one_gt{
     int total_mut;    
     ofstream * Si_table_;
 
-    sim_one_gt( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
-    ~sim_one_gt(){};		
+    simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
+    ~simTree(){};		
 
-	Net my_gt_coal_unit;
-	Net my_gt_num_gener;
+	//Net my_gt_coal_unit;
+	Tree my_gt_num_gener;
     void init();
     bool sim_num_gener_bool_;
     void initialize_gt_tip_nodes( Net & my_Net );
@@ -123,9 +123,9 @@ class sim_one_gt{
     
     void remove_unused_nodes();
     void finalize( size_t num_taxa );
-    void finalize_gt_str( string & gt_tr, Net & gt );
-    void compute_monophyly_vec( Net &my_gt_coal_unit,vector < int > sample_size );
-    void Si_num_out_table ( Net &mt_tree );
+    void finalize_gt_str( string & gt_tr, Tree & gt );
+    void compute_monophyly_vec( vector < int > sample_size );
+    void Si_num_out_table ( Tree &mt_tree );
     
     void include_lineages_at_sp_node( Node * sp_node );
     void assign_lineages_at_sp_node ( Node * sp_node );

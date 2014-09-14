@@ -33,11 +33,11 @@
 #define NETWORK
 
 /*! \brief Network class*/
-class Net{
+class Tree{
+    friend class Net;
     friend class HybridLambda;
-    friend class sim_one_gt;
+    friend class simTree;
     friend class Frequency;
-    friend class Figure;
 	private:		
 		string label_interior_node(string in_str);
 		void enumerate_internal_branch( Node &node );
@@ -79,7 +79,7 @@ class Net{
 		vector< valarray <int> > descndnt2;
 		vector<string> tip_name;
 		
-        Net (){ this->init(); }
+        Tree (){ this->init(); }
 	
         bool is_Net_() const { return this->is_Net ; }
         string extract_label(string in_str, size_t i);
@@ -87,22 +87,29 @@ class Net{
 
     public:	
     	void print_all_node();
-        Net(string Net_str);
-        ~Net(){};
+        Tree(string Tree_str);
+        ~Tree(){};
 		void rewrite_node_content();
 
-		vector <Node> NodeContainer;  /*!< \brief vector of nodes */
-		vector<string> tax_name;
+		vector < Node > NodeContainer;  /*!< \brief vector of nodes */
+		vector <string> tax_name;
 		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
 		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
 
 };
 
+class Net: public Tree {
+    //friend class Figure;
+    //friend class HybridLambda;
+    //friend class simTree;
+    public:
+        Net (string Net_str) : Tree ( Net_str){};
+        Net () { this->init();}
+        ~Net(){};
+    };
+
 string remove_interior_label(string in_str);
 size_t end_of_label_or_bl(string in_str, size_t i);
 void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ );
-
-
-
 
 #endif

@@ -174,7 +174,7 @@ void HybridLambda::extract_tmrca(){
     remove ( this->extract_file_name.c_str() );
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
-        Net gt(gt_tree_str_s[i]);
+        Tree gt(gt_tree_str_s[i]);
         this->extract_file << gt.NodeContainer.back().height << endl;
     }
     this->extract_file.close();
@@ -189,7 +189,7 @@ void HybridLambda::extract_bl(){
     remove ( this->extract_file_name.c_str() );
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i=0; i < gt_tree_str_s.size(); i++ ){
-        Net gt(gt_tree_str_s[i]);
+        Tree gt(gt_tree_str_s[i]);
         double totalbl = 0;
         for (size_t node_i = 0 ; node_i < gt.NodeContainer.size(); node_i++){
             totalbl += gt.NodeContainer[node_i].brchlen1();
@@ -208,7 +208,7 @@ void HybridLambda::extract_firstcoal(){
     remove ( this->extract_file_name.c_str() );
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
-        Net gt(gt_tree_str_s[i]);
+        Tree gt(gt_tree_str_s[i]);
         size_t first_coal_index_dummy = gt.first_coal_index();
         extract_file << gt.NodeContainer[first_coal_index_dummy].height << "\t" << gt.NodeContainer[first_coal_index_dummy].clade << endl;
     }
@@ -279,7 +279,7 @@ void HybridLambda::HybridLambda_core( ){
     this->outtable_header(extract_file);
 
 	for ( int i=0; i < this->num_sim_gt; i++ ){
-		sim_one_gt sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file);
+		simTree sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file);
 		gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
 		if ( this->simulation_jobs_->sim_num_mut_bool ) mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
 		
@@ -400,7 +400,7 @@ void HybridLambda::create_site_data_dir(){
 
 /*! \brief Generate segrateing site data */
 void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i ){
-	Net mt_tree( gt_string_mut_num );
+	Tree mt_tree( gt_string_mut_num );
     string sitefile_name = seg_dir_name + "/site" + std::to_string(site_i);
 	extract_file.open (sitefile_name.c_str()); 
 	
