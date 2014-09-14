@@ -57,7 +57,7 @@ class HybridLambda{
         /*! Members */ 
         int argc_;
         int argc_i;
-        char * const* argv_;        
+        char * const* argv_;
         string tmp_input_str;
 
         int num_sim_gt;
@@ -84,6 +84,8 @@ class HybridLambda{
         ofstream sim_gt_file_num_gener;
         ofstream sim_gt_file_num_mut;
         ofstream extract_file;
+        bool read_GENE_trees;
+        bool read_mt_trees;        
 
 		//vector <string> tax_name;
         vector <double> monophyly;
@@ -95,31 +97,24 @@ class HybridLambda{
         /*! Methods */              
         action_board* simulation_jobs() const { return this->simulation_jobs_; }
         SimulationParameters* parameters() const { return this->parameters_;   }         
+        
+        bool mono_fst_not_feasiable ( string flag );
+        bool is_num ( const char *inchar );
+
+        string read_input_para ( const char *inchar, string in_str );
+        string read_input_line ( const char *inchar );
         void init();
         void parse() ;
         void print();
-        
-        bool mono_fst_not_feasiable ( string flag );
-        bool read_GENE_trees;
-        bool read_mt_trees;        
-
-        string read_input_para(const char *inchar,string in_str);
-        string read_input_line(const char *inchar);
-        void  read_input_lines(const char inchar[], vector <string> & out_vec);
+        void read_input_lines(const char inchar[], vector <string> & out_vec);
         void read_sp_str( string & argv_i );
         void read_sample_sizes();
-
         void extract_mm_or_pop_param( string & mm_pop_string );
-
-        bool is_num(const char *inchar);
+        void create_new_site_data(string &gt_string_mut_num, int site_i);
+        void outtable_header( std::ofstream &output );
         void finalize();
 
-        void create_new_site_data(string &gt_string_mut_num, int site_i);
-
-        void outtable_header( std::ofstream &output );
-
-        template<class T>
-        T readNextInput() {
+        template < class T > T readNextInput() {
             ++argc_i;        
             if (argc_i >= argc_) throw std::invalid_argument( std::string( "Not enough parameters when parsing options: ") + argv_[argc_i-1]);
         
@@ -130,7 +125,6 @@ class HybridLambda{
             if (ss.fail() || ss.get(c)) throw std::invalid_argument( std::string( "Failed to parse option: ") + argv_[argc_i]); 
             return input;
         }
-        
 };
 
 #endif //HYBRDRIDLAMBDA_PARAM_INCLUDED

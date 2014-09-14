@@ -20,29 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*! \file freq.hpp
- * \brief Header file for freq.cpp */
-
 #include "net.hpp"
 
 class Frequency{
     friend class HybridLambda;
-    
+    // Methods
     Frequency (){};
     Frequency ( int argc, char * const* argv );
     ~Frequency(){}
     void compute_gt_frequencies( vector <string> &gt_tree_str_s );
+    string tree_topo( string in_str );
+    string remove_brchlen( string in_str );
+    bool same_topo( string gt_string1, string gt_string2 );
+    void compute_gt_frequencies_core();
+    
+    // Members
     string freq_out_filename;
     int argc_;
     int argc_i;
     char * const* argv_;
     ofstream freq_out_file;
-
     vector <string> gene_topo; /*!< \brief Different gene topologies */
     vector <int> gene_freq;    /*!< \brief Frequencies for different tree topologies */        
     vector <string> gt_tree_str_tmp;
-    string tree_topo(string in_str);    
-    string remove_brchlen(string in_str);
-    bool same_topo(string gt_string1,string gt_string2);        
-    void compute_gt_frequencies_core();
 };

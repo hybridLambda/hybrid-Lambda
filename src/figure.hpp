@@ -19,8 +19,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include"net.hpp"
-#include<iostream> // clog
+
+#include "net.hpp"
+#include <iostream> // clog
 
 enum FIGURE_OPTION { PLOT_DEFAULT, BRANCH, LABEL};
 enum FIGURE_PROGRAM { NO_METHOD, LATEX, DOT };
@@ -32,7 +33,6 @@ class Figure{
     #endif
     // Members
     string figure_file_prefix;
-
     FIGURE_PROGRAM method;
     FIGURE_OPTION option;    
     int argc_;
@@ -62,4 +62,26 @@ class Figure{
     void plot_core();
     void execute_dot(string method, string suffix);
     void edge_entry(string from, string to, size_t label, double bl, bool tip);
+
+    /*! \brief Remove '#' signs and the gamma parameter from a string \return string */
+    string rm_hash_sign( string in_str ){
+        while ( int(in_str.find('#'))>0 && in_str.find('#')!=string::npos ) {
+            size_t i = end_of_label_or_bl(in_str, in_str.find('#'));
+            in_str.erase(in_str.find('#'),i-in_str.find('#')+1);
+            //in_str.erase(in_str.find('#'),1);
+        }
+        return in_str;
+    }
+
+    /*! \brief Remove the '&' and '#' signs from a string \return string */
+    string rm_and_hash_sign( string in_str ){
+        return rm_hash_sign( rm_and_sign ( in_str ) );
+    }
+
+    string rm_and_sign( string in_str ){
+        while ( int(in_str.find('&')) > 0 && in_str.find('&')!=string::npos) {
+            in_str.erase(in_str.find('&'),1);
+        }
+        return in_str;
+    }
 };

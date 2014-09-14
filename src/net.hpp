@@ -20,9 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//net.hpp
 #include "node.hpp"
 #include <valarray>
+#include <fstream>
+
 
 /*!\file net.cpp
  *  \brief Core function of converting a Newick (extended Newick) format string into a species tree (network), and simple string manipulation for tree strings
@@ -30,7 +31,6 @@
 
 #ifndef NETWORK
 #define NETWORK
-
 
 /*! \brief Network class*/
 class Net{
@@ -82,6 +82,9 @@ class Net{
         Net (){ this->init(); }
 	
         bool is_Net_() const { return this->is_Net ; }
+        string extract_label(string in_str, size_t i);
+
+
     public:	
     	void print_all_node();
         Net(string Net_str);
@@ -94,5 +97,12 @@ class Net{
 		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
 
 };
+
+string remove_interior_label(string in_str);
+size_t end_of_label_or_bl(string in_str, size_t i);
+void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ );
+
+
+
 
 #endif

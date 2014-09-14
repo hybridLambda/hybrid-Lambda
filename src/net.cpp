@@ -80,7 +80,6 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 		for ( size_t new_i_label=0 ; new_i_label < brchlens.size(); new_i_label++ ){
 			Node empty_node;
 			NodeContainer.push_back(empty_node);
-            //cout <<new_i_label <<" "<<labels[new_i_label]<<endl;
 			NodeContainer[new_i_label].label = labels[new_i_label];
 			NodeContainer[new_i_label].node_content = node_contents[new_i_label];
             NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
@@ -90,16 +89,10 @@ Net::Net(string old_string /*! input (extended) newick form string */){
 			size_t j;
 			for ( j = i+1; j < NodeContainer.size()-1; j++ ){
 				if ( NodeContainer[j].label==NodeContainer[i].label ){
-					if (NodeContainer[j].node_content[0]=='('){
+					if ( NodeContainer[j].node_content[0] == '(' ){
 						NodeContainer[i].node_content = NodeContainer[j].node_content;
-	//					NodeContainer[i].brchlen2=NodeContainer[i].brchlen1;
-	//					double* brch_ptr_i=&NodeContainer[i].brchlen1;
-	//					double* brch_ptr_j=&NodeContainer[j].brchlen1;
-	//					brch_ptr_i=brch_ptr_j;
 					}
-	//				else{
 					NodeContainer[i].set_brchlen2 ( NodeContainer[j].brchlen1() );
-	//				}
 					break;
 				}
 			}
@@ -112,17 +105,13 @@ Net::Net(string old_string /*! input (extended) newick form string */){
     this->NodeContainer.back().find_tip();
     this->NodeContainer.back().find_hybrid_descndnt();
     this->NodeContainer.back().CalculateRank();
-    this->max_rank = NodeContainer.back().rank();
-	
+    this->max_rank = NodeContainer.back().rank();	
     this->enumerate_internal_branch( this->NodeContainer.back() );
-    
     this->init_descendant();
     this->init_node_clade();
     //this->rewrite_descendant();
-
     this->check_isNet();
     this->check_isUltrametric();
-
 	//dout<<"Net constructed"<<endl;
 }
 
@@ -133,13 +122,8 @@ void Net::init_descendant(){
         descndnt.push_back(descndnt_dummy);
         valarray <int> descndnt2_dummy(0,tip_name.size());
         descndnt2.push_back(descndnt2_dummy);
-        //dout<<NodeContainer_ptr[i]->name<<"  "<<NodeContainer_ptr[i]->label<<"  "<<NodeContainer_ptr[i]->tip_bool << " ";
         for ( size_t tax_name_i = 0; tax_name_i < tax_name.size(); tax_name_i++ ) descndnt[i][tax_name_i] = this->NodeContainer[i].find_descndnt( tax_name[tax_name_i], TAXA) ? 1:0;
-        //cout << i <<" ";
-        //for ( size_t tax_name_i = 0; tax_name_i < tax_name.size(); tax_name_i++ ) cout << descndnt[i][tax_name_i] ;
-        //cout<<endl;
         for ( size_t tip_name_i = 0; tip_name_i < tip_name.size(); tip_name_i++ ) descndnt2[i][tip_name_i] = this->NodeContainer[i].find_descndnt( tip_name[tip_name_i], TIP) ? 1:0;
-
         this->NodeContainer[i].num_descndnt = descndnt[i].sum();
     }
 
@@ -173,6 +157,11 @@ void Net::init_node_clade(){
     }
 }
 
+string Net::extract_label(string in_str, size_t i){
+	size_t j=end_of_label_or_bl(in_str, i);
+	//cout<<"i="<<i<<", j="<<j<<endl;
+	return in_str.substr(i,j+1-i);
+}
 
 
 
@@ -259,7 +248,7 @@ void Net::check_isUltrametric(){
 	size_t remaining_node_i=0;	
 	while ( remaining_node.size() > 0 ){
 		int node_i = remaining_node[remaining_node_i];
-		if (NodeContainer[node_i].rank() == rank_i){
+		if ( NodeContainer[node_i].rank() == rank_i ){
 			if (rank_i == 1) NodeContainer[node_i].path_time.push_back(0.0);
 			else{
 				for (size_t child_i = 0; child_i < NodeContainer[node_i].child.size(); child_i++ ){
@@ -297,7 +286,7 @@ void Net::check_isUltrametric(){
 
 
 void Net::check_isNet(){ //false stands for tree, true stands for net_work
-	for (size_t i=0; i < this->NodeContainer.size(); i++){
+	for (size_t i = 0; i < this->NodeContainer.size(); i++){
 		if ( !this->NodeContainer[i].parent2 ) continue;
         this->is_Net = true;
         return;
@@ -309,14 +298,9 @@ void Net::print_all_node(){
     if ( this->is_Net ) cout<<"           label  hybrid hyb_des non-tp parent1  abs_t brchln1 parent2 brchln2 #child #dsndnt #id rank   e_num   Clade "<<endl;
     else cout<<"            label non-tp   parent        abs_t brchln #child #dsndnt #id rank e_num   Clade "<<endl;
     for (size_t i = 0; i < this->NodeContainer.size(); i++ ){
-        //cout << i <<" " << this->descndnt[i].size()<<" " <<this->descndnt[i][0]<<this->descndnt[i][1]<<this->descndnt[i][2]<<endl; 
         for (size_t j = 0; j < this->descndnt[i].size(); j++ ) {cout<<setw(3)<<this->descndnt[i][j];}
-//cout<<&this->NodeContainer[i]<<endl;
-//Node tmp( this->NodeContainer[i]);
-//tmp.print( this->is_Net_() );
         this->NodeContainer[i].print( this->is_Net_() );
-        cout<<"  ";
-        
+        cout<<"  ";        
         for (size_t j=0;j<this->descndnt2[i].size();j++) {cout<<this->descndnt2[i][j]; }
         cout<<endl;
     }
@@ -365,14 +349,12 @@ size_t Net::first_coal_index (){
     size_t min_rank = this->first_coal_rank();
     size_t dummy_index = this->NodeContainer.size()-1;
     double min_coal_time = this->NodeContainer[dummy_index].height;
-    //cout<<"min_rank = "<<min_rank<<endl;
     for (size_t i = 0 ; i < NodeContainer.size(); i++){
         if ( this->NodeContainer[i].rank() == min_rank &&  this->NodeContainer[i].height < min_coal_time ){
             dummy_index = i;
             min_coal_time = this->NodeContainer[dummy_index].height;
         }        
     }
-    //cout << "min_coal_time = " << min_coal_time  <<endl;
     return dummy_index;
 }
 
@@ -386,7 +368,7 @@ void Net::enumerate_internal_branch( Node & node ) {
         node.set_enum2( current_enum_ );
         }
     else{
-        for ( size_t i = 0; i < node.child.size(); i++){
+        for ( size_t i = 0; i < node.child.size(); i++ ){
             this->enumerate_internal_branch( *node.child[i] );
         }
         node.set_visited( true );
@@ -397,13 +379,16 @@ void Net::enumerate_internal_branch( Node & node ) {
 
 
 /*! \brief Identify if its the start of the taxon name in a newick string, should be replaced by using (isalpha() || isdigit())  */
-bool Net::start_of_tax_name( string in_str, size_t i){
-	bool start_bool=false;
-	if ( (in_str[i]!='(' && in_str[i-1]=='(') || (in_str[i-1]==',' && in_str[i]!='(') || ( (in_str[i-1]==')') && ( in_str[i]!=')' || in_str[i]!=':' || in_str[i]!=',' || in_str[i]!=';' ) ) ) {
-		start_bool=true;	
-	}
-	
-	return 	start_bool;
+bool Net::start_of_tax_name( string in_str, size_t i ){
+	//bool start_bool = false;
+	//if ( (in_str[i]!='(' && in_str[i-1]=='(') || (in_str[i-1]==',' && in_str[i]!='(') || ( (in_str[i-1]==')') && ( in_str[i]!=')' || in_str[i]!=':' || in_str[i]!=',' || in_str[i]!=';' ) ) ) {
+		//start_bool=true;	
+	//}	
+	//return 	start_bool;
+	if      (  in_str[i-1] == '('  &&   in_str[i] != '(' ) return true;
+    else if (  in_str[i-1] == ','  &&   in_str[i] != '(' ) return true; 
+    else if ( (in_str[i-1] == ')') && ( in_str[i] != ')' || in_str[i]!=':' || in_str[i]!=',' || in_str[i]!=';' ) ) return true;
+    else return false;
 }
 
 
@@ -441,9 +426,7 @@ void Net::check_Parenthesis( string &in_str ){
 		else if (in_str[i] == ')') num_b--;
         else continue;
 	}
-	if ( num_b != 0 ){
-		throw std::invalid_argument(in_str + "Parenthesis not balanced!" );
-	}
+	if ( num_b != 0 ) throw std::invalid_argument(in_str + "Parenthesis not balanced!" );
 }
 
 
@@ -534,10 +517,8 @@ void Net::rewrite_descendant(){	//check for coaleased tips(& sign in the tips)
         }
     }
     sort(tax_name.begin(), tax_name.end());
-    //cout<<descndnt.size()<<endl;
     descndnt.clear();
-//	cout<<descndnt.size()<<endl;
-    //~descndnt();
+
     for (size_t i=0;i<NodeContainer.size();i++){
         vector <string> contained_tips;
         valarray <int> re_initial_descndnt(0,tax_name.size());
@@ -564,8 +545,48 @@ void Net::rewrite_descendant(){	//check for coaleased tips(& sign in the tips)
             }
         }	
         descndnt.push_back(re_initial_descndnt);
-    }
-			
+    }			
     //this->rewrite_node_clade();
     this->init_node_clade();
+}
+
+
+/*! \brief Remove interior nodes label of a string */
+string remove_interior_label(string in_str/*!< input newick form string */){
+	string out_str;
+	out_str=in_str;
+	
+	size_t found_bracket=out_str.find(')');
+	while ( found_bracket<out_str.size() ){
+		if (isalpha(out_str[found_bracket+1]) || isdigit(out_str[found_bracket+1])){
+			size_t char_j=end_of_label_or_bl(out_str, found_bracket+1);
+			//cout<<out_str<<endl;
+			//cout<<out_str[char_j+1]<<endl;
+			out_str.erase(out_str.begin()+found_bracket+1,out_str.begin()+char_j+1);
+			//cout<<out_str<<endl;
+		}
+		found_bracket=out_str.find(")",found_bracket+1);
+	}
+
+	return out_str;
+}
+
+
+size_t end_of_label_or_bl(string in_str, size_t i){
+	size_t j ;
+	for (j=i;j<in_str.size();j++){
+		char stop=in_str[j+1];
+		if (stop==',' || stop==')' || stop==':' || stop==';'){
+			break;
+		}
+	}
+	return j;
+}
+
+	
+void readNextStringto( string &readto , int& argc_i, int argc_, char * const* argv_ ){
+    argc_i++;
+    if (argc_i >= argc_) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]); 
+    readto = std::string(argv_[argc_i]);
+    if ( readto[0] == '-' ) throw std::invalid_argument(std::string("Not enough parameters when parsing options: ") + argv_[argc_i-1]);
 }

@@ -225,9 +225,9 @@ void  Figure::det_x_node ( ){
 				int start_child_x = parent_x - floor( n_child / 2 );
 
                 bool odd_num_child = (n_child % 2) == 1 ? true:false;
-                //cout << "parent x = " << parent_x <<" " << "start_child_x = "<<start_child_x <<" ";
+                dout << "parent x = " << parent_x <<" " << "start_child_x = "<<start_child_x <<" ";
                 for ( size_t child_i = 0; child_i < n_child; child_i++ ){                    
-                    //cout << " child_"<<child_i << " x = " ;
+                    dout << " child_"<<child_i << " x = " ;
                     for ( size_t node_j = 0; node_j < this->obj_net.NodeContainer.size(); node_j++ ){                    
                         if ( node_j == this->obj_net.NodeContainer[node_i].child[child_i]->node_index ){
                             if ( !odd_num_child && start_child_x == parent_x ){
@@ -235,7 +235,7 @@ void  Figure::det_x_node ( ){
                             }
                             x_node[node_j] = start_child_x;
                             start_child_x++;
-                            //cout << x_node[node_j] ;
+                            dout << x_node[node_j] ;
                         }
                     }
                     
@@ -246,7 +246,7 @@ void  Figure::det_x_node ( ){
 			}
 		}
         this->x_node_shift();
-                //cout << endl;
+        dout << endl;
 	}
 }
 

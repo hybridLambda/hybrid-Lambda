@@ -178,7 +178,7 @@ void sim_one_gt::implement_coalsecent( vector <size_t> & current_alive_lineages,
     while ( ( remaining_length > 0) && ( num_lineage > 1) ) {
         size_t new_lineage = remaining_gt_node[0]; // index of the internal node that lineage coalseced to
         this->compute_bl_extension( multi_merge_para, num_lineage );
-        cout << "current_lineage_Extension = "<<current_lineage_Extension<< " and remaining_length = "<< remaining_length<<endl;
+        dout << "current_lineage_Extension = "<<current_lineage_Extension<< " and remaining_length = "<< remaining_length<<endl;
         if (  current_lineage_Extension < remaining_length ){
             dout << "  " << current_N_lineage_To_Coalesce << " lineages coalesce at time " << current_lineage_Extension << endl;
             for ( size_t nc_i = 0; nc_i < current_N_lineage_To_Coalesce; nc_i++ ){

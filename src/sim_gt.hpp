@@ -98,7 +98,6 @@ class sim_one_gt{
     string gt_string_mut_num;
     string gt_string_mut_unit;
     string gt_string_gener_num;
-    //vector <string> tax_name;
     vector <double> monophyly;
     double total_brchlen;
     int total_mut;    
@@ -110,28 +109,21 @@ class sim_one_gt{
 	Net my_gt_coal_unit;
 	Net my_gt_num_gener;
     void init();
-bool sim_num_gener_bool_;
-
-void initialize_gt_tip_nodes( Net & my_Net );
-void initialize_gt_internal_nodes ( size_t num_tax );
-//void mapping_gt_tip_to_sp ( Net & my_Net );
-
-vector <size_t> remaining_sp_node;
-
-vector < size_t> remaining_gt_node;
-
-void initialize_remaining_sp_node ( Net &my_Net );
-
-void push_in_descdent();
-Node *current_sp_pop_node;
-Node *current_sp_pop_size;
-Node *current_sp_multiCoal_para;
-//void adjust_bl( size_t rank_i, Net& my_Net );
-void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node ,double top_time_in_coal_unit);
-
-void remove_unused_nodes();
-void finalize( size_t num_taxa );
-void finalize_gt_str( string & gt_tr, Net & gt );
+    bool sim_num_gener_bool_;
+    void initialize_gt_tip_nodes( Net & my_Net );
+    void initialize_gt_internal_nodes ( size_t num_tax );
+    vector <size_t> remaining_sp_node;
+    vector < size_t> remaining_gt_node;
+    void initialize_remaining_sp_node ( Net &my_Net );
+    void push_in_descdent();
+    Node *current_sp_pop_node;
+    Node *current_sp_pop_size;
+    Node *current_sp_multiCoal_para;
+    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node ,double top_time_in_coal_unit);
+    
+    void remove_unused_nodes();
+    void finalize( size_t num_taxa );
+    void finalize_gt_str( string & gt_tr, Net & gt );
     void compute_monophyly_vec( Net &my_gt_coal_unit,vector < int > sample_size );
     void Si_num_out_table ( Net &mt_tree );
     
@@ -149,15 +141,12 @@ void finalize_gt_str( string & gt_tr, Net & gt );
 
 
     void implement_coalsecent( vector <size_t> & current_alive_lineages, double remaining_length, double multi_merge_para);
-    //;
+
     size_t current_N_lineage_To_Coalesce;
     double current_lineage_Extension; // in coalescent unit
     double update_coal_para( vector < vector <double> > &lambda_bk_mat, double num_lineage);
-    //valarray <double> build_nc_X(vector < vector <double> > &lambda_bk_mat, double num_lineage);
     void build_nc_X( size_t num_lineage );
     size_t update_nc();
-    //int update_nc(valarray <double> nc_X);
-
 
     /*! \brief Beta function, requires tgamma function from math.h \return double */
     double Beta(double x,double y){
