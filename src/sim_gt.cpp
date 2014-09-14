@@ -244,6 +244,7 @@ void simTree::finalize( size_t num_taxa ){
     this->rewrite_node_content();
     string gt_tmp_str = this->NodeContainer.back().node_content + this->NodeContainer.back().label+";";
     gt_string_coal_unit = remove_interior_label(gt_tmp_str);
+    //gt_string_coal_unit = print_newick( & this->NodeContainer.back() ) + ";";
     //this->finalize_gt_str (gt_string_coal_unit , (*this) );
 	if (sim_num_gener_bool_) this->finalize_gt_str (gt_string_gener_num , my_gt_num_gener);
         
@@ -262,11 +263,12 @@ void simTree::finalize( size_t num_taxa ){
 }
 
 
-void simTree::finalize_gt_str( string & gt_tr, Tree & gt ){
-    gt.NodeContainer.back().CalculateRank();
-    gt.rewrite_node_content();
-    string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
-    gt_tr = remove_interior_label(gt_tmp_str);
+void simTree::finalize_gt_str( string & gt_str, Tree & gt ){
+    //gt.NodeContainer.back().CalculateRank();
+    //gt.rewrite_node_content();
+    //string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
+    //gt_str = remove_interior_label(gt_tmp_str);
+    gt_str = print_newick( &gt.NodeContainer.back() );
 }
 
 
@@ -291,10 +293,10 @@ void simTree::build_mt_tree(){
         }
         mt_tree.NodeContainer[brch_index].set_brchlen1 ( mt_tree.NodeContainer[brch_index].brchlen1() + 1 );
     }
-    mt_tree.rewrite_node_content();
-    gt_string_mut_num = mt_tree.NodeContainer.back().node_content + mt_tree.NodeContainer.back().label + ";";
-    gt_string_mut_num = remove_interior_label(gt_string_mut_num);
-    
+    //mt_tree.rewrite_node_content();
+    //gt_string_mut_num = mt_tree.NodeContainer.back().node_content + mt_tree.NodeContainer.back().label + ";";
+    //gt_string_mut_num = remove_interior_label(gt_string_mut_num);
+    gt_string_mut_num = mt_tree.print_newick ( & mt_tree.NodeContainer.back() );
     if ( this->simulation_jobs_->Si_num_bool) this->Si_num_out_table(mt_tree);
 }
 

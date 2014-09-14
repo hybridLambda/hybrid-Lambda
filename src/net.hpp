@@ -92,6 +92,7 @@ class Tree{
     public:	
 		vector < Node > NodeContainer;  /*!< \brief vector of nodes */
 		void rewrite_node_content();
+        string print_newick( Node * node );
 };
 
 class Net: public Tree {
