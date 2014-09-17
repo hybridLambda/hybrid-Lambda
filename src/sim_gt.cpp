@@ -26,30 +26,6 @@
 
 #include "sim_gt.hpp"
 
-action_board::action_board(){
-	this->sim_mut_unit_bool  = false;
-	this->sim_num_gener_bool = false;
-	this->sim_num_mut_bool   = false;
-	this->Si_num_bool        = false;
-	this->mono_bool          = false;
-}
-
-SimulationParameters::SimulationParameters(){
-	this->mutation_rate=0.00005;
-	//pop_size=10000;
-	//pop_size_string_bool=false;
-	//mm=2.0;
-    //this->net_str = "";
-	this->pop_bool=false;
-	this->mm_bool=false;
-	this->samples_bool=false;
-    this->is_Net = false;
-	this->num_gener_bool=false;
-	this->sp_coal_unit_bool=false;
-    this->total_num_lineage = 0;
-}
-
-
 void SimulationParameters::finalize(){
     if ( !this->mm_bool ) { // If coalescent parameter is ungiven, use Kingman coalescent as default
         para_string = write_para_into_tree( net_str, 2.0 ); 
@@ -132,7 +108,7 @@ simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_job
             this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1, 
                                    this->parameters_->my_Net->NodeContainer[node_i].parent1->height(), 
                                    pop_size );
-            //cout<<"here current_sp_pop_node.parent1->height = "<<this->parameters_->my_Net->NodeContainer[node_i].parent1->height() <<endl;
+
 			if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) {
 				dout<<"hybrid node parent1 finished, in parent 2 now"<<endl;
                 double remaining_length = this->parameters_->my_Net->NodeContainer[node_i].brchlen2();
@@ -225,7 +201,7 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
 
 void simTree::finalize( size_t num_taxa ){
     this->remove_unused_nodes();
-	//if (!this->check_isUltrametric()){throw "not ultrametic";}	
+
     this->NodeContainer.back().CalculateRank();
     this->rewrite_node_content();
     string gt_tmp_str = this->NodeContainer.back().node_content + this->NodeContainer.back().label+";";
@@ -236,8 +212,8 @@ void simTree::finalize( size_t num_taxa ){
         
 	// check if the gene tree is ultramatric.
 	dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
-	//Net checking_ultra_net(gt_string_coal_unit);
-	//if (!checking_ultra_net.is_ultrametric){throw "Gene tree is not ultrametric";}	
+    this->check_isUltrametric();
+	if ( !this->is_ultrametric ){ throw "Gene tree is not ultrametric"; }
 	
 	if ( this->simulation_jobs_->sim_mut_unit_bool ) build_gt_string_mut_unit( );
 	
@@ -250,11 +226,11 @@ void simTree::finalize( size_t num_taxa ){
 
 
 void simTree::finalize_gt_str( string & gt_str, Tree & gt ){
-    gt.NodeContainer.back().CalculateRank();
-    gt.rewrite_node_content();
-    string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
-    gt_str = remove_interior_label(gt_tmp_str);
-    //gt_str = print_newick( &gt.NodeContainer.back() );
+    //gt.NodeContainer.back().CalculateRank();
+    //gt.rewrite_node_content();
+    //string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
+    //gt_str = remove_interior_label(gt_tmp_str);
+    gt_str = print_newick( &gt.NodeContainer.back() );
 }
 
 

@@ -56,7 +56,16 @@ class SimulationParameters{
 	Net * my_pop_net;
 	Net * my_para_net;
 
-    SimulationParameters();
+    SimulationParameters(){
+        this->mutation_rate=0.00005;
+        this->pop_bool=false;
+        this->mm_bool=false;
+        this->samples_bool=false;
+        this->is_Net = false;
+        this->num_gener_bool=false;
+        this->sp_coal_unit_bool=false;
+        this->total_num_lineage = 0;
+    };
     ~SimulationParameters(){
         delete my_Net;
         delete my_pop_net;
@@ -91,7 +100,13 @@ class action_board {
     bool mono_bool;
     bool Si_num_bool;
 
-    action_board();
+    action_board(){
+        this->sim_mut_unit_bool  = false;
+        this->sim_num_gener_bool = false;
+        this->sim_num_mut_bool   = false;
+        this->Si_num_bool        = false;
+        this->mono_bool          = false;
+    };
     ~action_board(){};
 };
 
