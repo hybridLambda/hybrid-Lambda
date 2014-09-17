@@ -95,7 +95,7 @@ class action_board {
     ~action_board(){};
 };
 
-// \todo make this as an inherited class for Net
+
 /*! \brief One simulated gene tree from a network under Kingman or multi merger coalescent process*/
 class simTree : public Tree {
     friend class HybridLambda;
@@ -111,23 +111,26 @@ class simTree : public Tree {
     int total_mut;    
     ofstream * Si_table_;
 
+
+	Tree my_gt_num_gener;
+    bool sim_num_gener_bool_;
+
     simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
     ~simTree(){};		
 
-	//Net my_gt_coal_unit;
-	Tree my_gt_num_gener;
-    void init();
-    bool sim_num_gener_bool_;
+    void init(){ this->sim_num_gener_bool_ = false;}
     void initialize_gt_tip_nodes( Net * my_Net );
     void initialize_gt_internal_nodes ( size_t num_tax );
     vector <size_t> remaining_sp_node;
     vector < size_t> remaining_gt_node;
     void initialize_remaining_sp_node ( Net *my_Net );
     void push_in_descdent();
-    //Node *current_sp_pop_node;
-    Node *current_sp_pop_size;
-    Node *current_sp_multiCoal_para;
-    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node ,double top_time_in_coal_unit, double height);
+    
+    void implement_coalsecent( vector <size_t> & current_alive_lineages, 
+                               double remaining_length, double multi_merge_para, double pop_size, 
+                               string nodelabel );
+    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, 
+                         double top_time_in_coal_unit, double pop_size);
     
     void remove_unused_nodes();
     void finalize( size_t num_taxa );
@@ -148,7 +151,7 @@ class simTree : public Tree {
     void build_lambda_bk_mat( double para, size_t num_lineage);
 
 
-    void implement_coalsecent( vector <size_t> & current_alive_lineages, double remaining_length, double multi_merge_para, string nodelabel);
+
 
     size_t current_N_lineage_To_Coalesce;
     double current_lineage_Extension; // in coalescent unit

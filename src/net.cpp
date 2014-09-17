@@ -552,11 +552,12 @@ void Tree::rewrite_descendant(){	//check for coaleased tips(& sign in the tips)
 
 string Tree::print_newick( Node * node ){
     string tree_str;
-    if ( node->tip_bool ) tree_str = node->label + to_string (node->brchlen1() );
+    if ( node->tip_bool ) tree_str = node->label ;
     else {
         tree_str = "(";
         for ( size_t i = 0 ; i < node->child.size() ; i++ ){
-            tree_str += print_newick ( node->child[i] ) + "+" + to_string (node->child[i]->brchlen1() );
+            tree_str += print_newick ( node->child[i] ) + ":" + to_string (node->child[i]->brchlen1() );
+            if ( i < node->child.size()-1 ) tree_str += ",";
         }
         tree_str += ")";
     }

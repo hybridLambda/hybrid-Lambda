@@ -96,19 +96,10 @@ simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_job
     this->init();
 	dout<<"	Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
     this->Si_table_ = &Si_table;
-	//string sp_string_coal_unit= this->parameters_->sp_string_coal_unit;
-	//string sp_string_pop_size= this->parameters_->sp_string_pop_size;
-	//string para_string = this->parameters_->para_string;
     
 	sim_num_gener_bool_ = this->simulation_jobs_->sim_num_gener_bool;	
     if ( this->simulation_jobs_->sim_mut_unit_bool ||  this->simulation_jobs_->sim_num_mut_bool) sim_num_gener_bool_ = true;
-	
-    // \todo the following three trees should have been passed with parameters_
-    //Net my_Net(sp_string_coal_unit);
-    //this->parameters_->my_Net->print_all_node();
-	//Net my_pop_net(sp_string_pop_size);
-	//Net my_para_net(para_string);
-    
+	    
 	this->initialize_remaining_sp_node ( this->parameters_->my_Net );
     this->initialize_gt_tip_nodes( this->parameters_->my_Net );
     this->initialize_gt_internal_nodes ( this->parameters_->my_Net->tax_name.size() );
@@ -118,49 +109,42 @@ simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_job
     
 	while ( remaining_sp_node.size() > 0 ){
 		size_t node_i = remaining_sp_node[remaining_sp_node_i];
-        //cout << "remaining_sp_node.size() = " <<remaining_sp_node.size() <<", remaining_sp_node_i = "<<remaining_sp_node_i<<" remaining_sp_node[remaining_sp_node_i] = "<<remaining_sp_node[remaining_sp_node_i]<<endl;
-        //current_sp_pop_node = this->parameters_->my_Net->NodeContainer[node_i];
-        //cout <<"right here, this->parameters_->my_Net->NodeContainer.size="<<this->parameters_->my_Net->NodeContainer.size()<<",node_i="<<node_i<<endl;
-        //this->parameters_->my_Net->print_all_node();
-        //this->parameters_->my_Net->NodeContainer[node_i].print();
-        //current_sp_pop_node.print();
-        //cout<<endl;
-        //cout << "here"<<endl;
-        //this->parameters_->my_pop_net->NodeContainer[node_i]
-		//current_sp_pop_size = &my_pop_net.NodeContainer[node_i];
-        //current_sp_multiCoal_para = &this->parameters_->my_para_net.NodeContainer[node_i];
-        //cout<<"hea"<<endl;
         if ( this->parameters_->my_Net->NodeContainer[node_i].rank() == rank_i ){
             //this->include_lineages_at_sp_node ( current_sp_pop_node );
             this->include_lineages_at_sp_node ( this->parameters_->my_Net->NodeContainer[node_i] );
-			dout << "In population: " << this->parameters_->my_Net->NodeContainer[node_i].label << " with rank " << rank_i;
+			
+            dout << "In population: " << this->parameters_->my_Net->NodeContainer[node_i].label << " with rank " << rank_i;
 			dout << ((rank_i == this->parameters_->my_Net->max_rank) ? ", at the root, everything coalesces":"") ;
             dout << endl;            
+            
 			//here to choose go left or right for hybrid node.			
-			//if ( current_sp_pop_node.hybrid() ) this->assign_lineages_at_sp_node ( current_sp_pop_node );            
             if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) this->assign_lineages_at_sp_node ( this->parameters_->my_Net->NodeContainer[node_i] );
 			
             double remaining_length = ( rank_i == this->parameters_->my_Net->max_rank ) ? 1.0/0.0 : this->parameters_->my_Net->NodeContainer[node_i].brchlen1();
             double multi_merge_para = this->parameters_->my_para_net->NodeContainer[node_i].brchlen1();
+            double pop_size = this->parameters_->my_pop_net->NodeContainer[node_i].brchlen1();
             this->implement_coalsecent( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1, 
-                                        remaining_length, multi_merge_para,
+                                        remaining_length, multi_merge_para, pop_size,
                                         this->parameters_->my_Net->NodeContainer[node_i].label);
             
             if ( rank_i == this->parameters_->my_Net->max_rank ) {assert(this->print_all_node_dout());break; }
     
-            this->adjust_bl_core (this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1, this->parameters_->my_Net->NodeContainer[node_i].parent1->height() , this->parameters_->my_Net->NodeContainer[node_i].height() );
+            this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1, 
+                                   this->parameters_->my_Net->NodeContainer[node_i].parent1->height(), 
+                                   pop_size );
             //cout<<"here current_sp_pop_node.parent1->height = "<<this->parameters_->my_Net->NodeContainer[node_i].parent1->height() <<endl;
 			if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) {
 				dout<<"hybrid node parent1 finished, in parent 2 now"<<endl;
                 double remaining_length = this->parameters_->my_Net->NodeContainer[node_i].brchlen2();
                 double multi_merge_para = this->parameters_->my_para_net->NodeContainer[node_i].brchlen2();
+                double pop_size = this->parameters_->my_pop_net->NodeContainer[node_i].brchlen2();
                 this->implement_coalsecent( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2, 
-                                            remaining_length, 
-                                            multi_merge_para, 
+                                            remaining_length, multi_merge_para, pop_size,
                                             this->parameters_->my_Net->NodeContainer[node_i].label);
-                this->adjust_bl_core (this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2, this->parameters_->my_Net->NodeContainer[node_i].parent2->height(), this->parameters_->my_Net->NodeContainer[node_i].height());
+                this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2, 
+                                       this->parameters_->my_Net->NodeContainer[node_i].parent2->height(), 
+                                       pop_size);
             }
-            //cout<<"hea"<<endl;
 			remaining_sp_node.erase( remaining_sp_node.begin() + remaining_sp_node_i );
 		}
 		else { 	remaining_sp_node_i++; 	}
@@ -186,7 +170,8 @@ void simTree::remove_unused_nodes(){
 	}
 }
 
-void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages, double remaining_length, double multi_merge_para, string node_label){
+void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages, 
+                                    double remaining_length, double multi_merge_para, double pop_size, string node_label){
     size_t num_lineage = current_alive_lineages.size();
     this->build_lambda_bk_mat( multi_merge_para , num_lineage );			                        
     
@@ -207,7 +192,7 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages, do
                 this->NodeContainer[new_lineage].add_child( &this->NodeContainer[gt_child_node_index] );
                 this->descndnt[new_lineage] += this->descndnt[gt_child_node_index];
                 if (sim_num_gener_bool_){
-                    my_gt_num_gener.NodeContainer[gt_child_node_index].set_brchlen1 ( my_gt_num_gener.NodeContainer[gt_child_node_index].brchlen1() + ( current_lineage_Extension * current_sp_pop_size->brchlen1()) ) ; // b_alpha <- b_alpha + l*pop_size
+                    my_gt_num_gener.NodeContainer[gt_child_node_index].set_brchlen1 ( my_gt_num_gener.NodeContainer[gt_child_node_index].brchlen1() + ( current_lineage_Extension * pop_size) ) ; // b_alpha <- b_alpha + l*pop_size
                     my_gt_num_gener.NodeContainer[new_lineage].add_child(&my_gt_num_gener.NodeContainer[gt_child_node_index]);
                     my_gt_num_gener.descndnt[new_lineage] += my_gt_num_gener.descndnt[gt_child_node_index];
                 }
@@ -220,10 +205,11 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages, do
             }
             current_alive_lineages.push_back(new_lineage); // introducing a new lineage gamma
             this->NodeContainer[new_lineage].set_height( this->NodeContainer[new_lineage].child[0]->height() + this->NodeContainer[remaining_gt_node[0]].child[0]->brchlen1() ); // a_gamma <- a_alpha + b_alpha
+
             for ( size_t update_brch_i=0;update_brch_i < current_alive_lineages.size()-1;update_brch_i++){
                 this->NodeContainer[current_alive_lineages[update_brch_i]].set_brchlen1 ( this->NodeContainer[current_alive_lineages[update_brch_i]].brchlen1()+current_lineage_Extension );		
                 if (sim_num_gener_bool_){
-                    my_gt_num_gener.NodeContainer[current_alive_lineages[update_brch_i]].set_brchlen1 ( current_lineage_Extension*current_sp_pop_size->brchlen1()+my_gt_num_gener.NodeContainer[current_alive_lineages[update_brch_i]].brchlen1()) ;
+                    my_gt_num_gener.NodeContainer[current_alive_lineages[update_brch_i]].set_brchlen1 ( current_lineage_Extension*pop_size + my_gt_num_gener.NodeContainer[current_alive_lineages[update_brch_i]].brchlen1()) ;
                 }
             }
             
@@ -264,11 +250,11 @@ void simTree::finalize( size_t num_taxa ){
 
 
 void simTree::finalize_gt_str( string & gt_str, Tree & gt ){
-    //gt.NodeContainer.back().CalculateRank();
-    //gt.rewrite_node_content();
-    //string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
-    //gt_str = remove_interior_label(gt_tmp_str);
-    gt_str = print_newick( &gt.NodeContainer.back() );
+    gt.NodeContainer.back().CalculateRank();
+    gt.rewrite_node_content();
+    string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
+    gt_str = remove_interior_label(gt_tmp_str);
+    //gt_str = print_newick( &gt.NodeContainer.back() );
 }
 
 
@@ -322,24 +308,16 @@ void simTree::Si_num_out_table( Tree &mt_tree ){
 }
 
 
-void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double top_time_in_coal_unit, double current_height ){
+void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double top_time_in_coal_unit, double pop_size ){
     dout<<"*************************before adjusting***************"<<endl;
     assert(this->print_all_node_dout());
+    assert(this->my_gt_num_gener.print_all_node_dout());
     for ( size_t i = 0; i < Net_node_contains_gt_node.size(); i++){
         double height_diff_in_coal_unit = top_time_in_coal_unit - this->NodeContainer[Net_node_contains_gt_node[i]].height() ;
-        if ( sim_num_gener_bool_ ){
-            double tmp_bl = ( this->NodeContainer[Net_node_contains_gt_node[i]].height()  >  current_height ) ? 
-                            (height_diff_in_coal_unit) * current_sp_pop_size->brchlen2() : 
-                            (height_diff_in_coal_unit - this->NodeContainer[Net_node_contains_gt_node[i]].brchlen1() ) * current_sp_pop_size->brchlen2() + my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].brchlen1() ;
-            assert ( (height_diff_in_coal_unit) * current_sp_pop_size->brchlen2() == (height_diff_in_coal_unit - this->NodeContainer[Net_node_contains_gt_node[i]].brchlen1() ) * current_sp_pop_size->brchlen2() + my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].brchlen1());
-            //if ( (this->NodeContainer[Net_node_contains_gt_node[i]].height ) >  current_sp_pop_node.height ){
-              //my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( (current_sp_pop_node.parent2->height - this->NodeContainer[Net_node_contains_gt_node[i]].height)*current_sp_pop_size->brchlen2() );//+my_gt_num_gener.NodeContainer[current_sp_pop_node.Net_node_contains_gt_node1[i]]->brchlen1;		
-            //}
-            //else{
-              //my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( (current_sp_pop_node.parent2->height - this->NodeContainer[Net_node_contains_gt_node[i]].height- this->NodeContainer[Net_node_contains_gt_node[i]].brchlen1() )*current_sp_pop_size->brchlen2() + my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].brchlen1() );
-            //}
-        }
         this->NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( height_diff_in_coal_unit );
+        if ( sim_num_gener_bool_ ){
+            my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( height_diff_in_coal_unit * pop_size );
+        }
     }
     dout<<"************************* after adjusting***************"<<endl;
     assert(this->print_all_node_dout());
@@ -512,11 +490,6 @@ size_t simTree::update_nc (){
 }
 
 
-void simTree::init(){
-    sim_num_gener_bool_ = false;
-}
-
-
 void simTree::initialize_gt_tip_nodes( Net * my_Net ){
     dout << " initialize_gt_tip_nodes " << endl;
 	for ( size_t i = 0; i < my_Net->NodeContainer.size(); i++ ){
@@ -587,29 +560,26 @@ void simTree::initialize_gt_internal_nodes ( size_t num_tax ){
 }
 	
 void simTree::include_lineages_at_sp_node( Node & sp_node ){
-    dout << "include_lineages_at_sp_node begin"<<endl;
-
-    //cout << sp_node<<endl;
-    //sp_node.print(false);
-    //cout<<endl;
+    dout << "include lineages at sp_node "<< sp_node.label << endl;
+    dout << "include lineage: ";
     for ( size_t i = 0; i < sp_node.child.size(); i++){
-        //sp_node.child[i]->print(false);
-        //cout<<endl;
-        //if (sp_node.child[i]->parent1->label == sp_node.label){
         if ( sp_node.child[i]->parent1 == &sp_node ){ // to be used, check later
             for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node1.size(); j++){
                 sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node1[j]);
+                dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", "; 
             }
         }
-        else if ( sp_node.child[i]->parent2 != &sp_node ){
-            assert ( sp_node.child[i]->parent2 != &sp_node );
+        else if ( sp_node.child[i]->parent2 == &sp_node ){
+            assert ( sp_node.child[i]->parent2 == &sp_node );
             for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node2.size(); j++){
                 sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node2[j]);
+                dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", "; 
             }					
         }
         else continue;
     }
-    dout << "include_lineages_at_sp_node end"<<endl;
+    dout << sp_node.Net_node_contains_gt_node1.size() << " lineages in total" << endl;
+    
 }
 
 
