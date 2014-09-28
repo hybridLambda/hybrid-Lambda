@@ -185,7 +185,7 @@ void HybridLambda::extract_tmrca(){
 void HybridLambda::extract_bl(){
     if ( !this->bl_bool ){ return; }
 
-    this->extract_file_name = this->prefix + "BL";
+    this->extract_file_name = this->prefix + "bl";
     remove ( this->extract_file_name.c_str() );
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i=0; i < gt_tree_str_s.size(); i++ ){
