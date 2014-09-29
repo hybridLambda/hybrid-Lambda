@@ -276,9 +276,9 @@ void simTree::Si_num_out_table( Tree &mt_tree ){
 		}
 	}
 		
-	*Si_table_ << setw(12)<< total_brchlen<<setw(14)<<mt_tree.NodeContainer.back().height() <<setw(7)<<this->total_mut<<"  ";
+	*Si_table_ << total_brchlen<<'\t'<<mt_tree.NodeContainer.back().height() <<'\t'<<this->total_mut;
 	for ( size_t sii=0;sii<S_i.size();sii++){
-		*Si_table_<<setw(4)<<S_i[sii]<<" ";
+		*Si_table_<<'\t'<<S_i[sii];
 	}
     *Si_table_ << endl;	
 }

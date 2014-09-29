@@ -343,8 +343,8 @@ string HybridLambda::read_input_line(const char *inchar){
 void HybridLambda::outtable_header( std::ofstream &output ){
    	if ( !this->simulation_jobs_->Si_num_bool ){return;}
 
-	output <<"t_total       t_MRCA       S_total  ";
-	for ( int sii = 0; sii < this->parameters_->total_num_lineage-1; sii++ ) output<<"S_"<<sii+1<<"  ";
+	output <<"t_total\tt_MRCA\tS_total";
+	for ( int sii = 0; sii < this->parameters_->total_num_lineage-1; sii++ ) output<<"\tS_"<<sii+1;
 	output << endl;
 }
 
