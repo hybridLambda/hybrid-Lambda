@@ -1,0 +1,27 @@
+foo(){
+	echo "TMRCA" > figuretitle
+	R CMD BATCH tmrca.r
+
+	echo "BL" > figuretitle
+	R CMD BATCH bl.r
+
+	#cut -f 6 ms_stats > msdata
+	#cut -f 6 scrm_stats > scrmdata
+	#echo "Tajima_D" > figuretitle
+	#R CMD BATCH ks.r
+
+	#cut -f 2 ms_stats > msdata
+	#cut -f 2 scrm_stats > scrmdata
+	#echo "Pairewise_difference" > figuretitle
+	#R CMD BATCH ks.r
+
+	#cut -f 8 ms_stats > msdata
+	#cut -f 8 scrm_stats > scrmdata
+	#echo "theta_H" > figuretitle
+	#R CMD BATCH ks.r
+
+	#cut -f 10 ms_stats > msdata
+	#cut -f 10 scrm_stats > scrmdata
+	#echo "H" > figuretitle
+	#R CMD BATCH ks.r
+	}
