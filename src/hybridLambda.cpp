@@ -410,7 +410,7 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
 		total_mut += mt_tree.NodeContainer[node_i].brchlen1();
 	}
 	for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
-		extract_file << mt_tree.tip_name[tip_i] << " ";
+		extract_file << mt_tree.tip_name[tip_i] << "\t";
 		for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
 			if ( mt_tree.NodeContainer[node_i].brchlen1() > 0 ){
 				for ( int num_repeat = 0; num_repeat < mt_tree.NodeContainer[node_i].brchlen1(); num_repeat++ ){				

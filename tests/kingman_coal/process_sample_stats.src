@@ -1,3 +1,16 @@
+rearrange_hybridLambdaout(){
+    rm hybridLambdaout
+    echo -e "hybridLambda $1 ${rep}\n1 1 1" > hybridLambdaout
+    for i in $(seq 1 1 ${rep})
+        do
+        echo -e "\n//" >> hybridLambdaout
+        echo "segsites: $(cut -f 3 hybridLambda_Si_table | head -$(expr ${i} + 1) | tail -1)" >> hybridLambdaout
+        echo "positions: " >> hybridLambdaout
+        cut -f 2 hybridLambdaseg_sites/site${i} >> hybridLambdaout
+        done
+    cat hybridLambdaout | sample_stats > hybridLambda_stats
+}
+
 foo(){
 	echo "TMRCA" > figuretitle
 	R CMD BATCH tmrca.r
@@ -5,23 +18,28 @@ foo(){
 	echo "BL" > figuretitle
 	R CMD BATCH bl.r
 
-	#cut -f 6 ms_stats > msdata
-	#cut -f 6 scrm_stats > scrmdata
-	#echo "Tajima_D" > figuretitle
-	#R CMD BATCH ks.r
+	cut -f 4 ms_stats > msdata
+	cut -f 4 hybridLambda_stats > hybridLambdadata
+	echo "SS" > figuretitle
+	R CMD BATCH ks.r
 
-	#cut -f 2 ms_stats > msdata
-	#cut -f 2 scrm_stats > scrmdata
-	#echo "Pairewise_difference" > figuretitle
-	#R CMD BATCH ks.r
+	cut -f 6 ms_stats > msdata
+	cut -f 6 hybridLambda_stats > hybridLambdadata
+	echo "Tajima_D" > figuretitle
+	R CMD BATCH ks.r
 
-	#cut -f 8 ms_stats > msdata
-	#cut -f 8 scrm_stats > scrmdata
-	#echo "theta_H" > figuretitle
-	#R CMD BATCH ks.r
+	cut -f 2 ms_stats > msdata
+	cut -f 2 hybridLambda_stats > hybridLambdadata
+	echo "Pairewise_difference" > figuretitle
+	R CMD BATCH ks.r
 
-	#cut -f 10 ms_stats > msdata
-	#cut -f 10 scrm_stats > scrmdata
-	#echo "H" > figuretitle
-	#R CMD BATCH ks.r
+	cut -f 8 ms_stats > msdata
+	cut -f 8 hybridLambda_stats > hybridLambdadata
+	echo "theta_H" > figuretitle
+	R CMD BATCH ks.r
+
+	cut -f 10 ms_stats > msdata
+	cut -f 10 hybridLambda_stats > hybridLambdadata
+	echo "H" > figuretitle
+	R CMD BATCH ks.r
 	}
