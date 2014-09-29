@@ -5,10 +5,11 @@ currentcase=scan(\"current_case\",what=\"\");
 msdata=read.table(\"mstmrca\")\$V1;
 #hybridLambdadata=read.table(\"hybridLambdatmrca\")\$V1;
 hybridLambdadata=read.table(\"hybridLambdatmrca\")\$V1/2;
-#ee=ee_tmrca(${nsam});
-#sdv=sd_tmrca(${nsam});
-test=ks.test(msdata,hybridLambdadata)
+msmoments = c(msdata, msdata\^2, msdata\^3, msdata\^4);
+hybridLambdamoments = c(hybridLambdadata, hybridLambdadata\^2, hybridLambdadata\^3, hybridLambdadata\^4);
 pdf(paste(currentcase,figuretitle,\".pdf\",sep=\"\"));
+
+test=ks.test(msdata,hybridLambdadata)
 plot(ecdf(msdata), xlim=range(c(msdata, hybridLambdadata)),col=\"red\", main=currentcase)
 plot(ecdf(hybridLambdadata), add=TRUE, lty=\"dashed\", col=\"blue\")
 legend(\"bottomright\",c(paste(\"Tests Statistics = \",test\$statistic,sep=\"\"), paste(\"p-value = \",format(test\$p.value,digits=4),sep=\"\")))

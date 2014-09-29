@@ -32,7 +32,6 @@ hybrid-Lambda -spcu "(A:0,B:0);" -S 4 1 -num ${rep} -o hybridLambda -tmrca -bl
 
 foo
 
-
 #case 1
 net=5_tax_sp_nt1_para00_bl06
 echo ${net} > current_case
@@ -44,46 +43,46 @@ hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
 
 foo
 
-##case 2
-#net=5_tax_sp_nt1_para02_bl06
-#echo ${net} > current_case
-#rm ms* hybridLambda*
-#ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.8 -ej 1.4 6 5 -es 1.4 3 0.8 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
-#hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
-#hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
+#case 2
+net=5_tax_sp_nt1_para02_bl06
+echo ${net} > current_case
+rm ms* hybridLambda*
+ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.8 -ej 1.4 6 5 -es 1.4 3 0.8 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
+hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
+hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
 
-#foo
+foo
 
-##case 3
-#net=5_tax_sp_nt1_para05_bl06
-#echo ${net} > current_case
-#rm ms* hybridLambda*
-#ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.5 -ej 1.4 6 5 -es 1.4 3 0.5 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
-#hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
-#hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
+#case 3
+net=5_tax_sp_nt1_para05_bl06
+echo ${net} > current_case
+rm ms* hybridLambda*
+ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.5 -ej 1.4 6 5 -es 1.4 3 0.5 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
+hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
+hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
 
-#foo
+foo
 
-##case 4
-#net=5_tax_sp_nt1_para08_bl06
-#echo ${net} > current_case
-#rm ms* hybridLambda*
-#ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.2 -ej 1.4 6 5 -es 1.4 3 0.2 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
-#hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
-#hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
+#case 4
+net=5_tax_sp_nt1_para08_bl06
+echo ${net} > current_case
+rm ms* hybridLambda*
+ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.2 -ej 1.4 6 5 -es 1.4 3 0.2 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
+hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
+hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
 
-#foo
+foo
 
-##case 5
-#net=5_tax_sp_nt1_para10_bl06
-#echo ${net} > current_case
-#rm ms* hybridLambda*
-##ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.0 -ej 1.4 6 5 -es 1.4 3 0.0 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
-#ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -ej 1.4 3 5 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
-#hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
-#hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
+#case 5
+net=5_tax_sp_nt1_para10_bl06
+echo ${net} > current_case
+rm ms* hybridLambda*
+#ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.0 -ej 1.4 6 5 -es 1.4 3 0.0 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
+ms 5 ${rep} -T -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -ej 1.4 3 5 -ej 2 5 1 | tail -n +4 | grep -v // | grep -v '^$' > ms_gt
+hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
+hybrid-Lambda -spcu ../../../trees/${net} -num ${rep} -o hybridLambda -tmrca -bl
 
-#foo
+foo
 
 
 #net=5_tax_sp_nt1_para_bl100

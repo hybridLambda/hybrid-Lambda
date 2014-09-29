@@ -76,3 +76,6 @@ src/dotfigure.ps
 OUT*
 example*
 GENE*
+
+#tests
+tests/caterpillar_test/*gt*
