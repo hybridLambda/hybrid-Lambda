@@ -8,7 +8,7 @@ hybridLambdadata=read.table(paste(\"hybridLambda\",\"data\",sep=\"\"))\$V1;
 #sdv=1#sd_tmrca(${nsam});
 test=ks.test(msdata,hybridLambdadata)
 pdf(paste(currentcase,figuretitle,\".pdf\",sep=\"\"));
-plot(ecdf(msdata), xlim=range(c(msdata, hybridLambdadata)),col=\"red\", main=currentcase)
+plot(ecdf(msdata), xlim=range(c(msdata, hybridLambdadata)),col=\"red\", main=paste(currentcase, figuretitle) )
 plot(ecdf(hybridLambdadata), add=TRUE, lty=\"dashed\", col=\"blue\")
 legend(\"bottomright\",c(paste(\"Tests Statistics = \",test\$statistic,sep=\"\"), paste(\"p-value = \",format(test\$p.value,digits=4),sep=\"\")))
 legend(\"topleft\",c(\"ms\",\"hybridLambda\"), col=c(\"red\",\"blue\"), pch=16)

@@ -42,4 +42,8 @@ foo(){
 	cut -f 10 hybridLambda_stats > hybridLambdadata
 	echo "H" > figuretitle
 	R CMD BATCH ks.r
+    
+    pdfunite ${CURRENTCASE}BL.pdf  ${CURRENTCASE}TMRCA.pdf ${CURRENTCASE}SS.pdf ${CURRENTCASE}H.pdf ${CURRENTCASE}Pairewise_difference.pdf ${CURRENTCASE}Tajima_D.pdf ${CURRENTCASE}theta_H.pdf ${CURRENTCASE}.pdf 
+    rm ${CURRENTCASE}SS.pdf ${CURRENTCASE}BL.pdf ${CURRENTCASE}H.pdf ${CURRENTCASE}Pairewise_difference.pdf ${CURRENTCASE}Tajima_D.pdf ${CURRENTCASE}theta_H.pdf ${CURRENTCASE}TMRCA.pdf 
+
 	}

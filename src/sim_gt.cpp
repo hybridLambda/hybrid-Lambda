@@ -214,10 +214,10 @@ void simTree::finalize( size_t num_taxa ){
 	dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
     this->check_isUltrametric();
 	if ( !this->is_ultrametric ){ throw "Gene tree is not ultrametric"; }
-	
-	if ( this->simulation_jobs_->sim_mut_unit_bool ) build_gt_string_mut_unit( );
-	
-	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool ) this->build_mt_tree( );
+
+	if ( this->simulation_jobs_->sim_mut_unit_bool ) { build_gt_string_mut_unit( ); dout<<"mut_tree built"<<endl;}
+
+	if ( this->simulation_jobs_->sim_num_mut_bool ||  this->simulation_jobs_->Si_num_bool ) { this->build_mt_tree( );   dout<<"mt_tree built"<<endl; }
 
 	if ( num_taxa == 2 && this->simulation_jobs_->mono_bool) compute_monophyly_vec( this->parameters_->sample_size );
 
@@ -230,7 +230,7 @@ void simTree::finalize_gt_str( string & gt_str, Tree & gt ){
     //gt.rewrite_node_content();
     //string gt_tmp_str = gt.NodeContainer.back().node_content + gt.NodeContainer.back().label+";";
     //gt_str = remove_interior_label(gt_tmp_str);
-    gt_str = print_newick( &gt.NodeContainer.back() );
+    gt_str = print_newick( &gt.NodeContainer.back() ) + ";";
 }
 
 
@@ -247,7 +247,7 @@ void simTree::build_mt_tree(){
     
     brch_total.back() = 0;
     this->total_mut = poisson_rand_var(mutation_rate*total_brchlen);
-    for ( int mut_i=0; mut_i < this->total_mut; mut_i++){
+    for ( size_t mut_i = 0; mut_i < this->total_mut; mut_i++){
         size_t brch_index = 0;
         double u = unifRand()*total_brchlen;
         while ( u > brch_total[brch_index] ){
@@ -258,7 +258,7 @@ void simTree::build_mt_tree(){
     //mt_tree.rewrite_node_content();
     //gt_string_mut_num = mt_tree.NodeContainer.back().node_content + mt_tree.NodeContainer.back().label + ";";
     //gt_string_mut_num = remove_interior_label(gt_string_mut_num);
-    gt_string_mut_num = mt_tree.print_newick ( & mt_tree.NodeContainer.back() );
+    gt_string_mut_num = mt_tree.print_newick ( & mt_tree.NodeContainer.back() ) + ";";
     if ( this->simulation_jobs_->Si_num_bool) this->Si_num_out_table(mt_tree);
 }
 
@@ -354,9 +354,10 @@ void simTree::build_gt_string_mut_unit(){
 	for ( size_t i = 0; i < gt_mut_unit.NodeContainer.size(); i++){
 		gt_mut_unit.NodeContainer[i].set_brchlen1 ( gt_mut_unit.NodeContainer[i].brchlen1() * mutation_rate );
 	}
-    gt_mut_unit.rewrite_node_content();
-    gt_string_mut_unit = gt_mut_unit.NodeContainer.back().node_content + gt_mut_unit.NodeContainer.back().label + ";";
-	gt_string_mut_unit=remove_interior_label(gt_string_mut_unit);
+    //gt_mut_unit.rewrite_node_content();
+    //gt_string_mut_unit = gt_mut_unit.NodeContainer.back().node_content + gt_mut_unit.NodeContainer.back().label + ";";
+	//gt_string_mut_unit=remove_interior_label(gt_string_mut_unit);
+    gt_string_mut_unit = gt_mut_unit.print_newick( &gt_mut_unit.NodeContainer.back() ) + ";";
 }
 
 
