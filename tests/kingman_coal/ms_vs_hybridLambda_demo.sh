@@ -22,6 +22,24 @@ source ../bl_r.src
 
 source ../process_sample_stats.src	
 
+#case 00
+#net=Pair
+#CURRENTCASE=case00_${net}
+#echo -e ${CURRENTCASE} > current_case
+#rm ms* hybridLambda*
+#ms 2 ${rep} -T -t 20 > msout
+#grep ";" msout > ms_gt
+#cat msout | sample_stats > ms_stats
+#hybrid-Lambda -gt ms_gt -o ms -tmrca -bl
+#hybrid-Lambda -spcu "(A:0,B:0);" -S 1 1 -num ${rep} -o hybridLambda -tmrca -bl -mu 0.001 -seg -sim_Si_num
+
+
+#rearrange_hybridLambdaout 2
+
+#foo
+
+
+
 #case 0
 net=Onepop
 CURRENTCASE=case0_${net}
