@@ -4,9 +4,12 @@ rearrange_hybridLambdaout(){
     for i in $(seq 1 1 ${rep})
         do
         echo -e "\n//" >> hybridLambdaout
-        echo "segsites: $(cut -f 3 hybridLambda_Si_table | head -$(expr ${i} + 1) | tail -1)" >> hybridLambdaout
-        echo "positions: " >> hybridLambdaout
-        cut -f 2 hybridLambdaseg_sites/site${i} >> hybridLambdaout
+        num_seg=$(cut -f 3 hybridLambda_Si_table | head -$(expr ${i} + 1) | tail -1)
+        echo "segsites: ${num_seg} " >> hybridLambdaout
+        if [ ${num_seg} != 0 ]; then            
+            echo positions: $(seq 1 $((num_seg))) >> hybridLambdaout
+            cut -f 2 hybridLambdaseg_sites/site${i} >> hybridLambdaout
+        fi
         done
     cat hybridLambdaout | sample_stats > hybridLambda_stats
 }
