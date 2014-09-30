@@ -124,7 +124,7 @@ CURRENTCASE=case5_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 5 ${rep} -T -t 10 -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -es 1.1 3 0.0 -ej 1.4 6 5 -es 1.4 3 0.0 -ej 1.7 7 5 -ej 1.7 3 1 -ej 2 5 1 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 5 ${rep} -T -t 10 -I 5 1 1 1 1 1 -ej .5 4 3 -ej 0.8 2 3 -ej 1.4 3 5 -ej 2 5 1 -t 10 > msout
 grep ";" msout > ms_gt
@@ -179,7 +179,7 @@ CURRENTCASE=case8_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 5 10000 -T -t 10 -I 5 1 1 1 1 1 -ej 0.5 4 3 -ej 0.5 2 3 -es 0.5 3 0.0 -ej 0.8 3 5 -ej 0.8 6 1 -ej 1.1 5 1 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 5 ${rep} -T -t 10 -I 5 1 1 1 1 1 -ej 0.5 4 3 -ej 0.5 2 3 -ej 0.8 3 1 -ej 1.1 5 1 -t 10 > msout
 grep ";" msout > ms_gt
@@ -288,7 +288,7 @@ CURRENTCASE=case15_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 5 ${rep} -T -t 10 -I 5 1 1 1 1 1 -ej .5 4 3 -ej .5 2 3 -es 0.8 3 0 -ej 1.1 3 5 -es 1.1 6 0 -ej 1.4 6 5 -ej 1.4 7 1 -ej 1.7 5 1 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 5 ${rep} -T -t 10 -I 5 1 1 1 1 1 -ej .5 4 3 -ej .5 2 3 -es 0.8 3 0 -ej 1.1 3 5 -es 1.1 6 0 -ej 1.4 6 5 -ej 1.4 7 1 -ej 1.7 5 1 -t 10 > msout
 grep ";" msout > ms_gt
@@ -404,7 +404,7 @@ CURRENTCASE=case22_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 6 ${rep} -T -t 10 -I 6 1 1 1 1 1 1 -ej 0.5 6 2 -ej 0.8 2 3 -ej 1.1 4 3 -es 1.4 3 0.5 -ej 1.7 3 5 -ej 1.7 7 1 -ej 2 5 1 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 6 ${rep} -T -t 10 -I 6 1 1 1 1 1 1 -ej 0.5 6 2 -ej 0.8 2 3 -ej 1.1 4 3 -ej 1.7 3 1 -ej 2 5 1 -t 10 > msout
 grep ";" msout > ms_gt
@@ -519,7 +519,7 @@ CURRENTCASE=case29_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 6 ${rep} -T -t 10 -I 6 1 1 1 1 1 1 -ej 0.5 2 3 -ej 0.8 4 3 -es 0.8 3 0.0 -ej 0.8 6 5 -ej 1.1 5 3 -ej 1.1 7 1 -ej 1.4 3 1 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 6 ${rep} -T -t 10 -I 6 1 1 1 1 1 1 -ej 0.5 2 3 -ej 0.8 4 3 -ej 0.8 6 5 -ej 1.1 3 1 -ej 1.4 5 1 -t 10 > msout
 grep ";" msout > ms_gt
@@ -633,7 +633,7 @@ CURRENTCASE=case36_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 6 ${rep} -T -t 10 -I 6 1 1 1 1 1 1 -ej 0.5 2 3 -ej 0.5 6 3 -ej 0.5 4 3 -es 0.8 3 0.0 -ej 1.1 3 5 -ej 1.1 7 1 -ej 1.4 1 5 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 6 ${rep} -T -t 10 -I 6 1 1 1 1 1 1 -ej 0.5 2 3 -ej 0.5 6 3 -ej 0.5 4 3 -ej 1.1 3 1 -ej 1.4 1 5 -t 10 > msout
 grep ";" msout > ms_gt
@@ -748,7 +748,7 @@ CURRENTCASE=case43_${net}
 echo -e ${CURRENTCASE} > current_case
 rm -rf ms* hybridLambda*
 #ms 7 ${rep} -T -t 10 -I 7 1 1 1 1 1 1 1 -ej 0.5 6 7 -ej 0.8 7 2 -ej 1.1 2 3 -ej 1.4 4 3 -es 1.7 3 0.0 -ej 2 3 5 -ej 2 8 1 -ej 2.3 1 5 -t 10 > msout
-grep ";" msout > ms_gt
+#grep ";" msout > ms_gt
 cat msout | sample_stats > ms_stats
 ms 7 ${rep} -T -t 10 -I 7 1 1 1 1 1 1 1 -ej 0.5 6 7 -ej 0.8 7 2 -ej 1.1 2 3 -ej 1.4 4 3 -ej 2 3 1 -ej 2.3 1 5 -t 10 > msout
 grep ";" msout > ms_gt
