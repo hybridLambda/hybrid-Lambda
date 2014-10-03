@@ -9,7 +9,7 @@ other Lambda coalescent processes, which produce multifurcating genealo-
 gies. The other feature is that hybrid sim uses extended Newick formatted
 strings to make it easier to represent hybridization events between species.
 
-[![Build Status](https://travis-ci.org/shajoezhu/hybrid-Lambda.svg?branch=master)](https://travis-ci.org/shajoezhu/hybrid-Lambda)
+[![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)
 
 
 ##DOCUMENTATION
