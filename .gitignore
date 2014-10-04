@@ -28,6 +28,11 @@
 *.sqlite
 *.swp
 
+# Binaries #
+hybrid-Lambda
+hybrid-Lambda_dbg
+hybrid-Lambda_prof
+
 # doc #
 ######################
 doc/manual.aux
@@ -43,6 +48,8 @@ doc/net1-figure1.ps
 doc/net1.aux
 doc/net1.auxlock
 doc/net1.dvi
+html
+reference
 
 # automake
 Makefile
@@ -65,3 +72,10 @@ src/dotfigure.eps
 src/dotfigure.pdf
 src/dotfigure.ps
 
+# examples 
+OUT*
+example*
+GENE*
+
+#tests
+tests/caterpillar_test/*gt*

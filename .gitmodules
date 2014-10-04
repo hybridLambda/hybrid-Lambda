@@ -1,0 +1,3 @@
+[submodule "src/freq"]
+	path = src/freq
+	url = https://github.com/hybridLambda/freq.git

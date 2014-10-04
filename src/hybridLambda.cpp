@@ -185,7 +185,7 @@ void HybridLambda::extract_tmrca(){
 void HybridLambda::extract_bl(){
     if ( !this->bl_bool ){ return; }
 
-    this->extract_file_name = this->prefix + "BL";
+    this->extract_file_name = this->prefix + "bl";
     remove ( this->extract_file_name.c_str() );
     this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
     for ( size_t i=0; i < gt_tree_str_s.size(); i++ ){
@@ -343,8 +343,8 @@ string HybridLambda::read_input_line(const char *inchar){
 void HybridLambda::outtable_header( std::ofstream &output ){
    	if ( !this->simulation_jobs_->Si_num_bool ){return;}
 
-	output <<"t_total       t_MRCA       S_total  ";
-	for ( int sii = 0; sii < this->parameters_->total_num_lineage-1; sii++ ) output<<"S_"<<sii+1<<"  ";
+	output <<"t_total\tt_MRCA\tS_total";
+	for ( int sii = 0; sii < this->parameters_->total_num_lineage-1; sii++ ) output<<"\tS_"<<sii+1;
 	output << endl;
 }
 
@@ -410,7 +410,7 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
 		total_mut += mt_tree.NodeContainer[node_i].brchlen1();
 	}
 	for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
-		extract_file << mt_tree.tip_name[tip_i] << " ";
+		extract_file << mt_tree.tip_name[tip_i] << "\t";
 		for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
 			if ( mt_tree.NodeContainer[node_i].brchlen1() > 0 ){
 				for ( int num_repeat = 0; num_repeat < mt_tree.NodeContainer[node_i].brchlen1(); num_repeat++ ){				
