@@ -1,6 +1,7 @@
 #!/bin/bash
 
-
+# use git submodule to down load files
+git submodule update --init --recursive
 aclocal
 autoconf
 automake -a
