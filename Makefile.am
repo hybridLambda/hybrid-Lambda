@@ -17,7 +17,7 @@ shared_SOURCES = src/hybridLambda.cpp \
 				 src/node.cpp \
 				 src/net.cpp \
 				 src/sim_gt.cpp \
-				 src/freq.cpp \
+				 src/freq/freq.cpp \
 				 src/mtrand.cpp \
 				 src/figure.cpp  
 				 

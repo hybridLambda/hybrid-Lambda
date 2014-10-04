@@ -22,7 +22,7 @@
 
 #include "hybridLambda.hpp"
 #include "figure.hpp"
-#include "freq.hpp"
+#include "freq/freq.hpp"
 #include <stdlib.h>     /* strtod */
 
 void HybridLambda::init(){
