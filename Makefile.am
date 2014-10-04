@@ -19,7 +19,7 @@ shared_SOURCES = src/hybridLambda.cpp \
 				 src/sim_gt.cpp \
 				 src/freq/freq.cpp \
 				 src/mtrand.cpp \
-				 src/figure.cpp  
+				 src/plot/figure.cpp  
 				 
 debug_SOURCES = src/debug/net_debug.cpp \
 			    src/debug/node_debug.cpp

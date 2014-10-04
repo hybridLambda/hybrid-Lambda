@@ -7,7 +7,7 @@ script:
 - make unit_tests
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq libcppunit-dev libboost-all-dev graphviz
+- sudo apt-get install -qq git-core libcppunit-dev libboost-all-dev graphviz
 #- git submodule update --init --recursive
 before_script:
 - ./bootstrap

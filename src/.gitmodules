@@ -1,3 +1,7 @@
 [submodule "freq"]
       path = freq
       url = https://github.com/hybridLambda/freq.git
+
+[submodule "plot"]
+      path = plot
+      url = https://github.com/hybridLambda/plot.git
