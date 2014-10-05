@@ -21,7 +21,7 @@
 */
 
 #include "hybridLambda.hpp"
-#include "figure.hpp"
+#include "plot.figure.hpp"
 #include "freq/freq.hpp"
 #include <stdlib.h>     /* strtod */
 
