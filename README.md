@@ -13,7 +13,7 @@ strings to make it easier to represent hybridization events between species.
 
 
 ##DOCUMENTATION
-[Download](http://shajoezhu.github.io/hybrid-Lambda/doc/manual.pdf)
+[Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
 
 ##INSTALLATION
 To install hybrid-Lambda, first install the following packages and libraries
