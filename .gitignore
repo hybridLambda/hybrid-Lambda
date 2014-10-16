@@ -79,3 +79,4 @@ GENE*
 
 #tests
 tests/caterpillar_test/*gt*
+*.dirstamp
