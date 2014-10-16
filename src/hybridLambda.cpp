@@ -26,15 +26,15 @@
 #include <stdlib.h>     /* strtod */
 
 void HybridLambda::init(){
-	this->seed            = (unsigned)(time(0));
-	this->simulation_bool = false;
-	this->prefix = "OUT";
-	this->freq_bool       = false;
-	this->print_tree_bool = false;
-	this->plot_bool       = false;
-	this->seg_bool        = false;
-	this->read_GENE_trees = false;
-	this->read_mt_trees   = false;
+    this->seed            = (unsigned)(time(0));
+    this->simulation_bool = false;
+    this->prefix = "OUT";
+    this->freq_bool       = false;
+    this->print_tree_bool = false;
+    this->plot_bool       = false;
+    this->seg_bool        = false;
+    this->read_GENE_trees = false;
+    this->read_mt_trees   = false;
     this->fst_bool        = false;    
     this->tmrca_bool      = false;
     this->bl_bool         = false;
@@ -76,42 +76,42 @@ void HybridLambda::extract_mm_or_pop_param( string & mm_pop_string ){
 
 
 void HybridLambda::parse(){
-	while (argc_i < argc_){	
-		std::string argv_i(argv_[argc_i]);
-		if ( argv_i == "-h" || argv_i == "-help" ){ print_help(); }
-		else if ( argv_i =="-gt" ){ readNextStringto( this->gt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
+    while (argc_i < argc_){	
+        std::string argv_i(argv_[argc_i]);
+        if ( argv_i == "-h" || argv_i == "-help" ){ print_help(); }
+        else if ( argv_i =="-gt" ){ readNextStringto( this->gt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
         /*! read number of mutations site and simulate segregating sites*/
-		else if ( argv_i =="-mt" ){ readNextStringto( this->mt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
-		else if ( argv_i =="-seed" ){ this->seed = this->readNextInput<size_t>(); }
+        else if ( argv_i =="-mt" ){ readNextStringto( this->mt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
+        else if ( argv_i =="-seed" ){ this->seed = this->readNextInput<size_t>(); }
         else if ( argv_i =="-num" ){ this->num_sim_gt = this->readNextInput<int>(); }
         else if ( argv_i =="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i == "-spcu" || argv_i=="-spng"){ this->read_sp_str(argv_i); }
-		else if ( argv_i =="-mm" ){ this->parameters_->mm_bool = true; this->extract_mm_or_pop_param( this->parameters_->para_string ) ; }
+        else if ( argv_i =="-mm" ){ this->parameters_->mm_bool = true; this->extract_mm_or_pop_param( this->parameters_->para_string ) ; }
         else if ( argv_i =="-pop" ){ this->parameters_->pop_bool = true; this->extract_mm_or_pop_param( this->parameters_->sp_string_pop_size ) ; }        
         else if ( argv_i =="-S" ){ this->read_sample_sizes();	}
         else if ( argv_i =="-mu"){ this->parameters_->mutation_rate = this->readNextInput<double>(); }	
         else if ( argv_i =="-o" ) readNextStringto( this->prefix , this->argc_i, this->argc_,  this->argv_ );
         else if ( argv_i == "-sim_mut_unit"  ){ this->simulation_jobs_->set_sim_mut_unit(); }
         else if ( argv_i == "-sim_num_gener" ){ this->simulation_jobs_->set_sim_num_gener();}
-		else if ( argv_i == "-sim_num_mut" ){ this->simulation_jobs_->set_sim_num_mut(); } 
-		else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); } // work on code for removing out_table
-		else if ( argv_i == "-mono"){ this->simulation_jobs_->set_mono() ; }
-		else if ( argv_i == "-freq" || argv_i == "-f" ){ this->freq_bool=true; }
+        else if ( argv_i == "-sim_num_mut" ){ this->simulation_jobs_->set_sim_num_mut(); } 
+        else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); } // work on code for removing out_table
+        else if ( argv_i == "-mono"){ this->simulation_jobs_->set_mono() ; }
+        else if ( argv_i == "-freq" || argv_i == "-f" ){ this->freq_bool=true; }
         //else if ( argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true;  this->argc_i++;}
-		else if ( argv_i == "-plot" || argv_i == "-dot" ){ this->plot_bool = true; }
+        else if ( argv_i == "-plot" || argv_i == "-dot" ){ this->plot_bool = true; }
         //else if ( argv_i == "-plot_file" || argv_i == "-plotF" || argv_i == "-dot_file" || argv_i == "-dotF" ){ this->plot_bool=true; this->argc_i++; }
         else if ( argv_i == "-label" || argv_i == "-branch" ){ argc_i++; continue; }        
-		else if ( argv_i == "-tmrca"     ){ this->tmrca_bool = true;     }
-		else if ( argv_i == "-firstcoal" ){ this->firstcoal_bool = true; }
-		else if ( argv_i == "-bl"   ){ this->bl_bool = true; }       
-		else if ( argv_i == "-seg"  ){ this->seg_bool = true;	}
+        else if ( argv_i == "-tmrca"     ){ this->tmrca_bool = true;     }
+        else if ( argv_i == "-firstcoal" ){ this->firstcoal_bool = true; }
+        else if ( argv_i == "-bl"   ){ this->bl_bool = true; }       
+        else if ( argv_i == "-seg"  ){ this->seg_bool = true;	}
         //else if ( argv_i == "-segD" ){ this->seg_bool=true; readNextStringto( this->seg_dir_name , this->argc_i, this->argc_,  this->argv_ ); }        
-		else if ( argv_i == "-print" ){ this->print_tree_bool = true; }
-		else if ( argv_i == "-fst"   ){ this->fst_bool = true; }
-		else { throw std::invalid_argument ( "Unknown flag:" + argv_i); }
+        else if ( argv_i == "-print" ){ this->print_tree_bool = true; }
+        else if ( argv_i == "-fst"   ){ this->fst_bool = true; }
+        else { throw std::invalid_argument ( "Unknown flag:" + argv_i); }
         //else { cout <<"  need to change this !!!" << argv_i<<endl; argc_i++;continue; } // need to change this !!!
         argc_i++;	
-	}
-		
+    }
+
     this->finalize();
 }
 
@@ -134,13 +134,13 @@ void HybridLambda::finalize(){
     if ( this->simulation_bool ) {
         if ( this->gt_file_name.size() > 0 ) clog << "WARNING: \"-gt\" option is ignored" << endl; 
         if ( this->mt_file_name.size() > 0 ) clog << "WARNING: \"-mt\" option is ignored" << endl; 
-        
+    
         this->parameters()->finalize( );    
-        
+    
         if ( this->seg_bool ) {
             this->simulation_jobs_->set_sim_num_mut();
             this->seg_dir_name = this->prefix + "seg_sites" ;
-            }
+        }
         if ( this->print_tree_bool ) this->print();
         if ( this->plot_bool ){
             Figure figure_para ( this->argc_, this->argv_ );
@@ -148,17 +148,14 @@ void HybridLambda::finalize(){
             figure_para.finalize();
             figure_para.plot( this->parameters()->net_str );
             exit(EXIT_SUCCESS);
-            }
-    }
-    else {
+        }
+    } else {
         if ( this->gt_file_name.size() > 0 ) {
             this->read_input_lines( this->gt_file_name.c_str(), this->gt_tree_str_s);
-            }
-        else if ( this->mt_file_name.size() > 0 ) {
+        } else if ( this->mt_file_name.size() > 0 ) {
             this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
-            }
-        else throw std::invalid_argument( "No input was provided!" );
-        }
+        } else throw std::invalid_argument( "No input was provided!" );
+    }
 }
 
 void HybridLambda::print(){
@@ -251,58 +248,56 @@ void HybridLambda::extract_mono() {
 /*! \brief  sim_n_gt constructor */
 void HybridLambda::HybridLambda_core( ){
     if ( !simulation_bool ){ return; }
-   	//srand(seed);	// initialize gnu seed
+    //srand(seed);	// initialize gnu seed
     MTRand_closed mt;
-	mt.seed( this->seed );		// initialize mt seed
+    mt.seed( this->seed );		// initialize mt seed
     clog << "Random seed: " << this->seed <<endl;
-	dout <<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
-		
-	string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
-	string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
-	string gene_tree_file_num_gener = this->prefix + "_num_gener";
-	string gene_tree_file_num_mut   = this->prefix + "_num_mut";
+    dout <<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+    
+    string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
+    string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
+    string gene_tree_file_num_gener = this->prefix + "_num_gener";
+    string gene_tree_file_num_mut   = this->prefix + "_num_mut";
     string gene_tree_file_Si_table  = this->prefix + "_Si_table";
     
-	remove(gene_tree_file_coal_unit.c_str());
-	remove(gene_tree_file_mut_unit.c_str());
-	remove(gene_tree_file_num_gener.c_str());
-	remove(gene_tree_file_num_mut.c_str());
-	remove(gene_tree_file_Si_table.c_str());
-
-	
-   	sim_gt_file_coal_unit.open ( gene_tree_file_coal_unit.c_str(), ios::out | ios::app | ios::binary); 
+    remove(gene_tree_file_coal_unit.c_str());
+    remove(gene_tree_file_mut_unit.c_str());
+    remove(gene_tree_file_num_gener.c_str());
+    remove(gene_tree_file_num_mut.c_str());
+    remove(gene_tree_file_Si_table.c_str());
+    
+    sim_gt_file_coal_unit.open ( gene_tree_file_coal_unit.c_str(), ios::out | ios::app | ios::binary); 
     sim_gt_file_mut_unit.open  ( gene_tree_file_mut_unit.c_str(),  ios::out | ios::app | ios::binary); 
     sim_gt_file_num_gener.open ( gene_tree_file_num_gener.c_str(), ios::out | ios::app | ios::binary); 
     sim_gt_file_num_mut.open   ( gene_tree_file_num_mut.c_str(),   ios::out | ios::app | ios::binary);
     extract_file.open          ( gene_tree_file_Si_table.c_str(),  ios::out | ios::app | ios::binary);
-
+    
     this->outtable_header(extract_file);
-
-	for ( int i=0; i < this->num_sim_gt; i++ ){
+    
+    for ( int i=0; i < this->num_sim_gt; i++ ){
         //this->parameters_->my_Net->print_all_node();
-		simTree sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file);
-		gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
-		if ( this->simulation_jobs_->sim_num_mut_bool ) mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
-		
-		if ( this->simulation_jobs_->mono_bool){
-			if ( i == 0 ){
-				monophyly = sim_gt_string.monophyly;	
-			}
-			else{
-				for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
-					monophyly[mono_i]=monophyly[mono_i]+sim_gt_string.monophyly[mono_i];
-				}		
-			}
-		}
-		
-		dout << sim_gt_string.gt_string_coal_unit << endl;
-		sim_gt_file_coal_unit<<sim_gt_string.gt_string_coal_unit <<"\n";
-		        
-		if (  this->simulation_jobs_->sim_mut_unit() ){ sim_gt_file_mut_unit  << sim_gt_string.gt_string_mut_unit  << "\n"; }
-		if (  this->simulation_jobs_->sim_num_gener()){ sim_gt_file_num_gener << sim_gt_string.gt_string_gener_num << "\n"; }
-		if (  this->simulation_jobs_->sim_num_mut()  ){ sim_gt_file_num_mut   << sim_gt_string.gt_string_mut_num   << "\n"; }
-	}
-	    
+        simTree sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file);
+        gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
+        if ( this->simulation_jobs_->sim_num_mut_bool ) mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
+        
+        if ( this->simulation_jobs_->mono_bool){
+            if ( i == 0 ){
+                monophyly = sim_gt_string.monophyly;	
+            } else{
+                for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
+                    monophyly[mono_i]=monophyly[mono_i]+sim_gt_string.monophyly[mono_i];
+                }		
+            }
+        }
+        
+        dout << sim_gt_string.gt_string_coal_unit << endl;
+        sim_gt_file_coal_unit<<sim_gt_string.gt_string_coal_unit <<"\n";
+        
+        if (  this->simulation_jobs_->sim_mut_unit() ){ sim_gt_file_mut_unit  << sim_gt_string.gt_string_mut_unit  << "\n"; }
+        if (  this->simulation_jobs_->sim_num_gener()){ sim_gt_file_num_gener << sim_gt_string.gt_string_gener_num << "\n"; }
+        if (  this->simulation_jobs_->sim_num_mut()  ){ sim_gt_file_num_mut   << sim_gt_string.gt_string_mut_num   << "\n"; }
+    }
+    
     sim_gt_file_coal_unit.close();
     sim_gt_file_mut_unit.close();
     sim_gt_file_num_gener.close();
@@ -310,16 +305,21 @@ void HybridLambda::HybridLambda_core( ){
     extract_file.close();
     
     std::clog << "Produced gene tree files: \n";	
-	std::clog << gene_tree_file_coal_unit << "\n";				
+    std::clog << gene_tree_file_coal_unit << "\n";				
+    
     if (  this->simulation_jobs_->sim_mut_unit_bool  ) std::clog << gene_tree_file_mut_unit  << "\n"; 
     else remove (gene_tree_file_mut_unit.c_str()) ;
+    
     if (  this->simulation_jobs_->sim_num_gener_bool ) std::clog << gene_tree_file_num_gener << "\n"; 
     else remove (gene_tree_file_num_gener.c_str()) ;
+    
     if (  this->simulation_jobs_->sim_num_mut_bool   ) std::clog << gene_tree_file_num_mut   << "\n"; 
     else remove (gene_tree_file_num_mut.c_str()) ;
+    
     if (  this->simulation_jobs_->Si_num_bool   ) std::clog << gene_tree_file_Si_table  << "\n"; 
     else remove (gene_tree_file_Si_table.c_str()) ;
-	dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
+    
+    dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
     
     this->extract_mono();
     
@@ -351,38 +351,37 @@ void HybridLambda::outtable_header( std::ofstream &output ){
 
 
 void HybridLambda::read_input_lines(const char inchar[], vector <string> & out_vec){
-	ifstream in_file( inchar );
-	string out_str;
-	if ( in_file.good() ){
-		getline ( in_file, out_str );
-		while ( out_str.size() > 0 ){   
-			out_vec.push_back( out_str );
-			getline ( in_file, out_str );
-		}
-	}	
-	else{
-		string dummy_str(inchar);
-		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
-			out_str=dummy_str;
-			out_vec.push_back(out_str);
-		}else{
-			throw std::invalid_argument("Invalid input file. " + string (inchar) );
-		}
-	}
-	in_file.close();
+    ifstream in_file( inchar );
+    string out_str;
+    if ( in_file.good() ){
+        getline ( in_file, out_str );
+        while ( out_str.size() > 0 ){   
+            out_vec.push_back( out_str );
+            getline ( in_file, out_str );
+        }
+    } else {
+        string dummy_str(inchar);
+        if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos){
+            out_str=dummy_str;
+            out_vec.push_back(out_str);
+        } else{
+            throw std::invalid_argument("Invalid input file. " + string (inchar) );
+        }
+    }
+    in_file.close();
 }
 
 
 bool HybridLambda::is_num(const char *inchar){
-	bool is_num_return=true;
-	string in_str(inchar);
-	for (size_t i=0;i<in_str.size();i++){
-		if (isalpha(in_str[i]) && in_str[i]!='e'){
-			is_num_return=false;
-			break;
-		}
-	}
-	return is_num_return;
+    bool is_num_return=true;
+    string in_str(inchar);
+    for (size_t i=0;i<in_str.size();i++){
+        if ( isalpha(in_str[i]) && in_str[i]!='e'){
+            is_num_return=false;
+            break;
+        }
+    }
+    return is_num_return;
 }
 
 
@@ -401,93 +400,93 @@ void HybridLambda::create_site_data_dir(){
 
 /*! \brief Generate segrateing site data */
 void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i ){
-	Tree mt_tree( gt_string_mut_num );
+    Tree mt_tree( gt_string_mut_num );
     string sitefile_name = seg_dir_name + "/site" + std::to_string(site_i);
-	extract_file.open (sitefile_name.c_str()); 
-	
-	int total_mut = 0;
-	for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
-		total_mut += mt_tree.NodeContainer[node_i].brchlen1();
-	}
-	for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
-		extract_file << mt_tree.tip_name[tip_i] << "\t";
-		for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
-			if ( mt_tree.NodeContainer[node_i].brchlen1() > 0 ){
-				for ( int num_repeat = 0; num_repeat < mt_tree.NodeContainer[node_i].brchlen1(); num_repeat++ ){				
-					extract_file << mt_tree.samples_below[node_i][tip_i] ;
-				}
-			}
-		}
-		extract_file<<"\n";
-	}
-	extract_file.close();	
+    extract_file.open (sitefile_name.c_str()); 
+    
+    int total_mut = 0;
+    for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
+        total_mut += mt_tree.NodeContainer[node_i].brchlen1();
+    }
+    for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
+        extract_file << mt_tree.tip_name[tip_i] << "\t";
+        for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
+            if ( mt_tree.NodeContainer[node_i].brchlen1() > 0 ){
+                for ( int num_repeat = 0; num_repeat < mt_tree.NodeContainer[node_i].brchlen1(); num_repeat++ ){				
+                    extract_file << mt_tree.samples_below[node_i][tip_i] ;
+                }
+            }
+        }
+        extract_file<<"\n";
+    }
+    extract_file.close();	
 }
 
 void print_example(){
-	cout<<"Examples:"<<endl;
-	cout<<""<<endl;	
-	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut"<<endl;
-	cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 100 -pop 25000 -sim_num_gener"<<endl;
-	cout<<"hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'"<<endl;
-	cout<<"hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
-	cout<<"hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
-	cout<<"hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
-	cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE -f"<<endl;	
-	cout<<"hybrid-Lambda -gt GENE_coal_unit -f "<<endl;	
+    cout<<"Examples:"<<endl;
+    cout<<""<<endl;	
+    cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1"<<endl;	
+    cout<<"hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut"<<endl;
+    cout<<"hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 100 -pop 25000 -sim_num_gener"<<endl;
+    cout<<"hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'"<<endl;
+    cout<<"hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5"<<endl;
+    cout<<"hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4"<<endl;
+    cout<<"hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch"<<endl;	
+    cout<<"hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE -f"<<endl;	
+    cout<<"hybrid-Lambda -gt GENE_coal_unit -f "<<endl;	
     cout<<"hybrid-Lambda -mt GENE_num_mut -seg "<<endl;	
-	cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4"<<endl;
-	cout<<endl;
+    cout<<"hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4"<<endl;
+    cout<<endl;
 }
 
 void print_option(){
-	cout<<setw(20)<<"-h or -help"<<"  --  "<<"Help. List the following content."<<endl;
-	cout<<setw(20)<<"-spcu STR"<<"  --  "<<"Input the species network/tree string through command line or a file."<<endl;
-	cout<<setw(26)<<" "<<"Branch lengths of the INPUT are in coalescent unit."<<endl;
-	cout<<setw(20)<<"-spng STR"<<"  --  "<<"Input the species network/tree string through command line or a file. "<<endl;
-	cout<<setw(26)<<" "<<"Branch lengths of the INPUT are in number of generation."<<endl;
-	cout<<setw(20)<<"-pop STR/FLT"<<"  --  "<<"Population sizes are defined by a single numerical constant, "<<endl;
-	cout<<setw(26)<<" "<<"or a string which specifies the population size on each branch. "<<endl;
-	cout<<setw(26)<<" "<<"The string can be input through command line or a file. "<<endl;
-	cout<<setw(26)<<" "<<"By default, population size 10,000 is used."<<endl;
-	cout<<setw(20)<<"-mm STR/FLT"<<"  --  "<<"Multiple merger parameters are defined by a single numerical constant, "<<endl;
-	cout<<setw(26)<<" "<<"or a string which speifies the parameter on each branch. "<<endl;
-	cout<<setw(26)<<" "<<"The string can be input through command line or a file. "<<endl;
-	cout<<setw(26)<<" "<<"By default, Kingman coalescent is used."<<endl;
-	cout<<setw(20)<<"-S INT INT ..."<<"  --  "<<"Specify the number of samples for each taxon."<<endl;
-	cout<<setw(20)<<"-num INT"<<"  --  "<<"The number of gene trees will be simulated."<<endl;
-	cout<<setw(20)<<"-seed INT"<<"  --  "<<"User define random SEED"<<endl;
-	cout<<setw(20)<<"-mu FLT"<<"  --  "<<"User defined constant mutation rate per locus. By default mutation rate 0.00005 is used."<<endl;
-	cout<<setw(20)<<"-o STR [option]"<<"  --  "<<"Specify the file name prefix for simulated gene trees. Prefix is set as \"OUT\" by default."<<endl;
-	cout<<setw(26)<<" "<<"When options are not specified, only output trees with branch lengths are in coalescent unit."<<endl;
-	cout<<setw(20)<<"[-sim_mut_unit]"<<"  --  "<<"Convert the simulated gene tree branch lengths to mutation unit."<<endl;
-	cout<<setw(20)<<"[-sim_num_gener]"<<"  --  "<<"Convert the simulated gene tree branch lengths to number of generations."<<endl;
-	cout<<setw(20)<<"[-sim_num_mut]"<<"  --  "<<"Simulate numbers of mutations on each branch of simulated gene trees."<<endl;
-	cout<<setw(20)<<"[-sim_Si_num]"<<"  --  "<<"Generate a table, which includes the number of segregating sites"<<endl;
-	cout<<setw(26)<<" "<<"and the total branch length of the gene tree, as well as the TMRCA."<<endl;
-	cout<<setw(20)<<"-f"<<"  --  "<<"Generate a topology frequency table of a set of input trees or simulated gene trees."<<endl;
-	//cout<<setw(26)<<" "<<"Frequency table is saved in file freq out by default."<<endl;
+    cout<<setw(20)<<"-h or -help"<<"  --  "<<"Help. List the following content."<<endl;
+    cout<<setw(20)<<"-spcu STR"<<"  --  "<<"Input the species network/tree string through command line or a file."<<endl;
+    cout<<setw(26)<<" "<<"Branch lengths of the INPUT are in coalescent unit."<<endl;
+    cout<<setw(20)<<"-spng STR"<<"  --  "<<"Input the species network/tree string through command line or a file. "<<endl;
+    cout<<setw(26)<<" "<<"Branch lengths of the INPUT are in number of generation."<<endl;
+    cout<<setw(20)<<"-pop STR/FLT"<<"  --  "<<"Population sizes are defined by a single numerical constant, "<<endl;
+    cout<<setw(26)<<" "<<"or a string which specifies the population size on each branch. "<<endl;
+    cout<<setw(26)<<" "<<"The string can be input through command line or a file. "<<endl;
+    cout<<setw(26)<<" "<<"By default, population size 10,000 is used."<<endl;
+    cout<<setw(20)<<"-mm STR/FLT"<<"  --  "<<"Multiple merger parameters are defined by a single numerical constant, "<<endl;
+    cout<<setw(26)<<" "<<"or a string which speifies the parameter on each branch. "<<endl;
+    cout<<setw(26)<<" "<<"The string can be input through command line or a file. "<<endl;
+    cout<<setw(26)<<" "<<"By default, Kingman coalescent is used."<<endl;
+    cout<<setw(20)<<"-S INT INT ..."<<"  --  "<<"Specify the number of samples for each taxon."<<endl;
+    cout<<setw(20)<<"-num INT"<<"  --  "<<"The number of gene trees will be simulated."<<endl;
+    cout<<setw(20)<<"-seed INT"<<"  --  "<<"User define random SEED"<<endl;
+    cout<<setw(20)<<"-mu FLT"<<"  --  "<<"User defined constant mutation rate per locus. By default mutation rate 0.00005 is used."<<endl;
+    cout<<setw(20)<<"-o STR [option]"<<"  --  "<<"Specify the file name prefix for simulated gene trees. Prefix is set as \"OUT\" by default."<<endl;
+    cout<<setw(26)<<" "<<"When options are not specified, only output trees with branch lengths are in coalescent unit."<<endl;
+    cout<<setw(20)<<"[-sim_mut_unit]"<<"  --  "<<"Convert the simulated gene tree branch lengths to mutation unit."<<endl;
+    cout<<setw(20)<<"[-sim_num_gener]"<<"  --  "<<"Convert the simulated gene tree branch lengths to number of generations."<<endl;
+    cout<<setw(20)<<"[-sim_num_mut]"<<"  --  "<<"Simulate numbers of mutations on each branch of simulated gene trees."<<endl;
+    cout<<setw(20)<<"[-sim_Si_num]"<<"  --  "<<"Generate a table, which includes the number of segregating sites"<<endl;
+    cout<<setw(26)<<" "<<"and the total branch length of the gene tree, as well as the TMRCA."<<endl;
+    cout<<setw(20)<<"-f"<<"  --  "<<"Generate a topology frequency table of a set of input trees or simulated gene trees."<<endl;
+    //cout<<setw(26)<<" "<<"Frequency table is saved in file freq out by default."<<endl;
     cout<<setw(20)<<"-gt STR"<<"  --  "<<"Specify the FILE NAME of trees to analyse tree topology frequencies."<<endl;
     cout<<setw(20)<<"-seg"<<"  --  "<<"Generate segregating site data."<<endl;
     cout<<setw(20)<<"-mt STR"<<"  --  "<<"Specify the FILE NAME of trees to generate segregating site data."<<endl;
-	cout<<setw(26)<<" "<<"Tree branch lengths indicate number of mutations on the branch."<<endl;
+    cout<<setw(26)<<" "<<"Tree branch lengths indicate number of mutations on the branch."<<endl;
     cout<<setw(20)<<"-mono"<<"  --  "<<"Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. "<<endl;
-	cout<<setw(20)<<"-plot/-dot [option]"<<"  --  "<<"Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree)."<<endl;
-	cout<<setw(20)<<"      -branch"<<"  --  "<<"Branch lengths will be labelled in the figure."<<endl;
-	//cout<<setw(20)<<"-plotF/-dotF FILE"<<"  --  "<<"Generated figure will be saved in FILE."<<endl;			
-	cout<<endl;	
+    cout<<setw(20)<<"-plot/-dot [option]"<<"  --  "<<"Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree)."<<endl;
+    cout<<setw(20)<<"      -branch"<<"  --  "<<"Branch lengths will be labelled in the figure."<<endl;
+    //cout<<setw(20)<<"-plotF/-dotF FILE"<<"  --  "<<"Generated figure will be saved in FILE."<<endl;			
+    cout<<endl;	
 }
 
 /*! \brief hybrid-Lambda help file*/
 void print_help(){
-	cout<<endl;
-	cout<<endl;
-	cout<<"*****************************************************************"<<endl;
-	cout<<"*                      hybrid-Lambda beta 0.4                   *"<<endl;
-	cout<<"*                         Author: Joe ZHU                       *"<<endl;
-	cout<<"*****************************************************************"<<endl;
-	cout<<endl<<endl;
-	print_option();
-	print_example();
+    cout<<endl;
+    cout<<endl;
+    cout<<"*****************************************************************"<<endl;
+    cout<<"*                      hybrid-Lambda beta 0.4                   *"<<endl;
+    cout<<"*                         Author: Joe ZHU                       *"<<endl;
+    cout<<"*****************************************************************"<<endl;
+    cout<<endl<<endl;
+    print_option();
+    print_example();
     exit (EXIT_SUCCESS);
 }
