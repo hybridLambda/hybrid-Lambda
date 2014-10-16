@@ -40,11 +40,11 @@ class Tree{
     friend class simTree;
     friend class Frequency;
     friend class Figure;
-	private:		
-		string label_interior_node(string in_str);
-		void enumerate_internal_branch( Node &node );
-		
-	    size_t first_coal_rank();
+    private:        
+        string label_interior_node(string in_str);
+        void enumerate_internal_branch( Node &node );
+        
+        size_t first_coal_rank();
         size_t current_enum_;
         void init(){
             this->current_enum_ = 0;
@@ -60,7 +60,7 @@ class Tree{
         void check_labeled( string in_str );
         
         void check_isNet(); /*!< \brief To determin if a Net is network or not. \return is_Net */
-		void check_isUltrametric(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
+        void check_isUltrametric(); /*!< \brief To determin if a Net is ultrametric or not. \return is_ultrametric */
 
         size_t first_coal_index ();
     
@@ -74,24 +74,24 @@ class Tree{
         void rewrite_node_clade();
         
         string net_str; /*!< \brief species network string \todo this is new!!!*/
-		size_t max_rank;
-		vector< valarray <int> > descndnt;
-		vector< valarray <int> > samples_below;
-		vector<string> tip_name;
+        size_t max_rank;
+        vector< valarray <int> > descndnt;
+        vector< valarray <int> > samples_below;
+        vector<string> tip_name;
         bool is_Net_() const { return this->is_Net ; }
         string extract_label(string in_str, size_t i);
-    	void print_all_node();
-		bool print_all_node_dout();
+        void print_all_node();
+        bool print_all_node_dout();
         Tree (){ this->init(); }
         Tree(string Tree_str);
         ~Tree(){};
 
-		vector <string> tax_name;
-		bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
-		bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
-    public:	
-		vector < Node > NodeContainer;  /*!< \brief vector of nodes */
-		void rewrite_node_content();
+        vector <string> tax_name;
+        bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
+        bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
+    public:    
+        vector < Node > NodeContainer;  /*!< \brief vector of nodes */
+        void rewrite_node_content();
         string print_newick( Node * node );
 };
 
