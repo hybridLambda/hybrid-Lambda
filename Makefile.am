@@ -13,7 +13,7 @@ hybrid_Lambda_CXXFLAGS = -DNDEBUG $(common_flags)#options for not showing debug 
 hybrid_Lambda_dbg_CXXFLAGS = $(common_flags)
 hybrid_Lambda_prof_CXXFLAGS = $(common_flags) -DNDEBUG -pg #options for not showing debug messages. -fpermissive
 
-shared_SOURCES = src/hybridLambda.cpp \
+shared_src = src/hybridLambda.cpp \
 				 src/node.cpp \
 				 src/net.cpp \
 				 src/sim_gt.cpp \
@@ -24,11 +24,11 @@ shared_SOURCES = src/hybridLambda.cpp \
 debug_SOURCES = src/debug/net_debug.cpp \
 			    src/debug/node_debug.cpp
 
-hybrid_Lambda_SOURCES = $(shared_SOURCES) src/main.cpp  
-hybrid_Lambda_dbg_SOURCES = $(shared_SOURCES) $(debug_SOURCES) src/main.cpp  
-hybrid_Lambda_prof_SOURCES = $(shared_SOURCES) src/main.cpp  
+hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp  
+hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp  
+hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp  
 
-unit_tests_SOURCES = $(shared_SOURCES) src/tests/test_hybridLambda.cpp src/plot/test_figure.cpp src/tests/test_runner.cpp 
+unit_tests_SOURCES = $(shared_src) src/tests/test_hybridLambda.cpp src/plot/test_figure.cpp src/tests/test_runner.cpp 
 
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x -I src/ 
 unit_tests_LDADD= -lcppunit -ldl
