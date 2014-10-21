@@ -20,18 +20,14 @@ To install hybrid-Lambda, first install the following packages and libraries
 
 on Debian/Ubuntu based systems:
 ```bash
-apt-get install git-core build-essential autoconf autoconf-archive libcppunit-dev libboost-all-dev graphviz
+apt-get install libboost-all-dev graphviz
 ```
 on Mac OS:
 ```bash
-port install git boost cppunit automake autoconf autoconf-archive graphviz
+port install boost graphviz
 ```
 
-then type the following commands:
-```bash
-./bootstrap
-make
-```
+then `make` within direcotry `src/`.
 
 
 ##ASSUMPTION
