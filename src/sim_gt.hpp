@@ -24,8 +24,7 @@
 /*! \file sim_gt.hpp
  * \brief Header file for sim_gt.cpp */
 
-#include <boost/math/special_functions/gamma.hpp>
-#include <boost/math/special_functions/binomial.hpp>
+//#include <boost/math/special_functions/binomial.hpp>
 #include <stdio.h>
 #include "net.hpp"
 #include "mtrand.h"
