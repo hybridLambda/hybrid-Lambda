@@ -25,7 +25,6 @@
  *  \brief Main function of hybrid-Lambda */
 
 #include "hybridLambda.hpp"
-#include "fst.hpp"
 
 int main(int argc, char *argv[]){
 
