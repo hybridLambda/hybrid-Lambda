@@ -22,6 +22,7 @@
 
 #include "sim_gt.hpp"
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
+#include <sstream>      // std::stringstream
 
 #ifndef HYBRDRIDLAMBDA_PARAM_INCLUDED
 #define HYBRDRIDLAMBDA_PARAM_INCLUDED

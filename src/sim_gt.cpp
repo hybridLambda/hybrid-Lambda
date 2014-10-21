@@ -318,9 +318,9 @@ void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
 			double lambda_bk_mat_b_k;
 			if ( para < 1 ){//0<psi<1
 				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*pow(para,k_i)*pow(1-para,b_i-k_i);//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
-                //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+                lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
                 //cout<<"normal calculation : "<<exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)))<<endl;
-                lambda_bk_mat_b_k = exp( log( boost::math::binomial_coefficient<double>( b_i, k_i) ) + log( pow( para, (double)k_i ) ) + log( pow ( 1 - para, (double)b_i - (double)k_i ) ) );//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
+                //lambda_bk_mat_b_k = exp( log( boost::math::binomial_coefficient<double>( b_i, k_i) ) + log( pow( para, (double)k_i ) ) + log( pow ( 1 - para, (double)b_i - (double)k_i ) ) );//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
                 //cout<<"boost calculation : "<<lambda_bk_mat_b_k<<endl;
 // DEBUG
 				//if (isnan(lambda_bk_mat_b_k)){
@@ -335,9 +335,9 @@ void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
 			else{//1<alpha<2
 				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para);// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
                 //cout<<n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para)<<endl;
-                //lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+                lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
                 //cout<<"normal calculation "<<exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)))<<endl;// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-                lambda_bk_mat_b_k = exp( log(boost::math::binomial_coefficient<double>( b_i, k_i ) ) + log( Beta( (double)k_i - para, (double)b_i - (double)k_i+para ) ) - log( Beta( 2.0 - para, para ) ) );// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
+                //lambda_bk_mat_b_k = exp( log(boost::math::binomial_coefficient<double>( b_i, k_i ) ) + log( Beta( (double)k_i - para, (double)b_i - (double)k_i+para ) ) - log( Beta( 2.0 - para, para ) ) );// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
 				//cout<<"boost result "<<lambda_bk_mat_b_k<<endl;
 			}
 			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
