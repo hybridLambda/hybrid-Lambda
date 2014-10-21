@@ -16,18 +16,7 @@ strings to make it easier to represent hybridization events between species.
 [Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
 
 ##INSTALLATION
-To install hybrid-Lambda, first install the following packages and libraries
-
-on Debian/Ubuntu based systems:
-```bash
-apt-get install libboost-all-dev graphviz
-```
-on Mac OS:
-```bash
-port install boost graphviz
-```
-
-then `make` within direcotry `src/`.
+To install hybrid-Lambda, simply `make` within direcotry `src/`.
 
 
 ##ASSUMPTION
