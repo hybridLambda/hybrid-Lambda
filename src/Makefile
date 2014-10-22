@@ -1,6 +1,7 @@
 
 COMPILER = g++
-FLAGS = -O3 -g -std=c++0x -DNDEBUG
+VERSION = beta-0.3
+FLAGS = -O3 -g -std=c++0x -DNDEBUG -DVERSION=\"${VERSION}\"
 
 all: clean_all hybrid-Lambda clean
 
