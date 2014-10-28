@@ -24,7 +24,6 @@
 /*! \file sim_gt.hpp
  * \brief Header file for sim_gt.cpp */
 
-//#include <boost/math/special_functions/binomial.hpp>
 #include <stdio.h>
 #include "net.hpp"
 #include "mtrand.h"
@@ -162,7 +161,7 @@ class simTree : public Tree {
     
     vector < vector <double> > lambda_bk_mat;
     valarray <double> nc_X;
-    void build_lambda_bk_mat( double para, size_t num_lineage);
+    void build_lambda_bk_mat( double para, double num_lineage);
 
 
 
@@ -174,11 +173,12 @@ class simTree : public Tree {
     size_t update_nc();
 
     /*! \brief Beta function, requires tgamma function from math.h \return double */
-    double Beta(double x,double y){
-        double Beta_return;
+    double Beta ( double x, double y ){
+        //double Beta_return;
     //	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
-        Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
-        return Beta_return;
+        //Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
+        //return Beta_return;
+        return exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
     }
     
     /*! \fn double unifRand()
@@ -223,6 +223,8 @@ class simTree : public Tree {
         else if (a==1) return (n);
         else           return (1);
     }
+    
+    double binomial_coefficient( double n , double k);
     
     /*! \brief Compute n choose k \return double */
     template < class T > T n_choose_k ( T n, T k ){

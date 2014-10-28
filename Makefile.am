@@ -3,13 +3,14 @@ EXTRA_DIST = trees/*tax* bootstrap example/eg*
 distdir = $(PACKAGE)-$(VERSION)
 
 
-bin_PROGRAMS = hybrid-Lambda
+bin_PROGRAMS = hybrid-Lambda hybrid-Lambda_boost
 PROG = HYBRID-LAMBDA
 check_PROGRAMS = hybrid-Lambda_dbg hybrid-Lambda_prof unit_tests
 TESTS = unit_tests 
 
 common_flags = -O3 -g -std=c++0x -I src/ 
 hybrid_Lambda_CXXFLAGS = -DNDEBUG $(common_flags)#options for not showing debug messages.
+hybrid_Lambda_boost_CXXFLAGS = -DNDEBUG $(common_flags)#options for not showing debug messages.
 hybrid_Lambda_dbg_CXXFLAGS = $(common_flags)
 hybrid_Lambda_prof_CXXFLAGS = $(common_flags) -DNDEBUG -pg #options for not showing debug messages. -fpermissive
 
@@ -24,7 +25,8 @@ shared_src = src/hybridLambda.cpp \
 debug_SOURCES = src/debug/net_debug.cpp \
 			    src/debug/node_debug.cpp
 
-hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp  
+hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp src/regular_math.cpp
+hybrid_Lambda_boost_SOURCES = $(shared_src) src/main.cpp src/boost_math.cpp
 hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp  
 hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp  
 
