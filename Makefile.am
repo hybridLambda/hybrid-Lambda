@@ -27,8 +27,8 @@ debug_SOURCES = src/debug/net_debug.cpp \
 
 hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp src/regular_math.cpp
 hybrid_Lambda_boost_SOURCES = $(shared_src) src/main.cpp src/boost_math.cpp
-hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp  
-hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp  
+hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp  src/regular_math.cpp
+hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp  src/regular_math.cpp
 
 unit_tests_SOURCES = $(shared_src) src/tests/test_hybridLambda.cpp src/plot/test_figure.cpp src/tests/test_runner.cpp 
 
