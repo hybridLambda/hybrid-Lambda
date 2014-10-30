@@ -16,7 +16,26 @@ strings to make it easier to represent hybridization events between species.
 [Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
 
 ##INSTALLATION
+# User only
 To install hybrid-Lambda, first install the following packages and libraries
+
+# For developers
+To install hybrid-Lambda, first install the following packages and libraries
+
+on Debian/Ubuntu based systems:
+```bash
+apt-get install git-core build-essential autoconf autoconf-archive libcppunit-dev libboost-all-dev graphviz
+```
+on Mac OS:
+```bash
+port install git boost cppunit automake autoconf autoconf-archive graphviz
+```
+
+then type the following commands:
+```bash
+./bootstrap
+make
+```
 
 on Debian/Ubuntu based systems:
 ```bash
