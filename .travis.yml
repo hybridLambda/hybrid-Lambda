@@ -5,6 +5,8 @@ compiler:
 script:
 - make hybrid-Lambda
 - make unit_tests
+- cd src
+- make
 before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq git-core libcppunit-dev libboost-all-dev graphviz
