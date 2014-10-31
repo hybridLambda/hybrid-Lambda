@@ -553,9 +553,9 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
     //assert ( sample_size.size() == 2 );
     // at least one mutation in the tree
     // computing within differences
-//cout << " sites.size() "<< sites.size() <<endl;
     double Hw = 0, Hb = 0;
     // first add to Hw for population A
+    size_t pop_shift = 0;
     for ( size_t pop = 0; pop < sample_size.size(); pop++){
         size_t sample_size_tmp = sample_size[pop];
         double Hw_tmp = 0;
@@ -564,19 +564,23 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
             for( size_t sample_j = (sample_i+1); sample_j < sample_size_tmp ; sample_j++ ){
                 Npairs++;
                 for ( size_t base = 0; base < sites.size(); base++ ){
-                    Hw_tmp += abs( sites[base][sample_i] - sites[base][sample_j] );
+                    Hw_tmp += abs( sites[base][sample_i+pop_shift] - sites[base][sample_j+pop_shift] );
                 }
             }
         }
-        //cout << "Npairs with in = "<< Npairs<<endl;
-        Hw += Hw_tmp / Npairs;
+        //cout << "Differnce in population " <<pop<<" "<< Hw_tmp<<endl;
+        Hw += Hw_tmp ;
+        pop_shift += sample_size_tmp;
     }
 
     
     double Npairs = 0;
+    size_t pop_i_shift = 0;
+    size_t pop_j_shift = sample_size[0];
     for ( size_t pop_i = 0; pop_i < (sample_size.size() - 1); pop_i++ ){
         
         size_t sample_size_pop_i = sample_size[pop_i];
+        
         for( size_t sample_i = 0 ; sample_i < sample_size_pop_i; sample_i++ ){
     
             for ( size_t pop_j = (pop_i+1); pop_j < sample_size.size() ; pop_j++ ){
@@ -584,12 +588,14 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
                 for( size_t sample_j = 0 ; sample_j < sample_size_pop_j; sample_j++ ){
                     Npairs++;
                     for ( size_t base = 0; base < sites.size(); base++ ){
-                        Hb += abs( sites[base][sample_i] - sites[base][sample_j] ) ;
+                        Hb += abs( sites[base][sample_i+pop_i_shift] - sites[base][sample_j+pop_j_shift] ) ;
                     }
                 }
         
             }
         }
+        pop_i_shift += sample_size_pop_i;
+        pop_j_shift += sample_size[pop_i + 1];
     }
     
     //cout << "Hw = " << Hw <<endl;

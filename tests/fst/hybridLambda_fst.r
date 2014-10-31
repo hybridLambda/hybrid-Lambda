@@ -19,7 +19,12 @@ for( i in 1:N ){
         seqA2 <- as.numeric( substring( skra[a2,2], sites, sites ) )
         seqB1 <- as.numeric( substring( skra[(a1+n),2], sites, sites ) )
         seqB2 <- as.numeric( substring( skra[(a2+n),2], sites, sites ) )
-        Hw <- Hw  +   sum( abs( seqA1 - seqA2 ) )  +   sum( abs( seqB1 - seqB2 ) ) }}
+        Hw <- Hw  +   sum( abs( seqA1 - seqA2 ) )  +   sum( abs( seqB1 - seqB2 ) ) 
+        }
+#        print( paste("difference in pop A ",sum( abs( seqA1 - seqA2 ) ) ))
+#        print( paste("difference in pop B ",sum( abs( seqB1 - seqB2 ) ) ))
+    }
+#    print (paste("Hw is ", Hw))
     ## now add to Hw for population B
     #for( a1 in (n+1):(2*n   -1)){
     #  for( a2 in (a1+1):(2*n)){
@@ -34,7 +39,9 @@ for( i in 1:N ){
         seq2 <- as.numeric( substring( skra[b1,2], sites, sites ) )
         Hb <- Hb  +   sum( abs( seq1 - seq2 ) ) }}
     Fst <- c(Fst,  1 -  (Hw*n/(Hb*(n-1))) ) }
-print (1 -  (Hw*n/(Hb*(n-1))) )
+#    print (paste("Hw is ", Hb))
+
+#print (1 -  (Hw*n/(Hb*(n-1))) )
 }
 ##print( Fst )
 return( c( mean( Fst[-1]), var( Fst[-1] ) ) )
