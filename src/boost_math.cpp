@@ -23,6 +23,6 @@
 #include "sim_gt.hpp"
 #include <boost/math/special_functions/binomial.hpp>
 
-double simTree::binomial_coefficient ( double n, double k ){
+double binomial_coefficient ( double n, double k ){
     return boost::math::binomial_coefficient<double> ( n, k);
 }

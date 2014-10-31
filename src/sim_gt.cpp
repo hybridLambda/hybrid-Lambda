@@ -312,8 +312,8 @@ void simTree::build_lambda_bk_mat( double para, double num_lineage ){
 		for ( double k_i = 2; k_i <= b_i; k_i++){
             // replace this loop by the following
             double lambda_bk_mat_b_k = ( para < 1 ) ? 
-                                    exp ( log ( this->binomial_coefficient( b_i, k_i)) + log( pow( para, k_i) ) + log( pow( 1 - para, b_i - k_i ) ) ) :
-                                    exp( log( this->binomial_coefficient( b_i, k_i)) + log( Beta ( k_i - para, b_i-k_i + para) ) - log( Beta( 2.0 - para, para ) ) );
+                                    exp ( log ( binomial_coefficient( b_i, k_i)) + log( pow( para, k_i) ) + log( pow( 1 - para, b_i - k_i ) ) ) :
+                                    exp( log( binomial_coefficient( b_i, k_i)) + log( Beta ( k_i - para, b_i-k_i + para) ) - log( Beta( 2.0 - para, para ) ) );
             
 			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
 			}

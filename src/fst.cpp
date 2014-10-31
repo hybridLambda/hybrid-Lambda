@@ -20,52 +20,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//#include "sim_gt.hpp"
-#include"fst.hpp"
-/*!
- * Assume two populations A and B have been isolated until time tau in the past as measured from the present. 
- * Assume also that the same coalescent process is operating in populations A and B. 
- * Let TW denote the time until coalescence for two lines when drawn from the same population, 
- * and Tb when drawn from different populations. 
- * Let lambdaA denote the coalescence rate for two lines in population A, and 
- * lambdaAB for the common ancestral population AB. 
- * For the Beta(2 − alpha, alpha)-coalescent, lambdaA = 1, for the point-mass process lambdaA = psi^2. One now obtains
- * ETw exptected value of Tw
- * ETw = (1 - exp(-lambdaA * tau) * lambdaA^{-1} + exp(-lambdaA * tau) * (tau + lambdaAB^{-1})
- * 
- */
-
-double lambda( double alpha ){
-    return exp(log(boost::math::binomial_coefficient<double>(unsigned(2),unsigned(2)))+log(Beta(2-alpha,2-2+alpha)) - log(Beta(2.0-alpha,alpha)));
-    //return Beta(2-alpha, alpha)/Beta(2.0-alpha,alpha);
-}
+#include "sim_gt.hpp"
+#include "fst.hpp"
+#include <cassert>
+using namespace std;
 
 
-double ETw( double alphaA, double alphaAB, double tau ){
-    //exp(log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)))
-    double lambdaA = lambda( alphaA );
-    double lambdaAB = lambda( alphaAB );
-    
-    return ( 1 - exp( -lambdaA * tau ) ) / lambdaA + exp( -lambdaA * tau) * ( tau + 1 / lambdaAB);
-} 
-
-double ETb( double alphaAB, double tau ){
-    double lambdaAB = lambda( alphaAB );
-    return tau + 1/ lambdaAB;
-}
-
-double FST_indirect( double alphaA, double alphaAB, double tau ){
-    double lambdaA = lambda( alphaA );
-    double lambdaAB = lambda( alphaAB );
-    return ( 1 - ETw( lambdaA, lambdaAB, tau) / ETb( lambdaAB, tau) );
-}
-
-double FST( double alphaA, double alphaAB, double tau ){
-    double lambdaA = lambda( alphaA );
-    double lambdaAB = lambda( alphaAB );
-    cout << "lambdaA = " << lambdaA <<endl;
-    return ( 1 - exp( -tau ) ) * ( tau / ( 1 + tau ) );
-    //return ( 1 - exp(-lambdaA * tau) ) * ( 1 - 1 / ( tau + 1 / lambdaAB ) / lambdaA );
-    
-}
-
+//function(N, n)
+  //{
+    //// N is number of files
+    //// n is sample size per population
+    //// assuming two populations same sample size
+    //Fst <- 0
+    //for( i in 1:N ){
+      //skra <- matrix( scan( paste( c("/home/knoppix/verk/Rvinna/cprograms/largesamplesize/jerome/dist/seg-sites/site", i), collapse=""), what=c("",""), quiet=TRUE), 2*n, 2, byrow=T )
+      //// see if file has mutations
+      //if( substring( skra[1,2], 1,1) != "A" ){
+        //// at least one mutation in the tree
+        //// computing within differences
+        //Hw <- Hb <- 0
+        //sites <- 1:nchar( skra[1,2] )
+        //// first add to Hw for population A
+        //for( a1 in 1:(n-1)){
+          //for( a2 in (a1+1):n){
+            //seqA1 <- as.numeric( substring( skra[a1,2], sites, sites ) )
+            //seqA2 <- as.numeric( substring( skra[a2,2], sites, sites ) )
+            //seqB1 <- as.numeric( substring( skra[(a1+n),2], sites, sites ) )
+            //seqB2 <- as.numeric( substring( skra[(a2+n),2], sites, sites ) )
+            //Hw <- Hw  +   sum( abs( seqA1 - seqA2 ) )  +   sum( abs( seqB1 - seqB2 ) ) }}
+        //// now add to Hw for population B
+        //#for( a1 in (n+1):(2*n   -1)){
+        //#  for( a2 in (a1+1):(2*n)){
+        //#    seq1 <- as.numeric( substring( skra[a1,2], sites, sites ) )
+        //#    seq2 <- as.numeric( substring( skra[a2,2], sites, sites ) )
+        //#    Hw <- Hw  +   sum( abs( seq1 - seq2 ) ) }}
+        ////// done adding to Hw
+        ////// now adding to  Hb
+        //for( a1 in 1:n ){
+          //for( b1 in (n+1):(2*n) ){
+            //seq1 <- as.numeric( substring( skra[a1,2], sites, sites ) )
+            //seq2 <- as.numeric( substring( skra[b1,2], sites, sites ) )
+            //Hb <- Hb  +   sum( abs( seq1 - seq2 ) ) }}
+        //Fst <- c(Fst,  1 -  (Hw*n/(Hb*(n-1))) ) }
+    //}
+    ////print( Fst )
+    //return( c( mean( Fst[-1]), var( Fst[-1] ) ) )
+  //}
