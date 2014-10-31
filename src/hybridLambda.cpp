@@ -132,10 +132,14 @@ void HybridLambda::read_sample_sizes(){
 void HybridLambda::finalize(){
     
     if ( this->simulation_bool ) {
+        if ( this->fst_bool ){
+            this->fst_file_name = this->prefix + "_fst";
+            remove ( fst_file_name.c_str() );
+        }
         if ( this->gt_file_name.size() > 0 ) clog << "WARNING: \"-gt\" option is ignored" << endl; 
         if ( this->mt_file_name.size() > 0 ) clog << "WARNING: \"-mt\" option is ignored" << endl; 
-    
-        this->parameters()->finalize( );    
+        
+        this->parameters()->finalize( );
     
         if ( this->seg_bool ) {
             this->simulation_jobs_->set_sim_num_mut();
@@ -421,7 +425,12 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
         extract_file<<"\n";
     }
     extract_file.close();
-    (void)compute_fst ( this->haplotypes, parameters()->sample_size ) ;
+    
+    if ( this->fst_bool ) {
+        extract_file.open ( fst_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary ); 
+        extract_file << compute_fst ( this->haplotypes, parameters()->sample_size ) << "\n";
+        extract_file.close();
+    }
     //cout << "fst: " << compute_fst ( this->haplotypes, parameters()->sample_size ) << endl;
 }
 
@@ -583,8 +592,8 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
         }
     }
     
-    cout << "Hw = " << Hw <<endl;
-    cout << "Hb = " << Hb <<endl;
-    cout << "fst = " << 1.0 - (Hw/Hb) <<endl;
+    //cout << "Hw = " << Hw <<endl;
+    //cout << "Hb = " << Hb <<endl;
+    //cout << "fst = " << 1.0 - (Hw/Hb) <<endl;
     return ( 1 -  (Hw/Hb) ); 
 }

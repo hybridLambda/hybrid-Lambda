@@ -66,6 +66,7 @@ class HybridLambda{
         bool firstcoal_bool;        
         bool freq_bool;
         bool fst_bool;
+        string fst_file_name;
         size_t seed;	
         			
         string gt_file_name;
