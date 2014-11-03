@@ -10,23 +10,23 @@
 #pragma once
 #endif
 
-#include <boost/math/special_functions/factorials.hpp>
-#include <boost/math/special_functions/beta.hpp>
-#include <boost/math/policies/error_handling.hpp>
+//#include "factorials.hpp"
+#include "unchecked_factorial.hpp"
+#include "../src/sim_gt.hpp"
+//#include "beta.hpp"
+//#include <boost/math/policies/error_handling.hpp>
 
 namespace boost{ namespace math{
 
-template <class T, class Policy>
-T binomial_coefficient(unsigned n, unsigned k, const Policy& pol)
+template <class T>
+T binomial_coefficient(T n, T k)
 {
-   BOOST_STATIC_ASSERT(!boost::is_integral<T>::value);
-   BOOST_MATH_STD_USING
+   //BOOST_STATIC_ASSERT(!boost::is_integral<T>::value);
+   //BOOST_MATH_STD_USING
    static const char* function = "boost::math::binomial_coefficient<%1%>(unsigned, unsigned)";
    if(k > n)
-      return policies::raise_domain_error<T>(
-         function, 
-         "The binomial coefficient is undefined for k > n, but got k = %1%.",
-         k, pol);
+     throw std::invalid_argument ( "boost::math::binomial_coefficient The binomial coefficient is undefined for k > n" );
+
    T result;
    if((k == 0) || (k == n))
       return 1;
@@ -44,31 +44,18 @@ T binomial_coefficient(unsigned n, unsigned k, const Policy& pol)
    {
       // Use the beta function:
       if(k < n - k)
-         result = k * beta(static_cast<T>(k), static_cast<T>(n-k+1), pol);
+         //result = k * beta(static_cast<T>(k), static_cast<T>(n-k+1));
+         result = k * Beta((double)(k), (double)(n-k+1));
       else
-         result = (n - k) * beta(static_cast<T>(k+1), static_cast<T>(n-k), pol);
+         //result = (n - k) * beta(static_cast<T>(k+1), static_cast<T>(n-k));
+         result = (n - k) * Beta((double)(k+1), (double)(n-k));
       if(result == 0)
-         return policies::raise_overflow_error<T>(function, 0, pol);
+        throw std::invalid_argument ( "Over flow" );
+         //return policies::raise_overflow_error<T>(function, 0, pol);
       result = 1 / result;
    }
    // convert to nearest integer:
    return ceil(result - 0.5f);
-}
-//
-// Type float can only store the first 35 factorials, in order to
-// increase the chance that we can use a table driven implementation
-// we'll promote to double:
-//
-template <>
-inline float binomial_coefficient<float, policies::policy<> >(unsigned n, unsigned k, const policies::policy<>& pol)
-{
-   return policies::checked_narrowing_cast<float, policies::policy<> >(binomial_coefficient<double>(n, k, pol), "boost::math::binomial_coefficient<%1%>(unsigned,unsigned)");
-}
-
-template <class T>
-inline T binomial_coefficient(unsigned n, unsigned k)
-{
-   return binomial_coefficient<T>(n, k, policies::policy<>());
 }
 
 } // namespace math

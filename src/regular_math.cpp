@@ -20,8 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#include "regular_math.hpp"
+//#include "regular_math.hpp"
+#include "binomial/binomial.hpp"
 
 double binomial_coefficient ( double n, double k ){
-    return n_choose_k <double>( n, k);
+    return boost::math::binomial_coefficient<double> ( n, k);
 }

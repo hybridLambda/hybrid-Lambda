@@ -10,10 +10,10 @@
 #pragma once
 #endif
 
-#include <boost/math/special_functions/gamma.hpp>
-#include <boost/math/special_functions/math_fwd.hpp>
-#include <boost/math/special_functions/detail/unchecked_factorial.hpp>
-#include <boost/array.hpp>
+//#include <boost/math/special_functions/gamma.hpp>
+//#include <boost/math/special_functions/math_fwd.hpp>
+#include "unchecked_factorial.hpp"
+//#include <boost/array.hpp>
 #ifdef BOOST_MSVC
 #pragma warning(push) // Temporary until lexical cast fixed.
 #pragma warning(disable: 4127 4701)
