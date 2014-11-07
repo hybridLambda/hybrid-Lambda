@@ -10,10 +10,13 @@
 #pragma once
 #endif
 
+//#include <iostream>
+//#include <exception> // throw
+
 //#include "factorials.hpp"
 #include "unchecked_factorial.hpp"
-#include "../src/sim_gt.hpp"
-//#include "beta.hpp"
+//#include "../src/sim_gt.hpp"
+#include "beta.hpp"
 //#include <boost/math/policies/error_handling.hpp>
 
 namespace boost{ namespace math{
@@ -44,11 +47,11 @@ T binomial_coefficient(T n, T k)
    {
       // Use the beta function:
       if(k < n - k)
-         //result = k * beta(static_cast<T>(k), static_cast<T>(n-k+1));
-         result = k * Beta((double)(k), (double)(n-k+1));
+         result = k * beta(static_cast<T>(k), static_cast<T>(n-k+1));
+         //result = k * Beta((double)(k), (double)(n-k+1));
       else
-         //result = (n - k) * beta(static_cast<T>(k+1), static_cast<T>(n-k));
-         result = (n - k) * Beta((double)(k+1), (double)(n-k));
+         result = (n - k) * beta(static_cast<T>(k+1), static_cast<T>(n-k));
+         //result = (n - k) * Beta((double)(k+1), (double)(n-k));
       if(result == 0)
         throw std::invalid_argument ( "Over flow" );
          //return policies::raise_overflow_error<T>(function, 0, pol);
