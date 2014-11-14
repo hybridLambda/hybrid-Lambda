@@ -59,22 +59,29 @@ _CRTIMP int __cdecl vswprintf(wchar_t * __restrict__ , const wchar_t * __restric
 //#include <boost/limits.hpp>
 //#include <boost/mpl/if.hpp>
 //#include <boost/throw_exception.hpp>
-#include <boost/type_traits/is_pointer.hpp>
+//#include <boost/type_traits/is_pointer.hpp>
+#include "is_pointer.hpp"
 //#include <boost/type_traits/is_integral.hpp>
 //#include <boost/type_traits/is_arithmetic.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/numeric/conversion/cast.hpp>
+//#include <boost/type_traits/remove_pointer.hpp>
+#include "remove_pointer.hpp"
+//#include <boost/numeric/conversion/cast.hpp>
+#include "cast.hpp"
 //#include <boost/type_traits/ice.hpp>
-#include <boost/type_traits/make_unsigned.hpp>
+//#include <boost/type_traits/make_unsigned.hpp>
+#include "make_unsigned.hpp"
 //#include <boost/type_traits/is_signed.hpp>
-#include <boost/math/special_functions/sign.hpp>
+//#include <boost/math/special_functions/sign.hpp>
+#include "sign.hpp"
 //#include <boost/math/special_functions/fpclassify.hpp>
 //#include <boost/static_assert.hpp>
-#include <boost/detail/lcast_precision.hpp>
+//#include <boost/detail/lcast_precision.hpp>
+#include "lcast_precision.hpp"
 //#include <boost/detail/workaround.hpp>
 //#include "workaround.hpp"
 #if !defined(__SUNPRO_CC)
-#include <boost/container/container_fwd.hpp>
+//#include <boost/container/container_fwd.hpp>
+#include "container_fwd.hpp"
 #endif // !defined(__SUNPRO_CC)
 #ifndef BOOST_NO_CWCHAR
 #   include <cwchar>

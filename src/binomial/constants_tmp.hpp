@@ -14,10 +14,9 @@
 #pragma warning(push)
 #pragma warning(disable: 4127 4701)
 #endif
-#ifndef BOOST_MATH_NO_LEXICAL_CAST
+//#ifndef BOOST_MATH_NO_LEXICAL_CAST
 //#include <boost/lexical_cast.hpp>
-#include "lexical_cast.hpp"
-#endif
+//#endif
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
@@ -140,7 +139,7 @@ namespace boost{ namespace math
          return p;
       }
 
-      template <class T, const T& (*F)(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(T))>
+      template <class T, const T& (*F)()>
       struct constant_initializer
       {
          static void force_instantiate()
@@ -152,18 +151,14 @@ namespace boost{ namespace math
          {
             initializer()
             {
-               F(
-      #ifdef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-                  0
-      #endif
-                  );
+               F();
             }
             void force_instantiate()const{}
          };
          static const initializer init;
       };
 
-      template <class T, const T& (*F)(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(T))>
+      template <class T, const T& (*F)()>
       typename constant_initializer<T, F>::initializer const constant_initializer<T, F>::init;
 
       template <class T, int N, const T& (*F)(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(mpl::int_<N>) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))>
@@ -178,11 +173,7 @@ namespace boost{ namespace math
          {
             initializer()
             {
-               F(
-      #ifdef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-                  mpl::int_<N>() , 0
-      #endif
-                  );
+               F();
             }
             void force_instantiate()const{}
          };
@@ -336,7 +327,7 @@ namespace boost{ namespace math
 // We deliberately include this *after* all the declarations above,
 // that way the calculation routines can call on other constants above:
 //
-//#include <boost/math/constants/calculate_constants.hpp>
+#include "calculate_constants.hpp"
 
 #endif // BOOST_MATH_CONSTANTS_CONSTANTS_INCLUDED
 
