@@ -28,33 +28,6 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 
 
-#
-# Platform specific setup
-#
-#############################
-AC_CANONICAL_HOST
-# Check for which host we are on and setup a few things
-# specifically based on the host
-case $host_os in
-  darwin* )
-   AC_PROG_CXX([clang])
-    export CXX=clang++
-    export CXXFLAGS=-I/opt/local/include -stdlib=libc++ 
-    AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],[AC_MSG_ERROR(['boost' header files not found. Install from the port: sudo port install boost])])
-         ;;
-  linux*)
-  AC_PROG_CXX
-    AC_CHECK_HEADERS([boost/math/special_functions/gamma.hpp],[],[AC_MSG_ERROR(['boost' header files not found. Try downloading from :http://www.boost.org. Or: sudo apt-get install libboost-all-dev])])        
-		;;
-   *BSD*)
-        # Do something specific for BSD
-        ;;
-    *)
-        #Default Case
-        AC_MSG_ERROR([Your platform is not currently supported])
-        ;;
-esac
-
 
 # Checks for library functions.
 AC_FUNC_MALLOC
