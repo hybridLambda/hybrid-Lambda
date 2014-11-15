@@ -14,8 +14,8 @@
 // NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
 //#include <boost/mpl/integral_c_tag.hpp>
-#include <boost/mpl/aux_/static_cast.hpp>
-#include <boost/mpl/aux_/nttp_decl.hpp>
+#include "mpl_static_cast.hpp"
+#include "nttp_decl.hpp"
 //#include <boost/mpl/aux_/config/static_constant.hpp>
 //#include <boost/mpl/aux_/config/workaround.hpp>
 

@@ -79,6 +79,6 @@ BOOST_TT_AUX_TYPE_TRAIT_DEF1(remove_cv,T,typename boost::detail::remove_cv_impl<
 
 } // namespace boost
 
-#include <boost/type_traits/detail/type_trait_undef.hpp>
+//#include <boost/type_traits/detail/type_trait_undef.hpp>
 
 #endif // BOOST_TT_REMOVE_CV_HPP_INCLUDED
