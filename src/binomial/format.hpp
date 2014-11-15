@@ -31,14 +31,14 @@
 #endif
 
 // ****  Forward declarations ----------------------------------
-#include <boost/format/format_fwd.hpp>     // basic_format<Ch,Tr>, and other frontends
+//#include <boost/format/format_fwd.hpp>     // basic_format<Ch,Tr>, and other frontends
 #include <boost/format/internals_fwd.hpp>  // misc forward declarations for internal use
 
 // ****  Auxiliary structs (stream_format_state<Ch,Tr> , and format_item<Ch,Tr> )
-#include <boost/format/internals.hpp>    
+//#include <boost/format/internals.hpp>    
 
 // ****  Format  class  interface --------------------------------
-#include <boost/format/format_class.hpp>
+//#include <boost/format/format_class.hpp>
 
 // **** Exceptions -----------------------------------------------
 #include <boost/format/exceptions.hpp>
@@ -50,10 +50,10 @@
 #include <boost/format/parsing.hpp>                 // format-string parsing (member-)functions
 
 // **** Implementation of the free functions ----------------------
-#include <boost/format/free_funcs.hpp>
+//#include <boost/format/free_funcs.hpp>
 
 
 // *** Undefine 'local' macros :
-#include <boost/format/detail/unset_macros.hpp>
+//#include <boost/format/detail/unset_macros.hpp>
 
 #endif // BOOST_FORMAT_HPP
