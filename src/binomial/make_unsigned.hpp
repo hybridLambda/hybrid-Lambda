@@ -9,21 +9,21 @@
 #ifndef BOOST_TT_MAKE_UNSIGNED_HPP_INCLUDED
 #define BOOST_TT_MAKE_UNSIGNED_HPP_INCLUDED
 
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_integral.hpp>
-#include <boost/type_traits/is_signed.hpp>
-#include <boost/type_traits/is_unsigned.hpp>
-#include <boost/type_traits/is_enum.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_volatile.hpp>
-#include <boost/type_traits/add_const.hpp>
-#include <boost/type_traits/add_volatile.hpp>
-#include <boost/type_traits/detail/ice_or.hpp>
-#include <boost/type_traits/detail/ice_and.hpp>
-#include <boost/type_traits/detail/ice_not.hpp>
-#include <boost/static_assert.hpp>
+//#include <boost/mpl/if.hpp>
+//#include <boost/type_traits/is_integral.hpp>
+#include "is_signed.hpp"
+#include "is_unsigned.hpp"
+//#include <boost/type_traits/is_enum.hpp>
+//#include <boost/type_traits/is_same.hpp>
+//#include <boost/type_traits/remove_cv.hpp>
+#include "is_const.hpp"
+//#include <boost/type_traits/is_volatile.hpp>
+#include "add_const.hpp"
+#include "add_volatile.hpp"
+//#include <boost/type_traits/detail/ice_or.hpp>
+//#include <boost/type_traits/detail/ice_and.hpp>
+//#include <boost/type_traits/detail/ice_not.hpp>
+#include "static_assert.hpp"
 
 // should be the last #include
 //#include <boost/type_traits/detail/type_trait_def.hpp>

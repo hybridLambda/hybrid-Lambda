@@ -14,8 +14,8 @@
 
 //#include <boost/math/special_functions/beta.hpp>
 //#include <boost/math/special_functions/erf.hpp>
-#include <boost/math/tools/roots.hpp>
-//#include <boost/math/special_functions/detail/t_distribution_inv.hpp>
+#include "roots.hpp"
+#include "t_distribution_inv.hpp"
 
 namespace boost{ namespace math{ namespace detail{
 

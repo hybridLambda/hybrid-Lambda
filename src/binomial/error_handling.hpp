@@ -28,7 +28,7 @@
 // Note that this only occurs when the compiler can deduce code is unreachable,
 // for example when policy macros are used to ignore errors rather than throw.
 #endif
-//#include <boost/format.hpp>
+#include "format.hpp"
 
 namespace boost{ namespace math{
 
@@ -79,21 +79,21 @@ inline std::string do_format(Formatter f, const Group& g)
 }
 
 template <class E, class T>
-//void raise_error(const char* function, const char* message)
-//{
-  //if(function == 0)
-       //function = "Unknown function operating on type %1%";
-  //if(message == 0)
-       //message = "Cause unknown";
+void raise_error(const char* function, const char* message)
+{
+  if(function == 0)
+       function = "Unknown function operating on type %1%";
+  if(message == 0)
+       message = "Cause unknown";
 
-  //std::string msg("Error in function ");
-  //msg += (boost::format(function) % typeid(T).name()).str();
-  //msg += ": ";
-  //msg += message;
+  std::string msg("Error in function ");
+  msg += (boost::format(function) % typeid(T).name()).str();
+  msg += ": ";
+  msg += message;
 
-  //E e(msg);
-  //boost::throw_exception(e);
-//}
+  E e(msg);
+  boost::throw_exception(e);
+}
 
 template <class E, class T>
 void raise_error(const char* function, const char* message, const T& val)
@@ -203,72 +203,72 @@ inline T raise_pole_error(
 }
 
 
-//template <class T>
-//inline T raise_overflow_error(
-           //const char* function,
-           //const char* message,
-           //const  ::boost::math::policies::overflow_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<std::overflow_error, T>(function, message ? message : "numeric overflow");
-   //// We should never get here:
-   //return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
-//}
+template <class T>
+inline T raise_overflow_error(
+           const char* function,
+           const char* message,
+           const  ::boost::math::policies::overflow_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<std::overflow_error, T>(function, message ? message : "numeric overflow");
+   // We should never get here:
+   return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
+}
 
-//template <class T>
-//inline T raise_overflow_error(
-           //const char* function,
-           //const char* message,
-           //const T& val,
-           //const ::boost::math::policies::overflow_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<std::overflow_error, T>(function, message ? message : "numeric overflow", val);
-   //// We should never get here:
-   //return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
-//}
+template <class T>
+inline T raise_overflow_error(
+           const char* function,
+           const char* message,
+           const T& val,
+           const ::boost::math::policies::overflow_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<std::overflow_error, T>(function, message ? message : "numeric overflow", val);
+   // We should never get here:
+   return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
+}
 
-//template <class T>
-//inline T raise_overflow_error(
-           //const char* ,
-           //const char* ,
-           //const  ::boost::math::policies::overflow_error< ::boost::math::policies::ignore_error>&)
-//{
-   //// This may or may not do the right thing, but the user asked for the error
-   //// to be ignored so here we go anyway:
-   //return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
-//}
+template <class T>
+inline T raise_overflow_error(
+           const char* ,
+           const char* ,
+           const  ::boost::math::policies::overflow_error< ::boost::math::policies::ignore_error>&)
+{
+   // This may or may not do the right thing, but the user asked for the error
+   // to be ignored so here we go anyway:
+   return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
+}
 
-//template <class T>
-//inline T raise_overflow_error(
-           //const char* ,
-           //const char* ,
-           //const  ::boost::math::policies::overflow_error< ::boost::math::policies::errno_on_error>&)
-//{
-   //errno = ERANGE;
-   //// This may or may not do the right thing, but the user asked for the error
-   //// to be silent so here we go anyway:
-   //return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
-//}
+template <class T>
+inline T raise_overflow_error(
+           const char* ,
+           const char* ,
+           const  ::boost::math::policies::overflow_error< ::boost::math::policies::errno_on_error>&)
+{
+   errno = ERANGE;
+   // This may or may not do the right thing, but the user asked for the error
+   // to be silent so here we go anyway:
+   return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
+}
 
-//template <class T>
-//inline T raise_overflow_error(
-           //const char* function,
-           //const char* message,
-           //const  ::boost::math::policies::overflow_error< ::boost::math::policies::user_error>&)
-//{
-   //return user_overflow_error(function, message, std::numeric_limits<T>::infinity());
-//}
+template <class T>
+inline T raise_overflow_error(
+           const char* function,
+           const char* message,
+           const  ::boost::math::policies::overflow_error< ::boost::math::policies::user_error>&)
+{
+   return user_overflow_error(function, message, std::numeric_limits<T>::infinity());
+}
 
 
-//template <class T>
-//inline T raise_underflow_error(
-           //const char* function,
-           //const char* message,
-           //const  ::boost::math::policies::underflow_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<std::underflow_error, T>(function, message ? message : "numeric underflow");
-   //// We should never get here:
-   //return 0;
-//}
+template <class T>
+inline T raise_underflow_error(
+           const char* function,
+           const char* message,
+           const  ::boost::math::policies::underflow_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<std::underflow_error, T>(function, message ? message : "numeric underflow");
+   // We should never get here:
+   return 0;
+}
 
 template <class T>
 inline T raise_underflow_error(
@@ -302,17 +302,17 @@ inline T raise_underflow_error(
    return user_underflow_error(function, message, T(0));
 }
 
-//template <class T>
-//inline T raise_denorm_error(
-           //const char* function,
-           //const char* message,
-           //const T& /* val */,
-           //const  ::boost::math::policies::denorm_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<std::underflow_error, T>(function, message ? message : "denormalised result");
-   //// we never get here:
-   //return T(0);
-//}
+template <class T>
+inline T raise_denorm_error(
+           const char* function,
+           const char* message,
+           const T& /* val */,
+           const  ::boost::math::policies::denorm_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<std::underflow_error, T>(function, message ? message : "denormalised result");
+   // we never get here:
+   return T(0);
+}
 
 template <class T>
 inline T raise_denorm_error(
@@ -349,17 +349,17 @@ inline T raise_denorm_error(
    return user_denorm_error(function, message, val);
 }
 
-//template <class T>
-//inline T raise_evaluation_error(
-           //const char* function,
-           //const char* message,
-           //const T& val,
-           //const  ::boost::math::policies::evaluation_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<boost::math::evaluation_error, T>(function, message, val);
-   //// we never get here:
-   //return T(0);
-//}
+template <class T>
+inline T raise_evaluation_error(
+           const char* function,
+           const char* message,
+           const T& val,
+           const  ::boost::math::policies::evaluation_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<boost::math::evaluation_error, T>(function, message, val);
+   // we never get here:
+   return T(0);
+}
 
 template <class T>
 inline T raise_evaluation_error(
@@ -396,71 +396,71 @@ inline T raise_evaluation_error(
    return user_evaluation_error(function, message, val);
 }
 
-//template <class T, class TargetType>
-//inline TargetType raise_rounding_error(
-           //const char* function,
-           //const char* message,
-           //const T& val,
-           //const TargetType&,
-           //const  ::boost::math::policies::rounding_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<boost::math::rounding_error, T>(function, message, val);
-   //// we never get here:
-   //return TargetType(0);
-//}
+template <class T, class TargetType>
+inline TargetType raise_rounding_error(
+           const char* function,
+           const char* message,
+           const T& val,
+           const TargetType&,
+           const  ::boost::math::policies::rounding_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<boost::math::rounding_error, T>(function, message, val);
+   // we never get here:
+   return TargetType(0);
+}
 
-//template <class T, class TargetType>
-//inline TargetType raise_rounding_error(
-           //const char* ,
-           //const char* ,
-           //const T& val,
-           //const TargetType&,
-           //const  ::boost::math::policies::rounding_error< ::boost::math::policies::ignore_error>&)
-//{
-   //// This may or may not do the right thing, but the user asked for the error
-   //// to be ignored so here we go anyway:
-   //BOOST_STATIC_ASSERT(std::numeric_limits<TargetType>::is_specialized);
-   //return  val > 0 ? (std::numeric_limits<TargetType>::max)() : (std::numeric_limits<TargetType>::is_integer ? (std::numeric_limits<TargetType>::min)() : -(std::numeric_limits<TargetType>::max)());
-//}
+template <class T, class TargetType>
+inline TargetType raise_rounding_error(
+           const char* ,
+           const char* ,
+           const T& val,
+           const TargetType&,
+           const  ::boost::math::policies::rounding_error< ::boost::math::policies::ignore_error>&)
+{
+   // This may or may not do the right thing, but the user asked for the error
+   // to be ignored so here we go anyway:
+   BOOST_STATIC_ASSERT(std::numeric_limits<TargetType>::is_specialized);
+   return  val > 0 ? (std::numeric_limits<TargetType>::max)() : (std::numeric_limits<TargetType>::is_integer ? (std::numeric_limits<TargetType>::min)() : -(std::numeric_limits<TargetType>::max)());
+}
 
-//template <class T, class TargetType>
-//inline TargetType raise_rounding_error(
-           //const char* ,
-           //const char* ,
-           //const T& val,
-           //const TargetType&,
-           //const  ::boost::math::policies::rounding_error< ::boost::math::policies::errno_on_error>&)
-//{
-   //errno = ERANGE;
-   //// This may or may not do the right thing, but the user asked for the error
-   //// to be silent so here we go anyway:
-   //BOOST_STATIC_ASSERT(std::numeric_limits<TargetType>::is_specialized);
-   //return  val > 0 ? (std::numeric_limits<TargetType>::max)() : (std::numeric_limits<TargetType>::is_integer ? (std::numeric_limits<TargetType>::min)() : -(std::numeric_limits<TargetType>::max)());
-//}
+template <class T, class TargetType>
+inline TargetType raise_rounding_error(
+           const char* ,
+           const char* ,
+           const T& val,
+           const TargetType&,
+           const  ::boost::math::policies::rounding_error< ::boost::math::policies::errno_on_error>&)
+{
+   errno = ERANGE;
+   // This may or may not do the right thing, but the user asked for the error
+   // to be silent so here we go anyway:
+   BOOST_STATIC_ASSERT(std::numeric_limits<TargetType>::is_specialized);
+   return  val > 0 ? (std::numeric_limits<TargetType>::max)() : (std::numeric_limits<TargetType>::is_integer ? (std::numeric_limits<TargetType>::min)() : -(std::numeric_limits<TargetType>::max)());
+}
 
-//template <class T, class TargetType>
-//inline TargetType raise_rounding_error(
-           //const char* function,
-           //const char* message,
-           //const T& val,
-           //const TargetType& t,
-           //const  ::boost::math::policies::rounding_error< ::boost::math::policies::user_error>&)
-//{
-   //return user_rounding_error(function, message, val, t);
-//}
+template <class T, class TargetType>
+inline TargetType raise_rounding_error(
+           const char* function,
+           const char* message,
+           const T& val,
+           const TargetType& t,
+           const  ::boost::math::policies::rounding_error< ::boost::math::policies::user_error>&)
+{
+   return user_rounding_error(function, message, val, t);
+}
 
-//template <class T, class R>
-//inline T raise_indeterminate_result_error(
-           //const char* function,
-           //const char* message,
-           //const T& val,
-           //const R& ,
-           //const ::boost::math::policies::indeterminate_result_error< ::boost::math::policies::throw_on_error>&)
-//{
-   //raise_error<std::domain_error, T>(function, message, val);
-   //// we never get here:
-   //return std::numeric_limits<T>::quiet_NaN();
-//}
+template <class T, class R>
+inline T raise_indeterminate_result_error(
+           const char* function,
+           const char* message,
+           const T& val,
+           const R& ,
+           const ::boost::math::policies::indeterminate_result_error< ::boost::math::policies::throw_on_error>&)
+{
+   raise_error<std::domain_error, T>(function, message, val);
+   // we never get here:
+   return std::numeric_limits<T>::quiet_NaN();
+}
 
 template <class T, class R>
 inline T raise_indeterminate_result_error(
@@ -520,23 +520,23 @@ inline T raise_pole_error(const char* function, const char* message, const T& va
       val, policy_type());
 }
 
-//template <class T, class Policy>
-//inline T raise_overflow_error(const char* function, const char* message, const Policy&)
-//{
-   //typedef typename Policy::overflow_error_type policy_type;
-   //return detail::raise_overflow_error<T>(
-      //function, message ? message : "Overflow Error",
-      //policy_type());
-//}
+template <class T, class Policy>
+inline T raise_overflow_error(const char* function, const char* message, const Policy&)
+{
+   typedef typename Policy::overflow_error_type policy_type;
+   return detail::raise_overflow_error<T>(
+      function, message ? message : "Overflow Error",
+      policy_type());
+}
 
-//template <class T, class Policy>
-//inline T raise_overflow_error(const char* function, const char* message, const T& val, const Policy&)
-//{
-   //typedef typename Policy::overflow_error_type policy_type;
-   //return detail::raise_overflow_error(
-      //function, message ? message : "Overflow evaluating function at %1%",
-      //val, policy_type());
-//}
+template <class T, class Policy>
+inline T raise_overflow_error(const char* function, const char* message, const T& val, const Policy&)
+{
+   typedef typename Policy::overflow_error_type policy_type;
+   return detail::raise_overflow_error(
+      function, message ? message : "Overflow evaluating function at %1%",
+      val, policy_type());
+}
 
 template <class T, class Policy>
 inline T raise_underflow_error(const char* function, const char* message, const Policy&)
@@ -566,14 +566,14 @@ inline T raise_evaluation_error(const char* function, const char* message, const
       val, policy_type());
 }
 
-//template <class T, class TargetType, class Policy>
-//inline TargetType raise_rounding_error(const char* function, const char* message, const T& val, const TargetType& t, const Policy&)
-//{
-   //typedef typename Policy::rounding_error_type policy_type;
-   //return detail::raise_rounding_error(
-      //function, message ? message : "Value %1% can not be represented in the target integer type.",
-      //val, t, policy_type());
-//}
+template <class T, class TargetType, class Policy>
+inline TargetType raise_rounding_error(const char* function, const char* message, const T& val, const TargetType& t, const Policy&)
+{
+   typedef typename Policy::rounding_error_type policy_type;
+   return detail::raise_rounding_error(
+      function, message ? message : "Value %1% can not be represented in the target integer type.",
+      val, t, policy_type());
+}
 
 template <class T, class R, class Policy>
 inline T raise_indeterminate_result_error(const char* function, const char* message, const T& val, const R& result, const Policy&)
@@ -590,17 +590,17 @@ inline T raise_indeterminate_result_error(const char* function, const char* mess
 namespace detail
 {
 
-//template <class R, class T, class Policy>
-//inline bool check_overflow(T val, R* result, const char* function, const Policy& pol)
-//{
-   //BOOST_MATH_STD_USING
-   //if(fabs(val) > tools::max_value<R>())
-   //{
-      //*result = static_cast<R>(boost::math::policies::detail::raise_overflow_error<R>(function, 0, pol));
-      //return true;
-   //}
-   //return false;
-//}
+template <class R, class T, class Policy>
+inline bool check_overflow(T val, R* result, const char* function, const Policy& pol)
+{
+   BOOST_MATH_STD_USING
+   if(fabs(val) > tools::max_value<R>())
+   {
+      *result = static_cast<R>(boost::math::policies::detail::raise_overflow_error<R>(function, 0, pol));
+      return true;
+   }
+   return false;
+}
 template <class R, class T, class Policy>
 inline bool check_overflow(std::complex<T> val, R* result, const char* function, const Policy& pol)
 {
@@ -669,25 +669,25 @@ inline bool check_denorm(std::complex<T> /* val */, R* /* result*/, const char* 
 
 } // namespace detail
 
-//template <class R, class Policy, class T>
-//inline R checked_narrowing_cast(T val, const char* function)
-//{
-   //typedef typename Policy::overflow_error_type overflow_type;
-   //typedef typename Policy::underflow_error_type underflow_type;
-   //typedef typename Policy::denorm_error_type denorm_type;
-   ////
-   //// Most of what follows will evaluate to a no-op:
-   ////
-   //R result = 0;
-   //if(detail::check_overflow<R>(val, &result, function, overflow_type()))
-      //return result;
-   //if(detail::check_underflow<R>(val, &result, function, underflow_type()))
-      //return result;
-   //if(detail::check_denorm<R>(val, &result, function, denorm_type()))
-      //return result;
+template <class R, class Policy, class T>
+inline R checked_narrowing_cast(T val, const char* function)
+{
+   typedef typename Policy::overflow_error_type overflow_type;
+   typedef typename Policy::underflow_error_type underflow_type;
+   typedef typename Policy::denorm_error_type denorm_type;
+   //
+   // Most of what follows will evaluate to a no-op:
+   //
+   R result = 0;
+   if(detail::check_overflow<R>(val, &result, function, overflow_type()))
+      return result;
+   if(detail::check_underflow<R>(val, &result, function, underflow_type()))
+      return result;
+   if(detail::check_denorm<R>(val, &result, function, denorm_type()))
+      return result;
 
-   //return static_cast<R>(val);
-//}
+   return static_cast<R>(val);
+}
 
 template <class T, class Policy>
 inline void check_series_iterations(const char* function, boost::uintmax_t max_iter, const Policy& pol)

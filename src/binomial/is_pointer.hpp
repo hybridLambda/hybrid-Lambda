@@ -21,12 +21,12 @@
 #ifndef BOOST_TT_IS_POINTER_HPP_INCLUDED
 #define BOOST_TT_IS_POINTER_HPP_INCLUDED
 
-#include <boost/type_traits/is_member_pointer.hpp>
-#include <boost/type_traits/detail/ice_and.hpp>
-#include <boost/type_traits/detail/ice_not.hpp>
+#include "is_member_pointer.hpp"
+#include "ice_and.hpp"
+#include "ice_not.hpp"
 //#include <boost/type_traits/config.hpp>
 #if !BOOST_WORKAROUND(BOOST_MSVC,<=1300)
-#include <boost/type_traits/remove_cv.hpp>
+//#include <boost/type_traits/remove_cv.hpp>
 #endif
 
 //#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION

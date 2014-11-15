@@ -3,7 +3,8 @@ EXTRA_DIST = trees/*tax* bootstrap example/eg*
 distdir = $(PACKAGE)-$(VERSION)
 
 
-bin_PROGRAMS = hybrid-Lambda hybrid-Lambda_boost
+bin_PROGRAMS = hybrid-Lambda 
+#hybrid-Lambda_boost
 PROG = HYBRID-LAMBDA
 check_PROGRAMS = hybrid-Lambda_dbg hybrid-Lambda_prof unit_tests
 TESTS = unit_tests 
