@@ -14,7 +14,7 @@
 // $Date: 2008-10-10 23:19:02 -0700 (Fri, 10 Oct 2008) $
 // $Revision: 49267 $
 
-#include <boost/mpl/aux_/config/use_preprocessed.hpp>
+//#include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
     && !defined(BOOST_MPL_PREPROCESSING_MODE)
@@ -55,7 +55,7 @@
 #   define AUX778076_OP_NAME or_
 #   define AUX778076_OP_VALUE1 true
 #   define AUX778076_OP_VALUE2 false
-#   include <boost/mpl/aux_/logical_op.hpp>
+//#   include <boost/mpl/aux_/logical_op.hpp>
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_OR_HPP_INCLUDED

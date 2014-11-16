@@ -15,11 +15,12 @@
 #include "push_back.hpp"
 #include "at.hpp"
 #include "size.hpp"
-#include "comparison.hpp"
-#include <boost/type_traits/is_same.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/assert.hpp>
-#include <boost/math/tools/config.hpp>
+#include "greater.hpp"
+#include "less_equal.hpp"
+//#include <boost/type_traits/is_same.hpp>
+//#include <boost/static_assert.hpp>
+//#include <boost/assert.hpp>
+#include "math_config.hpp"
 #include <limits>
 // Sadly we do need the .h versions of these to be sure of getting
 // FLT_MANT_DIG etc.

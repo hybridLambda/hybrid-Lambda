@@ -20,9 +20,11 @@
 #include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_void.hpp>
+
 #ifndef BOOST_NO_IS_ABSTRACT
 #include <boost/type_traits/is_abstract.hpp>
 #endif
+
 #include <boost/type_traits/add_lvalue_reference.hpp>
 #include <boost/type_traits/add_rvalue_reference.hpp>
 #include <boost/type_traits/is_function.hpp>

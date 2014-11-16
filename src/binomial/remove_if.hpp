@@ -15,14 +15,14 @@
 // $Date: 2008-10-10 23:19:02 -0700 (Fri, 10 Oct 2008) $
 // $Revision: 49267 $
 
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/reverse_fold.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/protect.hpp>
-#include <boost/mpl/lambda.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/aux_/inserter_algorithm.hpp>
+#include "fold.hpp"
+#include "reverse_fold.hpp"
+//#include <boost/mpl/eval_if.hpp>
+//#include <boost/mpl/identity.hpp>
+//#include <boost/mpl/protect.hpp>
+//#include <boost/mpl/lambda.hpp>
+//#include <boost/mpl/apply.hpp>
+#include "mpl_inserter_algorithm.hpp"
 
 namespace boost { namespace mpl {
 
