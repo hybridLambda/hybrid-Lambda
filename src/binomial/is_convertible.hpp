@@ -17,7 +17,7 @@
 #include <boost/type_traits/detail/yes_no_type.hpp>
 #include <boost/type_traits/config.hpp>
 #include <boost/type_traits/is_array.hpp>
-#include <boost/type_traits/ice.hpp>
+//#include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_void.hpp>
 
