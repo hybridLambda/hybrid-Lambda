@@ -24,19 +24,20 @@
 // we make sure that our include of <memory> doesn't try to
 // pull in the TR1 headers: that's why we use this header 
 // rather than including <memory> directly:
-#include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
+//#include "config_memory.hpp"  // std::auto_ptr
+#  include <memory>
 
 //#include <boost/assert.hpp>
 //#include <boost/checked_delete.hpp>
 //#include <boost/throw_exception.hpp>
-#include <boost/smart_ptr/detail/shared_count.hpp>
+#include "smart_ptr_shared_count.hpp"
 //#include <boost/detail/workaround.hpp>
-#include <boost/smart_ptr/detail/sp_convertible.hpp>
-#include <boost/smart_ptr/detail/sp_nullptr_t.hpp>
+#include "smart_ptr_sp_convertible.hpp"
+#include "smart_ptr_sp_nullptr_t.hpp"
 
 #if !defined(BOOST_SP_NO_ATOMIC_ACCESS)
-#include <boost/smart_ptr/detail/spinlock_pool.hpp>
-#include <boost/memory_order.hpp>
+#include "spinlock_pool.hpp"
+#include "memory_order.hpp"
 #endif
 
 #include <algorithm>            // for std::swap

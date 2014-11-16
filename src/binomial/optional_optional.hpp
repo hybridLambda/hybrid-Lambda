@@ -24,19 +24,19 @@
 #include "alignment_of.hpp"
 #include "has_nothrow_constructor.hpp"
 #include "type_with_alignment.hpp"
-#include <boost/type_traits/remove_reference.hpp>
+#include "remove_reference.hpp"
 //#include <boost/type_traits/is_reference.hpp>
 //#include <boost/mpl/if.hpp>
 //#include <boost/mpl/bool.hpp>
 //#include <boost/mpl/not.hpp>
-#include <boost/detail/reference_content.hpp>
+#include "reference_content.hpp"
 #include <boost/none.hpp>
 //#include <boost/utility/swap.hpp>
 #include "addressof.hpp"
 #include "compare_pointees.hpp"
 #include "in_place_factory.hpp"
 
-#include <boost/optional/optional_fwd.hpp>
+#include "optional_optional_fwd.hpp"
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
 // VC6.0 has the following bug:
