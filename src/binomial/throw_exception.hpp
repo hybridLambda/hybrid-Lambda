@@ -26,7 +26,7 @@
 //  http://www.boost.org/libs/utility/throw_exception.html
 //
 
-#include <boost/exception/detail/attribute_noreturn.hpp>
+#include "exception_attribute_noreturn.hpp"
 //#include <boost/detail/workaround.hpp>
 //#include <boost/config.hpp>
 #include <exception>
@@ -40,9 +40,9 @@
 #endif
 
 #if !defined( BOOST_EXCEPTION_DISABLE )
-# include <boost/exception/exception.hpp>
+# include "exception_exception.hpp"
 #if !defined(BOOST_THROW_EXCEPTION_CURRENT_FUNCTION)
-# include <boost/current_function.hpp>
+# include "current_function.hpp"
 # define BOOST_THROW_EXCEPTION_CURRENT_FUNCTION BOOST_CURRENT_FUNCTION
 #endif
 # define BOOST_THROW_EXCEPTION(x) ::boost::exception_detail::throw_exception_(x,BOOST_THROW_EXCEPTION_CURRENT_FUNCTION,__FILE__,__LINE__)

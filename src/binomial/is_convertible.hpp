@@ -14,29 +14,29 @@
 
 //#include <boost/type_traits/intrinsics.hpp>
 #ifndef BOOST_IS_CONVERTIBLE
-#include <boost/type_traits/detail/yes_no_type.hpp>
-#include <boost/type_traits/config.hpp>
-#include <boost/type_traits/is_array.hpp>
+#include "yes_no_type.hpp"
+//#include <boost/type_traits/config.hpp>
+#include "is_array.hpp"
 //#include <boost/type_traits/ice.hpp>
-#include <boost/type_traits/is_arithmetic.hpp>
-#include <boost/type_traits/is_void.hpp>
+//#include <boost/type_traits/is_arithmetic.hpp>
+//#include <boost/type_traits/is_void.hpp>
 
 #ifndef BOOST_NO_IS_ABSTRACT
-#include <boost/type_traits/is_abstract.hpp>
+#include "is_abstract.hpp"
 #endif
 
-#include <boost/type_traits/add_lvalue_reference.hpp>
-#include <boost/type_traits/add_rvalue_reference.hpp>
-#include <boost/type_traits/is_function.hpp>
+#include "add_lvalue_reference.hpp"
+#include "add_rvalue_reference.hpp"
+#include "is_function.hpp"
 
-#if defined(__MWERKS__)
-#include <boost/type_traits/remove_reference.hpp>
-#endif
+//#if defined(__MWERKS__)
+//#include <boost/type_traits/remove_reference.hpp>
+//#endif
 
 #endif // BOOST_IS_CONVERTIBLE
 
 // should be always the last #include directive
-#include <boost/type_traits/detail/bool_trait_def.hpp>
+#include "bool_trait_def.hpp"
 
 namespace boost {
 
