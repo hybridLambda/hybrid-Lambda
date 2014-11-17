@@ -63,11 +63,11 @@
 
 #else
 
-#   include <boost/preprocessor/arithmetic/add.hpp>
-#   include <boost/preprocessor/arithmetic/sub.hpp>
+#   include "preprocessor_arithmetic_add.hpp"
+#   include "preprocessor_arithmetic_sub.hpp"
 //#   include <boost/preprocessor/inc.hpp>
 //#   include <boost/preprocessor/tuple/elem.hpp>
-#   include <boost/preprocessor/repeat.hpp>
+#   include "preprocessor_repeat.hpp"
 //#   include <boost/preprocessor/cat.hpp>
 
 #   define BOOST_MPL_PP_AUX_TAIL_PARAM_FUNC(unused, i, op) \
