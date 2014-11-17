@@ -14,12 +14,12 @@
 // $Date: 2008-10-10 23:19:02 -0700 (Fri, 10 Oct 2008) $
 // $Revision: 49267 $
 
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/aux_/na_spec.hpp>
-#include <boost/mpl/aux_/lambda_support.hpp>
-#include <boost/mpl/aux_/preprocessor/default_params.hpp>
-#include <boost/mpl/aux_/preprocessor/params.hpp>
-#include <boost/mpl/aux_/config/ctps.hpp>
+#include "mpl_times.hpp"
+//#include <boost/mpl/aux_/na_spec.hpp>
+//#include <boost/mpl/aux_/lambda_support.hpp>
+#include "mpl_default_params.hpp"
+//#include <boost/mpl/aux_/preprocessor/params.hpp>
+//#include <boost/mpl/aux_/config/ctps.hpp>
 
 // backward compatibility header, deprecated
 
