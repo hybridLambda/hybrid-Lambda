@@ -30,7 +30,7 @@
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
     && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
-#   define BOOST_MPL_PREPROCESSED_HEADER apply_wrap.hpp
+//#   define BOOST_MPL_PREPROCESSED_HEADER apply_wrap.hpp
 //#   include "include_preprocessed.hpp"
 namespace boost { namespace mpl {
 
