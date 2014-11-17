@@ -9,7 +9,7 @@ PROG = HYBRID-LAMBDA
 check_PROGRAMS = hybrid-Lambda_dbg hybrid-Lambda_prof unit_tests
 TESTS = unit_tests 
 
-common_flags = -O3 -g -std=c++0x -I src/ 
+common_flags = -O3 -g -std=c++0x -I src/ -I src/boost
 hybrid_Lambda_CXXFLAGS = -DNDEBUG $(common_flags)#options for not showing debug messages.
 hybrid_Lambda_boost_CXXFLAGS = -DNDEBUG $(common_flags)#options for not showing debug messages.
 hybrid_Lambda_dbg_CXXFLAGS = $(common_flags)
