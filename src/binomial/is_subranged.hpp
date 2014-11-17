@@ -14,8 +14,6 @@
 //#include "boost/limits.hpp"
 
 //#include "boost/mpl/int.hpp"
-#include "multiplies.hpp"
-#include "less.hpp"
 //#include "boost/mpl/equal_to.hpp"
 
 #include "is_same.hpp"
@@ -24,6 +22,8 @@
 #include "int_float_mixture.hpp"
 #include "sign_mixture.hpp"
 #include "udt_builtin_mixture.hpp"
+#include "multiplies.hpp"
+#include "less.hpp"
 
 namespace boost { namespace numeric { namespace convdetail
 {
