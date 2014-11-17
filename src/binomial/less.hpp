@@ -112,4 +112,11 @@ struct less_impl< integral_c_tag,integral_c_tag >
 
 }}
 
+//#undef AUX778076_OP_TAG_NAME
+//#undef AUX778076_OP_IMPL_NAME
+//#undef AUX778076_OP_ARITY
+//#undef AUX778076_OP_PREFIX
+//#undef AUX778076_OP_NAME
+//#undef AUX778076_OP_TOKEN
+
 #endif // BOOST_MPL_LESS_HPP_INCLUDED
