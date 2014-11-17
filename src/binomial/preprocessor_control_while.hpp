@@ -49,13 +49,13 @@
 # define BOOST_PP_WHILE_F(d, _) 0
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    include <boost/preprocessor/control/detail/edg/while.hpp>
+//#    include <boost/preprocessor/control/detail/edg/while.hpp>
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-#    include <boost/preprocessor/control/detail/msvc/while.hpp>
+//#    include <boost/preprocessor/control/detail/msvc/while.hpp>
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_DMC()
-#    include <boost/preprocessor/control/detail/dmc/while.hpp>
+//#    include <boost/preprocessor/control/detail/dmc/while.hpp>
 # else
-#    include <boost/preprocessor/control/detail/while.hpp>
+#    include "preprocessor_control_detail_while.hpp"
 # endif
 #
 # define BOOST_PP_WHILE_257(p, o, s) BOOST_PP_ERROR(0x0001)
