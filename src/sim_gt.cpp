@@ -431,14 +431,18 @@ void simTree::build_nc_X( size_t num_lineage ){
 
 //use heap structure for this!
 size_t simTree::update_nc (){	
-	for ( size_t kmerge = 0; kmerge < int(nc_X.size()); kmerge++ ){
+	size_t kmerge = 0;
+	for ( ; kmerge < int(nc_X.size()); kmerge++ ){
 		if ( this->nc_X[kmerge] == this->nc_X.min()){
 			//nc=kmerge+2;
-			return kmerge + 2;
-			//break;
+
+			break;
 		}
 	}
-    dout << "k merger was never found ... " << endl;
+	assert ( this->nc_X[kmerge] == this->nc_X.min() );
+	if ( this->nc_X[kmerge] != this->nc_X.min() )
+	    throw std::invalid_argument ( "k merger was never found ... " );
+	return kmerge + 2;
 }
 
 

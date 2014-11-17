@@ -88,8 +88,8 @@ class action_board {
     void set_sim_mut_unit()  { this->sim_mut_unit_bool  = true; }
     void set_sim_num_gener() { this->sim_num_gener_bool = true; }
     void set_sim_num_mut()   { this->sim_num_mut_bool   = true; }	
-    bool set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
-    bool set_mono() { this->mono_bool = true; } 
+    void set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
+    void set_mono() { this->mono_bool = true; } 
     bool mono()          const { return mono_bool; }  // \todo, make this private
     
     bool sim_mut_unit_bool;
