@@ -14,15 +14,15 @@
 // $Date: 2008-10-10 23:19:02 -0700 (Fri, 10 Oct 2008) $
 // $Revision: 49267 $
 
-#include <boost/mpl/void_fwd.hpp>
-#include <boost/mpl/aux_/na.hpp>
+#include "mpl_void_fwd.hpp"
+#include "mpl_na.hpp"
 //#include <boost/mpl/aux_/config/lambda.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 
-#   include <boost/mpl/int.hpp>
-#   include <boost/mpl/aux_/lambda_arity_param.hpp>
-#   include <boost/mpl/aux_/template_arity_fwd.hpp>
+#   include "mpl_int.hpp"
+#   include "mpl_lambda_arity_param.hpp"
+#   include "mpl_template_arity_fwd.hpp"
 
 namespace boost { namespace mpl {
 

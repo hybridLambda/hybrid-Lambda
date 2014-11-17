@@ -20,18 +20,18 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 //#   include <boost/mpl/aux_/arity.hpp>
-#   include <boost/mpl/aux_/has_apply.hpp>
+#   include "mpl_has_apply.hpp"
 //#   include <boost/mpl/aux_/na.hpp>
 //#   include <boost/mpl/aux_/msvc_never_true.hpp>
 #endif
 
-#include <boost/mpl/aux_/config/use_preprocessed.hpp>
+#include "mpl_use_preprocessed.hpp"
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
     && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER apply_wrap.hpp
-#   include <boost/mpl/aux_/include_preprocessed.hpp>
+#   include "include_preprocessed.hpp"
 
 #else
 
@@ -92,7 +92,7 @@ namespace boost { namespace mpl {
 #define AUX778076_MSVC_DTW_NAME BOOST_PP_CAT(msvc_apply,i_)
 #define AUX778076_MSVC_DTW_ORIGINAL_NAME apply
 #define AUX778076_MSVC_DTW_ARITY i_
-#include <boost/mpl/aux_/msvc_dtw.hpp>
+//#include <boost/mpl/aux_/msvc_dtw.hpp>
 
 template<
       typename F BOOST_PP_COMMA_IF(i_) AUX778076_APPLY_WRAP_PARAMS(i_, typename T)

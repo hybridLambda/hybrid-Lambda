@@ -14,14 +14,14 @@
 // $Date: 2008-10-10 23:19:02 -0700 (Fri, 10 Oct 2008) $
 // $Revision: 49267 $
 
-#include <boost/mpl/limits/arity.hpp>
+#include "mpl_limits_arity.hpp"
 //#include <boost/mpl/aux_/config/dtp.hpp>
-#include <boost/mpl/aux_/config/preprocessor.hpp>
+#include "mpl_preprocessor.hpp"
 
-#include <boost/preprocessor/comma_if.hpp>
-#include <boost/preprocessor/logical/and.hpp>
-#include <boost/preprocessor/identity.hpp>
-#include <boost/preprocessor/empty.hpp>
+//#include <boost/preprocessor/comma_if.hpp>
+//#include <boost/preprocessor/logical/and.hpp>
+#include "preprocessor_identity.hpp"
+#include "preprocessor_empty.hpp"
 
 // BOOST_MPL_PP_DEF_PARAMS_TAIL(1,T,value): , T1 = value, .., Tn = value
 // BOOST_MPL_PP_DEF_PARAMS_TAIL(2,T,value): , T2 = value, .., Tn = value

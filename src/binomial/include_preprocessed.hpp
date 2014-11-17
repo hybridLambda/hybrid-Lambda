@@ -13,11 +13,11 @@
 // $Date: 2008-10-10 23:19:02 -0700 (Fri, 10 Oct 2008) $
 // $Revision: 49267 $
 
-//#include <boost/mpl/aux_/config/compiler.hpp>
+#include "mpl_compiler.hpp"
 //#include <boost/mpl/aux_/config/preprocessor.hpp>
 //#include <boost/mpl/aux_/config/workaround.hpp>
 //#include <boost/preprocessor/cat.hpp>
-//#include <boost/preprocessor/stringize.hpp>
+#include "mpl_stringize.hpp"
 
 #if !defined(BOOST_NEEDS_TOKEN_PASTING_OP_FOR_TOKENS_JUXTAPOSING)
 #   define AUX778076_PREPROCESSED_HEADER \
