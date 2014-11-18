@@ -1,4 +1,4 @@
-AC_INIT([hybrid-Lambda],[beta-0.3],[joezhu@well.ox.ac.uk])
+AC_INIT([hybrid-Lambda],[beta-0.3],[sha.joe.zhu@gmail.com])
 #AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joezhu@well.ox.ac.uk])
 
 #dnl AC_CONFIG_SRCDIR([simu.c])
@@ -27,14 +27,12 @@ AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
-
-
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 
-AC_CHECK_FUNCS([floor])
-AC_CHECK_FUNCS([pow])
+#AC_CHECK_FUNCS([floor])
+#AC_CHECK_FUNCS([pow])
 AC_HEADER_STDBOOL
 
 AC_CONFIG_FILES([Makefile])

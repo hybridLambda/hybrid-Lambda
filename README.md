@@ -24,7 +24,7 @@ To install hybrid-Lambda, first install the following packages and libraries
 
 on Debian/Ubuntu based systems:
 ```bash
-apt-get install git-core build-essential autoconf autoconf-archive libcppunit-dev graphviz
+apt-get install git-core build-essential autoconf autoconf-archive libcppunit-dev graphviz curl
 ```
 on Mac OS:
 ```bash

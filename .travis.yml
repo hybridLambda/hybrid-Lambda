@@ -12,6 +12,7 @@ before_install:
 - sudo apt-get install -qq git-core libcppunit-dev graphviz
 #- git submodule update --init --recursive
 before_script:
+#- ./tests/checkbootstrap.sh
 - ./bootstrap
 os:
   - linux

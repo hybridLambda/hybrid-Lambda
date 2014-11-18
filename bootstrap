@@ -1,7 +1,49 @@
 #!/bin/bash
 
-# use git submodule to down load files
-git submodule update --init --recursive
+root_dir=$PWD
+if [ ! -d "${root_dir}/src" ]; then
+  "Error: please execute this script from hybrid-Lambda root directory"
+  exit 1
+fi
+
+echo -n "Preparing ..."
+
+# First check if this is downloaded from zip or a git clone
+if [ -f ${root_dir}/.git ]; then
+	# use git submodule to down load files
+	git submodule update --init --recursive
+else
+	echo -n "." # echo "ok not git clone, now check plot and figure" 
+
+	plot_dir=${root_dir}/src/plot
+	if [ -f ${plot_dir}/figure.cpp  -a -f ${plot_dir}/figure.hpp  -a -f ${plot_dir}/test_figure.cpp ];then
+		echo -n "." # echo "ok, do nothing" 
+	else
+		mkdir plot_tmp_dir
+		echo -n "." # echo "ok, do something" # 
+		#curl -LOk https://github.com/hybridLambda/plot/archive/master.zip
+		wget --no-check-certificate https://github.com/hybridLambda/plot/archive/master.tar.gz -o /dev/null
+		tar -xf master.tar.gz -C plot_tmp_dir
+		cp plot_tmp_dir/*/* src/plot/
+		rm -r plot_tmp_dir master.tar.gz
+	fi
+
+	freq_dir=${root_dir}/src/freq
+	if [ -f ${freq_dir}/figure.cpp  -a -f ${freq_dir}/figure.hpp  -a -f ${freq_dir}/test_figure.cpp ];then
+		echo -n "." # echo "ok, do nothing" 
+	else
+		mkdir freq_tmp_dir
+		echo -n "." # echo "ok, do something" # 
+		#curl -LOk https://github.com/hybridLambda/freq/archive/master.zip
+		wget --no-check-certificate https://github.com/hybridLambda/freq/archive/master.tar.gz -o /dev/null
+		tar -xf master.tar.gz -C freq_tmp_dir
+		cp freq_tmp_dir/*/* src/freq/
+		rm -r freq_tmp_dir master.tar.gz
+	fi
+
+fi # [-f ${root_dir}/.git]
+echo " done."
+
 aclocal
 autoconf
 automake -a
