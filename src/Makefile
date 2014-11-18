@@ -1,5 +1,5 @@
 COMPILER = g++
-VERSION = beta-0.3
+VERSION = $(shell cat ../version)
 FLAGS = -O3 -g -std=c++0x -DNDEBUG -DVERSION=\"${VERSION}\" -I../src/ 
 
 all: clean_all hybrid-Lambda 

@@ -1,4 +1,5 @@
-AC_INIT([hybrid-Lambda],[beta-0.3],[sha.joe.zhu@gmail.com])
+#AC_INIT([hybrid-Lambda],[beta-0.3],[sha.joe.zhu@gmail.com])
+AC_INIT([hybrid-Lambda],esyscmd([sh -c "cat version | tr -d '\n'"]),[sha.joe.zhu@gmail.com])
 #AC_INIT([hybrid-Lambda],esyscmd([sh -c "date \"+%Y%m%d\" | tr -d '\n'"]),[joezhu@well.ox.ac.uk])
 
 #dnl AC_CONFIG_SRCDIR([simu.c])
