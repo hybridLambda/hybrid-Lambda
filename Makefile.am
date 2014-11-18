@@ -19,16 +19,17 @@ shared_src = src/hybridLambda.cpp \
 				 src/sim_gt.cpp \
 				 src/freq/freq.cpp \
 				 src/mtrand.cpp \
-				 src/plot/figure.cpp  
+				 src/plot/figure.cpp \
+				 src/regular_math.cpp
 				 
 debug_SOURCES = src/debug/net_debug.cpp \
 			    src/debug/node_debug.cpp
 
-hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp src/regular_math.cpp
-hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp  src/regular_math.cpp
-hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp  src/regular_math.cpp
+hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp 
+hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp 
+hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp 
 
-unit_tests_SOURCES = $(shared_src) src/tests/test_hybridLambda.cpp src/plot/test_figure.cpp src/tests/test_runner.cpp  src/regular_math.cpp
+unit_tests_SOURCES = $(shared_src) tests/unittest/test_hybridLambda.cpp src/plot/test_figure.cpp tests/unittest/test_runner.cpp 
 
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x -I src/ 
 unit_tests_LDADD= -lcppunit -ldl

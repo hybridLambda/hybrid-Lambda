@@ -4,7 +4,8 @@ compiler:
 - clang
 script:
 - make hybrid-Lambda
-- make unit_tests
+- make check
+- tests/checkbinary.sh 
 - cd src
 - make
 before_install:
