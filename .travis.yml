@@ -10,7 +10,7 @@ script:
 - make
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq git-core libcppunit-dev graphviz
+- sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind
 #- git submodule update --init --recursive
 before_script:
 #- ./tests/checkbootstrap.sh
