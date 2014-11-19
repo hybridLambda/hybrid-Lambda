@@ -1,7 +1,7 @@
 #!/bin/bash
 function test_hybrid-Lambda {
   echo -n " hybrid-Lambda $@ "
-  for i in `seq 1 10`; do
+  for i in `seq 1 1`; do
     echo -n "."
 
     # Test using hybrid-Lambda self-checks
@@ -36,6 +36,7 @@ echo "Testing Examples"
 	test_hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch || exit 1
 	test_hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE -f || exit 1
 	test_hybrid-Lambda -gt GENE_coal_unit -f  || exit 1
+    test_hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -o GENE -num 100 -mu 0.00003 -sim_num_mut || exit 1
 	test_hybrid-Lambda -mt GENE_num_mut -seg  || exit 1
 	test_hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4 || exit 1
 echo ""

@@ -159,6 +159,7 @@ void HybridLambda::finalize(){
             this->read_input_lines( this->gt_file_name.c_str(), this->gt_tree_str_s);
         } else if ( this->mt_file_name.size() > 0 ) {
             this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
+            this->seg_dir_name = this->prefix + "seg_sites" ;  // Initialize segregating site data directory
         } else throw std::invalid_argument( "No input was provided!" );
     }
 }
@@ -394,6 +395,7 @@ bool HybridLambda::is_num(const char *inchar){
 /*! \brief remove old segregating sites data, and generate new ones */
 void HybridLambda::create_site_data_dir(){
     if ( !this->seg_bool ){ return; }
+    cout << this->seg_dir_name <<endl;
 	string rm_commond="rm -rf " + this->seg_dir_name;
 	int sys = system( rm_commond.c_str() );
 	string mkdir_commond="mkdir "+ this->seg_dir_name;
