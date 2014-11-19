@@ -26,6 +26,8 @@ test:
     - rm -r *
     - wget --no-check-certificate https://github.com/hybridLambda/hybrid-Lambda/archive/dev.tar.gz -o /dev/null
     - tar -xf dev.tar.gz -C .
+    - ls
+    - echo $PWD
     - ./bootstrap
     - make hybrid-Lambda
     - make check
