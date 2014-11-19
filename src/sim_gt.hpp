@@ -63,11 +63,14 @@ class SimulationParameters{
         this->num_gener_bool=false;
         this->sp_coal_unit_bool=false;
         this->total_num_lineage = 0;
+        this->my_Net = NULL;
+        this->my_pop_net = NULL;
+        this->my_para_net = NULL;
     };
     ~SimulationParameters(){
-        delete my_Net;
-        delete my_pop_net;
-        delete my_para_net;
+		if ( my_Net )	   delete my_Net;
+        if ( my_pop_net )  delete my_pop_net;
+        if ( my_para_net ) delete my_para_net;
         };
     string write_sp_string_in_coal_unit( string &sp_num_gener_string, string &pop_size_string );
     string rewrite_pop_string_by_para_string( string para_string,string pop_size_string );
