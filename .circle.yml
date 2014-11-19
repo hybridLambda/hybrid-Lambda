@@ -1,0 +1,22 @@
+## Customize checkout
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init # use submodules
+
+## Customize dependencies
+dependencies:
+  pre:
+    - apt-get update -qq
+    - apt-get install -qq git-core libcppunit-dev graphviz valgrind
+    
+test:    
+  override:
+    - ./bootstrap
+    - make hybrid-Lambda
+    - make check
+    - tests/checkbinary.sh 
+    - cd src
+    - make
+
+  
