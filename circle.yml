@@ -9,7 +9,7 @@ dependencies:
   pre:
     - sudo apt-get update -qq
   override:
-    - sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind
+    - sudo apt-get install -qq libcppunit-dev graphviz valgrind
     #g++ 4.6.3-1ubuntu5
 test:    
   override:
