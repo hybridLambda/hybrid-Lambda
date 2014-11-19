@@ -21,5 +21,13 @@ test:
     - tests/checkbinary.sh 
     - cd src
     - make
-
-  
+  post:
+    - rm -r *
+    - wget --no-check-certificate https://github.com/hybridLambda/plot/archive/dev.tar.gz -o /dev/null
+    - tar -xf master.tar.gz -C .
+    - ./bootstrap
+    - make hybrid-Lambda
+    - make check
+    - tests/checkbinary.sh 
+    - cd src
+    - make  
