@@ -26,7 +26,7 @@ function test_hybrid-Lambda {
 }
 
 echo "Testing Examples"
-	test_hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -print
+	#test_hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -print
 	test_hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1 || exit 1
 	test_hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut || exit 1
 	test_hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 100 -pop 25000 -sim_num_gener || exit 1
