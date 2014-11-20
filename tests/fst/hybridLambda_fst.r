@@ -44,5 +44,6 @@ for( i in 1:N ){
 #print (1 -  (Hw*n/(Hb*(n-1))) )
 }
 ##print( Fst )
+plot (ecdf(Fst), col="red") 
 return( c( mean( Fst[-1]), var( Fst[-1] ) ) )
 }
