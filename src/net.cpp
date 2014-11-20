@@ -591,13 +591,15 @@ size_t end_of_label_or_bl( string &in_str, size_t i ){
         //}
     //}
     //return j;
-    for ( size_t j = i; j < in_str.size(); j++){
-        if      ( in_str[j+1] == ',' )    return j;
-        else if ( in_str[j+1] == ')' )    return j;
-        else if ( in_str[j+1] == ':' )    return j;
-        else if ( in_str[j+1] == ';' )    return j;
+    size_t j = i;
+    for ( ; j < in_str.size(); j++){
+        if      ( in_str[j+1] == ',' )    break;
+        else if ( in_str[j+1] == ')' )    break;
+        else if ( in_str[j+1] == ':' )    break;
+        else if ( in_str[j+1] == ';' )    break;
         else continue;
     }
+    return j;
 }
 
     
