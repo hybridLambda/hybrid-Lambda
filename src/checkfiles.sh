@@ -24,7 +24,7 @@ else
 		exit 1
 	fi
 	tar -xf master.tar.gz -C plot_tmp_dir
-	cp plot_tmp_dir/*/* src/plot/
+	cp plot_tmp_dir/*/* plot/
 	rm -r plot_tmp_dir master.tar.gz
 fi
 
@@ -41,7 +41,7 @@ else
 		exit 1
 	fi
 	tar -xf master.tar.gz -C freq_tmp_dir
-	cp freq_tmp_dir/*/* src/freq/
+	cp freq_tmp_dir/*/* freq/
 	rm -r freq_tmp_dir master.tar.gz
 fi
 
