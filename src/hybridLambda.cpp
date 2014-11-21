@@ -603,5 +603,7 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
     //cout << "Hw = " << Hw <<endl;
     //cout << "Hb = " << Hb <<endl;
     //cout << "fst = " << 1.0 - (Hw/Hb) <<endl;
-    return ( 1 -  (Hw/Hb) ); 
+    double n = (double)sample_size[0];
+    return ( 1 -  (Hw*n/(Hb*(n-1)))  );
+    //return ( 1 -  (Hw/Hb) ); 
 }
