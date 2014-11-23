@@ -2,10 +2,10 @@
 
 fst_test () {
 	#echo ${prefix} > prefix
-	hybrid-Lambda -spcu "(A:1,B:1);" -seg -fst -S ${n_sample} ${n_sample} -num ${Nrep}  -seed ${seed}
+	./hybrid-Lambda -spcu "(A:1,B:1);" -seg -fst -S ${n_sample} ${n_sample} -num ${Nrep}  -seed ${seed}
 	
 	echo "rm(list = ls())
-	source(\"hybridLambda_fst.r\")
+	source(\"tests/fst/hybridLambda_fst.r\")
 	prefix = \"OUT\"
 	bjarki_fst = hybridLambdaFst( ${Nrep}, ${n_sample} ) 
 	fst = read.table(\"OUT_fst\")\$V1 
