@@ -45,7 +45,7 @@ for i in $(seq 1 9); do
 done
 
 for i in $(seq 1 9); do 
-	Nrep=10${i}00
+	Nrep=1${i}00
 	n_sample=3${i}
 	seed=${i}
 	fst_test || exit 1
