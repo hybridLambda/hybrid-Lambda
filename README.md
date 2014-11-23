@@ -17,7 +17,12 @@ strings to make it easier to represent hybridization events between species.
 
 ##INSTALLATION
 ### User only
-To install hybrid-Lambda, simply ```make``` within the direcotry ```src/```.
+To install hybrid-Lambda, simply ```make``` within the direcotry ```src/```:
+```bash
+cd src/
+./checkfiles.sh
+make
+```
 
 ### For developers
 To install hybrid-Lambda, first install the following packages and libraries
