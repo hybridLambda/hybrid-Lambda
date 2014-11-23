@@ -6,6 +6,7 @@ script:
 - make hybrid-Lambda
 - make check
 - tests/checkbinary.sh 
+- tests/fst/compute_fst.sh
 - cd src
 - make
 before_install:
