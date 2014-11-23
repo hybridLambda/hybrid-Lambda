@@ -32,7 +32,6 @@ int main(int argc, char *argv[]){
 
     try {
 	    HybridLambda run_hybridLambda ( argc, argv );
-        double Fst;
 
         run_hybridLambda.HybridLambda_core( );
         run_hybridLambda.create_site_data_dir(); // segregating site data were generated				

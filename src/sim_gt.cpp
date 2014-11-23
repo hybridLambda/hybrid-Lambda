@@ -149,7 +149,7 @@ void simTree::remove_unused_nodes(){
 void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages, 
                                     double remaining_length, double multi_merge_para, double pop_size, string node_label){
     size_t num_lineage = current_alive_lineages.size();
-    this->build_lambda_bk_mat( multi_merge_para , num_lineage );			                        
+    this->build_lambda_bk_mat( multi_merge_para , (double)num_lineage );			                        
     
     dout << num_lineage << " lineages entering population "<< node_label <<" with remaining branch length of " << remaining_length  <<endl;
 
@@ -300,46 +300,21 @@ void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double
 }
 
 
-void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
+void simTree::build_lambda_bk_mat( double para, double num_lineage ){
     lambda_bk_mat.clear();
     if ( para == 2.0 ) return;
     //cout << "para = " << para<<endl;
     assert( para <= 2 );
     assert( para > 0 );
     
-	for (size_t b_i = 2;b_i <= num_lineage; b_i++){
+	for ( double b_i = 2;b_i <= num_lineage; b_i++){
 		vector <double> lambda_bk_mat_b;
-		for (size_t k_i = 2; k_i <= b_i; k_i++){
+		for ( double k_i = 2; k_i <= b_i; k_i++){
             // replace this loop by the following
-            //double lambda_bk_mat_b_k = ( para < 1 ) ? 
-                                    //exp( log( boost::math::binomial_coefficient<double>( b_i, k_i) ) + log( pow( para, (double)k_i ) ) + log( pow ( 1 - para, (double)b_i - (double)k_i ) ) ) :
-                                    //exp( log(boost::math::binomial_coefficient<double>( b_i, k_i ) ) + log( Beta( (double)k_i - para, (double)b_i - (double)k_i+para ) ) - log( Beta( 2.0 - para, para ) ) );
+            double lambda_bk_mat_b_k = ( para < 1 ) ? 
+                                    exp ( log ( binomial_coefficient( b_i, k_i)) + log( pow( para, k_i) ) + log( pow( 1 - para, b_i - k_i ) ) ) :
+                                    exp( log( binomial_coefficient( b_i, k_i)) + log( Beta ( k_i - para, b_i-k_i + para) ) - log( Beta( 2.0 - para, para ) ) );
             
-			double lambda_bk_mat_b_k;
-			if ( para < 1 ){//0<psi<1
-				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*pow(para,k_i)*pow(1-para,b_i-k_i);//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
-                lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)));//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
-                //cout<<"normal calculation : "<<exp(log(n_choose_k(b_i,k_i)) + log(pow(para,k_i)) + log(pow(1-para,b_i-k_i)))<<endl;
-                //lambda_bk_mat_b_k = exp( log( boost::math::binomial_coefficient<double>( b_i, k_i) ) + log( pow( para, (double)k_i ) ) + log( pow ( 1 - para, (double)b_i - (double)k_i ) ) );//.2 is psi lambda_bk=\binom{b}{k}\psi^k (1-\psi)^{b-k}
-                //cout<<"boost calculation : "<<lambda_bk_mat_b_k<<endl;
-// DEBUG
-				//if (isnan(lambda_bk_mat_b_k)){
-					//throw std::domain_error("Function \"build_lambda_bk_mat\" returns NaN");
-					////dout<<"log(n_choose_k(b_i,k_i)) " <<log(n_choose_k(b_i,k_i))<<endl;
-					////dout<<"b="<<b_i<<"  k="<<k_i<<endl;
-					////dout<<"log(boost::math::binomial_coefficient(b_i,k_i)) " <<log(boost::math::binomial_coefficient<double>(unsigned(b_i),unsigned(k_i)))<<endl;
-					////dout<<"log(pow(para,k_i)) "<< log(pow(para,k_i))<<endl;
-					////dout<<"log(pow(1-para,b_i-k_i)) "<<log(pow(1-para,b_i-k_i))<<endl;
-				//}
-			}
-			else{//1<alpha<2
-				//lambda_bk_mat_b_k=n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para);// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-                //cout<<n_choose_k(b_i,k_i)*Beta(k_i-para,b_i-k_i+para)/Beta(2.0-para,para)<<endl;
-                lambda_bk_mat_b_k=exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)));// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-                //cout<<"normal calculation "<<exp(log(n_choose_k(b_i,k_i))+log(Beta(k_i-para,b_i-k_i+para)) - log(Beta(2.0-para,para)))<<endl;// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-                //lambda_bk_mat_b_k = exp( log(boost::math::binomial_coefficient<double>( b_i, k_i ) ) + log( Beta( (double)k_i - para, (double)b_i - (double)k_i+para ) ) - log( Beta( 2.0 - para, para ) ) );// \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
-				//cout<<"boost result "<<lambda_bk_mat_b_k<<endl;
-			}
 			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
 			}
 		lambda_bk_mat.push_back(lambda_bk_mat_b);
@@ -456,14 +431,18 @@ void simTree::build_nc_X( size_t num_lineage ){
 
 //use heap structure for this!
 size_t simTree::update_nc (){	
-	for ( size_t kmerge = 0; kmerge < int(nc_X.size()); kmerge++ ){
+	size_t kmerge = 0;
+	for ( ; kmerge < int(nc_X.size()); kmerge++ ){
 		if ( this->nc_X[kmerge] == this->nc_X.min()){
 			//nc=kmerge+2;
-			return kmerge + 2;
-			//break;
+
+			break;
 		}
 	}
-    dout << "k merger was never found ... " << endl;
+	assert ( this->nc_X[kmerge] == this->nc_X.min() );
+	if ( this->nc_X[kmerge] != this->nc_X.min() )
+	    throw std::invalid_argument ( "k merger was never found ... " );
+	return kmerge + 2;
 }
 
 

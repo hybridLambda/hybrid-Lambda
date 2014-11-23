@@ -1,7 +1,24 @@
 #!/bin/bash
 
-# use git submodule to down load files
-git submodule update --init --recursive
+root_dir=$PWD
+if [ ! -d "${root_dir}/src" ]; then
+  "Error: please execute this script from hybrid-Lambda root directory"
+  exit 1
+fi
+
+echo -n "Preparing ..."
+
+# First check if this is downloaded from zip or a git clone
+if [ -f ${root_dir}/.git ]; then
+	# use git submodule to down load files
+	git submodule update --init --recursive
+else
+	cd src/
+	./checkfiles.sh
+	cd ..
+fi # [-f ${root_dir}/.git]
+echo " done."
+
 aclocal
 autoconf
 automake -a

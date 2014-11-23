@@ -4,12 +4,17 @@ compiler:
 - clang
 script:
 - make hybrid-Lambda
-- make unit_tests
+- make check
+- tests/checkbinary.sh 
+- tests/fst/compute_fst.sh
+- cd src
+- make
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq git-core libcppunit-dev libboost-all-dev graphviz
+- sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core
 #- git submodule update --init --recursive
 before_script:
+#- ./tests/checkbootstrap.sh
 - ./bootstrap
 os:
   - linux

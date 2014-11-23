@@ -24,7 +24,6 @@
 /*! \file sim_gt.hpp
  * \brief Header file for sim_gt.cpp */
 
-//#include <boost/math/special_functions/binomial.hpp>
 #include <stdio.h>
 #include "net.hpp"
 #include "mtrand.h"
@@ -64,11 +63,14 @@ class SimulationParameters{
         this->num_gener_bool=false;
         this->sp_coal_unit_bool=false;
         this->total_num_lineage = 0;
+        this->my_Net = NULL;
+        this->my_pop_net = NULL;
+        this->my_para_net = NULL;
     };
     ~SimulationParameters(){
-        delete my_Net;
-        delete my_pop_net;
-        delete my_para_net;
+		if ( my_Net )	   delete my_Net;
+        if ( my_pop_net )  delete my_pop_net;
+        if ( my_para_net ) delete my_para_net;
         };
     string write_sp_string_in_coal_unit( string &sp_num_gener_string, string &pop_size_string );
     string rewrite_pop_string_by_para_string( string para_string,string pop_size_string );
@@ -89,8 +91,8 @@ class action_board {
     void set_sim_mut_unit()  { this->sim_mut_unit_bool  = true; }
     void set_sim_num_gener() { this->sim_num_gener_bool = true; }
     void set_sim_num_mut()   { this->sim_num_mut_bool   = true; }	
-    bool set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
-    bool set_mono() { this->mono_bool = true; } 
+    void set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
+    void set_mono() { this->mono_bool = true; } 
     bool mono()          const { return mono_bool; }  // \todo, make this private
     
     bool sim_mut_unit_bool;
@@ -162,7 +164,7 @@ class simTree : public Tree {
     
     vector < vector <double> > lambda_bk_mat;
     valarray <double> nc_X;
-    void build_lambda_bk_mat( double para, size_t num_lineage);
+    void build_lambda_bk_mat( double para, double num_lineage);
 
 
 
@@ -172,14 +174,6 @@ class simTree : public Tree {
     double update_coal_para( vector < vector <double> > &lambda_bk_mat, double num_lineage);
     void build_nc_X( size_t num_lineage );
     size_t update_nc();
-
-    /*! \brief Beta function, requires tgamma function from math.h \return double */
-    double Beta(double x,double y){
-        double Beta_return;
-    //	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
-        Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
-        return Beta_return;
-    }
     
     /*! \fn double unifRand()
      * \brief Simulate random variable between 0 and 1.
@@ -210,29 +204,21 @@ class simTree : public Tree {
         k--;//k=k-1;	
         return k;
     }
-    
-    /*! \brief Compute factorial of a \return double a! */
-    template < class T > T factorial ( T a ){
-        if (a > 1) return (a * factorial (a-1));
-        else       return (1);
-    }
-    
-    /*! \brief Compute a permutations of n \return double */
-    template < class T > T n_permu_a ( T n, T a ){
-        if   ( a > 1 ) return (n*n_permu_a(n-1,a-1));
-        else if (a==1) return (n);
-        else           return (1);
-    }
-    
-    /*! \brief Compute n choose k \return double */
-    template < class T > T n_choose_k ( T n, T k ){
-        if ( k < ( n/2 ) ) return (n_choose_k(n,n-k));
-        else               return (n_permu_a(n,k)/factorial(k));
-    }
 
 };
 
 string write_para_into_tree(string sp_string, double para);
 string construct_adding_new_Net_str(Net & old_Net);
+
+double binomial_coefficient( double n , double k);
+
+/*! \brief Beta function, requires tgamma function from math.h \return double */
+inline double Beta(double x,double y){
+	double Beta_return;
+//	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
+    Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
+	return Beta_return;
+}
+
 
 #endif

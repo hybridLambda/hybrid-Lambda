@@ -9,15 +9,33 @@ other Lambda coalescent processes, which produce multifurcating genealo-
 gies. The other feature is that hybrid sim uses extended Newick formatted
 strings to make it easier to represent hybridization events between species.
 
-[![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=master)](https://travis-ci.org/hybridLambda/hybrid-Lambda)
-
+[![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)](https://travis-ci.org/hybridLambda/hybrid-Lambda)
+[![Build Status](https://circleci.com/gh/hybridLambda/hybrid-Lambda/tree/dev.png?circle-token=:hybridLambda)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
 
 ##DOCUMENTATION
 [Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
 
 ##INSTALLATION
-To install hybrid-Lambda, simply `make` within direcotry `src/`.
+### User only
+To install hybrid-Lambda, simply ```make``` within the direcotry ```src/```.
 
+### For developers
+To install hybrid-Lambda, first install the following packages and libraries
+
+on Debian/Ubuntu based systems:
+```bash
+apt-get install git-core build-essential autoconf autoconf-archive libcppunit-dev graphviz 
+```
+on Mac OS:
+```bash
+port install git cppunit automake autoconf autoconf-archive graphviz
+```
+
+then type the following commands:
+```bash
+./bootstrap
+make
+```
 
 ##ASSUMPTION
 Input network files are written in extended newick format.
