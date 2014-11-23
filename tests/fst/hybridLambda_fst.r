@@ -2,7 +2,7 @@ hybridLambdaFst <- function(N, n)  {
 ## N is number of files
 ## n is sample size per population
 ## assuming two populations same sample size
-Fst <- c()
+Fst <- 0
 #prefix=scan("prefix",what="");
 for( i in 1:N ){
   skra <- matrix( scan( paste( c( prefix, "seg_sites/site", i), collapse=""), what=c("",""), quiet=TRUE), 2*n, 2, byrow=T )

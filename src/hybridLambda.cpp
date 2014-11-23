@@ -555,9 +555,10 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
     //assert ( sample_size.size() == 2 );
     // at least one mutation in the tree
     // computing within differences
-    double Hw = 0, Hb = 0;
+    double Gw = 0, Gb = 0;
     // first add to Hw for population A
     size_t pop_shift = 0;
+
     for ( size_t pop = 0; pop < sample_size.size(); pop++){
         size_t sample_size_tmp = sample_size[pop];
         double Hw_tmp = 0;
@@ -571,7 +572,7 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
             }
         }
         //cout << "Differnce in population " <<pop<<" "<< Hw_tmp<<endl;
-        Hw += Hw_tmp ;
+        Gw += Hw_tmp / ( sample_size_tmp * ( sample_size_tmp - 1) ) ;
         pop_shift += sample_size_tmp;
     }
 
@@ -590,7 +591,7 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
                 for( size_t sample_j = 0 ; sample_j < sample_size_pop_j; sample_j++ ){
                     Npairs++;
                     for ( size_t base = 0; base < sites.size(); base++ ){
-                        Hb += abs( sites[base][sample_i+pop_i_shift] - sites[base][sample_j+pop_j_shift] ) ;
+                        Gb += abs( sites[base][sample_i+pop_i_shift] - sites[base][sample_j+pop_j_shift] ) ;
                     }
                 }
         
@@ -599,11 +600,15 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
         pop_i_shift += sample_size_pop_i;
         pop_j_shift += sample_size[pop_i + 1];
     }
-    
+    double size_prod = 1;
+    for ( size_t pop = 0; pop < sample_size.size(); pop++ ){
+		size_prod *= sample_size[pop];
+		}
+    Gb /= size_prod;
     //cout << "Hw = " << Hw <<endl;
     //cout << "Hb = " << Hb <<endl;
     //cout << "fst = " << 1.0 - (Hw/Hb) <<endl;
-    double n = (double)sample_size[0];
-    return ( 1 -  (Hw*n/(Hb*(n-1)))  );
-    //return ( 1 -  (Hw/Hb) ); 
+
+    //return ( 1 -  (Hw*n/(Hb*(n-1)))  );
+    return ( 1 -  (Gw / Gb) ); 
 }
