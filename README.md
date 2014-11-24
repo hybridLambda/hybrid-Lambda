@@ -9,8 +9,12 @@ other Lambda coalescent processes, which produce multifurcating genealo-
 gies. The other feature is that hybrid sim uses extended Newick formatted
 strings to make it easier to represent hybridization events between species.
 
-[![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)](https://travis-ci.org/hybridLambda/hybrid-Lambda)
-[![Build Status](https://circleci.com/gh/hybridLambda/hybrid-Lambda/tree/dev.png?circle-token=:hybridLambda)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
+
+Version             | Branch  | Travis CI Build Status                                                                                                                   | Circle CI Build Status 
+------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |--------------------------
+Stable Version      | release | [![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=release)](https://travis-ci.org/hybridLambda/hybrid-Lambda) | [![Build Status](https://circleci.com/gh/hybridLambda/hybrid-Lambda/tree/release.png?circle-token=:hybridLambda)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
+Development Version | dev     | [![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)](https://travis-ci.org/hybridLambda/hybrid-Lambda)     | [![Build Status](https://circleci.com/gh/hybridLambda/hybrid-Lambda/tree/dev.png?circle-token=:hybridLambda)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
+
 
 ##DOCUMENTATION
 [Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
