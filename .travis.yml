@@ -15,9 +15,6 @@ before_install:
   #- gem update --system
   #- gem --version
 before_script:
-  - travis_retry bundle
-  - if [ $TRAVIS_OS_NAME == linux ]; then travis_retry ./configure --llvm-config llvm-config-3.4; fi
-  - if [ $TRAVIS_OS_NAME == osx ]; then travis_retry ./configure --llvm-config /usr/local/opt/llvm/bin/llvm-config; fi
   - ./bootstrap
 
 script:
