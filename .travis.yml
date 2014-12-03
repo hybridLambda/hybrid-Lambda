@@ -1,3 +1,8 @@
+os:
+  - linux
+  - osx
+osx_image: xcode61
+
 language: cpp
 compiler:
   - gcc
@@ -24,7 +29,3 @@ script:
 - cd src
 - make
 
-os:
-  - linux
-  - osx
-osx_image: xcode61
