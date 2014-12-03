@@ -21,7 +21,7 @@ Development Version | dev     | [![Build Status](https://travis-ci.org/hybridLam
 
 ##INSTALLATION
 ### User only
-To install hybrid-Lambda, simply ```make``` within the direcotry ```src/```:
+To install hybrid-Lambda, simply type ```make``` within the directory ```src/```:
 ```bash
 cd src/
 ./checkfiles.sh
