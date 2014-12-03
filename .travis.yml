@@ -1,20 +1,10 @@
 language: cpp
-os:
-- linux
-- osx
-#env:
-  #matrix:
-    #linux:
-      #- var1=val1
-      #- var2=val2
-    #osx:
-      #- var3=val3
-      #- var4=val4
+
 compiler:
 - gcc
 - clang
 
-matrix:
+before_install:
   -os: linux
       - sudo apt-get update -qq
       - sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core
@@ -33,3 +23,7 @@ script:
 - cd src
 - make
 
+os:
+- linux
+- osx
+osx_image: xcode61
