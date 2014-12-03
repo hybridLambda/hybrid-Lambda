@@ -1,7 +1,28 @@
 language: cpp
+os:
+- linux
+- osx
+#env:
+  #matrix:
+    #linux:
+      #- var1=val1
+      #- var2=val2
+    #osx:
+      #- var3=val3
+      #- var4=val4
 compiler:
 - gcc
 - clang
+before_install:
+  matrix:
+    linux:
+      - sudo apt-get update -qq
+      - sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core
+#- git submodule update --init --recursive
+    osx:
+      - sudo brew install cppunit graphviz valgrind r-base-core
+before_script:
+- ./bootstrap
 script:
 - make hybrid-Lambda
 - make check
@@ -9,13 +30,4 @@ script:
 - tests/fst/compute_fst.sh
 - cd src
 - make
-before_install:
-- sudo apt-get update -qq
-- sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core
-#- git submodule update --init --recursive
-before_script:
-#- ./tests/checkbootstrap.sh
-- ./bootstrap
-os:
-  - linux
-  - osx
+
