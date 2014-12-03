@@ -1,19 +1,20 @@
 language: cpp
-
 compiler:
-- gcc
-- clang
-
+  - gcc
+  - clang
 before_install:
-  -os: linux
-      - sudo apt-get update -qq
-      - sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core
-#- git submodule update --init --recursive
-  -os: osx
-      - sudo brew install cppunit graphviz valgrind r-base-core
-      
+  - echo $LANG
+  - echo $LC_ALL
+  - if [ $TRAVIS_OS_NAME == linux ]; then       - sudo apt-get update -qq; sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install llvm cppunit graphviz valgrind r-base-core && brew link --force llvm; fi
+  #- rvm use $RVM --install --binary --fuzzy
+  #- gem update --system
+  #- gem --version
 before_script:
-- ./bootstrap
+  - travis_retry bundle
+  - if [ $TRAVIS_OS_NAME == linux ]; then travis_retry ./configure --llvm-config llvm-config-3.4; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then travis_retry ./configure --llvm-config /usr/local/opt/llvm/bin/llvm-config; fi
+  - ./bootstrap
 
 script:
 - make hybrid-Lambda
