@@ -15,7 +15,6 @@ compiler:
 - clang
 
 matrix:
-  exclude:
   -os: linux
       - sudo apt-get update -qq
       - sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core
