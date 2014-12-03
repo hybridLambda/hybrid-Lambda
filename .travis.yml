@@ -25,5 +25,6 @@ script:
 - make
 
 os:
-- osx
+  - linux
+  - osx
 osx_image: xcode61
