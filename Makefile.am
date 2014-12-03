@@ -1,7 +1,7 @@
-EXTRA_DIST = trees/*tax* bootstrap example/eg* src/Makefile
+EXTRA_DIST = trees/*tax* bootstrap example/eg* src/Makefile version src/boost
+
 #DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
-
 
 bin_PROGRAMS = hybrid-Lambda 
 PROG = HYBRID-LAMBDA
@@ -34,11 +34,5 @@ unit_tests_SOURCES = $(shared_src) tests/unittest/test_hybridLambda.cpp src/plot
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x -I src/ 
 unit_tests_LDADD= -lcppunit -ldl
 
-include_HEADERS = src/sim_gt.hpp src/plot/figure.hpp src/freq/freq.hpp src/mtrand.h src/hybridLambda.hpp src/node.hpp src/net.hpp \
-				  src/boost/math/special_functions/binomial.hpp \
-src/boost/math/special_functions/factorials.hpp \
-src/boost/math/special_functions/beta.hpp \
-src/boost/math/policies/error_handling.hpp \
-src/boost/config/no_tr1/utility.hpp \
-src/boost/math/tools/user.hpp \
-src/boost/detail/fenv.hpp 
+include_HEADERS = src/sim_gt.hpp src/plot/figure.hpp src/freq/freq.hpp src/mtrand.h src/hybridLambda.hpp src/node.hpp src/net.hpp 
+

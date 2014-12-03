@@ -4,8 +4,9 @@ AC_INIT([hybrid-Lambda],esyscmd([sh -c "cat version | tr -d '\n'"]),[sha.joe.zhu
 
 #dnl AC_CONFIG_SRCDIR([simu.c])
 #AC_CONFIG_HEADER([config.h])
-
-AM_INIT_AUTOMAKE([subdir-objects])
+# tar-ustar: make dist can include files with long names
+AM_INIT_AUTOMAKE([1.9 tar-ustar subdir-objects]) 
+#AM_INIT_AUTOMAKE([subdir-objects])
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
 AM_SILENT_RULES([yes])
 
