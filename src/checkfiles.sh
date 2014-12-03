@@ -17,8 +17,16 @@ if [ -f ${plot_dir}/figure.cpp  -a -f ${plot_dir}/figure.hpp  -a -f ${plot_dir}/
 else
 	mkdir plot_tmp_dir
 	echo -n "." # echo "ok, do something" # 
-	#curl -LOk https://github.com/hybridLambda/plot/archive/master.zip
-	wget --no-check-certificate https://github.com/hybridLambda/plot/archive/master.tar.gz -o /dev/null
+
+	if [[ "$OSTYPE" == "linux" ]]; then
+		wget --no-check-certificate https://github.com/hybridLambda/plot/archive/master.tar.gz -o /dev/null
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+		curl -LOk https://github.com/hybridLambda/plot/archive/master.zip
+	else
+		echo "Unknown OS, fail to download package from https://github.com/hybridLambda/plot/archive/master.tar.gz" 
+		exit 1
+	fi
+
 	if [ ! -f master.tar.gz ]; then
 		echo "Error: Download package from https://github.com/hybridLambda/plot/archive/master.tar.gz failed"
 		exit 1
@@ -34,8 +42,16 @@ if [ -f ${freq_dir}/freq.cpp  -a -f ${freq_dir}/freq.hpp  -a -f ${freq_dir}/freq
 else
 	mkdir freq_tmp_dir
 	echo -n "." # echo "ok, do something" # 
-	#curl -LOk https://github.com/hybridLambda/freq/archive/master.zip
-	wget --no-check-certificate https://github.com/hybridLambda/freq/archive/master.tar.gz -o /dev/null
+
+	if [[ "$OSTYPE" == "linux" ]]; then
+		wget --no-check-certificate https://github.com/hybridLambda/freq/archive/master.tar.gz -o /dev/null
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+		curl -LOk https://github.com/hybridLambda/freq/archive/master.zip
+	else
+		echo "Unknown OS, fail to download package from https://github.com/hybridLambda/freq/archive/master.tar.gz" 
+		exit 1
+	fi
+	
 	if [ ! -f master.tar.gz ]; then
 		echo "Error: Download package from https://github.com/hybridLambda/freq/archive/master.tar.gz failed"
 		exit 1
@@ -45,3 +61,20 @@ else
 	rm -r freq_tmp_dir master.tar.gz
 fi
 
+
+
+#if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        ## ...
+#elif [[ "$OSTYPE" == "darwin"* ]]; then
+        ## Mac OSX
+#elif [[ "$OSTYPE" == "cygwin" ]]; then
+        ## POSIX compatibility layer and Linux environment emulation for Windows
+#elif [[ "$OSTYPE" == "msys" ]]; then
+        ## Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+#elif [[ "$OSTYPE" == "win32" ]]; then
+        ## I'm not sure this can happen.
+#elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        ## ...
+#else
+        ## Unknown.
+#fi

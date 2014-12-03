@@ -31,5 +31,4 @@ test:
     - make check
     - tests/checkbinary.sh 
     - tests/fst/compute_fst.sh
-    - cd src
-    - make  
+    - cd src; make
