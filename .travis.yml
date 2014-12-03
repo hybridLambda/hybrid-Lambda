@@ -10,23 +10,23 @@ before_install:
   - echo $LANG
   - echo $LC_ALL
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq; sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core; fi
-  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew tap homebrew/science && brew install llvm cppunit graphviz valgrind gcc r && brew link --force llvm; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew tap homebrew/science && brew install llvm cppunit graphviz valgrind && brew link --force llvm; fi
 before_script:
   - ./bootstrap
 
 script:
-- make hybrid-Lambda
-- make check
-- tests/checkbinary.sh 
-- tests/fst/compute_fst.sh
-- cd src; make
-- rm -r *
-- wget --no-check-certificate https://github.com/hybridLambda/hybrid-Lambda/archive/dev.tar.gz -o /dev/null
-- tar -xf dev.tar.gz
-- mv hybrid-Lambda-dev/* .
-- ./bootstrap
-- make hybrid-Lambda
-- make check
-- tests/checkbinary.sh 
-- tests/fst/compute_fst.sh
-- cd src; make  
+  - make hybrid-Lambda
+  - make check
+  - tests/checkbinary.sh 
+  - if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst.sh; fi
+  - cd src; make
+  - rm -r *
+  - wget --no-check-certificate https://github.com/hybridLambda/hybrid-Lambda/archive/dev.tar.gz -o /dev/null
+  - tar -xf dev.tar.gz
+  - mv hybrid-Lambda-dev/* .
+  - ./bootstrap
+  - make hybrid-Lambda
+  - make check
+  - tests/checkbinary.sh 
+  - if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst.sh; fi
+  - cd src; make  
