@@ -9,11 +9,8 @@ compiler:
 before_install:
   - echo $LANG
   - echo $LC_ALL
-  - if [ $TRAVIS_OS_NAME == linux ]; then       - sudo apt-get update -qq; sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq; sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install llvm cppunit graphviz valgrind r-base-core && brew link --force llvm; fi
-  #- rvm use $RVM --install --binary --fuzzy
-  #- gem update --system
-  #- gem --version
 before_script:
   - ./bootstrap
 
