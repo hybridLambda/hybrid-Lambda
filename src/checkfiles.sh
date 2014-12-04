@@ -24,7 +24,7 @@ extract_tmp(){
 	if [[ "${OS}" == "Linux" ]]; then
 		wget --no-check-certificate https://github.com/hybridLambda/${tmp}/archive/${VERSION}.tar.gz -o /dev/null
 	elif [[ "${OS}" == "Darwin"* ]]; then
-		curl -LOk https://github.com/hybridLambda/${tmp}/archive/${VERSION}.zip
+		curl -LOk https://github.com/hybridLambda/${tmp}/archive/${VERSION}.tar.gz
 	else
 		echo "Unknown OS, fail to download package from https://github.com/hybridLambda/${tmp}/archive/${VERSION}.tar.gz" 
 		exit 1
