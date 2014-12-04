@@ -9,6 +9,10 @@ if [ ! -f "${src_dir}/main.cpp" ]; then
   exit 1
 fi
 
+OS=`uname -s`
+
+echo "operating system is ${OS}"
+
 echo -n "." # echo "ok not git clone, now check plot and figure" 
 #rm master.tar.gz  # just making sure download the one we actually want to 
 plot_dir=${src_dir}/plot
@@ -18,9 +22,9 @@ else
 	mkdir plot_tmp_dir
 	echo -n "." # echo "ok, do something" # 
 
-	if [[ "$OSTYPE" == "linux" ]]; then
+	if [[ "${OS}" == "Linux" ]]; then
 		wget --no-check-certificate https://github.com/hybridLambda/plot/archive/master.tar.gz -o /dev/null
-	elif [[ "$OSTYPE" == "darwin"* ]]; then
+	elif [[ "${OS}" == "darwin"* ]]; then
 		curl -LOk https://github.com/hybridLambda/plot/archive/master.zip
 	else
 		echo "Unknown OS, fail to download package from https://github.com/hybridLambda/plot/archive/master.tar.gz" 
@@ -43,9 +47,9 @@ else
 	mkdir freq_tmp_dir
 	echo -n "." # echo "ok, do something" # 
 
-	if [[ "$OSTYPE" == "linux" ]]; then
+	if [[ "${OS}" == "Linux" ]]; then
 		wget --no-check-certificate https://github.com/hybridLambda/freq/archive/master.tar.gz -o /dev/null
-	elif [[ "$OSTYPE" == "darwin"* ]]; then
+	elif [[ "${OS}" == "darwin"* ]]; then
 		curl -LOk https://github.com/hybridLambda/freq/archive/master.zip
 	else
 		echo "Unknown OS, fail to download package from https://github.com/hybridLambda/freq/archive/master.tar.gz" 
