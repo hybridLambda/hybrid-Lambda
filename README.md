@@ -24,7 +24,6 @@ Development Version | dev     | [![Build Status](https://travis-ci.org/hybridLam
 To install hybrid-Lambda, simply type ```make``` within the directory ```src/```:
 ```bash
 cd src/
-./checkfiles.sh
 make
 ```
 
@@ -62,8 +61,8 @@ Program parameters and options:
 Options                  | Useage |
 :------------------------:| ------------------------------- |
 -h or -help          | Help. List the following content. |
--spcu STR          | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in <b>c</b>oalescent <b>u</b>nit. |
--spng STR          | Input the species network/tree string through command line or a file. Branch lengths of the INPUT are in <b>n</b>umber of <b>g</b>eneration. |
+-spcu STR          | Input the <b>sp</b>ecies network/tree string through command line or a file. Branch lengths of the INPUT are in <b>c</b>oalescent <b>u</b>nit. |
+-spng STR          | Input the <b>sp</b>ecies network/tree string through command line or a file. Branch lengths of the INPUT are in <b>n</b>umber of <b>g</b>eneration. |
 -pop STR/FLT           | Population sizes are defined by a single numerical constant, or a string which specifies the population size on each branch. The string can be input through command line or a file. By **default**, population size 10,000 is used.|
 -mm STR/FLT            | Multiple merger parameters are defined by a single numerical constant, or a string which speifies the parameter on each branch. The string can be input through command line or a file. By **default**, Kingman coalescent is used.|
 -S INT INT ...         | Specify the number of samples for each taxon.|
