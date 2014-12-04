@@ -18,7 +18,7 @@ echo -n "." # echo "ok not git clone, now check plot and figure"
 #rm master.tar.gz  # just making sure download the one we actually want to 
 
 extract_tmp(){
-	mkdir ${tmp}_dir
+	if [ ! -d ${tmp}_dir ]; then mkdir ${tmp}_dir; fi
 	echo -n "." # echo "ok, do something" # 
 
 	if [[ "${OS}" == "Linux" ]]; then
@@ -27,15 +27,17 @@ extract_tmp(){
 		curl -LOk https://github.com/hybridLambda/${tmp}/archive/${VERSION}.tar.gz
 	else
 		echo "Unknown OS, fail to download package from https://github.com/hybridLambda/${tmp}/archive/${VERSION}.tar.gz" 
+		echo "Please contact Joe at sha.joe.zhu@gmail.com if assistance is needed"
 		exit 1
 	fi
 
 	if [ ! -f ${VERSION}.tar.gz ]; then
 		echo "Error: Download package from https://github.com/hybridLambda/${tmp}/archive/${VERSION}.tar.gz failed"
+		echo "Please contact Joe at sha.joe.zhu@gmail.com if assistance is needed"
 		exit 1
 	fi
 	tar -xf ${VERSION}.tar.gz -C ${tmp}_dir
-	mkdir ${tmp}
+	if [ ! -d ${tmp} ]; then mkdir ${tmp}; fi
 	cp ${tmp}_dir/*/* ${tmp}/
 	rm -r ${tmp}_dir ${VERSION}.tar.gz	
 }

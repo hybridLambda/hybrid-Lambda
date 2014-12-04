@@ -1,4 +1,4 @@
-EXTRA_DIST = trees/*tax* bootstrap example/eg* src/Makefile version src/boost
+EXTRA_DIST = trees/*tax* bootstrap example/eg* src/Makefile version src/boost src/checkfiles.sh
 
 #DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
