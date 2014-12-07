@@ -5,6 +5,7 @@
 
 #ifndef BOOST_MATH_SPECIAL_FUNCTIONS_LANCZOS_SSE2
 #define BOOST_MATH_SPECIAL_FUNCTIONS_LANCZOS_SSE2
+#pragma clang diagnostic ignored "-Wdeprecated-register"
 
 #ifdef _MSC_VER
 #pragma once
