@@ -17,7 +17,8 @@ before_script:
 script:
   - make hybrid-Lambda
   - make check
-  - if [ $TRAVIS_OS_NAME == linux ]; then tests/checkbinary.sh ; fi
+#  - if [ $TRAVIS_OS_NAME == linux ]; then tests/checkbinary.sh ; fi
+  - tests/checkbinary.sh
   - if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst.sh; fi
   - cd src; make
   - rm -r *
