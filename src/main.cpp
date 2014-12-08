@@ -28,7 +28,10 @@
 
 int main(int argc, char *argv[]){
 
-	if ( argc == 1 ) print_help(); 	//else, proceed
+	//if ( argc == 1 ) {
+        //print_help(); 	//else, proceed
+        //return EXIT_SUCCESS;
+    //}
 
     try {
 	    HybridLambda run_hybridLambda ( argc, argv );

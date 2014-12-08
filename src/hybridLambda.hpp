@@ -29,14 +29,14 @@
 #define HYBRDRIDLAMBDA_PARAM_INCLUDED
 using namespace std;
 
-void print_example();
-void print_help();
-void print_option();
 
 class HybridLambda{
     public:	
         /*! Constructors and Destructors */  
-        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { this->init(); this->parse(); }        
+        HybridLambda(int argc, char *argv[]) : argc_(argc), argv_(argv) { 
+            this->init(); 
+            this->parse(); 
+        }
         ~HybridLambda();
         
         // ACTION
@@ -57,6 +57,7 @@ class HybridLambda{
         string tmp_input_str;
 
         int num_sim_gt;
+        bool print_help_bool;
         bool print_tree_bool;
         bool plot_bool;
         bool simulation_bool;
@@ -118,11 +119,23 @@ class HybridLambda{
         
             char c;
             T input;
-            std::stringstream ss(argv_[argc_i]);
+            std::stringstream ss( argv_[argc_i] );
             ss >> input;
             if (ss.fail() || ss.get(c)) throw std::invalid_argument( std::string( "Failed to parse option: ") + argv_[argc_i]); 
             return input;
         }
+                /*! \brief hybrid-Lambda help file*/
+        void print_help(){
+            print_option();
+            print_example();
+            return;
+            //exit (EXIT_SUCCESS);
+        }
+        
+        void print_example();
+        //void print_help();
+        void print_option();
+        
 };
 
 /*!

@@ -39,6 +39,7 @@ void HybridLambda::init(){
     this->tmrca_bool      = false;
     this->bl_bool         = false;
     this->firstcoal_bool  = false;
+    this->print_help_bool = false;
     this->argc_i = 1;
     
     this->gt_file_name = "";
@@ -76,9 +77,11 @@ void HybridLambda::extract_mm_or_pop_param( string & mm_pop_string ){
 
 
 void HybridLambda::parse(){
+    if ( argc_ == 1 ){ this->print_help_bool = true; }
+    
     while (argc_i < argc_){	
         std::string argv_i(argv_[argc_i]);
-        if ( argv_i == "-h" || argv_i == "-help" ){ print_help(); }
+        if ( argv_i == "-h" || argv_i == "-help" ){ this->print_help_bool = true; }
         else if ( argv_i =="-gt" ){ readNextStringto( this->gt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
         /*! read number of mutations site and simulate segregating sites*/
         else if ( argv_i =="-mt" ){ readNextStringto( this->mt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
@@ -88,7 +91,8 @@ void HybridLambda::parse(){
         else if ( argv_i =="-mm" ){ this->parameters_->mm_bool = true; this->extract_mm_or_pop_param( this->parameters_->para_string ) ; }
         else if ( argv_i =="-pop" ){ this->parameters_->pop_bool = true; this->extract_mm_or_pop_param( this->parameters_->sp_string_pop_size ) ; }        
         else if ( argv_i =="-S" ){ this->read_sample_sizes();	}
-        else if ( argv_i =="-mu"){ this->parameters_->mutation_rate = this->readNextInput<double>(); }	
+        //else if ( argv_i =="-mu"){ this->parameters_->mutation_rate = this->readNextInput<double>(); }	
+        else if ( argv_i =="-mu"){ ++argc_i; this->parameters_->mutation_rate = strtod(argv_[argc_i], NULL); }	
         else if ( argv_i =="-o" ) readNextStringto( this->prefix , this->argc_i, this->argc_,  this->argv_ );
         else if ( argv_i == "-sim_mut_unit"  ){ this->simulation_jobs_->set_sim_mut_unit(); }
         else if ( argv_i == "-sim_num_gener" ){ this->simulation_jobs_->set_sim_num_gener();}
@@ -130,6 +134,10 @@ void HybridLambda::read_sample_sizes(){
 
 
 void HybridLambda::finalize(){
+    if ( this->print_help_bool ){ 
+        this->print_help();
+        return; 
+    }
     
     if ( this->simulation_bool ) {
         if ( this->fst_bool ){
@@ -160,7 +168,11 @@ void HybridLambda::finalize(){
         } else if ( this->mt_file_name.size() > 0 ) {
             this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
             this->seg_dir_name = this->prefix + "seg_sites" ;  // Initialize segregating site data directory
-        } else throw std::invalid_argument( "No input was provided!" );
+        } else {
+            delete simulation_jobs_; 
+            delete parameters_; 
+            throw std::invalid_argument( "No input was provided!" );
+        }
     }
 }
 
@@ -254,6 +266,7 @@ void HybridLambda::extract_mono() {
 
 /*! \brief  sim_n_gt constructor */
 void HybridLambda::HybridLambda_core( ){
+    
     if ( !simulation_bool ){ return; }
     //srand(seed);	// initialize gnu seed
     MTRand_closed mt;
@@ -436,7 +449,7 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
     //cout << "fst: " << compute_fst ( this->haplotypes, parameters()->sample_size ) << endl;
 }
 
-void print_example(){
+void HybridLambda::print_example(){
     cout << "Examples:" 
          << endl 
          << endl;
@@ -454,7 +467,7 @@ void print_example(){
     cout << endl;
 }
 
-void print_option(){
+void HybridLambda::print_option(){
     cout << endl 
          << "hybrid-Lambda " << VERSION 
          << endl 
@@ -498,12 +511,6 @@ void print_option(){
     cout << endl;	
 }
 
-/*! \brief hybrid-Lambda help file*/
-void print_help(){
-    print_option();
-    print_example();
-    exit (EXIT_SUCCESS);
-}
 
 
 /*!

@@ -35,6 +35,7 @@ class SimulationParameters{
     friend class HybridLambda;
     friend class simTree;
     
+    void set_mutation_rate ( double rate ) { this->mutation_rate = rate; }
     double mutation_rate;
     bool mm_bool;
     bool pop_bool;
