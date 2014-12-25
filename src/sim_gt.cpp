@@ -67,13 +67,8 @@ void SimulationParameters::finalize(){
 	my_para_net = new Net (para_string);
 }
 
-
-simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
-    this->init();
-	dout<<"	Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
-    this->Si_table_ = &Si_table;
-    
-	sim_num_gener_bool_ = this->simulation_jobs_->sim_num_gener_bool;	
+void simTree::core (){
+    sim_num_gener_bool_ = this->simulation_jobs_->sim_num_gener_bool;
     if ( this->simulation_jobs_->sim_mut_unit_bool ||  this->simulation_jobs_->sim_num_mut_bool) sim_num_gener_bool_ = true;
 	    
 	this->initialize_remaining_sp_node ( this->parameters_->my_Net );
@@ -132,6 +127,21 @@ simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_job
 	}
 
     this->finalize( this->parameters_->my_Net->tax_name.size() );
+}
+
+
+simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs ): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
+    this->init();
+    dout<<"	Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
+    this->core();
+}
+
+
+simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
+    this->init();
+    dout<<"	Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
+    this->Si_table_ = &Si_table;
+    this->core();
 }
 
 void simTree::remove_unused_nodes(){

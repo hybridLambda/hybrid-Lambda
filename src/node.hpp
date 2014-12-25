@@ -30,14 +30,14 @@
 
 using namespace std;
 
-//Unless compiled with options NDEBUG, we will produce a debug output using 
-//'dout' instead of cout and execute (expensive) assert statements.
-#ifndef NDEBUG
-#define dout std::cout
-#else
-#pragma GCC diagnostic ignored "-Wunused-value"
-#define dout 0 && std::cout
-#endif
+////Unless compiled with options NDEBUG, we will produce a debug output using 
+////'dout' instead of cout and execute (expensive) assert statements.
+//#ifndef NDEBUG
+//#define dout std::cout
+//#else
+//#pragma GCC diagnostic ignored "-Wunused-value"
+//#define dout 0 && std::cout
+//#endif
 
 #ifndef NODE
 #define NODE
