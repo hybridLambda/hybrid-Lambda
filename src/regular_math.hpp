@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#include "global.hpp"
 //#include "sim_gt.hpp"
 /*! \brief Compute factorial of a \return double a! */
 template < class T > T factorial ( T a ){

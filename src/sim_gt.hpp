@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include "net.hpp"
 #include "mtrand.h"
+#include "global.hpp"
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
 	

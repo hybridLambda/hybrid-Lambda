@@ -23,7 +23,7 @@
 #include "node.hpp"
 #include <valarray>
 #include <fstream>
-
+#include "global.hpp"
 
 /*!\file net.cpp
  *  \brief Core function of converting a Newick (extended Newick) format string into a species tree (network), and simple string manipulation for tree strings

@@ -26,6 +26,7 @@
 #include <string>
 #include <cassert>
 #include <stdexcept>
+#include "global.hpp"
 
 using namespace std;
 

@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "global.hpp"
 #include "sim_gt.hpp"
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
 #include <sstream>      // std::stringstream
