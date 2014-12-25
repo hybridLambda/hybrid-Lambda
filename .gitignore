@@ -87,6 +87,8 @@ tests/caterpillar_test/*gt*
 # unittest
 unit_tests
 unit_tests.trs
+test-driver
+compile
 
 # gcov
 *gcov

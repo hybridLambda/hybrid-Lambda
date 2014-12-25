@@ -49,13 +49,18 @@ class SimulationParameters{
     bool num_gener_bool;
     bool sp_coal_unit_bool;
 
-    string net_str;
     vector < int > sample_size;
 
     Net * my_Net;
 	Net * my_pop_net;
 	Net * my_para_net;
 
+    string write_sp_string_in_coal_unit( string &sp_num_gener_string, string &pop_size_string );
+    string rewrite_pop_string_by_para_string( string para_string,string pop_size_string );
+
+    public:
+    string net_str;
+    void finalize();
     SimulationParameters(){
         this->mutation_rate=0.00005;
         this->pop_bool=false;
@@ -74,10 +79,6 @@ class SimulationParameters{
         if ( my_pop_net )  delete my_pop_net;
         if ( my_para_net ) delete my_para_net;
         };
-    string write_sp_string_in_coal_unit( string &sp_num_gener_string, string &pop_size_string );
-    string rewrite_pop_string_by_para_string( string para_string,string pop_size_string );
-
-    void finalize();
 };
 
 
@@ -103,6 +104,7 @@ class action_board {
     bool mono_bool;
     bool Si_num_bool;
 
+    public:
     action_board(){
         this->sim_mut_unit_bool  = false;
         this->sim_num_gener_bool = false;
@@ -123,7 +125,6 @@ class simTree : public Tree {
 
     action_board* simulation_jobs_;
     SimulationParameters* parameters_;
-    string gt_string_coal_unit;
     string gt_string_mut_num;
     string gt_string_mut_unit;
     string gt_string_gener_num;
@@ -137,8 +138,6 @@ class simTree : public Tree {
     bool sim_num_gener_bool_;
 
     simTree(){ this->parameters_ = NULL; this->simulation_jobs_ = NULL; };
-    simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
-    ~simTree(){};		
 
     void init(){ this->sim_num_gener_bool_ = false;}
     void initialize_gt_tip_nodes( Net * my_Net );
@@ -210,6 +209,12 @@ class simTree : public Tree {
         return k;
     }
 
+    void core();
+    public:
+        string gt_string_coal_unit;
+        simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );
+        simTree( SimulationParameters* sim_param, action_board *simulation_jobs);
+        ~simTree(){};
 };
 
 string write_para_into_tree(string sp_string, double para);
