@@ -115,6 +115,9 @@ class action_board {
 
 /*! \brief One simulated gene tree from a network under Kingman or multi merger coalescent process*/
 class simTree : public Tree {
+    #ifdef UNITTEST
+    friend class TestSimGt;
+    #endif
     friend class HybridLambda;
 
     action_board* simulation_jobs_;
@@ -132,6 +135,7 @@ class simTree : public Tree {
 	Tree my_gt_num_gener;
     bool sim_num_gener_bool_;
 
+    simTree(){ this->parameters_ = NULL; this->simulation_jobs_ = NULL; };
     simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );    
     ~simTree(){};		
 
@@ -165,10 +169,9 @@ class simTree : public Tree {
     
     vector < vector <double> > lambda_bk_mat;
     valarray <double> nc_X;
-    void build_lambda_bk_mat( double para, double num_lineage);
-
-
-
+    void build_lambda_bk_mat( double para, size_t num_lineage);
+    double lambdaAlpha( double b, double k, double para );
+    double lambdaPsi( double b, double k, double para );
 
     size_t current_N_lineage_To_Coalesce;
     double current_lineage_Extension; // in coalescent unit
@@ -215,11 +218,8 @@ double binomial_coefficient( double n , double k);
 
 /*! \brief Beta function, requires tgamma function from math.h \return double */
 inline double Beta(double x,double y){
-	double Beta_return;
-//	Beta_return=tgamma(x)*tgamma(y)/tgamma(x+y);
-    Beta_return=exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
-	return Beta_return;
+//	return tgamma(x)*tgamma(y)/tgamma(x+y);
+	return exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
 }
-
 
 #endif

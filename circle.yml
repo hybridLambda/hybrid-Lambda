@@ -20,6 +20,7 @@ test:
     - make hybrid-Lambda
     - make check
     - tests/checkbinary.sh 
+    - tests/fst/compute_fst.sh
     - cd src; make clean; make
   post:
     - rm -r *
