@@ -301,11 +301,15 @@ void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double
 
 
 void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
-    lambda_bk_mat.clear();
-    if ( para == 2.0 ) return;
+    if ( para > 2 or para < 0){ // TODO: move this check to early on?
+        throw std::invalid_argument(string("Multiple merger parameter ") + to_string (para) + string(" is out of the range of [0, 2]."));
+    }
     assert( para <= 2 );
     assert( para >= 0 );
+    lambda_bk_mat.clear();
+    if ( para == 2.0 ) return;
     
+    assert( para < 2 );
 	for ( int b_int = 2; b_int <= num_lineage; b_int++){
         double b_i = (double)b_int;
 		vector <double> lambda_bk_mat_b;
