@@ -29,7 +29,7 @@ hybrid_Lambda_SOURCES = $(shared_src) src/main.cpp
 hybrid_Lambda_dbg_SOURCES = $(shared_src) $(debug_SOURCES) src/main.cpp 
 hybrid_Lambda_prof_SOURCES = $(shared_src) src/main.cpp 
 
-unit_tests_SOURCES = $(shared_src) tests/unittest/test_hybridLambda.cpp src/plot/test_figure.cpp tests/unittest/test_runner.cpp 
+unit_tests_SOURCES = $(shared_src) tests/unittest/test_hybridLambda.cpp tests/unittest/test_simGt.cpp tests/unittest/test_runner.cpp 
 
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x -I src/ 
 unit_tests_LDADD= -lcppunit -ldl

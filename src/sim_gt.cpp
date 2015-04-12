@@ -149,8 +149,8 @@ void simTree::remove_unused_nodes(){
 void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages, 
                                     double remaining_length, double multi_merge_para, double pop_size, string node_label){
     size_t num_lineage = current_alive_lineages.size();
-    this->build_lambda_bk_mat( multi_merge_para , (double)num_lineage );			                        
-    
+    this->build_lambda_bk_mat( multi_merge_para , num_lineage );
+
     dout << num_lineage << " lineages entering population "<< node_label <<" with remaining branch length of " << remaining_length  <<endl;
 
     // The first condition is valid when proposed coalsecent will happen befoer moving on to the next population. 
@@ -300,27 +300,41 @@ void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double
 }
 
 
-void simTree::build_lambda_bk_mat( double para, double num_lineage ){
+void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
+    if ( para > 2 or para < 0){ // TODO: move this check to early on?
+        throw std::invalid_argument(string("Multiple merger parameter ") + to_string (para) + string(" is out of the range of [0, 2]."));
+    }
+    assert( para <= 2 );
+    assert( para >= 0 );
     lambda_bk_mat.clear();
     if ( para == 2.0 ) return;
-    //cout << "para = " << para<<endl;
-    assert( para <= 2 );
-    assert( para > 0 );
     
-	for ( double b_i = 2;b_i <= num_lineage; b_i++){
+    assert( para < 2 );
+	for ( int b_int = 2; b_int <= num_lineage; b_int++){
+        double b_i = (double)b_int;
 		vector <double> lambda_bk_mat_b;
-		for ( double k_i = 2; k_i <= b_i; k_i++){
-            // replace this loop by the following
-            double lambda_bk_mat_b_k = ( para < 1 ) ? 
-                                    exp ( log ( binomial_coefficient( b_i, k_i)) + log( pow( para, k_i) ) + log( pow( 1 - para, b_i - k_i ) ) ) :
-                                    exp( log( binomial_coefficient( b_i, k_i)) + log( Beta ( k_i - para, b_i-k_i + para) ) - log( Beta( 2.0 - para, para ) ) );
-            
+		for ( int k_int = 2; k_int <= b_int; k_int++){
+            double lambda_bk_mat_b_k = ( para > 1 ) ? this->lambdaAlpha( b_i, (double)k_int, para):
+                                                      this->lambdaPsi( b_i, (double)k_int, para);
 			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
 			}
 		lambda_bk_mat.push_back(lambda_bk_mat_b);
 	}
 }
 
+double simTree::lambdaAlpha( double b, double k, double para ){
+    assert ( b >= k );
+    assert ( k > 1 );
+    //if ( b < k) throw std::invalid_argument("b can not be less than k");
+    return exp( log( binomial_coefficient( b, k)) + log( Beta ( k - para, b-k + para) ) - log( Beta( 2.0 - para, para ) ) );
+}
+
+double simTree::lambdaPsi( double b, double k, double para ){
+    assert ( b >= k );
+    assert ( k > 1 );
+    //if ( b < k) throw std::invalid_argument("b can not be less than k");
+    return exp ( log ( binomial_coefficient( b, k)) + log( pow( para, k-2) ) + log( pow( 1 - para, b - k ) ) );
+}
 
 void simTree::build_gt_string_mut_unit(){
    	double mutation_rate = this->parameters_->mutation_rate;
@@ -381,7 +395,6 @@ string SimulationParameters::write_sp_string_in_coal_unit( string &sp_num_gener_
 		}
 	}
     sp_num_gener_net.rewrite_node_content();
-	//rewrite_node_content(sp_num_gener_net_node_ptr);
 	string sp_coal_unit_string = construct_adding_new_Net_str(sp_num_gener_net);
 	
 	return sp_coal_unit_string;
