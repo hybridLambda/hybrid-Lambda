@@ -44,7 +44,7 @@ extract_tmp(){
 
 tmp=plot
 tmp_dir=${src_dir}/${tmp}
-if [ -f ${tmp_dir}/figure.cpp  -a -f ${tmp_dir}/figure.hpp  -a -f ${tmp_dir}/test_figure.cpp ];then
+if [ -f ${tmp_dir}/figure.cpp  -a -f ${tmp_dir}/figure.hpp ];then
 	echo -n "." # echo "ok, do nothing" 
 else
 	extract_tmp
@@ -52,7 +52,7 @@ fi
 
 tmp=freq
 tmp_dir=${src_dir}/${tmp}
-if [ -f ${tmp_dir}/freq.cpp  -a -f ${tmp_dir}/freq.hpp  -a -f ${tmp_dir}/freq_extra.cpp ];then
+if [ -f ${tmp_dir}/freq.cpp  -a -f ${tmp_dir}/freq.hpp ];then
 	echo -n "." # echo "ok, do nothing" 
 else
 	extract_tmp
