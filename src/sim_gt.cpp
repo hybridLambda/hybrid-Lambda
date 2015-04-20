@@ -302,7 +302,7 @@ void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double
 
 void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
     if ( para > 2 or para < 0){ // TODO: move this check to early on?
-        throw std::invalid_argument(string("Multiple merger parameter ") + to_string (para) + string(" is out of the range of [0, 2]."));
+        throw std::invalid_argument(string("Multiple merger parameter ") + to_string (static_cast<long long>(para)) + string(" is out of the range of [0, 2]."));
     }
     assert( para <= 2 );
     assert( para >= 0 );
@@ -472,7 +472,7 @@ void simTree::initialize_gt_tip_nodes( Net * my_Net ){
             for ( size_t sample_i = 0; sample_i < this->parameters_->sample_size[sample_size_i]; sample_i++){
                 this->NodeContainer.push_back(my_Net->NodeContainer[i]);
                 this->descndnt.push_back(my_Net->descndnt[i]);
-                this->NodeContainer.back().label += "_" + to_string( sample_i+1 );
+                this->NodeContainer.back().label += "_" + to_string(static_cast<long long>(sample_i+1 ));
                 this->NodeContainer.back().set_brchlen1( 0.0 );
                 this->NodeContainer.back().parent1 = NULL;
                 this->NodeContainer.back().parent2 = NULL;
@@ -594,7 +594,7 @@ string write_para_into_tree( string in_str /*! Externed newick formatted network
 
 string construct_adding_new_Net_str( Net &in_Net ){
     string out_str = in_Net.NodeContainer.back().node_content + in_Net.NodeContainer.back().label;
-	if ( in_Net.NodeContainer.back().brchlen1() != 0 ) 	out_str += ":" + to_string( in_Net.NodeContainer.back().brchlen1() );
+	if ( in_Net.NodeContainer.back().brchlen1() != 0 ) 	out_str += ":" + to_string( static_cast<long long>(in_Net.NodeContainer.back().brchlen1() ));
 	out_str.push_back(';');
 	return out_str;
 }

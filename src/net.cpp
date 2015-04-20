@@ -322,7 +322,7 @@ string Tree::label_interior_node(string in_str /*!< input newick form string */)
             current_string += "root";
         }
         else {
-            current_string += "Int_" + to_string( interior_node_counter );
+            current_string += "Int_" + to_string(static_cast<long long>(interior_node_counter));
             sub_str_start_index = i+1;
         }
         in_str_partition.push_back(current_string);
@@ -455,7 +455,7 @@ void Tree::rewrite_node_content(){
 string Tree::rewrite_internal_node_content( size_t i ){
     string new_node_content="(";
     for (size_t child_i = 0; child_i < this->NodeContainer[i].child.size(); child_i++ ){
-        string brchlen_str1 = to_string ( this->NodeContainer[i].child[child_i]->brchlen1() );
+        string brchlen_str1 = to_string (static_cast<long long>(this->NodeContainer[i].child[child_i]->brchlen1() ));
         if ( this->NodeContainer[i].child[child_i]->node_content == this->NodeContainer[i].child[child_i]->label ) {
             //new_node_content += this->NodeContainer[i].child[child_i]->label+":" + to_string ( this->NodeContainer[i].child[child_i]->brchlen1() ) ;
             new_node_content += this->NodeContainer[i].child[child_i]->label+":" +  brchlen_str1;
@@ -467,7 +467,7 @@ string Tree::rewrite_internal_node_content( size_t i ){
                 for ( size_t node_ii_child_i = 0; node_ii_child_i < this->NodeContainer[node_ii].child.size(); node_ii_child_i++ ){
                     if ( this->NodeContainer[node_ii].child[node_ii_child_i]->node_content == this->NodeContainer[i].child[child_i]->node_content){
                         new_hybrid_node=true;
-                        brchlen_str2 = to_string(this->NodeContainer[i].child[child_i]->brchlen2() );
+                        brchlen_str2 = to_string(static_cast<long long>(this->NodeContainer[i].child[child_i]->brchlen2() ));
                     break;}
                 }
                 if (new_hybrid_node){break;}
@@ -556,7 +556,7 @@ string Tree::print_newick( Node * node ){
     else {
         tree_str = "(";
         for ( size_t i = 0 ; i < node->child.size() ; i++ ){
-            tree_str += print_newick ( node->child[i] ) + ":" + to_string (node->child[i]->brchlen1() );
+            tree_str += print_newick ( node->child[i] ) + ":" + to_string (static_cast<long long>(node->child[i]->brchlen1() ));
             if ( i < node->child.size()-1 ) tree_str += ",";
         }
         tree_str += ")";

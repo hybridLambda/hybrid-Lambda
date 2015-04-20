@@ -409,7 +409,7 @@ void HybridLambda::create_site_data_dir(){
 /*! \brief Generate segrateing site data */
 void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i ){
     Tree mt_tree( gt_string_mut_num );
-    string sitefile_name = seg_dir_name + "/site" + std::to_string(site_i);
+    string sitefile_name = seg_dir_name + "/site" + std::to_string(static_cast<long long>(site_i));
     extract_file.open (sitefile_name.c_str()); 
     
     int total_mut = 0;
