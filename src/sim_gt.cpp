@@ -406,7 +406,7 @@ string SimulationParameters::write_sp_string_in_coal_unit( string &sp_num_gener_
 	}
     sp_num_gener_net.rewrite_node_content();
 	string sp_coal_unit_string = construct_adding_new_Net_str(sp_num_gener_net);
-	
+	cout << sp_coal_unit_string << endl;
 	return sp_coal_unit_string;
 }
 
