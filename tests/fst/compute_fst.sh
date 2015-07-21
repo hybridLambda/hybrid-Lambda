@@ -1,8 +1,14 @@
 #!/bin/bash
 
+
+function exe_hybrid-Lambda {
+  echo -n " hybrid-Lambda $@ "
+  ./hybrid-Lambda $@
+}
+
 fst_test () {
 	#echo ${prefix} > prefix
-	./hybrid-Lambda -spcu "(A:1,B:1);" -seg -fst -S ${n_sample} ${n_sample} -num ${Nrep}  -seed ${seed}
+	exe_hybrid-Lambda -spcu "(A:1,B:1);" -seg -fst -S ${n_sample} ${n_sample} -num ${Nrep}  -seed ${seed}
 	
 	echo "rm(list = ls())
 	source(\"tests/fst/hybridLambda_fst.r\")
@@ -27,6 +33,7 @@ fst_test () {
 	" > run.r
 	
 	R CMD BATCH run.r 
+        cat run.r.Rout
 	grep "Status Ok" run.r.Rout 	
 }
 
