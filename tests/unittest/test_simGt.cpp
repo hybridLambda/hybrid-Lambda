@@ -53,8 +53,8 @@ class TestSimGt : public CppUnit::TestCase {
     void testLambdaCalculations(){
         //if p = 1: lambda_{b, b}  =  1,  and all other lambda_{b,k} are 0
         CPPUNIT_ASSERT_EQUAL(1.0, testSubjectPtr->lambdaPsi(2, 2, 1) );
-        CPPUNIT_ASSERT_EQUAL(0.0, testSubjectPtr->lambdaPsi(2, 1, 1) ); // This should not happen, k should be always at least 2.
-        //CPPUNIT_ASSERT_THROW(testSubjectPtr->lambdaPsi(1, 2, 1), std::invalid_argument );
+        //CPPUNIT_ASSERT_ASSERTION_FAIL( testSubjectPtr->lambdaPsi(2, 1, 1) ); // This should not happen, k should be always at least 2.
+        //CPPUNIT_ASSERT_ASSERTION_FAIL( testSubjectPtr->lambdaPsi(2, 3, 1) );
 
         CPPUNIT_ASSERT_EQUAL(1.0, testSubjectPtr->lambdaPsi(3, 3, 1) );
         CPPUNIT_ASSERT_EQUAL(0.0, testSubjectPtr->lambdaPsi(3, 2, 1) ); 
