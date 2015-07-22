@@ -179,7 +179,7 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
                 this->descndnt[new_lineage] += this->descndnt[gt_child_node_index];
                 if (sim_num_gener_bool_){
                     my_gt_num_gener.NodeContainer[gt_child_node_index].set_brchlen1 ( my_gt_num_gener.NodeContainer[gt_child_node_index].brchlen1() + ( current_lineage_Extension * pop_size) ) ; // b_alpha <- b_alpha + l*pop_size
-                    my_gt_num_gener.NodeContainer[new_lineage].add_child(&my_gt_num_gener.NodeContainer[gt_child_node_index]);
+                        my_gt_num_gener.NodeContainer[new_lineage].add_child(&my_gt_num_gener.NodeContainer[gt_child_node_index]);
                     my_gt_num_gener.descndnt[new_lineage] += my_gt_num_gener.descndnt[gt_child_node_index];
                 }
                 current_alive_lineages.erase(current_alive_lineages.begin()+lineage_index); // X'\{alpha}
@@ -206,7 +206,7 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
         }
         else return;
     }
-}			
+}
 
 
 void simTree::finalize( size_t num_taxa ){
@@ -320,22 +320,40 @@ void simTree::build_lambda_bk_mat( double para, size_t num_lineage ){
     if ( para == 2.0 ) return;
     
     assert( para < 2 );
-	for ( int b_int = 2; b_int <= num_lineage; b_int++){
+    for ( int b_int = 2; b_int <= num_lineage; b_int++){
         double b_i = (double)b_int;
-		vector <double> lambda_bk_mat_b;
-		for ( int k_int = 2; k_int <= b_int; k_int++){
+        vector <double> lambda_bk_mat_b;
+        for ( int k_int = 2; k_int <= b_int; k_int++){
             double lambda_bk_mat_b_k = ( para > 1 ) ? this->lambdaAlpha( b_i, (double)k_int, para):
                                                       this->lambdaPsi( b_i, (double)k_int, para);
-			lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
-			}
-		lambda_bk_mat.push_back(lambda_bk_mat_b);
-	}
+            lambda_bk_mat_b.push_back(lambda_bk_mat_b_k);
+        }
+        lambda_bk_mat.push_back(lambda_bk_mat_b);
+    }
+}
+
+long double logbinomial(long double n, long double k) {
+  assert(n >= 0.0L);
+  assert(k >= 0.0L);
+  assert(k <= n);
+
+  long double x= 0.0L;
+  long double bi= 0.0L;
+
+  while (k > x)
+  {
+    bi+= logl(n-x);
+    bi-= logl(k-x);
+    x++;
+  }
+  return bi;
 }
 
 double simTree::lambdaAlpha( double b, double k, double para ){
     assert ( b >= k );
     assert ( k > 1 );
     //if ( b < k) throw std::invalid_argument("b can not be less than k");
+    //  \lambda_{bk}=\binom{b}{k}\frac{B(k-\alpha,b-k+\alpha)}{B(2-\alpha,\alpha)}
     return exp( log( binomial_coefficient( b, k)) + log( Beta ( k - para, b-k + para) ) - log( Beta( 2.0 - para, para ) ) );
 }
 
@@ -343,7 +361,8 @@ double simTree::lambdaPsi( double b, double k, double para ){
     assert ( b >= k );
     assert ( k > 1 );
     //if ( b < k) throw std::invalid_argument("b can not be less than k");
-    return exp ( log ( binomial_coefficient( b, k)) + log( pow( para, k-2) ) + log( pow( 1 - para, b - k ) ) );
+    //.2 is psi lambda_bk=\binom{b}{k}\psi^{k-2} (1-\psi)^{b-k}
+    return exp ( logbinomial(b,k) + (k-2)*log(para) + (b-k)*log(1.0-para) );
 }
 
 void simTree::build_gt_string_mut_unit(){
@@ -406,7 +425,6 @@ string SimulationParameters::write_sp_string_in_coal_unit( string &sp_num_gener_
 	}
     sp_num_gener_net.rewrite_node_content();
 	string sp_coal_unit_string = construct_adding_new_Net_str(sp_num_gener_net);
-	cout << sp_coal_unit_string << endl;
 	return sp_coal_unit_string;
 }
 
@@ -581,8 +599,7 @@ void simTree::compute_bl_extension( double multi_merge_para, size_t num_lineage 
 
     if ( multi_merge_para != 2 ) this->build_nc_X( num_lineage );
     current_N_lineage_To_Coalesce = (multi_merge_para == 2) ? 2 : update_nc();
-    current_lineage_Extension = (multi_merge_para == 2) ? kingman_bl(num_lineage) : current_lineage_Extension = nc_X.min();
-    
+    current_lineage_Extension = (multi_merge_para == 2) ? kingman_bl(num_lineage) : nc_X.min();
     assert(current_N_lineage_To_Coalesce > 1);
 }
 
