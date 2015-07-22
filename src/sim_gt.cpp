@@ -359,10 +359,20 @@ double simTree::lambdaAlpha( double b, double k, double para ){
 
 double simTree::lambdaPsi( double b, double k, double para ){
     assert ( b >= k );
-    assert ( k > 1 );
+    assert ( k > 1.0 );
     //if ( b < k) throw std::invalid_argument("b can not be less than k");
     //.2 is psi lambda_bk=\binom{b}{k}\psi^{k-2} (1-\psi)^{b-k}
-    return exp ( logbinomial(b,k) + (k-2)*log(para) + (b-k)*log(1.0-para) );
+    if ( para == 1.0 && (int)b == (int)k ){
+        return 1.0;
+    } else if ( para == 1.0 && (int)b != (int)k ){
+        return 0.0;
+    } else if ( para == 0.0 && k == 2.0 ){
+        return binomial_coefficient(b, k);
+    } else if ( para == 0.0 && k != 2.0 ){
+        return 0.0;
+    } else {
+        return exp ( logbinomial(b,k) + (k-2)*log(para) + (b-k)*log(1.0-para) );
+    }
 }
 
 void simTree::build_gt_string_mut_unit(){
