@@ -48,6 +48,13 @@ make
 ##ASSUMPTION
 Input network files are written in extended newick format.
  
+## Citation
+_hybrid-Lambda_ is described in the manuscript
+
+> Sha Zhu, James H Degnan, Sharyn J Goldstien, Bjarki Eldon.
+> **Hybrid-Lambda: simulation of multiple merger and Kingman gene genealogies in species networks and species trees**. 
+> bioRxiv.
+> [doi: http://dx.doi.org/10.1101/023465](http://biorxiv.org/content/early/2015/07/29/023465).
 
 ##LICENCE
 You can freely use all code in this project under the conditions of the GNU
