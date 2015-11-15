@@ -614,8 +614,8 @@ void simTree::compute_bl_extension( double multi_merge_para, size_t num_lineage 
     if ( num_lineage <= 1) return;
 
     if ( multi_merge_para != 2 ) this->build_nc_X( num_lineage );
-    current_N_lineage_To_Coalesce = (multi_merge_para == 2) ? 2 : update_nc();
-    current_lineage_Extension = (multi_merge_para == 2) ? kingman_bl(num_lineage) : nc_X.min();
+    current_N_lineage_To_Coalesce = (multi_merge_para == 2) ? 2 : this->update_nc();
+    current_lineage_Extension = (multi_merge_para == 2) ? kingman_bl(num_lineage) : this->nc_X.min();
     assert(current_N_lineage_To_Coalesce > 1);
 }
 

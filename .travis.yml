@@ -19,7 +19,7 @@ script:
   - make check
   - tests/checkbinary.sh
   - if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst.sh; fi
-  - if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst_psi.sh; fi
+  #- if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst_psi.sh; fi
   - cd src; make
   - rm -r *
   - wget --no-check-certificate https://github.com/hybridLambda/hybrid-Lambda/archive/release.tar.gz -o /dev/null
@@ -28,6 +28,6 @@ script:
   - ./bootstrap
   - make hybrid-Lambda
   - make check
-  #- tests/checkbinary.sh
+  - tests/checkbinary.sh
   #- if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst.sh; fi
   - cd src; make
