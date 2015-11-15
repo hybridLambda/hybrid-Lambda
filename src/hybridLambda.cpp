@@ -270,10 +270,7 @@ void HybridLambda::extract_mono() {
 void HybridLambda::HybridLambda_core( ){
 
     if ( !simulation_bool ){ return; }
-    //srand(seed);	// initialize gnu seed
     MersenneTwister rg(this->seed);
-    //MTRand_closed mt;
-    //mt.seed( this->seed );		// initialize mt seed
     clog << "Random seed: " << this->seed <<endl;
     dout <<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 
@@ -345,7 +342,7 @@ void HybridLambda::HybridLambda_core( ){
     dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
 
     this->extract_mono();
-
+    rg.clearFastFunc(); // Empty memory was allocated for fastfunc
 }
 
 
