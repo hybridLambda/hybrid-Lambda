@@ -28,6 +28,6 @@ script:
   - ./bootstrap
   - make hybrid-Lambda
   - make check
-  - tests/checkbinary.sh
+  #- tests/checkbinary.sh
   #- if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst.sh; fi
   - cd src; make
