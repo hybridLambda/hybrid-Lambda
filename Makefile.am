@@ -36,5 +36,7 @@ unit_tests_SOURCES = $(shared_src) tests/unittest/test_hybridLambda.cpp tests/un
 unit_tests_CXXFLAGS = -DUNITTEST -DNDEBUG -std=c++0x -I src/
 unit_tests_LDADD= -lcppunit -ldl
 
-include_HEADERS = src/sim_gt.hpp src/plot/figure.hpp src/freq/freq.hpp src/hybridLambda.hpp src/node.hpp src/net.hpp src/global.hpp
+include_HEADERS = src/sim_gt.hpp src/plot/figure.hpp src/freq/freq.hpp src/hybridLambda.hpp src/node.hpp src/net.hpp src/global.hpp \
+				  src/fastfunc.hpp  src/hybridLambda.hpp src/random_generator.hpp src/global.hpp src/mersenne_twister.hpp \
+				  src/node.hpp  src/regular_math.hpp
 
