@@ -1,6 +1,6 @@
 COMPILER = g++
 VERSION = $(shell cat ../version)
-FLAGS = -O3 -g -std=c++0x -DNDEBUG -DVERSION=\"${VERSION}\" -I../src/
+FLAGS = -O3 -g -std=c++0x -DNDEBUG -DVERSION=\"${VERSION}\" -I../src/ -static
 
 .PHONY: all
 all: clean_all checkfile hybrid-Lambda
