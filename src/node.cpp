@@ -1,11 +1,11 @@
 /*
- * hybrid-Lambda is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under
  * coalescent process.
- * 
- * Copyright (C) 2010 -- 2014 Sha (Joe) Zhu
- * 
+ *
+ * Copyright (C) 2010 -- 2015 Sha (Joe) Zhu
+ *
  * This file is part of hybrid-Lambda.
- * 
+ *
  * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -80,11 +80,11 @@ void Node::add_child( Node *child_node /*! pointer to the child node*/){
 		//child_node->hybrid = true;
 	}
 	else child_node->parent1 = (this);
-} 
+}
 
 
 /*! \brief Rank network node from the bottom.
- * 
+ *
  * Child node has lower rank than the parent node. Tip nodes have rank one, the root node has the highest rank
  */
 void Node::CalculateRank(){
@@ -92,7 +92,7 @@ void Node::CalculateRank(){
 	else {
 		size_t child_max_rank = 0;
 		for ( size_t ith_child = 0; ith_child < this->child.size(); ith_child++ ){
-            this->child[ith_child]->CalculateRank();			
+            this->child[ith_child]->CalculateRank();
 			child_max_rank = max( child_max_rank, this->child[ith_child]->rank() );
 		}
 		this->rank_ = child_max_rank + 1;
@@ -100,7 +100,7 @@ void Node::CalculateRank(){
 }
 
 
-bool Node::find_descndnt ( string &name, NAMETYPE type ){	
+bool Node::find_descndnt ( string &name, NAMETYPE type ){
 	if ( this->tip_bool ) {
         string tmp = ( type == TAXA ) ? this->name : this->label;
         return ( tmp == name ) ? true : false;
@@ -112,7 +112,7 @@ bool Node::find_descndnt ( string &name, NAMETYPE type ){
             if ( descndnt_found ) break;
 		}
         return descndnt_found;
-	}	
+	}
 }
 
 

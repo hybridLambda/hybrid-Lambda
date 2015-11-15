@@ -1,11 +1,11 @@
 /*
- * hybrid-Lambda is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under
  * coalescent process.
- * 
- * Copyright (C) 2010 -- 2014 Sha (Joe) Zhu
- * 
+ *
+ * Copyright (C) 2010 -- 2015 Sha (Joe) Zhu
+ *
  * This file is part of hybrid-Lambda.
- * 
+ *
  * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -24,6 +24,8 @@
 #include "plot/figure.hpp"
 #include "freq/freq.hpp"
 #include <stdlib.h>     /* strtod */
+#include "mersenne_twister.hpp"
+
 
 void HybridLambda::init(){
     this->seed            = (unsigned)(time(0));
@@ -35,13 +37,13 @@ void HybridLambda::init(){
     this->seg_bool        = false;
     this->read_GENE_trees = false;
     this->read_mt_trees   = false;
-    this->fst_bool        = false;    
+    this->fst_bool        = false;
     this->tmrca_bool      = false;
     this->bl_bool         = false;
     this->firstcoal_bool  = false;
     this->print_help_bool = false;
     this->argc_i = 1;
-    
+
     this->gt_file_name = "";
     this->mt_file_name = "";
     this->num_sim_gt = 1;
@@ -49,9 +51,9 @@ void HybridLambda::init(){
     this->parameters_      = new SimulationParameters();
 }
 
-HybridLambda::~HybridLambda(){ 
-    delete simulation_jobs_; 
-    delete parameters_; 
+HybridLambda::~HybridLambda(){
+    delete simulation_jobs_;
+    delete parameters_;
 }
 
 string HybridLambda::read_input_para( const char *inchar, string in_str ){
@@ -60,7 +62,7 @@ string HybridLambda::read_input_para( const char *inchar, string in_str ){
 }
 
 void HybridLambda::read_sp_str( string & argv_i ){
-    this->simulation_bool=true; 
+    this->simulation_bool=true;
     if (argv_i == "-sp_num_gener" || argv_i == "-spng"){ this->parameters_->num_gener_bool=true; }
     if (argv_i == "-sp_coal_unit" || argv_i == "-spcu"){ this->parameters_->sp_coal_unit_bool=true;	}
     if ( this->parameters_->sp_coal_unit_bool && this->parameters_->num_gener_bool){
@@ -78,8 +80,8 @@ void HybridLambda::extract_mm_or_pop_param( string & mm_pop_string ){
 
 void HybridLambda::parse(){
     if ( argc_ == 1 ){ this->print_help_bool = true; }
-    
-    while (argc_i < argc_){	
+
+    while (argc_i < argc_){
         std::string argv_i(argv_[argc_i]);
         if ( argv_i == "-h" || argv_i == "-help" ){ this->print_help_bool = true; }
         else if ( argv_i =="-gt" ){ readNextStringto( this->gt_file_name , this->argc_i, this->argc_,  this->argv_ ); }
@@ -89,31 +91,31 @@ void HybridLambda::parse(){
         else if ( argv_i =="-num" ){ this->num_sim_gt = this->readNextInput<int>(); }
         else if ( argv_i =="-sp_coal_unit" || argv_i=="-sp_num_gener" || argv_i == "-spcu" || argv_i=="-spng"){ this->read_sp_str(argv_i); }
         else if ( argv_i =="-mm" ){ this->parameters_->mm_bool = true; this->extract_mm_or_pop_param( this->parameters_->para_string ) ; }
-        else if ( argv_i =="-pop" ){ this->parameters_->pop_bool = true; this->extract_mm_or_pop_param( this->parameters_->sp_string_pop_size ) ; }        
+        else if ( argv_i =="-pop" ){ this->parameters_->pop_bool = true; this->extract_mm_or_pop_param( this->parameters_->sp_string_pop_size ) ; }
         else if ( argv_i =="-S" ){ this->read_sample_sizes();	}
-        //else if ( argv_i =="-mu"){ this->parameters_->mutation_rate = this->readNextInput<double>(); }	
-        else if ( argv_i =="-mu"){ ++argc_i; this->parameters_->mutation_rate = strtod(argv_[argc_i], NULL); }	
+        //else if ( argv_i =="-mu"){ this->parameters_->mutation_rate = this->readNextInput<double>(); }
+        else if ( argv_i =="-mu"){ ++argc_i; this->parameters_->mutation_rate = strtod(argv_[argc_i], NULL); }
         else if ( argv_i =="-o" ) readNextStringto( this->prefix , this->argc_i, this->argc_,  this->argv_ );
         else if ( argv_i == "-sim_mut_unit"  ){ this->simulation_jobs_->set_sim_mut_unit(); }
         else if ( argv_i == "-sim_num_gener" ){ this->simulation_jobs_->set_sim_num_gener();}
-        else if ( argv_i == "-sim_num_mut" ){ this->simulation_jobs_->set_sim_num_mut(); } 
+        else if ( argv_i == "-sim_num_mut" ){ this->simulation_jobs_->set_sim_num_mut(); }
         else if ( argv_i == "-sim_Si_num"    ){ this->simulation_jobs_->set_Si_num(); } // work on code for removing out_table
         else if ( argv_i == "-mono"){ this->simulation_jobs_->set_mono() ; }
         else if ( argv_i == "-freq" || argv_i == "-f" ){ this->freq_bool=true; }
         //else if ( argv_i == "-freq_file"|| argv_i == "-fF" ){ this->freq_bool=true;  this->argc_i++;}
         else if ( argv_i == "-plot" || argv_i == "-dot" ){ this->plot_bool = true; }
         //else if ( argv_i == "-plot_file" || argv_i == "-plotF" || argv_i == "-dot_file" || argv_i == "-dotF" ){ this->plot_bool=true; this->argc_i++; }
-        else if ( argv_i == "-label" || argv_i == "-branch" ){ argc_i++; continue; }        
+        else if ( argv_i == "-label" || argv_i == "-branch" ){ argc_i++; continue; }
         else if ( argv_i == "-tmrca"     ){ this->tmrca_bool = true;     }
         else if ( argv_i == "-firstcoal" ){ this->firstcoal_bool = true; }
-        else if ( argv_i == "-bl"   ){ this->bl_bool = true; }       
+        else if ( argv_i == "-bl"   ){ this->bl_bool = true; }
         else if ( argv_i == "-seg"  ){ this->seg_bool = true;	}
-        //else if ( argv_i == "-segD" ){ this->seg_bool=true; readNextStringto( this->seg_dir_name , this->argc_i, this->argc_,  this->argv_ ); }        
+        //else if ( argv_i == "-segD" ){ this->seg_bool=true; readNextStringto( this->seg_dir_name , this->argc_i, this->argc_,  this->argv_ ); }
         else if ( argv_i == "-print" ){ this->print_tree_bool = true; }
         else if ( argv_i == "-fst"   ){ this->fst_bool = true; }
         else { throw std::invalid_argument ( "Unknown flag:" + argv_i); }
         //else { cout <<"  need to change this !!!" << argv_i<<endl; argc_i++;continue; } // need to change this !!!
-        argc_i++;	
+        argc_i++;
     }
 
     this->finalize();
@@ -134,21 +136,21 @@ void HybridLambda::read_sample_sizes(){
 
 
 void HybridLambda::finalize(){
-    if ( this->print_help_bool ){ 
+    if ( this->print_help_bool ){
         this->print_help();
-        return; 
+        return;
     }
-    
+
     if ( this->simulation_bool ) {
         if ( this->fst_bool ){
             this->fst_file_name = this->prefix + "_fst";
             remove ( fst_file_name.c_str() );
         }
-        if ( this->gt_file_name.size() > 0 ) clog << "WARNING: \"-gt\" option is ignored" << endl; 
-        if ( this->mt_file_name.size() > 0 ) clog << "WARNING: \"-mt\" option is ignored" << endl; 
-        
+        if ( this->gt_file_name.size() > 0 ) clog << "WARNING: \"-gt\" option is ignored" << endl;
+        if ( this->mt_file_name.size() > 0 ) clog << "WARNING: \"-mt\" option is ignored" << endl;
+
         this->parameters()->finalize( );
-    
+
         if ( this->seg_bool ) {
             this->simulation_jobs_->set_sim_num_mut();
             this->seg_dir_name = this->prefix + "seg_sites" ;
@@ -169,8 +171,8 @@ void HybridLambda::finalize(){
             this->read_input_lines( this->mt_file_name.c_str(), this->mt_tree_str_s);
             this->seg_dir_name = this->prefix + "seg_sites" ;  // Initialize segregating site data directory
         } else {
-            delete simulation_jobs_; 
-            delete parameters_; 
+            delete simulation_jobs_;
+            delete parameters_;
             throw std::invalid_argument( "No input was provided!" );
         }
     }
@@ -185,10 +187,10 @@ void HybridLambda::print(){
 
 void HybridLambda::extract_tmrca(){
     if ( !this->tmrca_bool ){ return; }
-    
+
     this->extract_file_name = this->prefix + "tmrca";
     remove ( this->extract_file_name.c_str() );
-    this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+    this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary);
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Tree gt(gt_tree_str_s[i]);
         this->extract_file << gt.NodeContainer.back().height() << endl;
@@ -203,7 +205,7 @@ void HybridLambda::extract_bl(){
 
     this->extract_file_name = this->prefix + "bl";
     remove ( this->extract_file_name.c_str() );
-    this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+    this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary);
     for ( size_t i=0; i < gt_tree_str_s.size(); i++ ){
         Tree gt(gt_tree_str_s[i]);
         double totalbl = 0;
@@ -219,10 +221,10 @@ void HybridLambda::extract_bl(){
 
 void HybridLambda::extract_firstcoal(){
     if ( !this->firstcoal_bool ){ return; }
-    
+
     this->extract_file_name = this->prefix+"fistcoal";
     remove ( this->extract_file_name.c_str() );
-    this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary); 
+    this->extract_file.open ( this->extract_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary);
     for ( size_t i = 0; i < gt_tree_str_s.size(); i++ ){
         Tree gt(gt_tree_str_s[i]);
         size_t first_coal_index_dummy = gt.first_coal_index();
@@ -234,13 +236,13 @@ void HybridLambda::extract_firstcoal(){
 }
 
 void HybridLambda::extract_frequency(){
-    if ( !this->freq_bool ) return; 
+    if ( !this->freq_bool ) return;
     Frequency freq_para;
     freq_para.freq_out_filename = this->prefix + "_frequencies";
-    
+
     ifstream tmp_file( freq_para.freq_out_filename.c_str() );
 	if ( tmp_file.good() ) 	{  remove(freq_para.freq_out_filename.c_str()); 	}
-    
+
     freq_para.compute_gt_frequencies( this->gt_tree_str_s );
 }
 
@@ -248,7 +250,7 @@ void HybridLambda::extract_frequency(){
 bool HybridLambda::mono_fst_not_feasiable( string flag ){ // flag is either -mono or -fst
     if ( this->parameters()->sample_size.size() != 2 || this->parameters()->is_Net ) {
         std::clog << "ERROR: \"" + flag + "\" flag only applies to species tree of two population." << endl;
-        return true; 
+        return true;
     }
     else return false;
 }
@@ -261,101 +263,102 @@ void HybridLambda::extract_mono() {
     for ( size_t mono_i = 0; mono_i < this->monophyly.size(); mono_i++){
         cout << setw(9) << this->monophyly[mono_i] / this->num_sim_gt << "  ";
     }
-    cout << endl;        
+    cout << endl;
 }
 
 /*! \brief  sim_n_gt constructor */
 void HybridLambda::HybridLambda_core( ){
-    
+
     if ( !simulation_bool ){ return; }
     //srand(seed);	// initialize gnu seed
-    MTRand_closed mt;
-    mt.seed( this->seed );		// initialize mt seed
+    MersenneTwister rg(this->seed);
+    //MTRand_closed mt;
+    //mt.seed( this->seed );		// initialize mt seed
     clog << "Random seed: " << this->seed <<endl;
     dout <<" Start simulating "<< this->num_sim_gt <<" gene trees -- begin of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
-    
+
     string gene_tree_file_coal_unit = this->prefix + "_coal_unit";
     string gene_tree_file_mut_unit  = this->prefix + "_mut_unit";
     string gene_tree_file_num_gener = this->prefix + "_num_gener";
     string gene_tree_file_num_mut   = this->prefix + "_num_mut";
     string gene_tree_file_Si_table  = this->prefix + "_Si_table";
-    
+
     remove(gene_tree_file_coal_unit.c_str());
     remove(gene_tree_file_mut_unit.c_str());
     remove(gene_tree_file_num_gener.c_str());
     remove(gene_tree_file_num_mut.c_str());
     remove(gene_tree_file_Si_table.c_str());
-    
-    sim_gt_file_coal_unit.open ( gene_tree_file_coal_unit.c_str(), ios::out | ios::app | ios::binary); 
-    sim_gt_file_mut_unit.open  ( gene_tree_file_mut_unit.c_str(),  ios::out | ios::app | ios::binary); 
-    sim_gt_file_num_gener.open ( gene_tree_file_num_gener.c_str(), ios::out | ios::app | ios::binary); 
+
+    sim_gt_file_coal_unit.open ( gene_tree_file_coal_unit.c_str(), ios::out | ios::app | ios::binary);
+    sim_gt_file_mut_unit.open  ( gene_tree_file_mut_unit.c_str(),  ios::out | ios::app | ios::binary);
+    sim_gt_file_num_gener.open ( gene_tree_file_num_gener.c_str(), ios::out | ios::app | ios::binary);
     sim_gt_file_num_mut.open   ( gene_tree_file_num_mut.c_str(),   ios::out | ios::app | ios::binary);
     extract_file.open          ( gene_tree_file_Si_table.c_str(),  ios::out | ios::app | ios::binary);
-    
+
     this->outtable_header(extract_file);
-    
+
     for ( int i=0; i < this->num_sim_gt; i++ ){
         //this->parameters_->my_Net->print_all_node();
-        simTree sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file);
+        simTree sim_gt_string( this->parameters_, this->simulation_jobs_ , this->extract_file, &rg);
         gt_tree_str_s.push_back(sim_gt_string.gt_string_coal_unit);
         if ( this->simulation_jobs_->sim_num_mut_bool ) mt_tree_str_s.push_back(sim_gt_string.gt_string_mut_num);
-        
+
         if ( this->simulation_jobs_->mono_bool){
             if ( i == 0 ){
-                monophyly = sim_gt_string.monophyly;	
+                monophyly = sim_gt_string.monophyly;
             } else{
                 for (unsigned int mono_i=0;mono_i<monophyly.size();mono_i++){
                     monophyly[mono_i]=monophyly[mono_i]+sim_gt_string.monophyly[mono_i];
-                }		
+                }
             }
         }
-        
+
         dout << sim_gt_string.gt_string_coal_unit << endl;
         sim_gt_file_coal_unit<<sim_gt_string.gt_string_coal_unit <<"\n";
-        
+
         if (  this->simulation_jobs_->sim_mut_unit() ){ sim_gt_file_mut_unit  << sim_gt_string.gt_string_mut_unit  << "\n"; }
         if (  this->simulation_jobs_->sim_num_gener()){ sim_gt_file_num_gener << sim_gt_string.gt_string_gener_num << "\n"; }
         if (  this->simulation_jobs_->sim_num_mut()  ){ sim_gt_file_num_mut   << sim_gt_string.gt_string_mut_num   << "\n"; }
     }
-    
+
     sim_gt_file_coal_unit.close();
     sim_gt_file_mut_unit.close();
     sim_gt_file_num_gener.close();
     sim_gt_file_num_mut.close();
     extract_file.close();
-    
-    std::clog << "Produced gene tree files: \n";	
-    std::clog << gene_tree_file_coal_unit << "\n";				
-    
-    if (  this->simulation_jobs_->sim_mut_unit_bool  ) std::clog << gene_tree_file_mut_unit  << "\n"; 
+
+    std::clog << "Produced gene tree files: \n";
+    std::clog << gene_tree_file_coal_unit << "\n";
+
+    if (  this->simulation_jobs_->sim_mut_unit_bool  ) std::clog << gene_tree_file_mut_unit  << "\n";
     else remove (gene_tree_file_mut_unit.c_str()) ;
-    
-    if (  this->simulation_jobs_->sim_num_gener_bool ) std::clog << gene_tree_file_num_gener << "\n"; 
+
+    if (  this->simulation_jobs_->sim_num_gener_bool ) std::clog << gene_tree_file_num_gener << "\n";
     else remove (gene_tree_file_num_gener.c_str()) ;
-    
-    if (  this->simulation_jobs_->sim_num_mut_bool   ) std::clog << gene_tree_file_num_mut   << "\n"; 
+
+    if (  this->simulation_jobs_->sim_num_mut_bool   ) std::clog << gene_tree_file_num_mut   << "\n";
     else remove (gene_tree_file_num_mut.c_str()) ;
-    
-    if (  this->simulation_jobs_->Si_num_bool   ) std::clog << gene_tree_file_Si_table  << "\n"; 
+
+    if (  this->simulation_jobs_->Si_num_bool   ) std::clog << gene_tree_file_Si_table  << "\n";
     else remove (gene_tree_file_Si_table.c_str()) ;
-    
+
     dout<<"end of sim_n_gt::sim_n_gt(sim::param sim_param,action_board my_action)"<<endl;
-    
+
     this->extract_mono();
-    
+
 }
 
 
 string HybridLambda::read_input_line(const char *inchar){
 	string out_str;
     ifstream in_file( inchar );
-	if (in_file.good())	getline ( in_file, out_str); 
+	if (in_file.good())	getline ( in_file, out_str);
 	else{
 		string dummy_str(inchar);
 		if (dummy_str.find('(')!=string::npos && dummy_str.find(')')!=string::npos) out_str=dummy_str;
 		else  throw std::invalid_argument("Invalid input file. " + string (inchar) );
 	}
-	in_file.close();			
+	in_file.close();
     return 	out_str;
 }
 
@@ -375,7 +378,7 @@ void HybridLambda::read_input_lines(const char inchar[], vector <string> & out_v
     string out_str;
     if ( in_file.good() ){
         getline ( in_file, out_str );
-        while ( out_str.size() > 0 ){   
+        while ( out_str.size() > 0 ){
             out_vec.push_back( out_str );
             getline ( in_file, out_str );
         }
@@ -416,15 +419,15 @@ void HybridLambda::create_site_data_dir(){
 	for ( size_t i = 0; i < mt_tree_str_s.size(); i++ ){
 		create_new_site_data( mt_tree_str_s[i], i+1 );
 	}
-    clog << "Segregating site data saved at: "<< this->seg_dir_name << "\n"; 
+    clog << "Segregating site data saved at: "<< this->seg_dir_name << "\n";
 }
 
 /*! \brief Generate segrateing site data */
 void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i ){
     Tree mt_tree( gt_string_mut_num );
     string sitefile_name = seg_dir_name + "/site" + std::to_string(static_cast<long long>(site_i));
-    extract_file.open (sitefile_name.c_str()); 
-    
+    extract_file.open (sitefile_name.c_str());
+
     int total_mut = 0;
     this->haplotypes.clear();
     for ( size_t node_i = 0; node_i < mt_tree.NodeContainer.size(); node_i++ ){
@@ -432,7 +435,7 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
             haplotypes.push_back ( mt_tree.samples_below[node_i] );}
         total_mut += mt_tree.NodeContainer[node_i].brchlen1();
     }
-    
+
     for ( size_t tip_i = 0; tip_i < mt_tree.tip_name.size(); tip_i++ ){
         extract_file << mt_tree.tip_name[tip_i] << "\t";
         for ( size_t i = 0 ; i < haplotypes.size(); i++){
@@ -440,9 +443,9 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
         extract_file<<"\n";
     }
     extract_file.close();
-    
+
     if ( this->fst_bool ) {
-        extract_file.open ( fst_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary ); 
+        extract_file.open ( fst_file_name.c_str(), std::ios::out | std::ios::app | std::ios::binary );
         extract_file << compute_fst ( this->haplotypes, parameters()->sample_size ) << "\n";
         extract_file.close();
     }
@@ -450,29 +453,29 @@ void HybridLambda::create_new_site_data( string &gt_string_mut_num, int site_i )
 }
 
 void HybridLambda::print_example(){
-    cout << "Examples:" 
-         << endl 
+    cout << "Examples:"
+         << endl
          << endl;
-    cout << "hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1" << endl;	
+    cout << "hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1" << endl;
     cout << "hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim_mut_unit -sim_num_mut" << endl;
     cout << "hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 100 -pop 25000 -sim_num_gener" << endl;
     cout << "hybrid-Lambda -spng '(A:50000,B:50000)r;' -pop '(A:50000,B:50000)r:40000;'" << endl;
     cout << "hybrid-Lambda -spcu '((((A:1.1,B:1.1):2.1,a:2.2):1.1,13D:.2):.3,4:.3);' -S 2 4 3 6 5" << endl;
     cout << "hybrid-Lambda -spcu '(A:1,B:1)r;' -mm '(A:1.9,B:.2)r:2;' -S 3 4" << endl;
-    cout << "hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch" << endl;	
-    cout << "hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE -f" << endl;	
-    cout << "hybrid-Lambda -gt GENE_coal_unit -f " << endl;	
-    cout << "hybrid-Lambda -mt GENE_num_mut -seg " << endl;	
+    cout << "hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch" << endl;
+    cout << "hybrid-Lambda -spcu trees/4_tax_sp1.tre -num 1000 -o GENE -f" << endl;
+    cout << "hybrid-Lambda -gt GENE_coal_unit -f " << endl;
+    cout << "hybrid-Lambda -mt GENE_num_mut -seg " << endl;
     cout << "hybrid-Lambda -spcu '(A:5,B:5)r;' -mono -num 100 -mm .1 -S 4 4" << endl;
     cout << endl;
 }
 
 void HybridLambda::print_option(){
-    cout << endl 
-         << "hybrid-Lambda " << VERSION 
-         << endl 
+    cout << endl
+         << "hybrid-Lambda " << VERSION
+         << endl
          << endl;
-    cout << "Usage:" 
+    cout << "Usage:"
          << endl;
     cout << setw(20) << "-h or -help"         << "  --  " << "Help. List the following content." << endl;
     cout << setw(20) << "-spcu STR"           << "  --  " << "Input the species network/tree string through command line or a file." << endl;
@@ -507,23 +510,23 @@ void HybridLambda::print_option(){
     cout << setw(20) << "-mono"               << "  --  " << "Generate a frequency table of monophyletic, paraphyletic and polyphyletic trees. " << endl;
     cout << setw(20) << "-plot/-dot [option]" << "  --  " << "Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree)." << endl;
     cout << setw(20) << "      -branch"       << "  --  " << "Branch lengths will be labelled in the figure." << endl;
-    //cout << setw(20) << "-plotF/-dotF FILE" << "  --  " << "Generated figure will be saved in FILE." << endl;			
-    cout << endl;	
+    //cout << setw(20) << "-plotF/-dotF FILE" << "  --  " << "Generated figure will be saved in FILE." << endl;
+    cout << endl;
 }
 
 
 
 /*!
- * Assume two populations A and B have been isolated until time tau in the past as measured from the present. 
- * Assume also that the same coalescent process is operating in populations A and B. 
- * Let TW denote the time until coalescence for two lines when drawn from the same population, 
- * and Tb when drawn from different populations. 
- * Let lambdaA denote the coalescence rate for two lines in population A, and 
- * lambdaAB for the common ancestral population AB. 
+ * Assume two populations A and B have been isolated until time tau in the past as measured from the present.
+ * Assume also that the same coalescent process is operating in populations A and B.
+ * Let TW denote the time until coalescence for two lines when drawn from the same population,
+ * and Tb when drawn from different populations.
+ * Let lambdaA denote the coalescence rate for two lines in population A, and
+ * lambdaAB for the common ancestral population AB.
  * For the Beta(2 − alpha, alpha)-coalescent, lambdaA = 1, for the point-mass process lambdaA = psi^2. One now obtains
  * ETw exptected value of Tw
  * ETw = (1 - exp(-lambdaA * tau) * lambdaA^{-1} + exp(-lambdaA * tau) * (tau + lambdaAB^{-1})
- * 
+ *
  */
 
 double lambda( double alpha ){
@@ -535,9 +538,9 @@ double lambda( double alpha ){
 double ETw( double alphaA, double alphaAB, double tau ){
     double lambdaA = lambda( alphaA );
     double lambdaAB = lambda( alphaAB );
-    
+
     return ( 1 - exp( -lambdaA * tau ) ) / lambdaA + exp( -lambdaA * tau) * ( tau + 1 / lambdaAB);
-} 
+}
 
 double ETb( double alphaAB, double tau ){
     double lambdaAB = lambda( alphaAB );
@@ -583,16 +586,16 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
         pop_shift += sample_size_tmp;
     }
 
-    
+
     double Npairs = 0;
     size_t pop_i_shift = 0;
     size_t pop_j_shift = sample_size[0];
     for ( size_t pop_i = 0; pop_i < (sample_size.size() - 1); pop_i++ ){
-        
+
         size_t sample_size_pop_i = sample_size[pop_i];
-        
+
         for( size_t sample_i = 0 ; sample_i < sample_size_pop_i; sample_i++ ){
-    
+
             for ( size_t pop_j = (pop_i+1); pop_j < sample_size.size() ; pop_j++ ){
                 size_t sample_size_pop_j = sample_size[pop_j];
                 for( size_t sample_j = 0 ; sample_j < sample_size_pop_j; sample_j++ ){
@@ -601,7 +604,7 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
                         Hb += abs( sites[base][sample_i+pop_i_shift] - sites[base][sample_j+pop_j_shift] ) ;
                     }
                 }
-        
+
             }
         }
         pop_i_shift += sample_size_pop_i;
@@ -617,5 +620,5 @@ double compute_fst ( vector < valarray <int> > &sites , vector < int > &sample_s
     //cout << "fst = " << 1.0 - (Hw/Hb) <<endl;
 
     //return ( 1 -  (Hw*n/(Hb*(n-1)))  );
-    return ( 1 -  (Hw / Hb) ); 
+    return ( 1 -  (Hw / Hb) );
 }

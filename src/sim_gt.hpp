@@ -1,11 +1,11 @@
 /*
- * hybrid-Lambda is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under
  * coalescent process.
- * 
- * Copyright (C) 2010 -- 2014 Sha (Joe) Zhu
- * 
+ *
+ * Copyright (C) 2010 -- 2015 Sha (Joe) Zhu
+ *
  * This file is part of hybrid-Lambda.
- * 
+ *
  * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -26,15 +26,16 @@
 
 #include <stdio.h>
 #include "net.hpp"
-#include "mtrand.h"
 #include "global.hpp"
+#include "mersenne_twister.hpp"
+
 #ifndef GLOBAL_sim
 #define GLOBAL_sim
-	
+
 class SimulationParameters{
     friend class HybridLambda;
     friend class simTree;
-    
+
     void set_mutation_rate ( double rate ) { this->mutation_rate = rate; }
     double mutation_rate;
     bool mm_bool;
@@ -45,7 +46,7 @@ class SimulationParameters{
     string sp_string_pop_size;
     string para_string;
     int total_num_lineage;
-    
+
     bool num_gener_bool;
     bool sp_coal_unit_bool;
 
@@ -89,15 +90,15 @@ class action_board {
     bool sim_mut_unit()  const { return sim_mut_unit_bool;  }
     bool sim_num_gener() const { return sim_num_gener_bool; }
     bool sim_num_mut()   const { return sim_num_mut_bool;   }
-    bool Si_num()        const { return Si_num_bool; }    
-    
+    bool Si_num()        const { return Si_num_bool; }
+
     void set_sim_mut_unit()  { this->sim_mut_unit_bool  = true; }
     void set_sim_num_gener() { this->sim_num_gener_bool = true; }
-    void set_sim_num_mut()   { this->sim_num_mut_bool   = true; }	
+    void set_sim_num_mut()   { this->sim_num_mut_bool   = true; }
     void set_Si_num() { this->Si_num_bool = true; this->sim_num_mut_bool=true; }
-    void set_mono() { this->mono_bool = true; } 
+    void set_mono() { this->mono_bool = true; }
     bool mono()          const { return mono_bool; }  // \todo, make this private
-    
+
     bool sim_mut_unit_bool;
     bool sim_num_gener_bool;
     bool sim_num_mut_bool;
@@ -123,6 +124,7 @@ class simTree : public Tree {
     #endif
     friend class HybridLambda;
 
+    MersenneTwister * mt;
     action_board* simulation_jobs_;
     SimulationParameters* parameters_;
     string gt_string_mut_num;
@@ -130,7 +132,7 @@ class simTree : public Tree {
     string gt_string_gener_num;
     vector <double> monophyly;
     double total_brchlen;
-    int total_mut;    
+    int total_mut;
     ofstream * Si_table_;
 
 
@@ -146,27 +148,27 @@ class simTree : public Tree {
     vector < size_t> remaining_gt_node;
     void initialize_remaining_sp_node ( Net *my_Net );
     void push_in_descdent();
-    
-    void implement_coalsecent( vector <size_t> & current_alive_lineages, 
-                               double remaining_length, double multi_merge_para, double pop_size, 
+
+    void implement_coalsecent( vector <size_t> & current_alive_lineages,
+                               double remaining_length, double multi_merge_para, double pop_size,
                                string nodelabel );
-    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, 
+    void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node,
                          double top_time_in_coal_unit, double pop_size);
-    
+
     void remove_unused_nodes();
     void finalize( size_t num_taxa );
     void finalize_gt_str( string & gt_tr, Tree & gt );
     void compute_monophyly_vec( vector < int > sample_size );
     void Si_num_out_table ( Tree &mt_tree );
-    
+
     void include_lineages_at_sp_node( Node & sp_node );
     void assign_lineages_at_sp_node ( Node & sp_node );
-    
+
     void build_gt_string_mut_unit();
     void build_mt_tree();
 
     void compute_bl_extension( double multi_merge_para, size_t num_lineage );
-    
+
     vector < vector <double> > lambda_bk_mat;
     valarray <double> nc_X;
     void build_lambda_bk_mat( double para, size_t num_lineage);
@@ -178,21 +180,18 @@ class simTree : public Tree {
     double update_coal_para( vector < vector <double> > &lambda_bk_mat, double num_lineage);
     void build_nc_X( size_t num_lineage );
     size_t update_nc();
-    
+
     /*! \fn double unifRand()
      * \brief Simulate random variable between 0 and 1.
      */
     double unifRand(){
-        MTRand_closed return_value;
-        return return_value();
-        //return rand()/(double(RAND_MAX)+1);
-        //return rand() / double(RAND_MAX); //generates a psuedo-random float between 0.0 and 0.999...
-    } 
-    
+        return (double)mt->sample();
+    }
+
     double kingman_bl( double num_lineage ){
 	    return -log( 1-unifRand() ) / num_lineage / (num_lineage-1) * 2.0;
     }
-    
+
     /*! \fn int poisson_rand_var(double lambda)
      * \brief Simulating Poisson random variable from given lambda
      */
@@ -205,15 +204,15 @@ class simTree : public Tree {
              p *= unifRand(); //p=p*unifRand();
         }
         //Generate uniform random number u in [0,1] and let pp × u.
-        k--;//k=k-1;	
+        k--;//k=k-1;
         return k;
     }
 
     void core();
     public:
         string gt_string_coal_unit;
-        simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table );
-        simTree( SimulationParameters* sim_param, action_board *simulation_jobs);
+        simTree( SimulationParameters* sim_param, action_board *simulation_jobs, std::ofstream &Si_table, MersenneTwister *mt );
+        //simTree( SimulationParameters* sim_param, action_board *simulation_jobs, MersenneTwister *mt);
         ~simTree(){};
 };
 
