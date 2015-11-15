@@ -1,7 +1,7 @@
 rm(list = ls())
-	source("hybridLambda_fst.r")
+	source("tests/fst/hybridLambda_fst.r")
 	prefix = "OUT"
-	bjarki_fst = hybridLambdaFst( 400, 24 ) 
+	bjarki_fst = hybridLambdaFst( 100, 21 ) 
 	fst = read.table("OUT_fst")$V1 
 	fst = fst[!is.nan(fst)]
 	hybridlambda_fst = c( mean(fst), var(fst))

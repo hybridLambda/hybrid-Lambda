@@ -1,11 +1,11 @@
 /*
- * hybrid-Lambda is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under
  * coalescent process.
- * 
- * Copyright (C) 2010 -- 2014 Sha (Joe) Zhu
- * 
+ *
+ * Copyright (C) 2010 -- 2015 Sha (Joe) Zhu
+ *
  * This file is part of hybrid-Lambda.
- * 
+ *
  * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
 	    HybridLambda run_hybridLambda ( argc, argv );
 
         run_hybridLambda.HybridLambda_core( );
-        run_hybridLambda.create_site_data_dir(); // segregating site data were generated				
+        run_hybridLambda.create_site_data_dir(); // segregating site data were generated
 
         run_hybridLambda.extract_tmrca ();
         run_hybridLambda.extract_bl ();
@@ -45,9 +45,9 @@ int main(int argc, char *argv[]){
         run_hybridLambda.extract_frequency();
 
 
-/// need to work         
+/// need to work
 //if (run_hybridLambda.fst_bool){
-////sim::param sim_para(argc, argv);	
+////sim::param sim_para(argc, argv);
 //Net coal_unit_net(sim_para.net_str);
 //double tau = coal_unit_net.NodeContainer[0].brchlen1;
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 //cout << "Expected[Fst] = " << Fst << endl;
 //}
 
-		//}			
+		//}
     }
     catch (const exception &e) {
       std::cerr << "Error: " << e.what() << std::endl;
