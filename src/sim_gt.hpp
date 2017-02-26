@@ -224,7 +224,12 @@ double binomial_coefficient( double n , double k);
 /*! \brief Beta function, requires tgamma function from math.h \return double */
 inline double Beta(double x,double y){
 //	return tgamma(x)*tgamma(y)/tgamma(x+y);
-	return exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
+    if ( x > 170 | y > 170 ){
+        return exp(lgamma(x)+lgamma(y)-lgamma(x+y));
+    } else {
+        return tgamma(x)*tgamma(y)/tgamma(x+y);
+        //return exp(log(tgamma(x))+log(tgamma(y))-log(tgamma(x+y)));
+    }
 }
 
 #endif
