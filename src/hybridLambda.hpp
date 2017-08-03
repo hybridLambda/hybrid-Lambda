@@ -85,7 +85,7 @@ class HybridLambda{
         bool read_GENE_trees;
         bool read_mt_trees;
 
-		//vector <string> tax_name;
+        //vector <string> tax_name;
         vector <double> monophyly;
         vector < valarray < int > > haplotypes;
 

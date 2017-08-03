@@ -431,6 +431,16 @@ string SimulationParameters::write_sp_string_in_coal_unit( string &sp_num_gener_
                                                            string &pop_size_string /*! Network in extended newick form, branch lengths are the population sizes*/){
     Net sp_num_gener_net(sp_num_gener_string);
     Net pop_size_net(pop_size_string);
+
+    bool is_equal = false;
+    if(sp_num_gener_net.tax_name.size() == pop_size_net.tax_name.size()){
+      is_equal = std::equal(sp_num_gener_net.tax_name.begin(), sp_num_gener_net.tax_name.end(), pop_size_net.tax_name.begin());
+    }
+
+    if (!is_equal){
+        throw std::invalid_argument("Species tree taxa name do not match!");
+    }
+
     for ( size_t node_i=0; node_i < sp_num_gener_net.NodeContainer.size(); node_i++){
         if ( node_i < sp_num_gener_net.NodeContainer.size()-1 ){
             sp_num_gener_net.NodeContainer[node_i].set_brchlen1 ( sp_num_gener_net.NodeContainer[node_i].brchlen1() / pop_size_net.NodeContainer[node_i].brchlen1() );
