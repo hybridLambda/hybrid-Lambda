@@ -101,7 +101,7 @@ void simTree::core (){
             if ( rank_i == this->parameters_->my_Net->max_rank ) {assert(this->print_all_node_dout());break; }
 
             this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1,
-                                   this->parameters_->my_Net->NodeContainer[node_i].parent1->height(),
+                                   this->parameters_->my_Net->NodeContainer[node_i].height() + this->parameters_->my_Net->NodeContainer[node_i].brchlen1(),
                                    pop_size );
 
             if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) {
@@ -113,7 +113,7 @@ void simTree::core (){
                                             remaining_length, multi_merge_para, pop_size,
                                             this->parameters_->my_Net->NodeContainer[node_i].label);
                 this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2,
-                                       this->parameters_->my_Net->NodeContainer[node_i].parent2->height(),
+                                       this->parameters_->my_Net->NodeContainer[node_i].height() + this->parameters_->my_Net->NodeContainer[node_i].brchlen2(),
                                        pop_size);
             }
             remaining_sp_node.erase( remaining_sp_node.begin() + remaining_sp_node_i );
@@ -229,7 +229,8 @@ void simTree::finalize( size_t num_taxa ){
     // check if the gene tree is ultramatric.
     dout<<"check of if "<<gt_string_coal_unit <<" is ultrametric"<<endl;
     this->check_isUltrametric();
-    if ( !this->is_ultrametric ){ throw "Gene tree is not ultrametric"; }
+    //if ( !this->is_ultrametric ){ throw std::invalid_argument ("Gene tree is not ultrametric"); }
+    if ( !this->is_ultrametric ){ clog << "WARNING: Gene tree is not ultrametric" << endl; }
 
     if ( this->simulation_jobs_->sim_mut_unit_bool ) { build_gt_string_mut_unit( ); dout<<"mut_tree built"<<endl;}
 
