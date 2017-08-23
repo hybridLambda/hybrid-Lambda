@@ -173,6 +173,7 @@ void simTree::remove_unused_nodes(){
 
 void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
                                     double remaining_length, double multi_merge_para, double pop_size, string node_label){
+    this->current_lineage_Extension = 0;
     size_t num_lineage = current_alive_lineages.size();
     this->build_lambda_bk_mat( multi_merge_para , num_lineage );
 
@@ -216,6 +217,7 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
             this->NodeContainer[new_lineage].set_height( this->NodeContainer[new_lineage].child[0]->height() + this->NodeContainer[remaining_gt_node[0]].child[0]->brchlen1() ); // a_gamma <- a_alpha + b_alpha
             if (sim_num_gener_bool_){
                 my_gt_num_gener.NodeContainer[new_lineage].set_height( my_gt_num_gener.NodeContainer[new_lineage].child[0]->height() + my_gt_num_gener.NodeContainer[remaining_gt_node[0]].child[0]->brchlen1() ); // a_gamma <- a_alpha + b_alpha
+                my_gt_num_gener.NodeContainer[new_lineage].set_brchlen1(0); // a_gamma <- a_alpha + b_alpha
             }
 
             for ( size_t update_brch_i=0;update_brch_i < current_alive_lineages.size()-1;update_brch_i++){
@@ -229,8 +231,11 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
             remaining_length -= current_lineage_Extension;
             num_lineage = current_alive_lineages.size();
             dout<<num_lineage<<" live lineages in population "<< node_label <<" with remaining branch length of " << remaining_length  <<endl;
+        } else {
+            dout << " Nothing to coalesce. " << endl;
+            current_lineage_Extension = 0;
+            return;
         }
-        else return;
     }
 }
 
@@ -333,7 +338,12 @@ void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double
         this->NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( height_diff_in_coal_unit );
         if ( sim_num_gener_bool_ ){
             double current_node_bl_in_num_gener = my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].brchlen1();
-            my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( current_node_bl_in_num_gener + pop_bl_in_coal_unit * pop_size );
+            if (pop_bl_in_coal_unit>current_lineage_Extension & current_lineage_Extension > 0){
+                my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( current_node_bl_in_num_gener + (pop_bl_in_coal_unit-current_lineage_Extension ) * pop_size );
+            } else {
+                my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( current_node_bl_in_num_gener + (pop_bl_in_coal_unit) * pop_size );
+            }
+
         }
     }
     dout<<"************************* after adjusting***************"<<endl;
