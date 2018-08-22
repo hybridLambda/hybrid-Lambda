@@ -1,0 +1,129 @@
+version: 2.0
+jobs:
+  "14.04":
+    docker:
+      - image: circleci/buildpack-deps:14.04
+    working_directory: /home/circleci/hybrid-Lambda
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci *
+      - restore_cache:
+          key: hybrid-Lambda-{{ .Branch }}
+      - run:
+          name: Checkout submodules
+          command: |
+            git submodule update --init --recursive --remote
+      - run:
+          name: Install dependencies and set path
+          command: |
+           sudo apt-get update
+           curl -fsSL https://git.io/vHGMF | bash
+           sudo apt-get install libcppunit-dev
+           sudo apt-get install valgrind
+           sudo apt-get install r-base-core
+
+      - run:
+           name: Getting ready
+           command: |
+            g++ --version
+            ./bootstrap
+      - run:
+           name: Compile
+           command: |
+            make hybrid-Lambda
+            make check
+      - run:
+           name: Run tests
+           command: |
+            tests/checkbinary.sh
+            tests/fst/compute_fst.sh
+            cd src; make clean; make
+
+  "16.04":
+    docker:
+      - image: circleci/buildpack-deps:16.04
+    working_directory: /home/circleci/hybrid-Lambda
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci *
+      - restore_cache:
+          key: hybrid-Lambda-{{ .Branch }}
+      - run:
+          name: Checkout submodules
+          command: |
+            git submodule update --init --recursive --remote
+      - run:
+          name: Install dependencies and set path
+          command: |
+           sudo apt-get update
+           curl -fsSL https://git.io/vHGMF | bash
+           sudo apt-get install libcppunit-dev
+           sudo apt-get install valgrind
+           sudo apt-get install r-base-core
+
+      - run:
+           name: Getting ready
+           command: |
+            g++ --version
+            ./bootstrap
+      - run:
+           name: Compile
+           command: |
+            make hybrid-Lambda
+            make check
+      - run:
+           name: Run tests
+           command: |
+            tests/checkbinary.sh
+            tests/fst/compute_fst.sh
+            cd src; make clean; make
+
+  "18.04":
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    working_directory: /home/circleci/hybrid-Lambda
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci *
+      - restore_cache:
+          key: hybrid-Lambda-{{ .Branch }}
+      - run:
+          name: Checkout submodules
+          command: |
+            git submodule update --init --recursive --remote
+      - run:
+          name: Install dependencies and set path
+          command: |
+           sudo apt-get update
+           curl -fsSL https://git.io/vHGMF | bash
+           sudo apt-get install libcppunit-dev
+           sudo apt-get install valgrind
+           sudo apt-get install r-base-core
+
+      - run:
+           name: Getting ready
+           command: |
+            g++ --version
+            ./bootstrap
+      - run:
+           name: Compile
+           command: |
+            make hybrid-Lambda
+            make check
+      - run:
+           name: Run tests
+           command: |
+            tests/checkbinary.sh
+            tests/fst/compute_fst.sh
+            cd src; make clean; make
+
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "14.04"
+      - "16.04"
+      - "18.04"
+
