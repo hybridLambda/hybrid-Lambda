@@ -209,10 +209,18 @@ void HybridLambda::extract_bl(){
     for ( size_t i=0; i < gt_tree_str_s.size(); i++ ){
         Tree gt(gt_tree_str_s[i]);
         double totalbl = 0;
+        vector <double> bl_of_x_descndnt(gt.tax_name.size() - 1, 0.0);
         for (size_t node_i = 0 ; node_i < gt.NodeContainer.size(); node_i++){
             totalbl += gt.NodeContainer[node_i].brchlen1();
+            bl_of_x_descndnt[gt.NodeContainer[node_i].num_descndnt - 1] += gt.NodeContainer[node_i].brchlen1();
         }
-        this->extract_file << totalbl << endl;
+
+        this->extract_file << totalbl << "\t";
+        for ( auto const &value: bl_of_x_descndnt){
+            this->extract_file << value << "\t";
+        }
+
+        this->extract_file << endl;
     }
     this->extract_file.close();
     std::clog << "Total branch length file is saved at: "<< extract_file_name << "\n";

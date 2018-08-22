@@ -6,7 +6,7 @@ rearrange_hybridLambdaout(){
         echo -e "\n//" >> hybridLambdaout
         num_seg=$(cut -f 3 hybridLambda_Si_table | head -$(expr ${i} + 1) | tail -1)
         echo "segsites: ${num_seg} " >> hybridLambdaout
-        if [ ${num_seg} != 0 ]; then            
+        if [ ${num_seg} != 0 ]; then
             echo positions: $(seq 1 $((num_seg))) >> hybridLambdaout
             cut -f 2 hybridLambdaseg_sites/site${i} >> hybridLambdaout
         fi
@@ -45,8 +45,8 @@ foo(){
 	cut -f 10 hybridLambda_stats > hybridLambdadata
 	echo "H" > figuretitle
 	R CMD BATCH ks.r
-    
-    pdfunite ${CURRENTCASE}BL.pdf  ${CURRENTCASE}TMRCA.pdf ${CURRENTCASE}SS.pdf ${CURRENTCASE}H.pdf ${CURRENTCASE}Pairewise_difference.pdf ${CURRENTCASE}Tajima_D.pdf ${CURRENTCASE}theta_H.pdf ${CURRENTCASE}.pdf 
-    rm ${CURRENTCASE}SS.pdf ${CURRENTCASE}BL.pdf ${CURRENTCASE}H.pdf ${CURRENTCASE}Pairewise_difference.pdf ${CURRENTCASE}Tajima_D.pdf ${CURRENTCASE}theta_H.pdf ${CURRENTCASE}TMRCA.pdf 
+
+    pdfunite ${CURRENTCASE}BL.pdf  ${CURRENTCASE}TMRCA.pdf ${CURRENTCASE}SS.pdf ${CURRENTCASE}H.pdf ${CURRENTCASE}Pairewise_difference.pdf ${CURRENTCASE}Tajima_D.pdf ${CURRENTCASE}theta_H.pdf ${CURRENTCASE}.pdf
+    rm ${CURRENTCASE}SS.pdf ${CURRENTCASE}BL.pdf ${CURRENTCASE}H.pdf ${CURRENTCASE}Pairewise_difference.pdf ${CURRENTCASE}Tajima_D.pdf ${CURRENTCASE}theta_H.pdf ${CURRENTCASE}TMRCA.pdf
 
 	}
