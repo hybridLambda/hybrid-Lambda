@@ -10,7 +10,7 @@ before_install:
   - echo $LANG
   - echo $LC_ALL
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq; sudo apt-get install -qq git-core libcppunit-dev graphviz valgrind r-base-core; fi
-  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install llvm cppunit graphviz valgrind && brew link --force llvm; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install llvm cppunit && brew link --force llvm; fi
 before_script:
   - ./bootstrap
 
@@ -22,9 +22,9 @@ script:
   #- if [ $TRAVIS_OS_NAME == linux ]; then tests/fst/compute_fst_psi.sh; fi
   - cd src; make
   - rm -r *
-  - wget --no-check-certificate https://github.com/hybridLambda/hybrid-Lambda/archive/release.tar.gz -o /dev/null
-  - tar -xf release.tar.gz
-  - mv hybrid-Lambda-release/* .
+  - wget --no-check-certificate https://github.com/hybridLambda/hybrid-Lambda/archive/dev.tar.gz -o /dev/null
+  - tar -xf dev.tar.gz
+  - mv hybrid-Lambda-dev/* .
   - ./bootstrap
   - make hybrid-Lambda
   - make check
