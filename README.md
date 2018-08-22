@@ -14,11 +14,11 @@ strings to make it easier to represent hybridization events between species.
 [![CircleCI](https://circleci.com/gh/hybridLambda/hybrid-Lambda.svg?style=shield)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
 
 
-##DOCUMENTATION
+## DOCUMENTATION
 
 [Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
 
-##INSTALLATION
+## INSTALLATION
 
 ### User only
 To install hybrid-Lambda, simply type ```make``` within the directory ```src/```:
@@ -45,7 +45,7 @@ then type the following commands:
 make
 ```
 
-##ASSUMPTION
+## ASSUMPTION
 
 Input network files are written in extended newick format.
 
@@ -58,12 +58,12 @@ _hybrid-Lambda_ is described in the manuscript
 > BMC Bioinformatics 2015, 16:292
 > [doi: http://doi:10.1186/s12859-015-0721-y](http://www.biomedcentral.com/1471-2105/16/292).
 
-##LICENCE
+## LICENCE
 
 You can freely use all code in this project under the conditions of the GNU
 GPL Version 3 or later.
 
-##HOW IT WORKS
+## HOW IT WORKS
 
 Program parameters and options:
 
@@ -92,7 +92,7 @@ Options                  | Useage |
 -plot/-dot _[option]_  | Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).|
 -_branch_            | Branch lengths will be labelled in the figure.|
 
-##Examples:
+## Examples:
 
 ```bash
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1
