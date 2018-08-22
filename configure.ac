@@ -10,6 +10,9 @@ AM_INIT_AUTOMAKE([1.9 tar-ustar subdir-objects])
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
 AM_SILENT_RULES([yes])
 
+# Load macros in 'm4'-dir
+AC_CONFIG_MACRO_DIR([m4])
+
 AC_CANONICAL_HOST
 
 # Checks for programs.
@@ -35,8 +38,28 @@ AC_FUNC_REALLOC
 
 #AC_CHECK_FUNCS([floor])
 #AC_CHECK_FUNCS([pow])
-AC_HEADER_STDBOOL
+#AC_HEADER_STDBOOL
 
-AC_CONFIG_FILES([Makefile])
+m4_include([m4/ac_doxygen.m4])
+DX_INIT_DOXYGEN(hybrid-Lambda, Doxyfile, html/)
+DX_HTML_FEATURE(ON)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(OFF)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(OFF)
+DX_PS_FEATURE(OFF)
+
+
+AC_CHECK_PROG(PDFLATEX, pdflatex, pdflatex)
+AC_CHECK_PROG(BIBTEX, bibtex,bibtex)
+if test -z "$PDFLATEX"; then
+  AC_MSG_WARN([Unable to create PDF version of the user manual.])
+fi
+
+AM_CONDITIONAL([HAVE_PDFLATEX], test -n "$PDFLATEX")
+
+AC_CONFIG_FILES([Makefile doc/Makefile])
 AC_OUTPUT
 
