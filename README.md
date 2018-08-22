@@ -10,16 +10,16 @@ gies. The other feature is that hybrid sim uses extended Newick formatted
 strings to make it easier to represent hybridization events between species.
 
 
-Version             | Branch  | Travis CI Build Status                                                                                                                   | Circle CI Build Status 
-------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |--------------------------
-Stable Version      | release | [![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=release)](https://travis-ci.org/hybridLambda/hybrid-Lambda) | [![Build Status](https://circleci.com/gh/hybridLambda/hybrid-Lambda/tree/release.png?circle-token=:hybridLambda)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
-Development Version | dev     | [![Build Status](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)](https://travis-ci.org/hybridLambda/hybrid-Lambda)     | [![Build Status](https://circleci.com/gh/hybridLambda/hybrid-Lambda/tree/dev.png?circle-token=:hybridLambda)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
+[![travis](https://travis-ci.org/hybridLambda/hybrid-Lambda.svg?branch=dev)](https://travis-ci.org/hybridLambda/hybrid-Lambda)
+[![CircleCI](https://circleci.com/gh/hybridLambda/hybrid-Lambda.svg?style=shield)](https://circleci.com/gh/hybridLambda/hybrid-Lambda)
 
 
-##DOCUMENTATION
+## DOCUMENTATION
+
 [Download](https://github.com/hybridLambda/hybrid-Lambda/blob/doc/doc/manual.pdf?raw=true)
 
-##INSTALLATION
+## INSTALLATION
+
 ### User only
 To install hybrid-Lambda, simply type ```make``` within the directory ```src/```:
 ```bash
@@ -32,11 +32,11 @@ To install hybrid-Lambda, first install the following packages and libraries
 
 on Debian/Ubuntu based systems:
 ```bash
-apt-get install git-core build-essential autoconf autoconf-archive libcppunit-dev graphviz 
+apt-get install build-essential autoconf autoconf-archive libcppunit-dev libboost-all-dev doxygen graphviz
 ```
 on Mac OS:
 ```bash
-port install git cppunit automake autoconf autoconf-archive graphviz
+port install automake autoconf autoconf-archive cppunit boost doxygen graphviz
 ```
 
 then type the following commands:
@@ -45,22 +45,25 @@ then type the following commands:
 make
 ```
 
-##ASSUMPTION
+## ASSUMPTION
+
 Input network files are written in extended newick format.
- 
+
 ## Citation
+
 _hybrid-Lambda_ is described in the manuscript
 
 > Sha Zhu, James H Degnan, Sharyn J Goldstien, Bjarki Eldon.
-> **Hybrid-Lambda: simulation of multiple merger and Kingman gene genealogies in species networks and species trees**. 
-> BMC Bioinformatics 2015, 16:292  
+> **Hybrid-Lambda: simulation of multiple merger and Kingman gene genealogies in species networks and species trees**.
+> BMC Bioinformatics 2015, 16:292
 > [doi: http://doi:10.1186/s12859-015-0721-y](http://www.biomedcentral.com/1471-2105/16/292).
 
-##LICENCE
+## LICENCE
+
 You can freely use all code in this project under the conditions of the GNU
 GPL Version 3 or later.
 
-##HOW IT WORKS
+## HOW IT WORKS
 
 Program parameters and options:
 
@@ -89,7 +92,8 @@ Options                  | Useage |
 -plot/-dot _[option]_  | Use LaTEX(-plot) or Dot (-dot) to draw the input (defined by -spcu) network(tree).|
 -_branch_            | Branch lengths will be labelled in the figure.|
 
-##Examples:
+## Examples:
+
 ```bash
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 3 -seed 2 -o example1
 hybrid-Lambda -spcu trees/4_tax_sp_nt1_para -o example2 -num 2 -mu 0.00003 -sim mut unit -sim num mut
@@ -101,6 +105,6 @@ hybrid-Lambda -spcu trees/7_tax_sp_nt1_para -dot -branch
 hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -o GENE_TREE_FILE -f
 hybrid-Lambda -spcu trees/4_tax_sp1 -num 1000 -o GENE_TREE_FILE -fF FRENQUENCY_FILE
 hybrid-Lambda -spcu '((1:1,2:1):1,3:2);' -num 1000 -o GENE -fF OUTPUT
-hybrid-Lambda -gt GENE_coal_unit -f 
+hybrid-Lambda -gt GENE_coal_unit -f
 hybrid-Lambda -spcu '(A:5,B:5)r;'-mono -num 100 -mm .1 -S 4 4
 ```
