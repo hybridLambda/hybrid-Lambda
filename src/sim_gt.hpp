@@ -153,7 +153,7 @@ class simTree : public Tree {
                                double remaining_length, double multi_merge_para, double pop_size,
                                string nodelabel );
     void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node,
-                         double bottom_time_in_coal_unit, double pop_bl_in_coal_unit, double pop_size);
+                         double bottom_time_in_coal_unit, double pop_bl_in_coal_unit, double pop_size, double remaining_length);
 
     void remove_unused_nodes();
     void finalize( size_t num_taxa );

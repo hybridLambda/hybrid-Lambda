@@ -113,7 +113,7 @@ void simTree::core (){
             this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1,
                                    this->parameters_->my_Net->NodeContainer[node_i].height(),
                                    this->parameters_->my_Net->NodeContainer[node_i].brchlen1(),
-                                   pop_size );
+                                   pop_size, remaining_length );
 
             if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) {
                 dout<<"hybrid node parent1 finished, in parent 2 now"<<endl;
@@ -126,7 +126,7 @@ void simTree::core (){
                 this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2,
                                        this->parameters_->my_Net->NodeContainer[node_i].height(),
                                        this->parameters_->my_Net->NodeContainer[node_i].brchlen2(),
-                                       pop_size);
+                                       pop_size, remaining_length);
 
             }
             remaining_sp_node.erase( remaining_sp_node.begin() + remaining_sp_node_i );
@@ -329,14 +329,14 @@ void simTree::Si_num_out_table( Tree &mt_tree ){
 }
 
 
-void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double bottom_time_in_coal_unit, double pop_bl_in_coal_unit, double pop_size ){
+void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double bottom_time_in_coal_unit, double pop_bl_in_coal_unit, double pop_size, double remaining_length ){
     double top_time_in_coal_unit = bottom_time_in_coal_unit + pop_bl_in_coal_unit;
     dout<<"*************************before adjusting***************"<<endl;
     assert(this->print_all_node_dout());
     assert(this->my_gt_num_gener.print_all_node_dout());
     for ( size_t i = 0; i < Net_node_contains_gt_node.size(); i++){
         double height_diff_in_coal_unit = top_time_in_coal_unit - this->NodeContainer[Net_node_contains_gt_node[i]].height() ;
-        this->NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( height_diff_in_coal_unit );
+        this->NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1(this->NodeContainer[Net_node_contains_gt_node[i]].brchlen1()+remaining_length);
         if ( sim_num_gener_bool_ ){
             double current_node_bl_in_num_gener = my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].brchlen1();
             if (pop_bl_in_coal_unit>current_lineage_Extension & current_lineage_Extension > 0){
@@ -344,7 +344,6 @@ void simTree::adjust_bl_core( vector <size_t> &Net_node_contains_gt_node, double
             } else {
                 my_gt_num_gener.NodeContainer[Net_node_contains_gt_node[i]].set_brchlen1 ( current_node_bl_in_num_gener + (pop_bl_in_coal_unit) * pop_size );
             }
-
         }
     }
     dout<<"************************* after adjusting***************"<<endl;
