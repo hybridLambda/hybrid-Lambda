@@ -626,21 +626,39 @@ void simTree::include_lineages_at_sp_node( Node & sp_node ){
     for ( size_t i = 0; i < sp_node.child.size(); i++){
         if ( sp_node.child[i]->parent1 == &sp_node ){ // to be used, check later
             for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node1.size(); j++){
-                sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node1[j]);
-                dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
+                bool unique = true;
+                for (size_t check_i = 0; check_i < sp_node.Net_node_contains_gt_node1.size(); check_i++) {
+                    if (sp_node.child[i]->Net_node_contains_gt_node1[j] == sp_node.Net_node_contains_gt_node1[check_i]){
+                        unique = false;
+                        break;
+                    }
+                }
+
+                if (unique){
+                    sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node1[j]);
+                    dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
+                }
             }
         }
         else if ( sp_node.child[i]->parent2 == &sp_node ){
             assert ( sp_node.child[i]->parent2 == &sp_node );
             for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node2.size(); j++){
-                sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node2[j]);
-                dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
+                bool unique = true;
+                for (size_t check_i = 0; check_i < sp_node.Net_node_contains_gt_node1.size(); check_i++) {
+                    if (sp_node.child[i]->Net_node_contains_gt_node2[j] == sp_node.Net_node_contains_gt_node1[check_i]){
+                        unique = false;
+                        break;
+                    }
+                }
+                if (unique){
+                    sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node2[j]);
+                    dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
+                }
             }
         }
         else continue;
     }
     dout << sp_node.Net_node_contains_gt_node1.size() << " lineages in total" << endl;
-
 }
 
 
