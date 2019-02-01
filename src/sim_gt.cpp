@@ -69,6 +69,24 @@ void SimulationParameters::finalize(){
     my_para_net = new Net (para_string);
 }
 
+
+
+
+//simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs ): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
+    //this->init();
+    //dout<<"    Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
+    //this->core();
+//}
+
+
+simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table, MersenneTwister *mt ): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
+    this->mt = mt;
+    this->init();
+    dout<<"    Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
+    this->Si_table_ = &Si_table;
+    this->core();
+}
+
 void simTree::core (){
     sim_num_gener_bool_ = this->simulation_jobs_->sim_num_gener_bool;
     if ( this->simulation_jobs_->sim_mut_unit_bool ||  this->simulation_jobs_->sim_num_mut_bool) {
@@ -93,8 +111,11 @@ void simTree::core (){
             dout << endl;
 
             //here to choose go left or right for hybrid node.
-            if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) this->assign_lineages_at_sp_node ( this->parameters_->my_Net->NodeContainer[node_i] );
+            if ( this->parameters_->my_Net->NodeContainer[node_i].hybrid() ) {
+                this->assign_lineages_at_sp_node ( this->parameters_->my_Net->NodeContainer[node_i] );
+            }
 
+            //
             double remaining_length = ( rank_i == this->parameters_->my_Net->max_rank ) ? 1.0/0.0 : this->parameters_->my_Net->NodeContainer[node_i].brchlen1();
             double multi_merge_para = this->parameters_->my_para_net->NodeContainer[node_i].brchlen1();
             double pop_size = this->parameters_->my_pop_net->NodeContainer[node_i].brchlen1();
@@ -142,21 +163,6 @@ void simTree::core (){
     this->finalize( this->parameters_->my_Net->tax_name.size() );
 }
 
-
-//simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs ): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
-    //this->init();
-    //dout<<"    Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
-    //this->core();
-//}
-
-
-simTree::simTree ( SimulationParameters* sim_param, action_board* simulation_jobs, ofstream &Si_table, MersenneTwister *mt ): parameters_(sim_param), simulation_jobs_ (simulation_jobs) {
-    this->mt = mt;
-    this->init();
-    dout<<"    Starting simulating gene tree from "<<  this->parameters_->sp_string_coal_unit<<endl;
-    this->Si_table_ = &Si_table;
-    this->core();
-}
 
 void simTree::remove_unused_nodes(){
     for ( size_t node_i = 0; node_i < this->NodeContainer.size(); ){
@@ -639,22 +645,23 @@ void simTree::include_lineages_at_sp_node( Node & sp_node ){
                     dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
                 }
             }
-            for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node2.size(); j++){
-                bool unique = true;
-                for (size_t check_i = 0; check_i < sp_node.Net_node_contains_gt_node1.size(); check_i++) {
-                    if (sp_node.child[i]->Net_node_contains_gt_node2[j] == sp_node.Net_node_contains_gt_node1[check_i]){
-                        unique = false;
-                        break;
+            if (sp_node.child[i]->parent2 == &sp_node ){ // This is for looping case, 1 sp node has two path to a hybrid node
+                for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node2.size(); j++){
+                    bool unique = true;
+                    for (size_t check_i = 0; check_i < sp_node.Net_node_contains_gt_node1.size(); check_i++) {
+                        if (sp_node.child[i]->Net_node_contains_gt_node2[j] == sp_node.Net_node_contains_gt_node1[check_i]){
+                            unique = false;
+                            break;
+                        }
+                    }
+
+                    if (unique){
+                        sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node2[j]);
+                        dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
                     }
                 }
-
-                if (unique){
-                    sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node2[j]);
-                    dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
-                }
             }
-        }
-        else if ( sp_node.child[i]->parent2 == &sp_node ){
+        } else if ( sp_node.child[i]->parent2 == &sp_node ){
             assert ( sp_node.child[i]->parent2 == &sp_node );
             for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node2.size(); j++){
                 bool unique = true;
@@ -669,20 +676,20 @@ void simTree::include_lineages_at_sp_node( Node & sp_node ){
                     dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
                 }
             }
-            for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node2.size(); j++){
-                bool unique = true;
-                for (size_t check_i = 0; check_i < sp_node.Net_node_contains_gt_node1.size(); check_i++) {
-                    if (sp_node.child[i]->Net_node_contains_gt_node2[j] == sp_node.Net_node_contains_gt_node1[check_i]){
-                        unique = false;
-                        break;
-                    }
-                }
+            //for ( size_t j = 0; j < sp_node.child[i]->Net_node_contains_gt_node1.size(); j++){
+                //bool unique = true;
+                //for (size_t check_i = 0; check_i < sp_node.Net_node_contains_gt_node1.size(); check_i++) {
+                    //if (sp_node.child[i]->Net_node_contains_gt_node1[j] == sp_node.Net_node_contains_gt_node1[check_i]){
+                        //unique = false;
+                        //break;
+                    //}
+                //}
 
-                if (unique){
-                    sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node2[j]);
-                    dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
-                }
-            }
+                //if (unique){
+                    //sp_node.Net_node_contains_gt_node1.push_back ( sp_node.child[i]->Net_node_contains_gt_node1[j]);
+                    //dout << &this->NodeContainer[sp_node.Net_node_contains_gt_node1.back()] << ", ";
+                //}
+            //}
         }
         else continue;
     }
@@ -690,7 +697,7 @@ void simTree::include_lineages_at_sp_node( Node & sp_node ){
 }
 
 
-void simTree::assign_lineages_at_sp_node ( Node &sp_node ){
+void simTree::assign_lineages_at_sp_node(Node &sp_node){
     dout<<"hybrid node"<<endl;
     vector < size_t > index_container_tmp = sp_node.Net_node_contains_gt_node1;
     sp_node.Net_node_contains_gt_node1.clear();

@@ -1,11 +1,11 @@
 /*
- * hybrid-Lambda is used to simulate gene trees given species network under 
+ * hybrid-Lambda is used to simulate gene trees given species network under
  * coalescent process.
- * 
+ *
  * Copyright (C) 2010 -- 2014 Sha (Joe) Zhu
- * 
+ *
  * This file is part of hybrid-Lambda.
- * 
+ *
  * hybrid-Lambda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -31,7 +31,7 @@ bool Node::print_dout( bool is_Net ){
     //else dout << "           ";
     if (this->parent1) dout << setw (11) << (parent1);
     else dout << "           ";
-	dout << setw (6) << this->height();
+	dout << setw (8) << this->height();
 	dout << setw (12) << this->brchlen1();
     if (is_Net){
         if (this->parent2) dout << setw (11) << (parent2->label);
