@@ -149,7 +149,7 @@ class simTree : public Tree {
     void initialize_remaining_sp_node ( Net *my_Net );
     void push_in_descdent();
 
-    void implement_coalsecent( vector <size_t> & current_alive_lineages,
+    double implement_coalsecent( vector <size_t> & current_alive_lineages,
                                double remaining_length, double multi_merge_para, double pop_size,
                                string nodelabel );
     void adjust_bl_core( vector <size_t> &Net_node_contains_gt_node,

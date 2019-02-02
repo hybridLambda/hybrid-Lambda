@@ -119,7 +119,8 @@ void simTree::core (){
             double remaining_length = ( rank_i == this->parameters_->my_Net->max_rank ) ? 1.0/0.0 : this->parameters_->my_Net->NodeContainer[node_i].brchlen1();
             double multi_merge_para = this->parameters_->my_para_net->NodeContainer[node_i].brchlen1();
             double pop_size = this->parameters_->my_pop_net->NodeContainer[node_i].brchlen1();
-            this->implement_coalsecent( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1,
+
+            remaining_length = this->implement_coalsecent( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node1,
                                         remaining_length, multi_merge_para, pop_size,
                                         this->parameters_->my_Net->NodeContainer[node_i].label);
 
@@ -141,7 +142,7 @@ void simTree::core (){
                 double remaining_length = this->parameters_->my_Net->NodeContainer[node_i].brchlen2();
                 double multi_merge_para = this->parameters_->my_para_net->NodeContainer[node_i].brchlen2();
                 double pop_size = this->parameters_->my_pop_net->NodeContainer[node_i].brchlen2();
-                this->implement_coalsecent( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2,
+                remaining_length = this->implement_coalsecent( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2,
                                             remaining_length, multi_merge_para, pop_size,
                                             this->parameters_->my_Net->NodeContainer[node_i].label);
                 this->adjust_bl_core ( this->parameters_->my_Net->NodeContainer[node_i].Net_node_contains_gt_node2,
@@ -178,7 +179,7 @@ void simTree::remove_unused_nodes(){
     }
 }
 
-void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
+double simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
                                     double remaining_length, double multi_merge_para, double pop_size, string node_label){
     this->current_lineage_Extension = 0;
     size_t num_lineage = current_alive_lineages.size();
@@ -241,9 +242,10 @@ void simTree::implement_coalsecent( vector <size_t> & current_alive_lineages,
         } else {
             dout << " Nothing to coalesce. " << endl;
             current_lineage_Extension = 0;
-            return;
+            return remaining_length;
         }
     }
+    return remaining_length;
 }
 
 
