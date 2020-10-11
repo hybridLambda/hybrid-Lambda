@@ -42,6 +42,8 @@ Node::Node(){
     this->height_ = 1.0/0.0;
     //prob_to_hybrid_left=1.0;
     this->visited_ = false;
+    this->set_label1_starts_at(0);
+    this->set_label2_starts_at(0);
 }
 
 
@@ -73,13 +75,17 @@ void Node::print( bool is_Net ){
 }
 
 /*! \brief Add child node to parent node */
-void Node::add_child( Node *child_node /*! pointer to the child node*/){
+void Node::add_child( Node *child_node, /*! pointer to the child node*/
+                      size_t adding_to_parent){
     this->child.push_back(child_node);
-    if ( child_node->parent1 ){
+
+    if ( (adding_to_parent == 2) | (child_node->parent1 != NULL)){
         child_node->parent2 = (this);
         //child_node->hybrid = true;
+    } else {
+        assert(adding_to_parent == 1);
+        child_node->parent1 = (this);
     }
-    else child_node->parent1 = (this);
 }
 
 

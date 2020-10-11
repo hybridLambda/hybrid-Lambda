@@ -82,6 +82,15 @@ class Node {
     vector<Node*> child; /*!< \brief list of pointers to its child nodes */
     Node* parent1; /*!< \brief pointer to its parent node. */
     string clade; /*!< \brief clade at this node, \todo this should be modified to a vector <string> */
+    size_t label1_starts_at_;
+    size_t label2_starts_at_;
+    size_t label1_starts_at() const {return this->label1_starts_at_;}
+    void set_label1_starts_at( size_t start_at ) { this->label1_starts_at_ = start_at; }
+    size_t label2_starts_at() const {return this->label2_starts_at_;}
+    void set_label2_starts_at( size_t start_at ) { this->label2_starts_at_ = start_at; }
+    size_t node_content_starts_at_;
+    size_t node_content_starts_at() const {return this->node_content_starts_at_;}
+    void set_node_content_starts_at( size_t start_at ) { this->node_content_starts_at_ = start_at; }
 
     int num_descndnt; /*!< \brief number of the tip nodes, that are descendant from this node */
     int num_descndnt_interior; /*!< \brief number of the interior nodes, that are descendant from this node \todo to be replaced by descndnt_interior_node.size()? */
@@ -113,7 +122,8 @@ class Node {
 
     // Methods
     Node(); /*!< \brief Initialize Node class*/
-    void add_child( Node *child_node /*! pointer to the child node*/);
+    void add_child( Node *child_node, /*! pointer to the child node*/
+                    size_t adding_to_parent = 1);
     void CalculateRank();
     void print( bool is_Net = false );
     bool print_dout( bool is_Net = false );

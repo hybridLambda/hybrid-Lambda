@@ -39,8 +39,10 @@ Tree::Tree(string old_string /*! input (extended) newick form string */){
     vector<string> labels;
     vector<string> node_contents;
     vector<string> brchlens;
-    this->initialize_nodes_label_and_content(labels, node_contents, brchlens);
-    this->initialize_NodeContainer(labels, node_contents, brchlens);
+    vector<size_t> label_starts_at;
+    vector<size_t> content_starts_at;
+    this->initialize_nodes_label_and_content(labels, node_contents, brchlens, label_starts_at, content_starts_at);
+    this->initialize_NodeContainer(labels, node_contents, brchlens, label_starts_at, content_starts_at);
     this->extract_tax_and_tip_names();
 
     this->connect_graph();
@@ -60,7 +62,9 @@ Tree::Tree(string old_string /*! input (extended) newick form string */){
 
 void Tree::initialize_nodes_label_and_content(vector<string> & labels,
                                               vector<string> & node_contents,
-                                              vector<string> & brchlens) {
+                                              vector<string> & brchlens,
+                                              vector<size_t> & label_starts_at,
+                                              vector<size_t> & content_starts_at) {
     size_t found_bl = net_str.find(':');
     for (size_t i_str_len=1;i_str_len<net_str.size();){
         if (net_str[i_str_len]=='e' && (net_str[i_str_len+1]=='-' || net_str[i_str_len+1]=='+')){
@@ -71,15 +75,18 @@ void Tree::initialize_nodes_label_and_content(vector<string> & labels,
                 size_t str_start_index = i_str_len;
                 string label = extract_label(net_str,i_str_len);
                 labels.push_back(label);
+                label_starts_at.push_back(str_start_index);
 
                 string node_content;
                 if ( net_str[str_start_index-1]==')' ){
                     size_t rev_dummy_i = Parenthesis_balance_index_backwards( net_str, str_start_index-1 );
                     size_t substr_len = str_start_index-rev_dummy_i;
                     node_content = net_str.substr(rev_dummy_i, substr_len );
+                    content_starts_at.push_back(rev_dummy_i);
                 }
                 else {
                     node_content=label;
+                    content_starts_at.push_back(str_start_index);
                 }
                 i_str_len += label.size();
 
@@ -102,7 +109,9 @@ void Tree::initialize_nodes_label_and_content(vector<string> & labels,
 
 void Tree::initialize_NodeContainer(vector<string> & labels,
                                     vector<string> & node_contents,
-                                    vector<string> & brchlens){
+                                    vector<string> & brchlens,
+                                    vector<size_t> & label_starts_at,
+                                    vector<size_t> & content_starts_at){
     //int label_counter = brchlens.size();
     for ( size_t new_i_label=0 ; new_i_label < brchlens.size(); new_i_label++ ){
         Node empty_node;
@@ -110,6 +119,8 @@ void Tree::initialize_NodeContainer(vector<string> & labels,
         NodeContainer[new_i_label].label = labels[new_i_label];
         NodeContainer[new_i_label].node_content = node_contents[new_i_label];
         NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
+        NodeContainer[new_i_label].set_label1_starts_at(label_starts_at[new_i_label]);
+        NodeContainer[new_i_label].set_node_content_starts_at(content_starts_at[new_i_label]);
     }
 
     for ( size_t i = 1; i < NodeContainer.size()-1; i++ ){
@@ -120,6 +131,8 @@ void Tree::initialize_NodeContainer(vector<string> & labels,
                     NodeContainer[i].node_content = NodeContainer[j].node_content;
                 }
                 NodeContainer[i].set_brchlen2 ( NodeContainer[j].brchlen1() );
+                NodeContainer[i].set_label2_starts_at ( NodeContainer[j].label1_starts_at() );
+                NodeContainer[i].set_node_content_starts_at ( NodeContainer[j].node_content_starts_at() );
                 break;
             }
         }
@@ -213,6 +226,7 @@ void Tree::connect_graph(){
     for ( size_t i = 0; i < NodeContainer.size(); i++ ){
         if ( NodeContainer[i].node_content[0] != '(' ) continue;
 
+//        cout <<  NodeContainer[i].label << " " <<  NodeContainer[i].node_content <<endl;
         char child_node1[NodeContainer[i].node_content.length()];
         for ( size_t i_content_len = 1; i_content_len < NodeContainer[i].node_content.length(); ){
             if (NodeContainer[i].node_content[i_content_len]=='(' ||  start_of_tax_name(NodeContainer[i].node_content,i_content_len) ){
@@ -231,7 +245,26 @@ void Tree::connect_graph(){
                 string child_node1_str = child_node1;
                 i_content_len = j_content_len + 2;
                 for ( size_t j = 0; j < NodeContainer.size(); j++){
-                    if (child_node1_str == NodeContainer[j].label) NodeContainer[i].add_child( &NodeContainer[j] );
+
+                    size_t adding_to_parent = 1;
+
+                    if (child_node1_str == NodeContainer[j].label) {
+
+//                        cout<< NodeContainer[i].node_content_starts_at() + child1_node_content_i << " " << NodeContainer[j].label << "  " <<  NodeContainer[j].label1_starts_at() <<endl;
+
+                        // Checking node content label index ...
+                        if (NodeContainer[j].label2_starts_at() == 0){
+                            assert(adding_to_parent = 1);
+                        } else {
+  //                          cout<< NodeContainer[i].node_content_starts_at() + child1_node_content_i + 1<< " " << NodeContainer[j].label << "  " <<  NodeContainer[j].label2_starts_at() <<endl;
+                            if (NodeContainer[i].node_content_starts_at() + child1_node_content_i + 1 == NodeContainer[j].label2_starts_at()){
+                                adding_to_parent = 2;
+                            }
+                        }
+
+
+                        NodeContainer[i].add_child( &NodeContainer[j], adding_to_parent );
+                    }
                 }
             }
             else { i_content_len++;}

@@ -70,10 +70,14 @@ class Tree{
 
     void initialize_nodes_label_and_content(vector<string> & labels,
                                             vector<string> & node_contents,
-                                            vector<string> & brchlens);
+                                            vector<string> & brchlens,
+                                            vector<size_t> & label_starts_at,
+                                            vector<size_t> & content_starts_at);
     void initialize_NodeContainer(vector<string> & labels,
                                     vector<string> & node_contents,
-                                    vector<string> & brchlens);
+                                    vector<string> & brchlens,
+                                    vector<size_t> & label_starts_at,
+                                    vector<size_t> & content_starts_at);
     void init_descendant();
     void init_node_clade();
     void rewrite_descendant();
