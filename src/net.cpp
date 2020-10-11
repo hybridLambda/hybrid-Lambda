@@ -36,68 +36,68 @@ Tree::Tree(string old_string /*! input (extended) newick form string */){
     this->check_labeled( old_string );
     // check & sign, this should be illigal for hybrid-Lambda,
 
-        vector<string> labels;
-        vector<string> node_contents;
-        vector<string> brchlens;
-        size_t found_bl = net_str.find(':');
-        for (size_t i_str_len=1;i_str_len<net_str.size();){
-            if (net_str[i_str_len]=='e' && (net_str[i_str_len+1]=='-' || net_str[i_str_len+1]=='+')){
-                i_str_len++;
-            }
-            else{
-                if ( start_of_tax_name(net_str,i_str_len) ){
-                    size_t str_start_index = i_str_len;
-                    string label = extract_label(net_str,i_str_len);
-                    labels.push_back(label);
+    vector<string> labels;
+    vector<string> node_contents;
+    vector<string> brchlens;
+    size_t found_bl = net_str.find(':');
+    for (size_t i_str_len=1;i_str_len<net_str.size();){
+        if (net_str[i_str_len]=='e' && (net_str[i_str_len+1]=='-' || net_str[i_str_len+1]=='+')){
+            i_str_len++;
+        }
+        else{
+            if ( start_of_tax_name(net_str,i_str_len) ){
+                size_t str_start_index = i_str_len;
+                string label = extract_label(net_str,i_str_len);
+                labels.push_back(label);
 
-                    string node_content;
-                    if ( net_str[str_start_index-1]==')' ){
-                        size_t rev_dummy_i = Parenthesis_balance_index_backwards( net_str, str_start_index-1 );
-                        size_t substr_len = str_start_index-rev_dummy_i;
-                        node_content = net_str.substr(rev_dummy_i, substr_len );
-                    }
-                    else {
-                        node_content=label;
-                    }
-                    i_str_len += label.size();
-
-                    node_contents.push_back(node_content);
-                    string brchlen;
-                    if ( found_bl != string::npos ){
-                        size_t found=min(min(net_str.find(",",i_str_len+1),net_str.find(")",i_str_len+1)),net_str.size());
-                        brchlen = net_str.substr(i_str_len+1,found-i_str_len-1);
-                    }
-                    found_bl = net_str.find(":", found_bl+1);
-                    brchlens.push_back(brchlen);
+                string node_content;
+                if ( net_str[str_start_index-1]==')' ){
+                    size_t rev_dummy_i = Parenthesis_balance_index_backwards( net_str, str_start_index-1 );
+                    size_t substr_len = str_start_index-rev_dummy_i;
+                    node_content = net_str.substr(rev_dummy_i, substr_len );
                 }
                 else {
-                    i_str_len++;
+                    node_content=label;
                 }
+                i_str_len += label.size();
+
+                node_contents.push_back(node_content);
+                string brchlen;
+                if ( found_bl != string::npos ){
+                    size_t found=min(min(net_str.find(",",i_str_len+1),net_str.find(")",i_str_len+1)),net_str.size());
+                    brchlen = net_str.substr(i_str_len+1,found-i_str_len-1);
+                }
+                found_bl = net_str.find(":", found_bl+1);
+                brchlens.push_back(brchlen);
+            }
+            else {
+                i_str_len++;
             }
         }
+    }
 
-        //int label_counter = brchlens.size();
-        for ( size_t new_i_label=0 ; new_i_label < brchlens.size(); new_i_label++ ){
-            Node empty_node;
-            NodeContainer.push_back(empty_node);
-            NodeContainer[new_i_label].label = labels[new_i_label];
-            NodeContainer[new_i_label].node_content = node_contents[new_i_label];
-            NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
-        }
+    //int label_counter = brchlens.size();
+    for ( size_t new_i_label=0 ; new_i_label < brchlens.size(); new_i_label++ ){
+        Node empty_node;
+        NodeContainer.push_back(empty_node);
+        NodeContainer[new_i_label].label = labels[new_i_label];
+        NodeContainer[new_i_label].node_content = node_contents[new_i_label];
+        NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
+    }
 
-        for ( size_t i = 1; i < NodeContainer.size()-1; i++ ){
-            size_t j;
-            for ( j = i+1; j < NodeContainer.size()-1; j++ ){
-                if ( NodeContainer[j].label==NodeContainer[i].label ){
-                    if ( NodeContainer[j].node_content[0] == '(' ){
-                        NodeContainer[i].node_content = NodeContainer[j].node_content;
-                    }
-                    NodeContainer[i].set_brchlen2 ( NodeContainer[j].brchlen1() );
-                    break;
+    for ( size_t i = 1; i < NodeContainer.size()-1; i++ ){
+        size_t j;
+        for ( j = i+1; j < NodeContainer.size()-1; j++ ){
+            if ( NodeContainer[j].label==NodeContainer[i].label ){
+                if ( NodeContainer[j].node_content[0] == '(' ){
+                    NodeContainer[i].node_content = NodeContainer[j].node_content;
                 }
+                NodeContainer[i].set_brchlen2 ( NodeContainer[j].brchlen1() );
+                break;
             }
-            if ( NodeContainer[j].label == NodeContainer[i].label ) NodeContainer.erase(NodeContainer.begin()+j);
         }
+        if ( NodeContainer[j].label == NodeContainer[i].label ) NodeContainer.erase(NodeContainer.begin()+j);
+    }
 
     this->extract_tax_and_tip_names();
 
