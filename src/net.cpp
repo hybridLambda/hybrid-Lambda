@@ -39,6 +39,28 @@ Tree::Tree(string old_string /*! input (extended) newick form string */){
     vector<string> labels;
     vector<string> node_contents;
     vector<string> brchlens;
+    this->initialize_nodes_label_and_content(labels, node_contents, brchlens);
+    this->initialize_NodeContainer(labels, node_contents, brchlens);
+    this->extract_tax_and_tip_names();
+
+    this->connect_graph();
+    this->NodeContainer.back().find_tip();
+    this->NodeContainer.back().find_hybrid_descndnt();
+    this->NodeContainer.back().CalculateRank();
+    this->max_rank = NodeContainer.back().rank();
+    this->enumerate_internal_branch( this->NodeContainer.back() );
+    this->init_descendant();
+    this->init_node_clade();
+    //this->rewrite_descendant();
+    this->check_isNet();
+    this->check_isUltrametric();
+    //dout<<"Net constructed"<<endl;
+}
+
+
+void Tree::initialize_nodes_label_and_content(vector<string> & labels,
+                                              vector<string> & node_contents,
+                                              vector<string> & brchlens) {
     size_t found_bl = net_str.find(':');
     for (size_t i_str_len=1;i_str_len<net_str.size();){
         if (net_str[i_str_len]=='e' && (net_str[i_str_len+1]=='-' || net_str[i_str_len+1]=='+')){
@@ -75,7 +97,12 @@ Tree::Tree(string old_string /*! input (extended) newick form string */){
             }
         }
     }
+}
 
+
+void Tree::initialize_NodeContainer(vector<string> & labels,
+                                    vector<string> & node_contents,
+                                    vector<string> & brchlens){
     //int label_counter = brchlens.size();
     for ( size_t new_i_label=0 ; new_i_label < brchlens.size(); new_i_label++ ){
         Node empty_node;
@@ -99,20 +126,6 @@ Tree::Tree(string old_string /*! input (extended) newick form string */){
         if ( NodeContainer[j].label == NodeContainer[i].label ) NodeContainer.erase(NodeContainer.begin()+j);
     }
 
-    this->extract_tax_and_tip_names();
-
-    this->connect_graph();
-    this->NodeContainer.back().find_tip();
-    this->NodeContainer.back().find_hybrid_descndnt();
-    this->NodeContainer.back().CalculateRank();
-    this->max_rank = NodeContainer.back().rank();
-    this->enumerate_internal_branch( this->NodeContainer.back() );
-    this->init_descendant();
-    this->init_node_clade();
-    //this->rewrite_descendant();
-    this->check_isNet();
-    this->check_isUltrametric();
-    //dout<<"Net constructed"<<endl;
 }
 
 
@@ -552,7 +565,9 @@ void Tree::rewrite_descendant(){    //check for coaleased tips(& sign in the tip
 
 string Tree::print_newick( Node * node ){
     string tree_str;
-    if ( node->tip_bool ) tree_str = node->label ;
+    if ( node->tip_bool ){
+        tree_str = node->label ;
+    }
     else {
         tree_str = "(";
         for ( size_t i = 0 ; i < node->child.size() ; i++ ){

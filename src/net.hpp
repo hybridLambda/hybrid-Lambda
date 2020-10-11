@@ -68,6 +68,12 @@ class Tree{
     void connect_graph();
     void extract_tax_and_tip_names();
 
+    void initialize_nodes_label_and_content(vector<string> & labels,
+                                            vector<string> & node_contents,
+                                            vector<string> & brchlens);
+    void initialize_NodeContainer(vector<string> & labels,
+                                    vector<string> & node_contents,
+                                    vector<string> & brchlens);
     void init_descendant();
     void init_node_clade();
     void rewrite_descendant();
