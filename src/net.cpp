@@ -119,6 +119,7 @@ void Tree::initialize_NodeContainer(vector<string> & labels,
         NodeContainer[new_i_label].label = labels[new_i_label];
         NodeContainer[new_i_label].node_content = node_contents[new_i_label];
         NodeContainer[new_i_label].set_brchlen1( strtod(brchlens[new_i_label].c_str(), NULL) );
+        //cout << new_i_label << "  " << labels[new_i_label] << "  " << brchlens[new_i_label] << endl;
         NodeContainer[new_i_label].set_label1_starts_at(label_starts_at[new_i_label]);
         NodeContainer[new_i_label].set_node_content_starts_at(content_starts_at[new_i_label]);
     }
@@ -215,8 +216,8 @@ void Tree::extract_tax_and_tip_names(){
         }
         tip_name.push_back(NodeContainer[i].label);
     }
-    sort(tax_name.begin(), tax_name.end());
-    sort(tip_name.begin(), tip_name.end());
+//    sort(tax_name.begin(), tax_name.end());
+//    sort(tip_name.begin(), tip_name.end());
     //cout << " tax_name.size() = "<<tax_name.size()<<endl;
     //cout << " tip_name.size() = "<<tax_name.size()<<endl;
 }
@@ -226,7 +227,7 @@ void Tree::connect_graph(){
     for ( size_t i = 0; i < NodeContainer.size(); i++ ){
         if ( NodeContainer[i].node_content[0] != '(' ) continue;
 
-//        cout <<  NodeContainer[i].label << " " <<  NodeContainer[i].node_content <<endl;
+        // cout <<  NodeContainer[i].label << " " <<  NodeContainer[i].node_content <<endl;
         char child_node1[NodeContainer[i].node_content.length()];
         for ( size_t i_content_len = 1; i_content_len < NodeContainer[i].node_content.length(); ){
             if (NodeContainer[i].node_content[i_content_len]=='(' ||  start_of_tax_name(NodeContainer[i].node_content,i_content_len) ){
@@ -242,6 +243,7 @@ void Tree::connect_graph(){
                     }
                     child1_node_content_i++;
                 }
+
                 string child_node1_str = child_node1;
                 i_content_len = j_content_len + 2;
                 for ( size_t j = 0; j < NodeContainer.size(); j++){
@@ -249,15 +251,12 @@ void Tree::connect_graph(){
                     size_t adding_to_parent = 1;
 
                     if (child_node1_str == NodeContainer[j].label) {
-
-//                        cout<< NodeContainer[i].node_content_starts_at() + child1_node_content_i << " " << NodeContainer[j].label << "  " <<  NodeContainer[j].label1_starts_at() <<endl;
-
+                        // cout<< NodeContainer[i].label << " " << NodeContainer[i].node_content_starts_at() + child1_node_content_i << " " << NodeContainer[j].label << "  " <<  NodeContainer[j].label1_starts_at() <<endl;
                         // Checking node content label index ...
                         if (NodeContainer[j].label2_starts_at() == 0){
                             assert(adding_to_parent = 1);
                         } else {
-  //                          cout<< NodeContainer[i].node_content_starts_at() + child1_node_content_i + 1<< " " << NodeContainer[j].label << "  " <<  NodeContainer[j].label2_starts_at() <<endl;
-                            if (NodeContainer[i].node_content_starts_at() + child1_node_content_i + 1 == NodeContainer[j].label2_starts_at()){
+                            if (NodeContainer[i].node_content_starts_at() > NodeContainer[j].label1_starts_at()){
                                 adding_to_parent = 2;
                             }
                         }
@@ -562,7 +561,7 @@ void Tree::rewrite_descendant(){    //check for coaleased tips(& sign in the tip
             tax_name.push_back(NodeContainer.back().clade.substr(tax_name_start,tax_name_length));
         }
     }
-    sort(tax_name.begin(), tax_name.end());
+//    sort(tax_name.begin(), tax_name.end());
     descndnt.clear();
 
     for (size_t i=0;i<NodeContainer.size();i++){
