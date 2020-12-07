@@ -216,8 +216,8 @@ void Tree::extract_tax_and_tip_names(){
         }
         tip_name.push_back(NodeContainer[i].label);
     }
-//    sort(tax_name.begin(), tax_name.end());
-//    sort(tip_name.begin(), tip_name.end());
+    sort(tax_name.begin(), tax_name.end());
+    sort(tip_name.begin(), tip_name.end());
     //cout << " tax_name.size() = "<<tax_name.size()<<endl;
     //cout << " tip_name.size() = "<<tax_name.size()<<endl;
 }
@@ -561,7 +561,7 @@ void Tree::rewrite_descendant(){    //check for coaleased tips(& sign in the tip
             tax_name.push_back(NodeContainer.back().clade.substr(tax_name_start,tax_name_length));
         }
     }
-//    sort(tax_name.begin(), tax_name.end());
+    sort(tax_name.begin(), tax_name.end());
     descndnt.clear();
 
     for (size_t i=0;i<NodeContainer.size();i++){
