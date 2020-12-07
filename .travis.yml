@@ -6,6 +6,17 @@ os:
 compiler:
   - gcc
   - clang
+
+addons:
+  apt:
+    packages: git-core libcppunit-dev graphviz valgrind r-base-core texlive-latex-extra texlive-fonts-recommended doxygen
+  homebrew:
+    packages:
+    - llvm
+    - cppunit
+    - zlib
+    update: true
+
 before_install:
   - echo $LANG
   - echo $LC_ALL
