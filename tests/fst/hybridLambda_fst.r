@@ -19,7 +19,7 @@ for( i in 1:N ){
         seqA2 <- as.numeric( substring( skra[a2,2], sites, sites ) )
         seqB1 <- as.numeric( substring( skra[(a1+n),2], sites, sites ) )
         seqB2 <- as.numeric( substring( skra[(a2+n),2], sites, sites ) )
-        Hw <- Hw  +   sum( abs( seqA1 - seqA2 ) )  +   sum( abs( seqB1 - seqB2 ) ) 
+        Hw <- Hw  +   sum( abs( seqA1 - seqA2 ) )  +   sum( abs( seqB1 - seqB2 ) )
         }
 #        print( paste("difference in pop A ",sum( abs( seqA1 - seqA2 ) ) ))
 #        print( paste("difference in pop B ",sum( abs( seqB1 - seqB2 ) ) ))
@@ -44,6 +44,6 @@ for( i in 1:N ){
 #print (1 -  (Hw*n/(Hb*(n-1))) )
 }
 ##print( Fst )
-plot (ecdf(Fst), col="red") 
-return( c( mean( Fst[-1]), var( Fst[-1] ) ) )
+plot (ecdf(Fst), col="red")
+return( c( mean( Fst[-1], na.rm = T), var( Fst[-1], na.rm = T ) ) )
 }
