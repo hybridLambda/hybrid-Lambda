@@ -277,6 +277,7 @@ void Tree::check_isUltrametric(){
         for (size_t path_time_i=0;path_time_i<NodeContainer[node_i].path_time.size();path_time_i++){
             if (pow((NodeContainer[node_i].path_time[path_time_i]-NodeContainer[node_i].path_time[0]),2)>0.000001){
                 this->is_ultrametric = false;
+		this->path_diff = abs(NodeContainer[node_i].path_time[path_time_i]-NodeContainer[node_i].path_time[0]);
                 break;
             }
         }

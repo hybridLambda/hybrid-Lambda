@@ -39,7 +39,9 @@ void SimulationParameters::finalize(){
 
     Net net_dummy(net_str);
 
-    if ( !net_dummy.is_ultrametric){
+    if ( !net_dummy.is_ultrametric){        
+        clog<<"Square diff in paths: "<<pow(net_dummy.path_diff, 2)<<endl;
+        clog<<"Absolute diff in paths: "<<net_dummy.path_diff<<endl;
         clog<<"WARNING! NOT ULTRAMETRIC!!!"<<endl;
         //return EXIT_FAIL;
     }

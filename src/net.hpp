@@ -50,6 +50,7 @@ class Tree{
             this->current_enum_ = 0;
             this->is_Net = false;
             this->is_ultrametric = true;
+	    this->path_diff = 0.0;
             }
 
         bool start_of_tax_name(string in_str, size_t i);
@@ -88,6 +89,7 @@ class Tree{
 
         vector <string> tax_name;
         bool is_ultrametric; /*!< \brief true if the distances between tips and root are equal; false, otherwise */
+        double path_diff; /**!< \brief keeps the absolute difference of two paths*/
         bool is_Net; /*!< \brief true if Net is a network; false if it's a tree */
     public:
         vector < Node > NodeContainer;  /*!< \brief vector of nodes */
