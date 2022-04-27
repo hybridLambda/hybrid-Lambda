@@ -39,6 +39,12 @@ void SimulationParameters::finalize(){
 
     Net net_dummy(net_str);
 
+    //GAB Added this statement for breaking the execution if the tree/networks is non-ultrametric
+    if ( !net_dummy.is_ultrametric){
+      cerr<< "ERROR: Non-ultrametric tree\n";
+      exit(1); // stop everything here
+    }
+
     if ( !net_dummy.is_ultrametric){        
         clog<<"Square diff in paths: "<<pow(net_dummy.path_diff, 2)<<endl;
         clog<<"Absolute diff in paths: "<<net_dummy.path_diff<<endl;
